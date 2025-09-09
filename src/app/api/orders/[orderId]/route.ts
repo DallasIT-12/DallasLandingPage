@@ -6,7 +6,23 @@ export async function GET(
   { params }: { params: Promise<{ orderId: string }> }
 ) {
   try {
-    const { orderId } = await params;
+    const resolvedParams = await params;
+    const { orderId } = resolvedParams;
+
+    if (!orderId) {
+      return NextResponse.json(
+        { error: 'Order ID is required' },
+        { status: 400 }
+      );
+    }
+
+    // Check if Prisma is available (for build-time safety)
+    if (!prisma) {
+      return NextResponse.json(
+        { error: 'Database connection not available' },
+        { status: 503 }
+      );
+    }
 
     const order = await prisma.order.findUnique({
       where: {
@@ -48,10 +64,33 @@ export async function PUT(
   { params }: { params: Promise<{ orderId: string }> }
 ) {
   try {
-    const { orderId } = await params;
-    const data = await request.json();
+    const resolvedParams = await params;
+    const { orderId } = resolvedParams;
     
+    if (!orderId) {
+      return NextResponse.json(
+        { error: 'Order ID is required' },
+        { status: 400 }
+      );
+    }
+
+    // Check if Prisma is available (for build-time safety)
+    if (!prisma) {
+      return NextResponse.json(
+        { error: 'Database connection not available' },
+        { status: 503 }
+      );
+    }
+
+    const data = await request.json();
     const { status } = data;
+
+    if (!status) {
+      return NextResponse.json(
+        { error: 'Status is required' },
+        { status: 400 }
+      );
+    }
 
     const order = await prisma.order.update({
       where: {

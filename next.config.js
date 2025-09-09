@@ -8,6 +8,7 @@ const nextConfig = {
     }
     return config;
   },
+  skipTrailingSlashRedirect: true,
 }
 
 module.exports = nextConfig
