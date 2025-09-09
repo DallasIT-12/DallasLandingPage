@@ -37,11 +37,18 @@ async function main() {
 
   console.log('Seeding products...')
   for (const product of products) {
-    await prisma.product.upsert({
-      where: { name: product.name },
-      update: {},
-      create: product,
+    const existingProduct = await prisma.product.findFirst({
+      where: { name: product.name }
     })
+
+    if (!existingProduct) {
+      await prisma.product.create({
+        data: product
+      })
+      console.log(`✅ Created product: ${product.name}`)
+    } else {
+      console.log(`⚠️  Product already exists: ${product.name}`)
+    }
   }
 
   console.log('Seeding completed!')
