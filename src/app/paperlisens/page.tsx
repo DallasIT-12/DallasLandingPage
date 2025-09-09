@@ -21,6 +21,7 @@ export default function Paperlisens() {
   const [shippingInfo, setShippingInfo] = useState({
     name: '',
     phone: '',
+    email: '',
     address: '',
     city: '',
     postalCode: '',
@@ -905,6 +906,22 @@ export default function Paperlisens() {
                         />
                       </div>
                       <div>
+                        <label style={{display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '500'}}>Email (Opsional)</label>
+                        <input 
+                          type="email"
+                          value={shippingInfo.email}
+                          onChange={(e) => setShippingInfo({...shippingInfo, email: e.target.value})}
+                          style={{
+                            width: '100%',
+                            padding: '10px',
+                            border: '1px solid #d1d5db',
+                            borderRadius: '6px',
+                            fontSize: '14px'
+                          }}
+                          placeholder="email@example.com"
+                        />
+                      </div>
+                      <div>
                         <label style={{display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '500'}}>Alamat Lengkap</label>
                         <textarea 
                           value={shippingInfo.address}
@@ -1095,23 +1112,61 @@ export default function Paperlisens() {
                           }
 
                           setPaymentLoading(true);
-                          const orderId = generateOrderId();
-                          setCurrentOrderId(orderId);
 
                           try {
+                            // Create order in database
+                            const orderData = {
+                              customerDetails: {
+                                first_name: shippingInfo.name,
+                                phone: shippingInfo.phone,
+                                email: shippingInfo.email || null,
+                                billing_address: {
+                                  address: shippingInfo.address,
+                                  city: shippingInfo.city,
+                                  postal_code: shippingInfo.postalCode || '00000'
+                                }
+                              },
+                              items: cartItems.map(item => ({
+                                id: item.id.toString(),
+                                price: item.price,
+                                quantity: item.quantity,
+                                name: item.name
+                              })),
+                              paymentMethod: paymentMethod,
+                              totalAmount: getTotalPrice() + 15000,
+                              notes: shippingInfo.notes || null
+                            };
+
+                            // Save order to database
+                            const orderResponse = await fetch('/api/orders', {
+                              method: 'POST',
+                              headers: {
+                                'Content-Type': 'application/json',
+                              },
+                              body: JSON.stringify(orderData)
+                            });
+
+                            if (!orderResponse.ok) {
+                              throw new Error('Failed to save order');
+                            }
+
+                            const orderResult = await orderResponse.json();
+                            const orderId = orderResult.data.orderNumber;
+                            setCurrentOrderId(orderId);
+
+                            // Generate payment token for non-COD payments
                             if (paymentMethod === 'transfer' || paymentMethod === 'ewallet') {
-                              // Generate payment token for non-COD payments
                               const paymentData = {
                                 orderId,
                                 amount: getTotalPrice() + 15000,
                                 customerDetails: {
                                   first_name: shippingInfo.name,
                                   phone: shippingInfo.phone,
-                                  email: 'customer@email.com',
+                                  email: shippingInfo.email || 'customer@email.com',
                                   billing_address: {
                                     address: shippingInfo.address,
                                     city: shippingInfo.city,
-                                    postal_code: shippingInfo.postalCode
+                                    postal_code: shippingInfo.postalCode || '00000'
                                   }
                                 },
                                 itemDetails: cartItems.map(item => ({

@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "@prisma/client": "^6.15.0",
     "@tailwindcss/postcss": "^4.1.13",
     "apg-lite": "^1.0.5",
     "argparse": "^2.0.1",
@@ -183,6 +184,7 @@
     "repeat-string": "^1.6.1",
     "requires-port": "^1.0.0",
     "reselect": "^5.1.1",
+    "resend": "^6.0.3",
     "ret": "^0.2.2",
     "safe-buffer": "^5.2.1",
     "scheduler": "^0.26.0",
@@ -238,13 +240,20 @@
     "autoprefixer": "^10.4.21",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.13",
+    "tsx": "^4.20.5",
     "typescript": "5.9.2"
   },
   "scripts": {
     "dev": "next dev -p 3002",
     "build": "next build",
     "start": "next start",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "db:seed": "tsx prisma/seed.ts",
+    "db:migrate": "prisma migrate dev",
+    "db:generate": "prisma generate"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   },
   "keywords": [],
   "author": "",
