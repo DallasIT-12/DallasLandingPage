@@ -250,7 +250,11 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "db:seed": "tsx prisma/seed.ts",
     "db:migrate": "prisma migrate dev",
-    "db:generate": "prisma generate"
+    "db:generate": "prisma generate",
+    "setup-supabase": "node setup-supabase.js",
+    "setup-db": "npx prisma db push && npm run db:seed",
+    "db:reset": "npx prisma migrate reset --force",
+    "db:studio": "npx prisma studio"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
