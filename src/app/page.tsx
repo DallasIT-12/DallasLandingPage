@@ -63,7 +63,7 @@ export default function Home() {
       }}>
         <div style={{maxWidth: '1280px', margin: '0 auto', padding: '0 24px'}}>
           <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '64px'}}>
-            <div style={{fontSize: '20px', fontWeight: '600'}}>Dallas Company</div>
+            <div style={{fontSize: '20px', fontWeight: '600'}}>Percetakan Dallas</div>
             <div style={{display: 'flex', gap: '32px'}}>
               <a href="#cigarettes" 
                  onClick={(e) => smoothScroll(e, '#cigarettes')}
@@ -213,7 +213,7 @@ export default function Home() {
               }}>
                 <span style={{fontSize: '3rem'}}>🚬</span>
               </div>
-              <h4 style={{fontSize: '1.5rem', fontWeight: '500', marginBottom: '8px'}}>Dallas Packaging</h4>
+              <h4 style={{fontSize: '1.5rem', fontWeight: '500', marginBottom: '8px'}}>Percetakan Dallas</h4>
               <p style={{color: '#9ca3af'}}>Custom cigarette box solutions</p>
             </div>
           </div>
@@ -451,7 +451,7 @@ export default function Home() {
             gap: '32px'
           }}>
             <div>
-              <h3 style={{fontSize: '1.5rem', fontWeight: '600', marginBottom: '16px'}}>Dallas Company</h3>
+              <h3 style={{fontSize: '1.5rem', fontWeight: '600', marginBottom: '16px'}}>Percetakan Dallas</h3>
               <p style={{color: '#9ca3af'}}>
                 Premium quality products for discerning customers.
               </p>
@@ -490,7 +490,7 @@ export default function Home() {
             textAlign: 'center', 
             color: '#9ca3af'
           }}>
-            <p>&copy; 2024 Dallas Company. All rights reserved.</p>
+            <p>&copy; 2024 Percetakan Dallas. All rights reserved.</p>
           </div>
         </div>
       </footer>
