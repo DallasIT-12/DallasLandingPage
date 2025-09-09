@@ -3,10 +3,10 @@ import { NextRequest, NextResponse } from 'next/server';
 // Mock payment status checker
 export async function GET(
   request: NextRequest,
-  { params }: { params: { orderId: string } }
+  { params }: { params: Promise<{ orderId: string }> }
 ) {
   try {
-    const orderId = params.orderId;
+    const { orderId } = await params;
 
     if (!orderId) {
       return NextResponse.json(
