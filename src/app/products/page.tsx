@@ -2,6 +2,148 @@
 
 import { useState, useEffect } from 'react';
 
+// 3D Floating Box Component
+const FloatingCigaretteBox = ({ product, delay = 0 }: { product: Product, delay?: number }) => {
+  return (
+    <div
+      style={{
+        position: 'relative',
+        width: '100%',
+        height: '200px',
+        perspective: '1000px',
+        animation: `float ${3 + delay * 0.5}s ease-in-out infinite`,
+        animationDelay: `${delay * 0.3}s`
+      }}
+    >
+      <div
+        style={{
+          width: '120px',
+          height: '160px',
+          margin: '20px auto',
+          position: 'relative',
+          transformStyle: 'preserve-3d',
+          transform: 'rotateY(-15deg) rotateX(5deg)',
+          transition: 'all 0.3s ease'
+        }}
+        className="cigarette-box-3d"
+      >
+        {/* Front Face */}
+        <div
+          style={{
+            position: 'absolute',
+            width: '120px',
+            height: '160px',
+            background: getBoxGradient(product.category),
+            border: '2px solid rgba(217, 119, 6, 0.3)',
+            borderRadius: '8px',
+            transform: 'translateZ(30px)',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '12px',
+            boxShadow: 'inset 0 0 20px rgba(0,0,0,0.1)'
+          }}
+        >
+          <div style={{
+            fontSize: '10px',
+            fontWeight: 'bold',
+            color: '#ffffff',
+            textAlign: 'center',
+            marginBottom: '8px',
+            textShadow: '0 1px 2px rgba(0,0,0,0.5)'
+          }}>
+            {product.name}
+          </div>
+          <div style={{
+            width: '80px',
+            height: '20px',
+            background: 'linear-gradient(90deg, #d97706, #f59e0b)',
+            borderRadius: '4px',
+            marginBottom: '8px',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.3)'
+          }}></div>
+          <div style={{
+            fontSize: '8px',
+            color: '#e5e7eb',
+            textAlign: 'center'
+          }}>
+            {product.subcategory}
+          </div>
+        </div>
+
+        {/* Right Face */}
+        <div
+          style={{
+            position: 'absolute',
+            width: '60px',
+            height: '160px',
+            background: getDarkerGradient(product.category),
+            border: '2px solid rgba(217, 119, 6, 0.2)',
+            borderRadius: '8px',
+            transform: 'rotateY(90deg) translateZ(30px)',
+            boxShadow: 'inset -5px 0 15px rgba(0,0,0,0.2)'
+          }}
+        ></div>
+
+        {/* Top Face */}
+        <div
+          style={{
+            position: 'absolute',
+            width: '120px',
+            height: '60px',
+            background: getLighterGradient(product.category),
+            border: '2px solid rgba(217, 119, 6, 0.1)',
+            borderRadius: '8px',
+            transform: 'rotateX(90deg) translateZ(80px)',
+            boxShadow: 'inset 0 -5px 15px rgba(0,0,0,0.1)'
+          }}
+        ></div>
+      </div>
+    </div>
+  );
+};
+
+// Helper functions for box gradients
+const getBoxGradient = (category: string) => {
+  switch (category) {
+    case 'Premium':
+      return 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%)';
+    case 'Standard':
+      return 'linear-gradient(135deg, #374151 0%, #4b5563 50%, #374151 100%)';
+    case 'Eco':
+      return 'linear-gradient(135deg, #065f46 0%, #047857 50%, #065f46 100%)';
+    default:
+      return 'linear-gradient(135deg, #1f2937 0%, #374151 50%, #1f2937 100%)';
+  }
+};
+
+const getDarkerGradient = (category: string) => {
+  switch (category) {
+    case 'Premium':
+      return 'linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%)';
+    case 'Standard':
+      return 'linear-gradient(135deg, #1f2937 0%, #374151 100%)';
+    case 'Eco':
+      return 'linear-gradient(135deg, #042f2e 0%, #065f46 100%)';
+    default:
+      return 'linear-gradient(135deg, #111827 0%, #1f2937 100%)';
+  }
+};
+
+const getLighterGradient = (category: string) => {
+  switch (category) {
+    case 'Premium':
+      return 'linear-gradient(135deg, #2d2d2d 0%, #404040 100%)';
+    case 'Standard':
+      return 'linear-gradient(135deg, #4b5563 0%, #6b7280 100%)';
+    case 'Eco':
+      return 'linear-gradient(135deg, #047857 0%, #059669 100%)';
+    default:
+      return 'linear-gradient(135deg, #374151 0%, #4b5563 100%)';
+  }
+};
+
 interface Product {
   id: string;
   name: string;
@@ -133,6 +275,31 @@ const customBoxProducts: Product[] = [
 ];
 
 export default function ProductsPage() {
+  // Add CSS keyframes for floating animation
+  useEffect(() => {
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes float {
+        0%, 100% { transform: translateY(0px) rotateY(-15deg) rotateX(5deg); }
+        50% { transform: translateY(-10px) rotateY(-15deg) rotateX(5deg); }
+      }
+      
+      .cigarette-box-3d:hover {
+        transform: rotateY(15deg) rotateX(-5deg) scale(1.1) !important;
+      }
+      
+      @keyframes pulse-glow {
+        0%, 100% { box-shadow: 0 0 20px rgba(217, 119, 6, 0.3); }
+        50% { box-shadow: 0 0 40px rgba(217, 119, 6, 0.6), 0 0 60px rgba(217, 119, 6, 0.3); }
+      }
+      
+      .product-card-hover {
+        animation: pulse-glow 2s ease-in-out infinite;
+      }
+    `;
+    document.head.appendChild(style);
+    return () => document.head.removeChild(style);
+  }, []);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -356,12 +523,15 @@ export default function ProductsPage() {
                     e.currentTarget.style.borderColor = '#f59e0b';
                     e.currentTarget.style.background = 'linear-gradient(135deg, rgba(217, 119, 6, 0.1) 0%, #1f2937 50%, rgba(217, 119, 6, 0.05) 100%)';
                     
-                    // Add glowing effect to the image
-                    const imageDiv = e.currentTarget.querySelector('div[style*="backgroundImage"]') as HTMLElement;
-                    if (imageDiv) {
-                      imageDiv.style.filter = 'brightness(1.2) contrast(1.1)';
-                      imageDiv.style.boxShadow = 'inset 0 0 60px rgba(217, 119, 6, 0.2)';
+                    // Add glowing effect to 3D box
+                    const box3D = e.currentTarget.querySelector('.cigarette-box-3d') as HTMLElement;
+                    if (box3D) {
+                      box3D.style.transform = 'rotateY(15deg) rotateX(-5deg) scale(1.1)';
+                      box3D.style.filter = 'drop-shadow(0 10px 20px rgba(217, 119, 6, 0.4))';
                     }
+                    
+                    // Add glow to entire card
+                    e.currentTarget.classList.add('product-card-hover');
                     
                     // Trigger shine effect
                     const shineEffect = e.currentTarget.querySelector('.shine-effect') as HTMLElement;
@@ -389,12 +559,15 @@ export default function ProductsPage() {
                     e.currentTarget.style.borderColor = 'transparent';
                     e.currentTarget.style.background = '#1f2937';
                     
-                    // Remove glowing effect from the image
-                    const imageDiv = e.currentTarget.querySelector('div[style*="backgroundImage"]') as HTMLElement;
-                    if (imageDiv) {
-                      imageDiv.style.filter = 'none';
-                      imageDiv.style.boxShadow = 'none';
+                    // Reset 3D box
+                    const box3D = e.currentTarget.querySelector('.cigarette-box-3d') as HTMLElement;
+                    if (box3D) {
+                      box3D.style.transform = 'rotateY(-15deg) rotateX(5deg) scale(1)';
+                      box3D.style.filter = 'none';
                     }
+                    
+                    // Remove glow from card
+                    e.currentTarget.classList.remove('product-card-hover');
                     
                     // Reset shine effect
                     const shineEffect = e.currentTarget.querySelector('.shine-effect') as HTMLElement;
@@ -420,16 +593,14 @@ export default function ProductsPage() {
                   <div style={{
                     width: '100%',
                     height: '200px',
-                    backgroundColor: '#374151',
+                    backgroundColor: 'transparent',
                     borderRadius: '12px',
                     marginBottom: '16px',
-                    backgroundImage: `url(${product.image})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
                     position: 'relative',
-                    overflow: 'hidden',
+                    overflow: 'visible',
                     transition: 'all 0.3s ease'
                   }}>
+                    <FloatingCigaretteBox product={product} delay={getCurrentSlideProducts().indexOf(product)} />
                     <div style={{
                       position: 'absolute',
                       top: 0,
@@ -452,7 +623,8 @@ export default function ProductsPage() {
                       fontSize: '12px',
                       fontWeight: '600',
                       boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
-                      transition: 'all 0.3s ease'
+                      transition: 'all 0.3s ease',
+                      zIndex: 10
                     }}>
                       {product.category}
                     </div>
@@ -627,13 +799,17 @@ export default function ProductsPage() {
             <div style={{
               width: '100%',
               height: '250px',
-              backgroundColor: '#374151',
+              backgroundColor: 'transparent',
               borderRadius: '12px',
               marginBottom: '24px',
-              backgroundImage: `url(${selectedProduct.image})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center'
-            }}></div>
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <div style={{ transform: 'scale(1.5)' }}>
+                <FloatingCigaretteBox product={selectedProduct} delay={0} />
+              </div>
+            </div>
 
             <p style={{color: '#9ca3af', marginBottom: '20px', lineHeight: '1.6'}}>
               {selectedProduct.description}
