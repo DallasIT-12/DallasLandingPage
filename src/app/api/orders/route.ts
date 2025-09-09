@@ -56,27 +56,37 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Create customer first (or find existing)
-    const customer = await prisma.customer.upsert({
+    // Find existing customer or create new one
+    let customer = await prisma.customer.findFirst({
       where: {
         phone: customerDetails.phone
-      },
-      update: {
-        name: customerDetails.first_name,
-        email: customerDetails.email || null,
-        address: customerDetails.billing_address.address,
-        city: customerDetails.billing_address.city,
-        postalCode: customerDetails.billing_address.postal_code
-      },
-      create: {
-        name: customerDetails.first_name,
-        phone: customerDetails.phone,
-        email: customerDetails.email || null,
-        address: customerDetails.billing_address.address,
-        city: customerDetails.billing_address.city,
-        postalCode: customerDetails.billing_address.postal_code
       }
     });
+
+    if (!customer) {
+      customer = await prisma.customer.create({
+        data: {
+          name: customerDetails.first_name,
+          phone: customerDetails.phone,
+          email: customerDetails.email || null,
+          address: customerDetails.billing_address.address,
+          city: customerDetails.billing_address.city,
+          postalCode: customerDetails.billing_address.postal_code
+        }
+      });
+    } else {
+      // Update existing customer
+      customer = await prisma.customer.update({
+        where: { id: customer.id },
+        data: {
+          name: customerDetails.first_name,
+          email: customerDetails.email || null,
+          address: customerDetails.billing_address.address,
+          city: customerDetails.billing_address.city,
+          postalCode: customerDetails.billing_address.postal_code
+        }
+      });
+    }
 
     // Generate unique order number
     const orderNumber = generateOrderId();
