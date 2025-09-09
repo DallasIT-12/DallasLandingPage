@@ -65,19 +65,25 @@ export default function Home() {
           <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '64px'}}>
             <div style={{fontSize: '20px', fontWeight: '600'}}>Percetakan Dallas</div>
             <div style={{display: 'flex', gap: '32px'}}>
+              <a href="/products" 
+                 style={{color: '#ffffff', textDecoration: 'none', transition: 'all 0.3s ease', cursor: 'pointer'}}
+                 onMouseOver={(e) => {(e.target as HTMLElement).style.color = '#d1d5db'; (e.target as HTMLElement).style.transform = 'translateY(-2px)'}}
+                 onMouseOut={(e) => {(e.target as HTMLElement).style.color = '#ffffff'; (e.target as HTMLElement).style.transform = 'translateY(0)'}}>
+                Custom Box Rokok
+              </a>
               <a href="#cigarettes" 
                  onClick={(e) => smoothScroll(e, '#cigarettes')}
                  style={{color: '#ffffff', textDecoration: 'none', transition: 'all 0.3s ease', cursor: 'pointer'}}
                  onMouseOver={(e) => {(e.target as HTMLElement).style.color = '#d1d5db'; (e.target as HTMLElement).style.transform = 'translateY(-2px)'}}
                  onMouseOut={(e) => {(e.target as HTMLElement).style.color = '#ffffff'; (e.target as HTMLElement).style.transform = 'translateY(0)'}}>
-                Rokok
+                Portfolio
               </a>
               <a href="#non-cigarettes" 
                  onClick={(e) => smoothScroll(e, '#non-cigarettes')}
                  style={{color: '#ffffff', textDecoration: 'none', transition: 'all 0.3s ease', cursor: 'pointer'}}
                  onMouseOver={(e) => {(e.target as HTMLElement).style.color = '#d1d5db'; (e.target as HTMLElement).style.transform = 'translateY(-2px)'}}
                  onMouseOut={(e) => {(e.target as HTMLElement).style.color = '#ffffff'; (e.target as HTMLElement).style.transform = 'translateY(0)'}}>
-                Non Rokok
+                Paperlisens
               </a>
               <a href="#contact" 
                  onClick={(e) => smoothScroll(e, '#contact')}
