@@ -296,13 +296,13 @@ export default function Paperlisens() {
                 fontSize: '16px'
               }}>📦</div>
               <h1 
-                onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}
+                onClick={() => typeof window !== 'undefined' && window.scrollTo({top: 0, behavior: 'smooth'})}
                 style={{
                   fontSize: '18px', 
                   fontWeight: '700', 
                   color: '#f97316', 
                   margin: 0, 
-                  display: window.innerWidth < 640 ? 'none' : 'block',
+                  display: typeof window !== 'undefined' && window.innerWidth < 640 ? 'none' : 'block',
                   cursor: 'pointer'
                 }}>
                 Paperlisens
@@ -313,7 +313,7 @@ export default function Paperlisens() {
             <div style={{flex: 1, position: 'relative', minWidth: '0'}}>
               <input
                 type="text"
-                placeholder={window.innerWidth < 640 ? "Cari produk..." : "Cari cup, wadah makanan, atau toko..."}
+                placeholder={typeof window !== 'undefined' && window.innerWidth < 640 ? "Cari produk..." : "Cari cup, wadah makanan, atau toko..."}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 style={{
@@ -1136,7 +1136,7 @@ export default function Paperlisens() {
                             setCartItems([]);
                             
                             // Open WhatsApp in new tab
-                            window.open(whatsappUrl, '_blank');
+                            typeof window !== 'undefined' && window.open(whatsappUrl, '_blank');
                             
                             // Show success message
                             setOrderConfirmed(true);

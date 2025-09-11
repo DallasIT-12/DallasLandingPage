@@ -66,8 +66,8 @@ export default function Home() {
             <div style={{fontSize: '16px', fontWeight: '600'}}>Percetakan Dallas</div>
             <div style={{
               display: 'flex', 
-              gap: window.innerWidth < 768 ? '16px' : '24px',
-              fontSize: window.innerWidth < 768 ? '14px' : '16px',
+              gap: typeof window !== 'undefined' && window.innerWidth < 768 ? '16px' : '24px',
+              fontSize: typeof window !== 'undefined' && window.innerWidth < 768 ? '14px' : '16px',
               overflowX: 'auto',
               whiteSpace: 'nowrap'
             }}>
@@ -75,7 +75,7 @@ export default function Home() {
                  style={{color: '#ffffff', textDecoration: 'none', transition: 'all 0.3s ease', cursor: 'pointer', minWidth: 'fit-content'}}
                  onMouseOver={(e) => {(e.target as HTMLElement).style.color = '#d1d5db'}}
                  onMouseOut={(e) => {(e.target as HTMLElement).style.color = '#ffffff'}}>
-                {window.innerWidth < 640 ? 'Custom' : 'Custom Box Rokok'}
+                {typeof window !== 'undefined' && window.innerWidth < 640 ? 'Custom' : 'Custom Box Rokok'}
               </a>
               <a href="#cigarettes" 
                  onClick={(e) => smoothScroll(e, '#cigarettes')}
@@ -120,9 +120,9 @@ export default function Home() {
           zIndex: 10
         }}>
           <h1 style={{
-            fontSize: window.innerWidth < 640 ? '2.5rem' : window.innerWidth < 768 ? '3rem' : '4rem', 
+            fontSize: typeof window !== 'undefined' ? (window.innerWidth < 640 ? '2.5rem' : window.innerWidth < 768 ? '3rem' : '4rem') : '4rem', 
             fontWeight: '300', 
-            marginBottom: window.innerWidth < 640 ? '16px' : '24px', 
+            marginBottom: typeof window !== 'undefined' && window.innerWidth < 640 ? '16px' : '24px', 
             lineHeight: '1.1'
           }}>
             Premium Quality<br/>
@@ -136,13 +136,12 @@ export default function Home() {
             </span>
           </h1>
           <p style={{
-            fontSize: window.innerWidth < 640 ? '1rem' : window.innerWidth < 768 ? '1.25rem' : '1.5rem', 
+            fontSize: typeof window !== 'undefined' ? (window.innerWidth < 640 ? '1rem' : window.innerWidth < 768 ? '1.25rem' : '1.5rem') : '1.5rem', 
             color: '#9ca3af', 
-            marginBottom: window.innerWidth < 640 ? '32px' : '48px', 
             fontWeight: '300',
             maxWidth: '600px',
             margin: '0 auto',
-            marginBottom: window.innerWidth < 640 ? '32px' : '48px'
+            marginBottom: typeof window !== 'undefined' && window.innerWidth < 640 ? '32px' : '48px'
           }}>
             Discover our exceptional range of cigarette and non-cigarette products
           </p>
@@ -151,17 +150,17 @@ export default function Home() {
             gap: '12px', 
             justifyContent: 'center', 
             flexWrap: 'wrap',
-            flexDirection: window.innerWidth < 480 ? 'column' : 'row',
+            flexDirection: typeof window !== 'undefined' && window.innerWidth < 480 ? 'column' : 'row',
             alignItems: 'center'
           }}>
             <a href="#cigarettes" 
                onClick={(e) => smoothScroll(e, '#cigarettes')}
                style={{
                  ...primaryButton,
-                 padding: window.innerWidth < 640 ? '10px 24px' : '12px 32px',
-                 fontSize: window.innerWidth < 640 ? '14px' : '16px',
-                 width: window.innerWidth < 480 ? '100%' : 'auto',
-                 maxWidth: window.innerWidth < 480 ? '280px' : 'none'
+                 padding: typeof window !== 'undefined' && window.innerWidth < 640 ? '10px 24px' : '12px 32px',
+                 fontSize: typeof window !== 'undefined' && window.innerWidth < 640 ? '14px' : '16px',
+                 width: typeof window !== 'undefined' && window.innerWidth < 480 ? '100%' : 'auto',
+                 maxWidth: typeof window !== 'undefined' && window.innerWidth < 480 ? '280px' : 'none'
                }}
                onMouseOver={(e) => {(e.target as HTMLElement).style.transform = 'scale(1.05)'; (e.target as HTMLElement).style.backgroundColor = '#f3f4f6'}}
                onMouseOut={(e) => {(e.target as HTMLElement).style.transform = 'scale(1)'; (e.target as HTMLElement).style.backgroundColor = '#ffffff'}}
@@ -173,10 +172,10 @@ export default function Home() {
                onClick={(e) => smoothScroll(e, '#non-cigarettes')}
                style={{
                  ...secondaryButton,
-                 padding: window.innerWidth < 640 ? '10px 24px' : '12px 32px',
-                 fontSize: window.innerWidth < 640 ? '14px' : '16px',
-                 width: window.innerWidth < 480 ? '100%' : 'auto',
-                 maxWidth: window.innerWidth < 480 ? '280px' : 'none'
+                 padding: typeof window !== 'undefined' && window.innerWidth < 640 ? '10px 24px' : '12px 32px',
+                 fontSize: typeof window !== 'undefined' && window.innerWidth < 640 ? '14px' : '16px',
+                 width: typeof window !== 'undefined' && window.innerWidth < 480 ? '100%' : 'auto',
+                 maxWidth: typeof window !== 'undefined' && window.innerWidth < 480 ? '280px' : 'none'
                }}
                onMouseOver={(e) => {(e.target as HTMLElement).style.transform = 'scale(1.05)'; (e.target as HTMLElement).style.backgroundColor = '#ffffff'; (e.target as HTMLElement).style.color = '#000000'}}
                onMouseOut={(e) => {(e.target as HTMLElement).style.transform = 'scale(1)'; (e.target as HTMLElement).style.backgroundColor = 'transparent'; (e.target as HTMLElement).style.color = '#ffffff'}}
@@ -203,8 +202,8 @@ export default function Home() {
           
           <div style={{
             display: 'grid', 
-            gridTemplateColumns: window.innerWidth < 768 ? '1fr' : 'repeat(auto-fit, minmax(400px, 1fr))', 
-            gap: window.innerWidth < 768 ? '32px' : '48px', 
+            gridTemplateColumns: typeof window !== 'undefined' && window.innerWidth < 768 ? '1fr' : 'repeat(auto-fit, minmax(400px, 1fr))', 
+            gap: typeof window !== 'undefined' && window.innerWidth < 768 ? '32px' : '48px', 
             alignItems: 'center'
           }}>
             <div style={{display: 'flex', flexDirection: 'column', gap: '24px'}}>
@@ -256,8 +255,8 @@ export default function Home() {
             <h3 style={{fontSize: '2rem', fontWeight: '300', textAlign: 'center', marginBottom: '48px'}}>Our Custom Box Portfolio</h3>
             <div style={{
               display: 'grid',
-              gridTemplateColumns: window.innerWidth < 480 ? '1fr' : window.innerWidth < 768 ? 'repeat(2, 1fr)' : 'repeat(auto-fit, minmax(250px, 1fr))',
-              gap: window.innerWidth < 768 ? '16px' : '24px'
+              gridTemplateColumns: typeof window !== 'undefined' ? (window.innerWidth < 480 ? '1fr' : window.innerWidth < 768 ? 'repeat(2, 1fr)' : 'repeat(auto-fit, minmax(250px, 1fr))') : 'repeat(auto-fit, minmax(250px, 1fr))',
+              gap: typeof window !== 'undefined' && window.innerWidth < 768 ? '16px' : '24px'
             }}>
               {[
                 { name: 'Premium Luxury Box', description: 'Embossed gold foil finish with magnetic closure', image: 'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=300&h=200&fit=crop' },
@@ -319,8 +318,8 @@ export default function Home() {
           
           <div style={{
             display: 'grid', 
-            gridTemplateColumns: window.innerWidth < 768 ? '1fr' : 'repeat(auto-fit, minmax(400px, 1fr))', 
-            gap: window.innerWidth < 768 ? '32px' : '48px', 
+            gridTemplateColumns: typeof window !== 'undefined' && window.innerWidth < 768 ? '1fr' : 'repeat(auto-fit, minmax(400px, 1fr))', 
+            gap: typeof window !== 'undefined' && window.innerWidth < 768 ? '32px' : '48px', 
             alignItems: 'center'
           }}>
             <div style={{
@@ -372,8 +371,8 @@ export default function Home() {
             <h3 style={{fontSize: '2rem', fontWeight: '300', textAlign: 'center', marginBottom: '48px'}}>Featured Products on Paperlisens</h3>
             <div style={{
               display: 'grid',
-              gridTemplateColumns: window.innerWidth < 480 ? '1fr' : window.innerWidth < 768 ? 'repeat(2, 1fr)' : 'repeat(auto-fit, minmax(280px, 1fr))',
-              gap: window.innerWidth < 768 ? '16px' : '24px'
+              gridTemplateColumns: typeof window !== 'undefined' ? (window.innerWidth < 480 ? '1fr' : window.innerWidth < 768 ? 'repeat(2, 1fr)' : 'repeat(auto-fit, minmax(280px, 1fr))') : 'repeat(auto-fit, minmax(280px, 1fr))',
+              gap: typeof window !== 'undefined' && window.innerWidth < 768 ? '16px' : '24px'
             }}>
               {[
                 { name: 'Cup A Premium - Paper Cup 8oz', price: 'Rp 85.000', originalPrice: 'Rp 95.000', discount: '11%', rating: '4.8', sold: '3.2k', image: 'https://images.unsplash.com/photo-1577303935007-0d306ee134d2?w=300&h=200&fit=crop', unit: '/1000 pcs' },
