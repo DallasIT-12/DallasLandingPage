@@ -378,7 +378,7 @@ export default function ProductsPage() {
                  onMouseOut={(e) => {(e.target as HTMLElement).style.color = '#9ca3af'; (e.target as HTMLElement).style.transform = 'translateY(0)'}}>
                 Portfolio
               </a>
-              <a href="/#non-cigarettes" 
+              <a href="/paperlisens" 
                  style={{color: '#9ca3af', textDecoration: 'none', transition: 'all 0.3s ease', cursor: 'pointer'}}
                  onMouseOver={(e) => {(e.target as HTMLElement).style.color = '#ffffff'; (e.target as HTMLElement).style.transform = 'translateY(-2px)'}}
                  onMouseOut={(e) => {(e.target as HTMLElement).style.color = '#9ca3af'; (e.target as HTMLElement).style.transform = 'translateY(0)'}}>
