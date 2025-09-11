@@ -281,35 +281,46 @@ export default function Paperlisens() {
         top: 0,
         zIndex: 50
       }}>
-        <div style={{maxWidth: '1200px', margin: '0 auto', padding: '0 16px'}}>
-          <div style={{display: 'flex', alignItems: 'center', height: '70px', gap: '24px'}}>
+        <div style={{maxWidth: '1200px', margin: '0 auto', padding: '0 12px'}}>
+          <div style={{display: 'flex', alignItems: 'center', height: '60px', gap: '12px'}}>
             {/* Logo */}
-            <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
+            <div style={{display: 'flex', alignItems: 'center', gap: '8px', minWidth: 'fit-content'}}>
               <div style={{
-                width: '40px',
-                height: '40px',
+                width: '32px',
+                height: '32px',
                 backgroundColor: '#f97316',
-                borderRadius: '8px',
+                borderRadius: '6px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '20px'
+                fontSize: '16px'
               }}>📦</div>
-              <h1 style={{fontSize: '24px', fontWeight: '700', color: '#f97316', margin: 0}}>Paperlisens</h1>
+              <h1 
+                onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}
+                style={{
+                  fontSize: '18px', 
+                  fontWeight: '700', 
+                  color: '#f97316', 
+                  margin: 0, 
+                  display: window.innerWidth < 640 ? 'none' : 'block',
+                  cursor: 'pointer'
+                }}>
+                Paperlisens
+              </h1>
             </div>
 
             {/* Search Bar */}
-            <div style={{flex: 1, maxWidth: '600px', position: 'relative'}}>
+            <div style={{flex: 1, position: 'relative', minWidth: '0'}}>
               <input
                 type="text"
-                placeholder="Cari cup, wadah makanan, atau toko..."
+                placeholder={window.innerWidth < 640 ? "Cari produk..." : "Cari cup, wadah makanan, atau toko..."}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 style={{
                   width: '100%',
-                  padding: '12px 16px',
+                  padding: '10px 36px 10px 12px',
                   border: '2px solid #e5e7eb',
-                  borderRadius: '8px',
+                  borderRadius: '6px',
                   fontSize: '14px',
                   outline: 'none',
                   transition: 'border-color 0.3s ease'
@@ -319,22 +330,22 @@ export default function Paperlisens() {
               />
               <div style={{
                 position: 'absolute',
-                right: '12px',
+                right: '10px',
                 top: '50%',
                 transform: 'translateY(-50%)',
                 color: '#9ca3af',
-                fontSize: '18px'
+                fontSize: '16px'
               }}>🔍</div>
             </div>
 
             {/* Cart & User */}
-            <div style={{display: 'flex', alignItems: 'center', gap: '16px'}}>
+            <div style={{display: 'flex', alignItems: 'center', gap: '8px', minWidth: 'fit-content'}}>
               <div 
                 ref={cartIconRef}
                 onClick={() => setIsCartOpen(true)}
-                style={{position: 'relative', cursor: 'pointer', padding: '8px'}}
+                style={{position: 'relative', cursor: 'pointer', padding: '6px'}}
               >
-                <span style={{fontSize: '24px'}}>🛒</span>
+                <span style={{fontSize: '20px'}}>🛒</span>
                 {getTotalItems() > 0 && (
                   <div style={{
                     position: 'absolute',
@@ -343,12 +354,12 @@ export default function Paperlisens() {
                     backgroundColor: '#dc2626',
                     color: 'white',
                     borderRadius: '50%',
-                    width: '20px',
-                    height: '20px',
+                    width: '18px',
+                    height: '18px',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    fontSize: '12px',
+                    fontSize: '10px',
                     fontWeight: '600'
                   }}>{getTotalItems()}</div>
                 )}
@@ -356,14 +367,15 @@ export default function Paperlisens() {
               <div 
                 onClick={() => setIsLoginOpen(true)}
                 style={{
-                  padding: '8px 16px',
+                  padding: '6px 12px',
                   backgroundColor: '#f97316',
                   color: 'white',
-                  borderRadius: '8px',
+                  borderRadius: '6px',
                   cursor: 'pointer',
-                  fontSize: '14px',
+                  fontSize: '12px',
                   fontWeight: '500',
-                  transition: 'all 0.3s ease'
+                  transition: 'all 0.3s ease',
+                  display: window.innerWidth < 480 ? 'none' : 'block'
                 }}
                 onMouseOver={(e) => (e.target as HTMLElement).style.backgroundColor = '#ea580c'}
                 onMouseOut={(e) => (e.target as HTMLElement).style.backgroundColor = '#f97316'}
