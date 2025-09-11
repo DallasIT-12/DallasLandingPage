@@ -356,8 +356,8 @@ export default function ProductsPage() {
       }}>
         <div style={{maxWidth: '1280px', margin: '0 auto', padding: '0 24px'}}>
           <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-            <a href="/" style={{fontSize: '20px', fontWeight: '600', color: '#ffffff', textDecoration: 'none'}}>
-              Percetakan Dallas
+            <a href="/" style={{textDecoration: 'none'}}>
+              <img src="/logo1.png" alt="Percetakan Dallas" style={{height: '36px', width: 'auto'}} />
             </a>
             <div style={{display: 'flex', gap: '32px'}}>
               <a href="/" 

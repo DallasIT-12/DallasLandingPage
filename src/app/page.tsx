@@ -63,7 +63,7 @@ export default function Home() {
       }}>
         <div style={{maxWidth: '1280px', margin: '0 auto', padding: '0 16px'}}>
           <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '56px'}}>
-            <div style={{fontSize: '16px', fontWeight: '600'}}>Percetakan Dallas</div>
+            <img src="/logo1.png" alt="Percetakan Dallas" style={{height: '32px', width: 'auto'}} />
             <div style={{
               display: 'flex', 
               gap: typeof window !== 'undefined' && window.innerWidth < 768 ? '16px' : '24px',
@@ -340,7 +340,7 @@ export default function Home() {
               }}>
                 <span style={{fontSize: '3rem'}}>🥤</span>
               </div>
-              <h4 style={{fontSize: '1.5rem', fontWeight: '500', marginBottom: '8px'}}>Paperlisens</h4>
+              <img src="/logo-paperlisens.png" alt="Paperlisens" style={{height: '32px', width: 'auto', marginBottom: '8px'}} />
               <p style={{color: '#9ca3af'}}>Food containers & cups marketplace</p>
             </div>
             <div style={{display: 'flex', flexDirection: 'column', gap: '24px'}}>
@@ -483,7 +483,9 @@ export default function Home() {
             gap: '32px'
           }}>
             <div>
-              <h3 style={{fontSize: '1.5rem', fontWeight: '600', marginBottom: '16px'}}>Percetakan Dallas</h3>
+              <div style={{display: 'flex', alignItems: 'center', marginBottom: '16px'}}>
+                <img src="/logo1.png" alt="Percetakan Dallas" style={{height: '40px', width: 'auto'}} />
+              </div>
               <p style={{color: '#9ca3af'}}>
                 Premium quality products for discerning customers.
               </p>

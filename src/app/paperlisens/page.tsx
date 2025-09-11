@@ -295,18 +295,17 @@ export default function Paperlisens() {
                 justifyContent: 'center',
                 fontSize: '16px'
               }}>📦</div>
-              <h1 
+              <img 
+                src="/logo-paperlisens.png" 
+                alt="Paperlisens"
                 onClick={() => typeof window !== 'undefined' && window.scrollTo({top: 0, behavior: 'smooth'})}
                 style={{
-                  fontSize: '18px', 
-                  fontWeight: '700', 
-                  color: '#f97316', 
-                  margin: 0, 
+                  height: '32px',
+                  width: 'auto',
                   display: typeof window !== 'undefined' && window.innerWidth < 640 ? 'none' : 'block',
                   cursor: 'pointer'
-                }}>
-                Paperlisens
-              </h1>
+                }}
+              />
             </div>
 
             {/* Search Bar */}
@@ -1260,7 +1259,7 @@ export default function Paperlisens() {
                   justifyContent: 'center',
                   fontSize: '16px'
                 }}>📦</div>
-                <h3 style={{fontSize: '20px', fontWeight: '700', margin: 0}}>Paperlisens</h3>
+                <img src="/logo-paperlisens.png" alt="Paperlisens" style={{height: '36px', width: 'auto', margin: 0}} />
               </div>
               <p style={{color: '#9ca3af', lineHeight: '1.6', margin: 0}}>
                 Marketplace terpercaya untuk wadah makanan dan cup berkualitas tinggi.
