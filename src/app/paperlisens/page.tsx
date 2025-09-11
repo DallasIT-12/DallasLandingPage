@@ -364,24 +364,6 @@ export default function Paperlisens() {
                   }}>{getTotalItems()}</div>
                 )}
               </div>
-              <div 
-                onClick={() => setIsLoginOpen(true)}
-                style={{
-                  padding: '6px 12px',
-                  backgroundColor: '#f97316',
-                  color: 'white',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  fontSize: '12px',
-                  fontWeight: '500',
-                  transition: 'all 0.3s ease',
-                  display: window.innerWidth < 480 ? 'none' : 'block'
-                }}
-                onMouseOver={(e) => (e.target as HTMLElement).style.backgroundColor = '#ea580c'}
-                onMouseOut={(e) => (e.target as HTMLElement).style.backgroundColor = '#f97316'}
-              >
-                Masuk
-              </div>
             </div>
           </div>
         </div>

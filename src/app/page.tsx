@@ -84,8 +84,7 @@ export default function Home() {
                  onMouseOut={(e) => {(e.target as HTMLElement).style.color = '#ffffff'}}>
                 Portfolio
               </a>
-              <a href="#non-cigarettes" 
-                 onClick={(e) => smoothScroll(e, '#non-cigarettes')}
+              <a href="/paperlisens" 
                  style={{color: '#ffffff', textDecoration: 'none', transition: 'all 0.3s ease', cursor: 'pointer', minWidth: 'fit-content'}}
                  onMouseOver={(e) => {(e.target as HTMLElement).style.color = '#d1d5db'}}
                  onMouseOut={(e) => {(e.target as HTMLElement).style.color = '#ffffff'}}>
@@ -500,12 +499,11 @@ export default function Home() {
                    onMouseOut={(e) => {(e.target as HTMLElement).style.color = '#9ca3af'; (e.target as HTMLElement).style.paddingLeft = '0px'}}>
                   Cigarettes
                 </a>
-                <a href="#non-cigarettes" 
-                   onClick={(e) => smoothScroll(e, '#non-cigarettes')}
+                <a href="/paperlisens" 
                    style={{color: '#9ca3af', textDecoration: 'none', transition: 'all 0.3s ease', cursor: 'pointer'}}
                    onMouseOver={(e) => {(e.target as HTMLElement).style.color = '#ffffff'; (e.target as HTMLElement).style.paddingLeft = '8px'}}
                    onMouseOut={(e) => {(e.target as HTMLElement).style.color = '#9ca3af'; (e.target as HTMLElement).style.paddingLeft = '0px'}}>
-                  Non-Cigarettes
+                  Paperlisens
                 </a>
               </div>
             </div>
