@@ -1152,40 +1152,18 @@ export default function Paperlisens() {
 
                             const orderResult = await orderResponse.json();
                             const orderId = orderResult.data.orderNumber;
+                            const whatsappUrl = orderResult.data.whatsappUrl;
                             setCurrentOrderId(orderId);
 
-                            // Generate payment token for non-COD payments
-                            if (paymentMethod === 'transfer' || paymentMethod === 'ewallet') {
-                              const paymentData = {
-                                orderId,
-                                amount: getTotalPrice() + 15000,
-                                customerDetails: {
-                                  first_name: shippingInfo.name,
-                                  phone: shippingInfo.phone,
-                                  email: shippingInfo.email || 'customer@email.com',
-                                  billing_address: {
-                                    address: shippingInfo.address,
-                                    city: shippingInfo.city,
-                                    postal_code: shippingInfo.postalCode || '00000'
-                                  }
-                                },
-                                itemDetails: cartItems.map(item => ({
-                                  id: item.id.toString(),
-                                  price: item.price,
-                                  quantity: item.quantity,
-                                  name: item.name
-                                }))
-                              };
-
-                              const paymentResult = await generatePaymentToken(paymentData);
-                              setPaymentDetails(paymentResult.data);
-                            }
-
-                            setOrderConfirmed(true);
+                            // Directly redirect to WhatsApp for all orders
                             setIsCheckoutOpen(false);
-                            if (paymentMethod === 'cod') {
-                              setCartItems([]);
-                            }
+                            setCartItems([]);
+                            
+                            // Open WhatsApp in new tab
+                            window.open(whatsappUrl, '_blank');
+                            
+                            // Show success message
+                            setOrderConfirmed(true);
                           } catch (error) {
                             console.error('Payment error:', error);
                             alert('Terjadi kesalahan saat memproses pembayaran. Silakan coba lagi.');
@@ -1239,289 +1217,43 @@ export default function Paperlisens() {
             backgroundColor: 'white',
             padding: '32px',
             borderRadius: '12px',
-            width: paymentMethod === 'cod' ? '500px' : '600px',
+            width: '500px',
             maxWidth: '90%',
-            maxHeight: '90vh',
-            overflowY: 'auto'
+            textAlign: 'center'
           }} onClick={(e) => e.stopPropagation()}>
-            
-            {paymentMethod === 'cod' ? (
-              // COD Success Message
-              <div style={{textAlign: 'center'}}>
-                <div style={{fontSize: '60px', marginBottom: '20px'}}>✅</div>
-                <h3 style={{fontSize: '24px', fontWeight: '600', marginBottom: '12px', color: '#059669'}}>Pesanan Berhasil!</h3>
-                <p style={{color: '#6b7280', marginBottom: '20px', lineHeight: '1.5'}}>
-                  Terima kasih! Pesanan Anda telah diterima dan akan segera diproses. 
-                  Kami akan menghubungi Anda melalui WhatsApp untuk konfirmasi.
-                </p>
-                <div style={{
-                  backgroundColor: '#f0fdf4',
-                  padding: '16px',
-                  borderRadius: '8px',
-                  marginBottom: '20px',
-                  textAlign: 'left'
-                }}>
-                  <div style={{fontSize: '14px', fontWeight: '500', marginBottom: '8px', color: '#059669'}}>ID Pesanan: #{currentOrderId}</div>
-                  <div style={{fontSize: '13px', color: '#6b7280'}}>Total: Rp{(getTotalPrice() + 15000).toLocaleString()}</div>
-                  <div style={{fontSize: '13px', color: '#6b7280'}}>Pembayaran: Bayar di Tempat (COD)</div>
-                </div>
-                <div style={{display: 'flex', gap: '12px'}}>
-                  <button 
-                    onClick={() => {setOrderConfirmed(false); setCartItems([]);}}
-                    style={{
-                      flex: 1,
-                      padding: '12px',
-                      backgroundColor: '#6b7280',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '8px',
-                      fontSize: '14px',
-                      fontWeight: '500',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    Tutup
-                  </button>
-                  <button 
-                    onClick={() => {
-                      window.open(`https://wa.me/6281234567890?text=Halo, saya sudah melakukan order dengan ID: ${currentOrderId}`, '_blank');
-                    }}
-                    style={{
-                      flex: 1,
-                      padding: '12px',
-                      backgroundColor: '#25d366',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '8px',
-                      fontSize: '14px',
-                      fontWeight: '500',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    💬 Chat WhatsApp
-                  </button>
-                </div>
-              </div>
-            ) : paymentMethod === 'transfer' ? (
-              // Bank Transfer Payment Details
-              <div>
-                <div style={{textAlign: 'center', marginBottom: '24px'}}>
-                  <div style={{fontSize: '48px', marginBottom: '12px'}}>🏦</div>
-                  <h3 style={{fontSize: '20px', fontWeight: '600', marginBottom: '8px'}}>Transfer Bank</h3>
-                  <p style={{color: '#6b7280', fontSize: '14px'}}>Silakan transfer ke rekening berikut</p>
-                </div>
-
-                <div style={{
-                  backgroundColor: '#f8fafc',
-                  border: '2px solid #e2e8f0',
-                  borderRadius: '8px',
-                  padding: '20px',
-                  marginBottom: '20px'
-                }}>
-                  <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px'}}>
-                    <h4 style={{fontSize: '16px', fontWeight: '600', margin: 0}}>{BANK_ACCOUNTS[selectedBank as keyof typeof BANK_ACCOUNTS].name}</h4>
-                    <span style={{fontSize: '20px'}}>{BANK_ACCOUNTS[selectedBank as keyof typeof BANK_ACCOUNTS].logo}</span>
-                  </div>
-                  
-                  <div style={{marginBottom: '12px'}}>
-                    <div style={{fontSize: '12px', color: '#6b7280', marginBottom: '4px'}}>Nomor Rekening</div>
-                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-                      <span style={{fontSize: '18px', fontWeight: '600', fontFamily: 'monospace'}}>
-                        {BANK_ACCOUNTS[selectedBank as keyof typeof BANK_ACCOUNTS].accountNumber}
-                      </span>
-                      <button 
-                        onClick={() => copyToClipboard(BANK_ACCOUNTS[selectedBank as keyof typeof BANK_ACCOUNTS].accountNumber)}
-                        style={{
-                          padding: '4px 8px',
-                          backgroundColor: '#f97316',
-                          color: 'white',
-                          border: 'none',
-                          borderRadius: '4px',
-                          fontSize: '12px',
-                          cursor: 'pointer'
-                        }}
-                      >
-                        Copy
-                      </button>
-                    </div>
-                  </div>
-
-                  <div style={{marginBottom: '12px'}}>
-                    <div style={{fontSize: '12px', color: '#6b7280', marginBottom: '4px'}}>Atas Nama</div>
-                    <div style={{fontSize: '16px', fontWeight: '500'}}>
-                      {BANK_ACCOUNTS[selectedBank as keyof typeof BANK_ACCOUNTS].accountName}
-                    </div>
-                  </div>
-
-                  <div>
-                    <div style={{fontSize: '12px', color: '#6b7280', marginBottom: '4px'}}>Jumlah Transfer</div>
-                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-                      <span style={{fontSize: '20px', fontWeight: '700', color: '#f97316'}}>
-                        Rp{(getTotalPrice() + 15000).toLocaleString()}
-                      </span>
-                      <button 
-                        onClick={() => copyToClipboard((getTotalPrice() + 15000).toString())}
-                        style={{
-                          padding: '4px 8px',
-                          backgroundColor: '#f97316',
-                          color: 'white',
-                          border: 'none',
-                          borderRadius: '4px',
-                          fontSize: '12px',
-                          cursor: 'pointer'
-                        }}
-                      >
-                        Copy
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <div style={{
-                  backgroundColor: '#fef3f2',
-                  border: '1px solid #f97316',
-                  borderRadius: '8px',
-                  padding: '12px',
-                  marginBottom: '20px'
-                }}>
-                  <div style={{fontSize: '13px', color: '#ea580c', fontWeight: '500', marginBottom: '4px'}}>Penting:</div>
-                  <div style={{fontSize: '12px', color: '#6b7280', lineHeight: '1.4'}}>
-                    • Transfer sesuai nominal yang tertera<br/>
-                    • Konfirmasi pembayaran via WhatsApp<br/>
-                    • Batas waktu transfer: 24 jam<br/>
-                    • Order ID: #{currentOrderId}
-                  </div>
-                </div>
-
-                <div style={{display: 'flex', gap: '12px'}}>
-                  <button 
-                    onClick={() => {setOrderConfirmed(false); setCartItems([]);}}
-                    style={{
-                      flex: 1,
-                      padding: '12px',
-                      backgroundColor: '#6b7280',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '8px',
-                      fontSize: '14px',
-                      fontWeight: '500',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    Tutup
-                  </button>
-                  <button 
-                    onClick={() => {
-                      window.open(`https://wa.me/6281234567890?text=Halo, saya sudah transfer untuk order ID: ${currentOrderId}. Mohon dikonfirmasi.`, '_blank');
-                    }}
-                    style={{
-                      flex: 1,
-                      padding: '12px',
-                      backgroundColor: '#25d366',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '8px',
-                      fontSize: '14px',
-                      fontWeight: '500',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    Konfirmasi Transfer
-                  </button>
-                </div>
-              </div>
-            ) : (
-              // E-Wallet Payment
-              <div>
-                <div style={{textAlign: 'center', marginBottom: '24px'}}>
-                  <div style={{fontSize: '48px', marginBottom: '12px'}}>📱</div>
-                  <h3 style={{fontSize: '20px', fontWeight: '600', marginBottom: '8px'}}>Pembayaran E-Wallet</h3>
-                  <p style={{color: '#6b7280', fontSize: '14px'}}>Scan QR Code atau gunakan link pembayaran</p>
-                </div>
-
-                {paymentDetails && (
-                  <div style={{
-                    backgroundColor: '#f8fafc',
-                    border: '2px solid #e2e8f0',
-                    borderRadius: '8px',
-                    padding: '20px',
-                    marginBottom: '20px',
-                    textAlign: 'center'
-                  }}>
-                    <div style={{fontSize: '96px', marginBottom: '16px'}}>📋</div>
-                    <p style={{fontSize: '14px', color: '#6b7280', marginBottom: '16px'}}>Scan QR Code dengan aplikasi e-wallet Anda</p>
-                    
-                    <div style={{marginBottom: '16px'}}>
-                      <div style={{fontSize: '12px', color: '#6b7280', marginBottom: '4px'}}>Atau gunakan link pembayaran:</div>
-                      <a 
-                        href={paymentDetails.redirect_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{
-                          display: 'inline-block',
-                          padding: '8px 16px',
-                          backgroundColor: '#f97316',
-                          color: 'white',
-                          textDecoration: 'none',
-                          borderRadius: '6px',
-                          fontSize: '14px',
-                          fontWeight: '500'
-                        }}
-                      >
-                        Bayar Sekarang
-                      </a>
-                    </div>
-
-                    <div style={{
-                      fontSize: '12px',
-                      color: '#6b7280',
-                      borderTop: '1px solid #e5e7eb',
-                      paddingTop: '12px'
-                    }}>
-                      Order ID: #{currentOrderId}<br/>
-                      Total: Rp{(getTotalPrice() + 15000).toLocaleString()}
-                    </div>
-                  </div>
-                )}
-
-                <div style={{display: 'flex', gap: '12px'}}>
-                  <button 
-                    onClick={() => {setOrderConfirmed(false); setCartItems([]);}}
-                    style={{
-                      flex: 1,
-                      padding: '12px',
-                      backgroundColor: '#6b7280',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '8px',
-                      fontSize: '14px',
-                      fontWeight: '500',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    Tutup
-                  </button>
-                  <button 
-                    onClick={() => {
-                      window.open(`https://wa.me/6281234567890?text=Halo, saya memerlukan bantuan untuk pembayaran order ID: ${currentOrderId}`, '_blank');
-                    }}
-                    style={{
-                      flex: 1,
-                      padding: '12px',
-                      backgroundColor: '#25d366',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '8px',
-                      fontSize: '14px',
-                      fontWeight: '500',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    Bantuan WhatsApp
-                  </button>
-                </div>
-              </div>
-            )}
+            <div style={{fontSize: '60px', marginBottom: '20px'}}>✅</div>
+            <h3 style={{fontSize: '24px', fontWeight: '600', marginBottom: '12px', color: '#059669'}}>Pesanan Berhasil Dikirim!</h3>
+            <p style={{color: '#6b7280', marginBottom: '20px', lineHeight: '1.5'}}>
+              Pesanan Anda telah dikirim ke WhatsApp untuk diproses. 
+              Silakan lanjutkan di WhatsApp untuk konfirmasi dan pembayaran.
+            </p>
+            <div style={{
+              backgroundColor: '#f0fdf4',
+              padding: '16px',
+              borderRadius: '8px',
+              marginBottom: '20px',
+              textAlign: 'left'
+            }}>
+              <div style={{fontSize: '14px', fontWeight: '500', marginBottom: '8px', color: '#059669'}}>ID Pesanan: #{currentOrderId}</div>
+              <div style={{fontSize: '13px', color: '#6b7280'}}>WhatsApp: 081260001487</div>
+              <div style={{fontSize: '13px', color: '#6b7280'}}>Status: Menunggu konfirmasi</div>
+            </div>
+            <button 
+              onClick={() => setOrderConfirmed(false)}
+              style={{
+                width: '100%',
+                padding: '12px',
+                backgroundColor: '#f97316',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                fontSize: '16px',
+                fontWeight: '600',
+                cursor: 'pointer'
+              }}
+            >
+              Tutup
+            </button>
           </div>
         </div>
       )}

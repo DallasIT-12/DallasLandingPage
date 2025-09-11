@@ -63,22 +63,9 @@ export default function AdminDashboard() {
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    fetchOrders();
+    // No longer fetching from database - show WhatsApp redirect message
+    setLoading(false);
   }, []);
-
-  const fetchOrders = async () => {
-    try {
-      const response = await fetch('/api/orders?limit=100');
-      const result = await response.json();
-      if (result.success) {
-        setOrders(result.data.orders);
-      }
-    } catch (error) {
-      console.error('Failed to fetch orders:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const updateOrderStatus = async (orderId: string, newStatus: string) => {
     try {
@@ -178,318 +165,115 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '24px 16px' }}>
-        {/* Filters */}
+      <div style={{ maxWidth: '800px', margin: '0 auto', padding: '24px 16px' }}>
+        {/* WhatsApp Management Message */}
         <div style={{
           backgroundColor: 'white',
-          padding: '20px',
-          borderRadius: '8px',
-          marginBottom: '24px',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+          padding: '40px',
+          borderRadius: '12px',
+          textAlign: 'center',
+          boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
         }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
-            <div>
-              <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '500' }}>
-                Filter Status
-              </label>
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '10px',
-                  border: '1px solid #d1d5db',
-                  borderRadius: '6px',
-                  fontSize: '14px'
-                }}
-              >
-                <option value="all">Semua Status</option>
-                {Object.entries(statusLabels).map(([value, label]) => (
-                  <option key={value} value={value}>{label}</option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '500' }}>
-                Cari Pesanan
-              </label>
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Nomor pesanan, nama, atau telepon..."
-                style={{
-                  width: '100%',
-                  padding: '10px',
-                  border: '1px solid #d1d5db',
-                  borderRadius: '6px',
-                  fontSize: '14px'
-                }}
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Orders Table */}
-        <div style={{
-          backgroundColor: 'white',
-          borderRadius: '8px',
-          overflow: 'hidden',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
-        }}>
-          <div style={{
-            overflowX: 'auto'
+          <div style={{ fontSize: '80px', marginBottom: '24px' }}>📱</div>
+          <h2 style={{ 
+            fontSize: '28px', 
+            fontWeight: '700', 
+            marginBottom: '16px', 
+            color: '#1f2937' 
           }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-              <thead>
-                <tr style={{ backgroundColor: '#f8fafc' }}>
-                  <th style={{ padding: '16px', textAlign: 'left', fontSize: '14px', fontWeight: '600', color: '#374151' }}>
-                    Pesanan
-                  </th>
-                  <th style={{ padding: '16px', textAlign: 'left', fontSize: '14px', fontWeight: '600', color: '#374151' }}>
-                    Customer
-                  </th>
-                  <th style={{ padding: '16px', textAlign: 'left', fontSize: '14px', fontWeight: '600', color: '#374151' }}>
-                    Total
-                  </th>
-                  <th style={{ padding: '16px', textAlign: 'left', fontSize: '14px', fontWeight: '600', color: '#374151' }}>
-                    Status
-                  </th>
-                  <th style={{ padding: '16px', textAlign: 'left', fontSize: '14px', fontWeight: '600', color: '#374151' }}>
-                    Aksi
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredOrders.map((order, index) => (
-                  <tr key={order.id} style={{
-                    borderBottom: '1px solid #e5e7eb',
-                    backgroundColor: index % 2 === 0 ? 'white' : '#fafafa'
-                  }}>
-                    <td style={{ padding: '16px' }}>
-                      <div>
-                        <div style={{ fontWeight: '600', color: '#1f2937', marginBottom: '4px' }}>
-                          #{order.orderNumber}
-                        </div>
-                        <div style={{ fontSize: '12px', color: '#6b7280' }}>
-                          {formatDate(order.createdAt)}
-                        </div>
-                        <div style={{ fontSize: '12px', color: '#6b7280' }}>
-                          {order.paymentMethod === 'cod' ? 'COD' : 
-                           order.paymentMethod === 'transfer' ? 'Transfer' : 'E-Wallet'}
-                        </div>
-                      </div>
-                    </td>
-                    <td style={{ padding: '16px' }}>
-                      <div>
-                        <div style={{ fontWeight: '500', color: '#1f2937', marginBottom: '2px' }}>
-                          {order.customer.name}
-                        </div>
-                        <div style={{ fontSize: '12px', color: '#6b7280' }}>
-                          {order.customer.phone}
-                        </div>
-                        <div style={{ fontSize: '12px', color: '#6b7280' }}>
-                          {order.customer.city}
-                        </div>
-                      </div>
-                    </td>
-                    <td style={{ padding: '16px' }}>
-                      <div style={{ fontWeight: '600', color: '#f97316' }}>
-                        {formatCurrency(order.totalAmount)}
-                      </div>
-                      <div style={{ fontSize: '12px', color: '#6b7280' }}>
-                        {order.orderItems.length} item
-                      </div>
-                    </td>
-                    <td style={{ padding: '16px' }}>
-                      <select
-                        value={order.status}
-                        onChange={(e) => updateOrderStatus(order.id, e.target.value)}
-                        style={{
-                          padding: '6px 8px',
-                          borderRadius: '4px',
-                          border: '1px solid #d1d5db',
-                          backgroundColor: statusColors[order.status as keyof typeof statusColors] || '#6b7280',
-                          color: 'white',
-                          fontSize: '12px',
-                          fontWeight: '500'
-                        }}
-                      >
-                        {Object.entries(statusLabels).map(([value, label]) => (
-                          <option key={value} value={value} style={{ color: 'black' }}>
-                            {label}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                    <td style={{ padding: '16px' }}>
-                      <div style={{ display: 'flex', gap: '8px' }}>
-                        <button
-                          onClick={() => {
-                            setSelectedOrder(order);
-                            setIsModalOpen(true);
-                          }}
-                          style={{
-                            padding: '6px 12px',
-                            backgroundColor: '#3b82f6',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '4px',
-                            fontSize: '12px',
-                            cursor: 'pointer'
-                          }}
-                        >
-                          Detail
-                        </button>
-                        <a
-                          href={`https://wa.me/${order.customer.phone}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          style={{
-                            padding: '6px 12px',
-                            backgroundColor: '#25d366',
-                            color: 'white',
-                            textDecoration: 'none',
-                            borderRadius: '4px',
-                            fontSize: '12px',
-                            display: 'inline-block'
-                          }}
-                        >
-                          WhatsApp
-                        </a>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            Manajemen Pesanan via WhatsApp
+          </h2>
+          <p style={{ 
+            fontSize: '16px', 
+            color: '#6b7280', 
+            marginBottom: '32px', 
+            lineHeight: '1.6' 
+          }}>
+            Sistem telah diperbarui untuk mengelola semua pesanan melalui WhatsApp. 
+            Semua order dari website akan langsung dikirim ke WhatsApp untuk diproses.
+          </p>
+          
+          <div style={{
+            backgroundColor: '#f0fdf4',
+            border: '2px solid #22c55e',
+            borderRadius: '8px',
+            padding: '20px',
+            marginBottom: '32px',
+            textAlign: 'left'
+          }}>
+            <h3 style={{ 
+              fontSize: '18px', 
+              fontWeight: '600', 
+              marginBottom: '12px', 
+              color: '#16a34a',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}>
+              ✅ Keunggulan Sistem Baru:
+            </h3>
+            <ul style={{ 
+              color: '#15803d', 
+              lineHeight: '1.8',
+              margin: 0,
+              paddingLeft: '20px'
+            }}>
+              <li>Tidak perlu database - lebih stabil dan cepat</li>
+              <li>Pelanggan tetap bisa isi form lengkap di website</li>
+              <li>Pesan otomatis dibuat dengan format rapi</li>
+              <li>Komunikasi langsung dengan pelanggan via WhatsApp</li>
+              <li>Tidak ada masalah deployment atau koneksi database</li>
+            </ul>
           </div>
 
-          {filteredOrders.length === 0 && (
-            <div style={{
-              padding: '40px',
-              textAlign: 'center',
-              color: '#6b7280'
+          <div style={{
+            backgroundColor: '#fef3f2',
+            border: '1px solid #f97316',
+            borderRadius: '8px',
+            padding: '16px',
+            marginBottom: '32px'
+          }}>
+            <div style={{ 
+              fontSize: '14px', 
+              color: '#ea580c', 
+              fontWeight: '600',
+              marginBottom: '8px'
             }}>
-              <div style={{ fontSize: '48px', marginBottom: '16px' }}>📭</div>
-              <div>Tidak ada pesanan yang sesuai filter</div>
+              📞 Nomor WhatsApp Admin:
             </div>
-          )}
+            <div style={{ 
+              fontSize: '20px', 
+              fontWeight: '700', 
+              color: '#dc2626',
+              fontFamily: 'monospace'
+            }}>
+              081260001487
+            </div>
+          </div>
+
+          <a
+            href="https://wa.me/081260001487?text=Halo admin, saya ingin mengecek pesanan terbaru."
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'inline-block',
+              padding: '16px 32px',
+              backgroundColor: '#25d366',
+              color: 'white',
+              textDecoration: 'none',
+              borderRadius: '8px',
+              fontSize: '16px',
+              fontWeight: '600',
+              transition: 'all 0.3s ease'
+            }}
+            onMouseOver={(e) => (e.target as HTMLElement).style.backgroundColor = '#1db954'}
+            onMouseOut={(e) => (e.target as HTMLElement).style.backgroundColor = '#25d366'}
+          >
+            💬 Buka WhatsApp Admin
+          </a>
         </div>
       </div>
 
-      {/* Order Detail Modal */}
-      {isModalOpen && selectedOrder && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          backgroundColor: 'rgba(0,0,0,0.5)',
-          zIndex: 9999,
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          padding: '20px'
-        }} onClick={() => setIsModalOpen(false)}>
-          <div style={{
-            backgroundColor: 'white',
-            borderRadius: '12px',
-            width: '700px',
-            maxWidth: '100%',
-            maxHeight: '90vh',
-            overflowY: 'auto'
-          }} onClick={(e) => e.stopPropagation()}>
-            <div style={{ padding: '24px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-                <h3 style={{ fontSize: '20px', fontWeight: '600', margin: 0 }}>
-                  Detail Pesanan #{selectedOrder.orderNumber}
-                </h3>
-                <button 
-                  onClick={() => setIsModalOpen(false)}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    fontSize: '24px',
-                    cursor: 'pointer',
-                    color: '#6b7280'
-                  }}
-                >×</button>
-              </div>
-
-              <div style={{ display: 'grid', gap: '20px' }}>
-                {/* Customer Info */}
-                <div style={{ backgroundColor: '#f8fafc', padding: '16px', borderRadius: '8px' }}>
-                  <h4 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '12px', color: '#1f2937' }}>
-                    Informasi Customer
-                  </h4>
-                  <div style={{ display: 'grid', gap: '8px', fontSize: '14px' }}>
-                    <div><strong>Nama:</strong> {selectedOrder.customer.name}</div>
-                    <div><strong>Telepon:</strong> {selectedOrder.customer.phone}</div>
-                    {selectedOrder.customer.email && (
-                      <div><strong>Email:</strong> {selectedOrder.customer.email}</div>
-                    )}
-                    <div><strong>Alamat:</strong> {selectedOrder.customer.address}</div>
-                    <div><strong>Kota:</strong> {selectedOrder.customer.city}</div>
-                    <div><strong>Kode Pos:</strong> {selectedOrder.customer.postalCode}</div>
-                  </div>
-                </div>
-
-                {/* Order Info */}
-                <div style={{ backgroundColor: '#fef3f2', padding: '16px', borderRadius: '8px' }}>
-                  <h4 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '12px', color: '#dc2626' }}>
-                    Informasi Pesanan
-                  </h4>
-                  <div style={{ display: 'grid', gap: '8px', fontSize: '14px' }}>
-                    <div><strong>Tanggal:</strong> {formatDate(selectedOrder.createdAt)}</div>
-                    <div><strong>Status:</strong> {statusLabels[selectedOrder.status as keyof typeof statusLabels]}</div>
-                    <div><strong>Pembayaran:</strong> {
-                      selectedOrder.paymentMethod === 'cod' ? 'Bayar di Tempat (COD)' :
-                      selectedOrder.paymentMethod === 'transfer' ? 'Transfer Bank' : 'E-Wallet'
-                    }</div>
-                    <div><strong>Total:</strong> <span style={{ color: '#f97316', fontWeight: '600' }}>{formatCurrency(selectedOrder.totalAmount)}</span></div>
-                    {selectedOrder.notes && (
-                      <div><strong>Catatan:</strong> {selectedOrder.notes}</div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Order Items */}
-                <div>
-                  <h4 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '12px', color: '#1f2937' }}>
-                    Item Pesanan
-                  </h4>
-                  <div style={{ border: '1px solid #e5e7eb', borderRadius: '8px', overflow: 'hidden' }}>
-                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                      <thead>
-                        <tr style={{ backgroundColor: '#f8fafc' }}>
-                          <th style={{ padding: '12px', textAlign: 'left', fontSize: '14px', fontWeight: '600' }}>Produk</th>
-                          <th style={{ padding: '12px', textAlign: 'center', fontSize: '14px', fontWeight: '600' }}>Qty</th>
-                          <th style={{ padding: '12px', textAlign: 'right', fontSize: '14px', fontWeight: '600' }}>Harga</th>
-                          <th style={{ padding: '12px', textAlign: 'right', fontSize: '14px', fontWeight: '600' }}>Subtotal</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {selectedOrder.orderItems.map((item, index) => (
-                          <tr key={item.id} style={{ borderBottom: index < selectedOrder.orderItems.length - 1 ? '1px solid #e5e7eb' : 'none' }}>
-                            <td style={{ padding: '12px', fontSize: '14px' }}>{item.product.name}</td>
-                            <td style={{ padding: '12px', fontSize: '14px', textAlign: 'center' }}>{item.quantity}</td>
-                            <td style={{ padding: '12px', fontSize: '14px', textAlign: 'right' }}>{formatCurrency(item.unitPrice)}</td>
-                            <td style={{ padding: '12px', fontSize: '14px', textAlign: 'right', fontWeight: '600', color: '#f97316' }}>
-                              {formatCurrency(item.totalPrice)}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

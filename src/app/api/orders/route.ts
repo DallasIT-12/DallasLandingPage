@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '../../../lib/prisma';
 import { generateOrderId } from '../../../lib/payment';
-import { sendOrderNotificationToAdmin, sendOrderConfirmationToCustomer } from '../../../lib/email';
 
 export async function POST(request: NextRequest) {
   try {
@@ -15,142 +13,60 @@ export async function POST(request: NextRequest) {
       notes
     } = data;
 
-    // Map frontend product IDs to database products
-    const productMapping = {
-      '1': 'Kotak Rokok Custom - Malboro',
-      '2': 'Kotak Rokok Custom - Gudang Garam', 
-      '3': 'Kotak Rokok Custom - Djarum',
-      '4': 'Kotak Rokok Custom - LA'
-    };
-
-    // Get or create products for each item
-    const processedItems = [];
-    for (const item of items) {
-      const productName = productMapping[item.id as keyof typeof productMapping];
-      if (!productName) {
-        continue; // Skip unknown products
-      }
-
-      // Find or create product
-      let product = await prisma.product.findFirst({
-        where: { name: productName }
-      });
-
-      if (!product) {
-        // Create product if it doesn't exist
-        product = await prisma.product.create({
-          data: {
-            name: productName,
-            price: item.price,
-            category: 'rokok',
-            isActive: true
-          }
-        });
-      }
-
-      processedItems.push({
-        productId: product.id,
-        quantity: item.quantity,
-        unitPrice: item.price,
-        totalPrice: item.price * item.quantity
-      });
-    }
-
-    // Find existing customer or create new one
-    let customer = await prisma.customer.findFirst({
-      where: {
-        phone: customerDetails.phone
-      }
-    });
-
-    if (!customer) {
-      customer = await prisma.customer.create({
-        data: {
-          name: customerDetails.first_name,
-          phone: customerDetails.phone,
-          email: customerDetails.email || null,
-          address: customerDetails.billing_address.address,
-          city: customerDetails.billing_address.city,
-          postalCode: customerDetails.billing_address.postal_code
-        }
-      });
-    } else {
-      // Update existing customer
-      customer = await prisma.customer.update({
-        where: { id: customer.id },
-        data: {
-          name: customerDetails.first_name,
-          email: customerDetails.email || null,
-          address: customerDetails.billing_address.address,
-          city: customerDetails.billing_address.city,
-          postalCode: customerDetails.billing_address.postal_code
-        }
-      });
-    }
-
     // Generate unique order number
     const orderNumber = generateOrderId();
 
-    // Create order with items
-    const order = await prisma.order.create({
-      data: {
-        orderNumber,
-        customerId: customer.id,
-        paymentMethod,
-        totalAmount,
-        notes: notes || null,
-        orderItems: {
-          create: processedItems
-        }
-      },
-      include: {
-        customer: true,
-        orderItems: {
-          include: {
-            product: true
-          }
-        }
-      }
-    });
+    // Map product IDs to names for WhatsApp message
+    const productMapping = {
+      '1': 'Cup A Premium - Paper Cup 8oz Putih',
+      '2': 'Cup B Standard - Paper Cup 12oz Coklat', 
+      '3': 'Cup C Large - Paper Cup 16oz Premium',
+      '4': 'Cup D Extra Large - Paper Cup 22oz Jumbo',
+      '5': 'Cup Toast - Food Container Persegi Kecil',
+      '6': 'Cup Toast Es - Food Container dengan Tutup',
+      '7': 'Cup A Mini - Paper Cup 4oz untuk Espresso',
+      '8': 'Cup Toast Es Premium - Leak Proof Container'
+    };
 
-    // Send email notifications
-    try {
-      const emailData = {
-        orderNumber: order.orderNumber,
-        customerName: customer.name,
-        customerPhone: customer.phone,
-        customerEmail: customer.email || undefined,
-        customerAddress: customer.address,
-        customerCity: customer.city,
-        totalAmount: order.totalAmount,
-        paymentMethod: order.paymentMethod,
-        items: order.orderItems.map(item => ({
-          name: item.product.name,
-          quantity: item.quantity,
-          price: item.unitPrice
-        })),
-        notes: order.notes || undefined
-      };
+    // Format items for WhatsApp message
+    const itemsList = items.map((item: any) => {
+      const productName = productMapping[item.id as keyof typeof productMapping] || item.name;
+      return `• ${productName}\n  Qty: ${item.quantity} x Rp${item.price.toLocaleString()} = Rp${(item.price * item.quantity).toLocaleString()}`;
+    }).join('\n');
 
-      // Send admin notification (don't wait for it to complete)
-      sendOrderNotificationToAdmin(emailData).catch(error => 
-        console.error('Failed to send admin notification:', error)
-      );
+    // Create WhatsApp message
+    const waMessage = encodeURIComponent(`*PESANAN BARU - ${orderNumber}*
 
-      // Send customer confirmation if email is provided
-      if (customer.email) {
-        sendOrderConfirmationToCustomer(emailData).catch(error => 
-          console.error('Failed to send customer confirmation:', error)
-        );
-      }
-    } catch (emailError) {
-      console.error('Email notification setup error:', emailError);
-      // Don't fail the order creation if email fails
-    }
+*Detail Pelanggan:*
+Nama: ${customerDetails.first_name}
+Telepon: ${customerDetails.phone}
+${customerDetails.email ? `Email: ${customerDetails.email}` : ''}
+Alamat: ${customerDetails.billing_address.address}, ${customerDetails.billing_address.city}
+${customerDetails.billing_address.postal_code ? `Kode Pos: ${customerDetails.billing_address.postal_code}` : ''}
+
+*Detail Pesanan:*
+${itemsList}
+
+*Subtotal: Rp${(totalAmount - 15000).toLocaleString()}*
+*Ongkir: Rp15.000*
+*TOTAL: Rp${totalAmount.toLocaleString()}*
+
+*Metode Pembayaran:* ${paymentMethod === 'cod' ? 'Bayar di Tempat (COD)' : paymentMethod === 'transfer' ? 'Transfer Bank' : 'E-Wallet'}
+
+${notes ? `*Catatan:* ${notes}` : ''}
+
+Terima kasih sudah berbelanja di Paperlisens! 🙏`);
+
+    // Create WhatsApp URL
+    const whatsappUrl = `https://wa.me/081260001487?text=${waMessage}`;
 
     return NextResponse.json({
       success: true,
-      data: order
+      data: {
+        orderNumber,
+        whatsappUrl,
+        message: 'Order berhasil dibuat. Silakan lanjutkan ke WhatsApp untuk konfirmasi.'
+      }
     });
 
   } catch (error) {
@@ -163,49 +79,10 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
-  try {
-    const { searchParams } = new URL(request.url);
-    const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '10');
-    const skip = (page - 1) * limit;
-
-    const [orders, total] = await Promise.all([
-      prisma.order.findMany({
-        skip,
-        take: limit,
-        orderBy: {
-          createdAt: 'desc'
-        },
-        include: {
-          customer: true,
-          orderItems: {
-            include: {
-              product: true
-            }
-          }
-        }
-      }),
-      prisma.order.count()
-    ]);
-
-    return NextResponse.json({
-      success: true,
-      data: {
-        orders,
-        pagination: {
-          page,
-          limit,
-          total,
-          totalPages: Math.ceil(total / limit)
-        }
-      }
-    });
-
-  } catch (error) {
-    console.error('Get orders error:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch orders' },
-      { status: 500 }
-    );
-  }
+  // Database-free implementation - redirect to WhatsApp for order management
+  return NextResponse.json({
+    success: false,
+    message: 'Order management dilakukan melalui WhatsApp. Hubungi 081260001487',
+    whatsappUrl: 'https://wa.me/081260001487?text=Halo, saya ingin menanyakan status pesanan.'
+  }, { status: 200 });
 }
