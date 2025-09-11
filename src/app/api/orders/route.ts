@@ -58,7 +58,7 @@ ${notes ? `*Catatan:* ${notes}` : ''}
 Terima kasih sudah berbelanja di Paperlisens! 🙏`);
 
     // Create WhatsApp URL
-    const whatsappUrl = `https://wa.me/081260001487?text=${waMessage}`;
+    const whatsappUrl = `https://wa.me/6281260001487?text=${waMessage}`;
 
     return NextResponse.json({
       success: true,
@@ -83,6 +83,6 @@ export async function GET(request: NextRequest) {
   return NextResponse.json({
     success: false,
     message: 'Order management dilakukan melalui WhatsApp. Hubungi 081260001487',
-    whatsappUrl: 'https://wa.me/081260001487?text=Halo, saya ingin menanyakan status pesanan.'
+    whatsappUrl: 'https://wa.me/6281260001487?text=Halo, saya ingin menanyakan status pesanan.'
   }, { status: 200 });
 }

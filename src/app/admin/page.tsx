@@ -252,7 +252,7 @@ export default function AdminDashboard() {
           </div>
 
           <a
-            href="https://wa.me/081260001487?text=Halo admin, saya ingin mengecek pesanan terbaru."
+            href="https://wa.me/6281260001487?text=Halo admin, saya ingin mengecek pesanan terbaru."
             target="_blank"
             rel="noopener noreferrer"
             style={{

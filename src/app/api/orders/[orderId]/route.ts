@@ -8,7 +8,7 @@ export async function GET(
   return NextResponse.json({
     success: false,
     message: 'Order tracking dilakukan melalui WhatsApp. Hubungi 081260001487',
-    whatsappUrl: 'https://wa.me/081260001487?text=Halo, saya ingin menanyakan status pesanan.'
+    whatsappUrl: 'https://wa.me/6281260001487?text=Halo, saya ingin menanyakan status pesanan.'
   }, { status: 200 });
 }
 
@@ -20,6 +20,6 @@ export async function PUT(
   return NextResponse.json({
     success: false,
     message: 'Update status pesanan dilakukan melalui WhatsApp. Hubungi 081260001487',
-    whatsappUrl: 'https://wa.me/081260001487?text=Halo, saya ingin mengupdate status pesanan.'
+    whatsappUrl: 'https://wa.me/6281260001487?text=Halo, saya ingin mengupdate status pesanan.'
   }, { status: 200 });
 }
