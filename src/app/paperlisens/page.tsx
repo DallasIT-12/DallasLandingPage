@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { generatePaymentToken, BANK_ACCOUNTS, generateOrderId, copyToClipboard } from '../../lib/payment';
+import { generateOrderId } from '../../lib/payment';
 
 interface CartItem {
   id: number;
