@@ -1018,24 +1018,6 @@ export default function Paperlisens() {
                             <div style={{flex: 1}}>
                               <div style={{fontSize: '14px', fontWeight: '500', color: '#1f2937'}}>{method.name}</div>
                               <div style={{fontSize: '12px', color: '#6b7280'}}>{method.desc}</div>
-                              {method.id === 'transfer' && paymentMethod === 'transfer' && (
-                                <div style={{marginTop: '8px'}}>
-                                  <select 
-                                    value={selectedBank}
-                                    onChange={(e) => setSelectedBank(e.target.value)}
-                                    style={{
-                                      padding: '4px 8px',
-                                      border: '1px solid #d1d5db',
-                                      borderRadius: '4px',
-                                      fontSize: '12px'
-                                    }}
-                                  >
-                                    {Object.entries(BANK_ACCOUNTS).map(([key, bank]) => (
-                                      <option key={key} value={key}>{bank.name}</option>
-                                    ))}
-                                  </select>
-                                </div>
-                              )}
                             </div>
                             <div style={{
                               width: '20px',
