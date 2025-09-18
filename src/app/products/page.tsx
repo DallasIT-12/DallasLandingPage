@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 
-// 3D Floating Box Component
+// 3D Floating Box Component with Prominent Real Image
 const FloatingCigaretteBox = ({ product, delay = 0 }: { product: Product, delay?: number }) => {
   return (
     <div
@@ -10,95 +10,125 @@ const FloatingCigaretteBox = ({ product, delay = 0 }: { product: Product, delay?
         position: 'relative',
         width: '100%',
         height: '200px',
-        perspective: '1000px',
+        perspective: '1200px',
         animation: `float ${3 + delay * 0.5}s ease-in-out infinite`,
-        animationDelay: `${delay * 0.3}s`
+        animationDelay: `${delay * 0.3}s`,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
       }}
     >
       <div
         style={{
-          width: '120px',
-          height: '160px',
-          margin: '20px auto',
+          width: '140px',
+          height: '180px',
           position: 'relative',
           transformStyle: 'preserve-3d',
-          transform: 'rotateY(-15deg) rotateX(5deg)',
+          transform: 'rotateY(0deg) rotateX(0deg)',
           transition: 'all 0.3s ease'
         }}
         className="cigarette-box-3d"
       >
-        {/* Front Face */}
+        {/* Front Face - Main Image */}
         <div
           style={{
             position: 'absolute',
-            width: '120px',
-            height: '160px',
-            background: getBoxGradient(product.category),
-            border: '2px solid rgba(217, 119, 6, 0.3)',
-            borderRadius: '8px',
-            transform: 'translateZ(30px)',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '12px',
-            boxShadow: 'inset 0 0 20px rgba(0,0,0,0.1)'
+            width: '140px',
+            height: '180px',
+            transform: 'translateZ(35px)',
+            borderRadius: '12px',
+            overflow: 'hidden',
+            boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
+            border: '1px solid rgba(255, 255, 255, 0.1)'
           }}
         >
+          <img 
+            src="/kotak rokok 1.png"
+            alt={product.name}
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              borderRadius: '10px',
+              filter: 'brightness(1.0) contrast(1.05) saturate(1.1)'
+            }}
+          />
+          {/* Minimal overlay - just for brand visibility */}
           <div style={{
-            fontSize: '10px',
-            fontWeight: 'bold',
-            color: '#ffffff',
-            textAlign: 'center',
-            marginBottom: '8px',
-            textShadow: '0 1px 2px rgba(0,0,0,0.5)'
-          }}>
-            {product.name}
-          </div>
-          <div style={{
-            width: '80px',
-            height: '20px',
-            background: 'linear-gradient(90deg, #d97706, #f59e0b)',
+            position: 'absolute',
+            top: '8px',
+            left: '8px',
+            right: '8px',
+            background: 'rgba(0,0,0,0.2)',
+            padding: '3px 6px',
             borderRadius: '4px',
-            marginBottom: '8px',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.3)'
-          }}></div>
-          <div style={{
-            fontSize: '8px',
-            color: '#e5e7eb',
-            textAlign: 'center'
+            backdropFilter: 'blur(2px)'
           }}>
-            {product.subcategory}
+            <div style={{ 
+              color: '#ffffff', 
+              fontSize: '9px', 
+              fontWeight: '500',
+              textAlign: 'center',
+              textShadow: '0 1px 2px rgba(0,0,0,0.6)'
+            }}>
+              {product.category}
+            </div>
           </div>
         </div>
 
-        {/* Right Face */}
+        {/* Right Face - Side with reduced opacity */}
         <div
           style={{
             position: 'absolute',
-            width: '60px',
-            height: '160px',
-            background: getDarkerGradient(product.category),
-            border: '2px solid rgba(217, 119, 6, 0.2)',
-            borderRadius: '8px',
-            transform: 'rotateY(90deg) translateZ(30px)',
-            boxShadow: 'inset -5px 0 15px rgba(0,0,0,0.2)'
+            width: '70px',
+            height: '180px',
+            background: 'linear-gradient(135deg, rgba(0,0,0,0.7), rgba(0,0,0,0.9))',
+            borderRadius: '12px',
+            transform: 'rotateY(90deg) translateZ(35px)',
+            boxShadow: 'inset -5px 0 15px rgba(0,0,0,0.4)',
+            border: '1px solid rgba(0, 0, 0, 0.2)',
+            overflow: 'hidden'
           }}
-        ></div>
+        >
+          <img 
+            src="/kotak rokok 1.png"
+            alt=""
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              opacity: 0.4,
+              filter: 'brightness(0.7)'
+            }}
+          />
+        </div>
 
-        {/* Top Face */}
+        {/* Top Face - Minimized */}
         <div
           style={{
             position: 'absolute',
-            width: '120px',
-            height: '60px',
-            background: getLighterGradient(product.category),
-            border: '2px solid rgba(217, 119, 6, 0.1)',
-            borderRadius: '8px',
-            transform: 'rotateX(90deg) translateZ(80px)',
-            boxShadow: 'inset 0 -5px 15px rgba(0,0,0,0.1)'
+            width: '140px',
+            height: '70px',
+            background: 'linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02))',
+            borderRadius: '12px',
+            transform: 'rotateX(90deg) translateZ(90px)',
+            boxShadow: 'inset 0 -5px 15px rgba(0,0,0,0.1)',
+            border: '1px solid rgba(255, 255, 255, 0.05)',
+            overflow: 'hidden'
           }}
-        ></div>
+        >
+          <img 
+            src="/kotak rokok 1.png"
+            alt=""
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              opacity: 0.2,
+              filter: 'brightness(1.3)'
+            }}
+          />
+        </div>
       </div>
     </div>
   );
@@ -275,17 +305,23 @@ const customBoxProducts: Product[] = [
 ];
 
 export default function ProductsPage() {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   // Add CSS keyframes for floating animation
   useEffect(() => {
     const style = document.createElement('style');
     style.textContent = `
       @keyframes float {
-        0%, 100% { transform: translateY(0px) rotateY(-15deg) rotateX(5deg); }
-        50% { transform: translateY(-10px) rotateY(-15deg) rotateX(5deg); }
+        0%, 100% { transform: translateY(0px) rotateY(0deg) rotateX(0deg); }
+        50% { transform: translateY(-10px) rotateY(0deg) rotateX(0deg); }
       }
       
       .cigarette-box-3d:hover {
-        transform: rotateY(15deg) rotateX(-5deg) scale(1.1) !important;
+        transform: rotateY(0deg) rotateX(0deg) scale(1.1) !important;
       }
       
       @keyframes pulse-glow {
@@ -372,11 +408,12 @@ export default function ProductsPage() {
                  onMouseOut={(e) => {(e.target as HTMLElement).style.color = '#ffffff'; (e.target as HTMLElement).style.transform = 'translateY(0)'}}>
                 Custom Box Rokok
               </a>
-              <a href="/#cigarettes" 
+              <a href="/KATALOG DALLAS.pdf" 
+                 download="KATALOG DALLAS.pdf"
                  style={{color: '#9ca3af', textDecoration: 'none', transition: 'all 0.3s ease', cursor: 'pointer'}}
                  onMouseOver={(e) => {(e.target as HTMLElement).style.color = '#ffffff'; (e.target as HTMLElement).style.transform = 'translateY(-2px)'}}
                  onMouseOut={(e) => {(e.target as HTMLElement).style.color = '#9ca3af'; (e.target as HTMLElement).style.transform = 'translateY(0)'}}>
-                Portfolio
+                Katalog
               </a>
               <a href="/paperlisens" 
                  style={{color: '#9ca3af', textDecoration: 'none', transition: 'all 0.3s ease', cursor: 'pointer'}}
@@ -531,18 +568,12 @@ export default function ProductsPage() {
                     // Add glowing effect to 3D box
                     const box3D = e.currentTarget.querySelector('.cigarette-box-3d') as HTMLElement;
                     if (box3D) {
-                      box3D.style.transform = 'rotateY(15deg) rotateX(-5deg) scale(1.1)';
+                      box3D.style.transform = 'rotateY(0deg) rotateX(0deg) scale(1.1)';
                       box3D.style.filter = 'drop-shadow(0 10px 20px rgba(217, 119, 6, 0.4))';
                     }
                     
                     // Add glow to entire card
                     e.currentTarget.classList.add('product-card-hover');
-                    
-                    // Trigger shine effect
-                    const shineEffect = e.currentTarget.querySelector('.shine-effect') as HTMLElement;
-                    if (shineEffect) {
-                      shineEffect.style.transform = 'translateX(100%)';
-                    }
                     
                     // Glow effect on category badge
                     const categoryBadge = e.currentTarget.querySelector('div[style*="backgroundColor: #d97706"]') as HTMLElement;
@@ -567,18 +598,12 @@ export default function ProductsPage() {
                     // Reset 3D box
                     const box3D = e.currentTarget.querySelector('.cigarette-box-3d') as HTMLElement;
                     if (box3D) {
-                      box3D.style.transform = 'rotateY(-15deg) rotateX(5deg) scale(1)';
+                      box3D.style.transform = 'rotateY(0deg) rotateX(0deg) scale(1)';
                       box3D.style.filter = 'none';
                     }
                     
                     // Remove glow from card
                     e.currentTarget.classList.remove('product-card-hover');
-                    
-                    // Reset shine effect
-                    const shineEffect = e.currentTarget.querySelector('.shine-effect') as HTMLElement;
-                    if (shineEffect) {
-                      shineEffect.style.transform = 'translateX(-100%)';
-                    }
                     
                     // Reset category badge
                     const categoryBadge = e.currentTarget.querySelector('div[style*="backgroundColor: #d97706"]') as HTMLElement;
@@ -606,17 +631,6 @@ export default function ProductsPage() {
                     transition: 'all 0.3s ease'
                   }}>
                     <FloatingCigaretteBox product={product} delay={getCurrentSlideProducts().indexOf(product)} />
-                    <div style={{
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      bottom: 0,
-                      background: 'linear-gradient(45deg, transparent 30%, rgba(217, 119, 6, 0.1) 50%, transparent 70%)',
-                      transform: 'translateX(-100%)',
-                      transition: 'transform 0.6s ease',
-                      pointerEvents: 'none'
-                    }} className="shine-effect"></div>
                     <div style={{
                       position: 'absolute',
                       top: '12px',

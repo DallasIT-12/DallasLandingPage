@@ -52,49 +52,51 @@ export default function Home() {
     }}>
       {/* Navigation */}
       <nav style={{
-        position: 'fixed', 
-        top: 0, 
-        width: '100%', 
-        zIndex: 50, 
-        backgroundColor: 'rgba(0,0,0,0.8)', 
+        position: 'fixed',
+        top: 0,
+        width: '100%',
+        zIndex: 50,
+        backgroundColor: 'rgba(0,0,0,0.9)',
         backdropFilter: 'saturate(180%) blur(20px)',
-        WebkitBackdropFilter: 'saturate(180%) blur(20px)',
-        borderBottom: '1px solid rgba(55,65,81,0.3)'
+        borderBottom: '1px solid rgba(55,65,81,0.3)',
+        padding: '16px 0'
       }}>
-        <div style={{maxWidth: '1280px', margin: '0 auto', padding: '0 16px'}}>
-          <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '56px'}}>
-            <img src="/logo1.png" alt="Percetakan Dallas" style={{height: '32px', width: 'auto'}} />
-            <div style={{
-              display: 'flex', 
-              gap: typeof window !== 'undefined' && window.innerWidth < 768 ? '16px' : '24px',
-              fontSize: typeof window !== 'undefined' && window.innerWidth < 768 ? '14px' : '16px',
-              overflowX: 'auto',
-              whiteSpace: 'nowrap'
-            }}>
-              <a href="/products" 
-                 style={{color: '#ffffff', textDecoration: 'none', transition: 'all 0.3s ease', cursor: 'pointer', minWidth: 'fit-content'}}
-                 onMouseOver={(e) => {(e.target as HTMLElement).style.color = '#d1d5db'}}
-                 onMouseOut={(e) => {(e.target as HTMLElement).style.color = '#ffffff'}}>
-                {typeof window !== 'undefined' && window.innerWidth < 640 ? 'Custom' : 'Custom Box Rokok'}
+        <div style={{maxWidth: '1280px', margin: '0 auto', padding: '0 24px'}}>
+          <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+            <a href="/" style={{textDecoration: 'none'}}>
+              <img src="/logo1.png" alt="Percetakan Dallas" style={{height: '36px', width: 'auto'}} />
+            </a>
+            <div style={{display: 'flex', gap: '32px'}}>
+              <a href="/" 
+                 style={{color: '#ffffff', textDecoration: 'none', transition: 'all 0.3s ease', cursor: 'pointer'}}
+                 onMouseOver={(e) => {(e.target as HTMLElement).style.color = '#d1d5db'; (e.target as HTMLElement).style.transform = 'translateY(-2px)'}}
+                 onMouseOut={(e) => {(e.target as HTMLElement).style.color = '#ffffff'; (e.target as HTMLElement).style.transform = 'translateY(0)'}}>
+                Home
               </a>
-              <a href="#cigarettes" 
-                 onClick={(e) => smoothScroll(e, '#cigarettes')}
-                 style={{color: '#ffffff', textDecoration: 'none', transition: 'all 0.3s ease', cursor: 'pointer', minWidth: 'fit-content'}}
-                 onMouseOver={(e) => {(e.target as HTMLElement).style.color = '#d1d5db'}}
-                 onMouseOut={(e) => {(e.target as HTMLElement).style.color = '#ffffff'}}>
-                Portfolio
+              <a href="/products" 
+                 style={{color: '#9ca3af', textDecoration: 'none', transition: 'all 0.3s ease', cursor: 'pointer'}}
+                 onMouseOver={(e) => {(e.target as HTMLElement).style.color = '#ffffff'; (e.target as HTMLElement).style.transform = 'translateY(-2px)'}}
+                 onMouseOut={(e) => {(e.target as HTMLElement).style.color = '#9ca3af'; (e.target as HTMLElement).style.transform = 'translateY(0)'}}>
+                Custom Box Rokok
+              </a>
+              <a href="/KATALOG DALLAS.pdf" 
+                 download="KATALOG DALLAS.pdf"
+                 style={{color: '#9ca3af', textDecoration: 'none', transition: 'all 0.3s ease', cursor: 'pointer'}}
+                 onMouseOver={(e) => {(e.target as HTMLElement).style.color = '#ffffff'; (e.target as HTMLElement).style.transform = 'translateY(-2px)'}}
+                 onMouseOut={(e) => {(e.target as HTMLElement).style.color = '#9ca3af'; (e.target as HTMLElement).style.transform = 'translateY(0)'}}>
+                Katalog
               </a>
               <a href="/paperlisens" 
-                 style={{color: '#ffffff', textDecoration: 'none', transition: 'all 0.3s ease', cursor: 'pointer', minWidth: 'fit-content'}}
-                 onMouseOver={(e) => {(e.target as HTMLElement).style.color = '#d1d5db'}}
-                 onMouseOut={(e) => {(e.target as HTMLElement).style.color = '#ffffff'}}>
+                 style={{color: '#9ca3af', textDecoration: 'none', transition: 'all 0.3s ease', cursor: 'pointer'}}
+                 onMouseOver={(e) => {(e.target as HTMLElement).style.color = '#ffffff'; (e.target as HTMLElement).style.transform = 'translateY(-2px)'}}
+                 onMouseOut={(e) => {(e.target as HTMLElement).style.color = '#9ca3af'; (e.target as HTMLElement).style.transform = 'translateY(0)'}}>
                 Paperlisens
               </a>
               <a href="#contact" 
                  onClick={(e) => smoothScroll(e, '#contact')}
-                 style={{color: '#ffffff', textDecoration: 'none', transition: 'all 0.3s ease', cursor: 'pointer', minWidth: 'fit-content'}}
-                 onMouseOver={(e) => {(e.target as HTMLElement).style.color = '#d1d5db'}}
-                 onMouseOut={(e) => {(e.target as HTMLElement).style.color = '#ffffff'}}>
+                 style={{color: '#9ca3af', textDecoration: 'none', transition: 'all 0.3s ease', cursor: 'pointer'}}
+                 onMouseOver={(e) => {(e.target as HTMLElement).style.color = '#ffffff'; (e.target as HTMLElement).style.transform = 'translateY(-2px)'}}
+                 onMouseOut={(e) => {(e.target as HTMLElement).style.color = '#9ca3af'; (e.target as HTMLElement).style.transform = 'translateY(0)'}}>
                 Kontak
               </a>
             </div>
@@ -153,8 +155,8 @@ export default function Home() {
             flexDirection: typeof window !== 'undefined' && window.innerWidth < 480 ? 'column' : 'row',
             alignItems: 'center'
           }}>
-            <a href="#cigarettes" 
-               onClick={(e) => smoothScroll(e, '#cigarettes')}
+            <a href="/KATALOG DALLAS.pdf" 
+               download="KATALOG DALLAS.pdf"
                style={{
                  ...primaryButton,
                  padding: typeof window !== 'undefined' && window.innerWidth < 640 ? '10px 24px' : '12px 32px',
@@ -166,7 +168,7 @@ export default function Home() {
                onMouseOut={(e) => {(e.target as HTMLElement).style.transform = 'scale(1)'; (e.target as HTMLElement).style.backgroundColor = '#ffffff'}}
                onMouseDown={(e) => (e.target as HTMLElement).style.transform = 'scale(0.95)'}
                onMouseUp={(e) => (e.target as HTMLElement).style.transform = 'scale(1.05)'}>
-              Explore Cigarettes
+              Download Katalog
             </a>
             <a href="#non-cigarettes" 
                onClick={(e) => smoothScroll(e, '#non-cigarettes')}
@@ -259,8 +261,8 @@ export default function Home() {
               gap: typeof window !== 'undefined' && window.innerWidth < 768 ? '16px' : '24px'
             }}>
               {[
-                { name: 'Premium Luxury Box', description: 'Embossed gold foil finish with magnetic closure', image: 'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=300&h=200&fit=crop' },
-                { name: 'Minimalist Design', description: 'Clean modern aesthetic with matte black finish', image: 'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=300&h=200&fit=crop' },
+                { name: 'IVORY PAPER', description: 'Kertas ini memiliki permukaan halus dan mengkilap, sehingga hasil cetak nya tajam dan berwarna cerah.', image: 'BAHAN-AP.jpg' },
+                { name: 'Minimalist Design', description: 'Clean modern aesthetic with matte black finish', image: '' },
                 { name: 'Vintage Classic', description: 'Traditional design with vintage typography', image: 'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=300&h=200&fit=crop' },
                 { name: 'Bold & Modern', description: 'Contemporary design with vibrant colors', image: 'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=300&h=200&fit=crop' }
               ].map((product, index) => (
@@ -493,12 +495,12 @@ export default function Home() {
             <div>
               <h4 style={{fontSize: '1.125rem', fontWeight: '500', marginBottom: '16px'}}>Products</h4>
               <div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
-                <a href="#cigarettes" 
-                   onClick={(e) => smoothScroll(e, '#cigarettes')}
+                <a href="/KATALOG DALLAS.pdf" 
+                   download="KATALOG DALLAS.pdf"
                    style={{color: '#9ca3af', textDecoration: 'none', transition: 'all 0.3s ease', cursor: 'pointer'}}
                    onMouseOver={(e) => {(e.target as HTMLElement).style.color = '#ffffff'; (e.target as HTMLElement).style.paddingLeft = '8px'}}
                    onMouseOut={(e) => {(e.target as HTMLElement).style.color = '#9ca3af'; (e.target as HTMLElement).style.paddingLeft = '0px'}}>
-                  Cigarettes
+                  Katalog
                 </a>
                 <a href="/paperlisens" 
                    style={{color: '#9ca3af', textDecoration: 'none', transition: 'all 0.3s ease', cursor: 'pointer'}}

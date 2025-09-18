@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { generateOrderId } from '../../lib/payment';
 
 interface CartItem {
@@ -14,7 +14,7 @@ interface CartItem {
 export default function Paperlisens() {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [currentSlide, setCurrentSlide] = useState(0);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
@@ -35,14 +35,13 @@ export default function Paperlisens() {
   const [currentOrderId, setCurrentOrderId] = useState('');
   const cartIconRef = useRef<HTMLDivElement>(null);
 
-  const categories = [
-    { id: 'all', name: 'Semua Kategori', icon: '🏪' },
-    { id: 'cup-a', name: 'Cup A', icon: '🥤' },
-    { id: 'cup-b', name: 'Cup B', icon: '☕' },
-    { id: 'cup-c', name: 'Cup C', icon: '🧋' },
-    { id: 'cup-d', name: 'Cup D', icon: '🥛' },
-    { id: 'cup-toast', name: 'Cup Toast', icon: '🍞' },
-    { id: 'cup-toast-es', name: 'Cup Toast Es', icon: '🧊' }
+  // Auto-sliding carousel images
+  const carouselImages = [
+    'https://images.unsplash.com/photo-1577303935007-0d306ee134d2?w=800&h=400&fit=crop',
+    'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=400&fit=crop', 
+    'https://images.unsplash.com/photo-1556909001-f6cb9e6befd5?w=800&h=400&fit=crop',
+    'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=400&fit=crop',
+    'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=800&h=400&fit=crop'
   ];
 
   const products = [
@@ -161,10 +160,18 @@ export default function Paperlisens() {
   ];
 
   const filteredProducts = products.filter(product => {
-    const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
     const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
+    return matchesSearch;
   });
+
+  // Auto-slide carousel
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % carouselImages.length);
+    }, 4000); // Change slide every 4 seconds
+
+    return () => clearInterval(interval);
+  }, [carouselImages.length]);
 
   const addToCart = (productId: number) => {
     const product = products.find(p => p.id === productId);
@@ -285,16 +292,6 @@ export default function Paperlisens() {
           <div style={{display: 'flex', alignItems: 'center', height: '60px', gap: '12px'}}>
             {/* Logo */}
             <div style={{display: 'flex', alignItems: 'center', gap: '8px', minWidth: 'fit-content'}}>
-              <div style={{
-                width: '32px',
-                height: '32px',
-                backgroundColor: '#f97316',
-                borderRadius: '6px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '16px'
-              }}>📦</div>
               <img 
                 src="/logo-paperlisens.png" 
                 alt="Paperlisens"
@@ -368,70 +365,81 @@ export default function Paperlisens() {
         </div>
       </header>
 
-      {/* Hero Banner */}
+      {/* Auto-sliding Carousel */}
       <div style={{
-        backgroundColor: 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)',
-        background: 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)',
-        color: 'white',
-        padding: '40px 0',
-        textAlign: 'center'
+        position: 'relative',
+        height: '400px',
+        overflow: 'hidden',
+        borderRadius: '0 0 12px 12px'
       }}>
-        <div style={{maxWidth: '1200px', margin: '0 auto', padding: '0 16px'}}>
-          <h2 style={{fontSize: '2.5rem', fontWeight: '700', marginBottom: '16px', margin: '0 0 16px 0'}}>
-            Selamat Datang di Paperlisens! 🎉
-          </h2>
-          <p style={{fontSize: '1.25rem', opacity: 0.9, margin: 0}}>
-            Marketplace terpercaya untuk wadah makanan & cup berkualitas tinggi
-          </p>
+        {carouselImages.map((image, index) => (
+          <div
+            key={index}
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              backgroundImage: `url(${image})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              opacity: index === currentSlide ? 1 : 0,
+              transition: 'opacity 1s ease-in-out'
+            }}
+          >
+            {/* Overlay */}
+            <div style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: 'linear-gradient(135deg, rgba(249, 115, 22, 0.7) 0%, rgba(234, 88, 12, 0.7) 100%)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <div style={{textAlign: 'center', color: 'white', padding: '0 20px'}}>
+                <h2 style={{fontSize: '2.5rem', fontWeight: '700', marginBottom: '16px', margin: '0 0 16px 0'}}>
+                  Selamat Datang di Paperlisens! 🎉
+                </h2>
+                <p style={{fontSize: '1.25rem', opacity: 0.9, margin: 0}}>
+                  Marketplace terpercaya untuk wadah makanan & cup berkualitas tinggi
+                </p>
+              </div>
+            </div>
+          </div>
+        ))}
+        
+        {/* Carousel Indicators */}
+        <div style={{
+          position: 'absolute',
+          bottom: '20px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          display: 'flex',
+          gap: '8px'
+        }}>
+          {carouselImages.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentSlide(index)}
+              style={{
+                width: '12px',
+                height: '12px',
+                borderRadius: '50%',
+                border: 'none',
+                backgroundColor: index === currentSlide ? 'white' : 'rgba(255, 255, 255, 0.5)',
+                cursor: 'pointer',
+                transition: 'background-color 0.3s ease'
+              }}
+            />
+          ))}
         </div>
       </div>
 
       <div style={{maxWidth: '1200px', margin: '0 auto', padding: '24px 16px'}}>
-        {/* Categories */}
-        <div style={{
-          backgroundColor: 'white',
-          borderRadius: '12px',
-          padding: '20px',
-          marginBottom: '24px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-        }}>
-          <h3 style={{fontSize: '18px', fontWeight: '600', marginBottom: '16px', color: '#1f2937'}}>Kategori</h3>
-          <div style={{display: 'flex', gap: '12px', flexWrap: 'wrap'}}>
-            {categories.map(category => (
-              <button
-                key={category.id}
-                onClick={() => setSelectedCategory(category.id)}
-                style={{
-                  padding: '12px 20px',
-                  borderRadius: '25px',
-                  border: 'none',
-                  backgroundColor: selectedCategory === category.id ? '#f97316' : '#f3f4f6',
-                  color: selectedCategory === category.id ? 'white' : '#374151',
-                  cursor: 'pointer',
-                  fontSize: '14px',
-                  fontWeight: '500',
-                  transition: 'all 0.3s ease',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px'
-                }}
-                onMouseOver={(e) => {
-                  if (selectedCategory !== category.id) {
-                    (e.target as HTMLElement).style.backgroundColor = '#e5e7eb';
-                  }
-                }}
-                onMouseOut={(e) => {
-                  if (selectedCategory !== category.id) {
-                    (e.target as HTMLElement).style.backgroundColor = '#f3f4f6';
-                  }
-                }}
-              >
-                <span>{category.icon}</span>
-                {category.name}
-              </button>
-            ))}
-          </div>
-        </div>
 
         {/* Products Grid */}
         <div style={{
