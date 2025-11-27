@@ -547,8 +547,8 @@ const BannerSlider = ({ images, interval = 10000 }: { images: string[], interval
             }}>
               {[
                 { name: 'ART PAPER', description: 'Kertas ini memiliki permukaan halus dan mengkilap, sehingga hasil cetak nya tajam dan berwarna cerah.', image: 'BAHAN-AP.jpg' },
-                { name: 'IVORY PAPER', description: 'Jenis kertas kemasan glossy/doff yang memadukan art carton dan matte paper, elegan sekaligus kuat.', image: 'BAHAN-IVORY.JPG' },
-                { name: 'Metalize', description: 'Kertas dengan lapisan logam tipis hasil proses metalisasi, tahan uap air dan cahaya.', image: 'BAHAN-METALIZE.JPG' },
+                { name: 'IVORY PAPER', description: 'Jenis kertas kemasan glossy/doff yang memadukan art carton dan matte paper, elegan sekaligus kuat.', image: 'BAHAN-IVORY.jpg' },
+                { name: 'Metalize', description: 'Kertas dengan lapisan logam tipis hasil proses metalisasi, tahan uap air dan cahaya.', image: 'BAHAN-METALIZE.jpg' },
                 { name: 'Duplex', description: 'Kertas karton daur ulang berlapis white liner, dengan satu sisi putih dan satu sisi abu-abu.', image: 'BAHAN-DC.jpg' }
               ].map((product, index) => (
                 <motion.div
