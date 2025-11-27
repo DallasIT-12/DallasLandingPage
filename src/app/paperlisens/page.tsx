@@ -1,1313 +1,416 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
-import { generateOrderId } from '../../lib/payment';
+import { useState, useEffect, useRef } from 'react'; // Import useEffect and useRef
+import { Icon } from '@iconify/react';
+import ProductDetail from '../../components/product/ProductDetail';
 
-interface CartItem {
-  id: number;
-  name: string;
-  price: number;
-  quantity: number;
-  image: string;
-}
+// --- Banner Slider Component ---
+const BannerSlider = ({ images, interval = 5000 }: { images: string[], interval?: number }) => { // Changed default interval to 5000
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-export default function Paperlisens() {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [isLoginOpen, setIsLoginOpen] = useState(false);
-  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
-  const [shippingInfo, setShippingInfo] = useState({
-    name: '',
-    phone: '',
-    email: '',
-    address: '',
-    city: '',
-    postalCode: '',
-    notes: ''
-  });
-  const [paymentMethod, setPaymentMethod] = useState('cod');
-  const [orderConfirmed, setOrderConfirmed] = useState(false);
-  const [paymentDetails, setPaymentDetails] = useState<any>(null);
-  const [selectedBank, setSelectedBank] = useState('bca');
-  const [paymentLoading, setPaymentLoading] = useState(false);
-  const [currentOrderId, setCurrentOrderId] = useState('');
-  const cartIconRef = useRef<HTMLDivElement>(null);
-
-  // Auto-sliding carousel images
-  const carouselImages = [
-    'https://images.unsplash.com/photo-1577303935007-0d306ee134d2?w=800&h=400&fit=crop',
-    'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=400&fit=crop', 
-    'https://images.unsplash.com/photo-1556909001-f6cb9e6befd5?w=800&h=400&fit=crop',
-    'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=400&fit=crop',
-    'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=800&h=400&fit=crop'
-  ];
-
-  const products = [
-    { 
-      id: 1, 
-      name: 'Cup A Premium - Paper Cup 8oz Putih', 
-      price: 85000, 
-      originalPrice: 95000, 
-      discount: 11, 
-      rating: 4.8, 
-      sold: 3200, 
-      image: 'https://images.unsplash.com/photo-1577303935007-0d306ee134d2?w=300&h=200&fit=crop',
-      category: 'cup-a',
-      location: 'Jakarta Pusat',
-      stock: 125,
-      unit: 'per 1000 pcs'
-    },
-    { 
-      id: 2, 
-      name: 'Cup B Standard - Paper Cup 12oz Coklat', 
-      price: 120000, 
-      originalPrice: 135000, 
-      discount: 11, 
-      rating: 4.7, 
-      sold: 2800, 
-      image: 'https://images.unsplash.com/photo-1577303935007-0d306ee134d2?w=300&h=200&fit=crop',
-      category: 'cup-b',
-      location: 'Bandung',
-      stock: 95,
-      unit: 'per 1000 pcs'
-    },
-    { 
-      id: 3, 
-      name: 'Cup C Large - Paper Cup 16oz Premium', 
-      price: 155000, 
-      originalPrice: 175000, 
-      discount: 11, 
-      rating: 4.9, 
-      sold: 1950, 
-      image: 'https://images.unsplash.com/photo-1577303935007-0d306ee134d2?w=300&h=200&fit=crop',
-      category: 'cup-c',
-      location: 'Surabaya',
-      stock: 75,
-      unit: 'per 1000 pcs'
-    },
-    { 
-      id: 4, 
-      name: 'Cup D Extra Large - Paper Cup 22oz Jumbo', 
-      price: 185000, 
-      originalPrice: 210000, 
-      discount: 12, 
-      rating: 4.6, 
-      sold: 1200, 
-      image: 'https://images.unsplash.com/photo-1577303935007-0d306ee134d2?w=300&h=200&fit=crop',
-      category: 'cup-d',
-      location: 'Yogyakarta',
-      stock: 60,
-      unit: 'per 1000 pcs'
-    },
-    { 
-      id: 5, 
-      name: 'Cup Toast - Food Container Persegi Kecil', 
-      price: 95000, 
-      originalPrice: 110000, 
-      discount: 14, 
-      rating: 4.5, 
-      sold: 2670, 
-      image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=200&fit=crop',
-      category: 'cup-toast',
-      location: 'Malang',
-      stock: 85,
-      unit: 'per 500 pcs'
-    },
-    { 
-      id: 6, 
-      name: 'Cup Toast Es - Food Container dengan Tutup', 
-      price: 125000, 
-      originalPrice: 145000, 
-      discount: 14, 
-      rating: 4.7, 
-      sold: 1850, 
-      image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=200&fit=crop',
-      category: 'cup-toast-es',
-      location: 'Semarang',
-      stock: 70,
-      unit: 'per 500 pcs'
-    },
-    { 
-      id: 7, 
-      name: 'Cup A Mini - Paper Cup 4oz untuk Espresso', 
-      price: 65000, 
-      originalPrice: 75000, 
-      discount: 13, 
-      rating: 4.4, 
-      sold: 1950, 
-      image: 'https://images.unsplash.com/photo-1577303935007-0d306ee134d2?w=300&h=200&fit=crop',
-      category: 'cup-a',
-      location: 'Jakarta Selatan',
-      stock: 150,
-      unit: 'per 1000 pcs'
-    },
-    { 
-      id: 8, 
-      name: 'Cup Toast Es Premium - Leak Proof Container', 
-      price: 165000, 
-      originalPrice: 185000, 
-      discount: 11, 
-      rating: 4.8, 
-      sold: 890, 
-      image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=200&fit=crop',
-      category: 'cup-toast-es',
-      location: 'Denpasar',
-      stock: 45,
-      unit: 'per 500 pcs'
+  const resetTimeout = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
     }
-  ];
+  };
 
-  const filteredProducts = products.filter(product => {
-    const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesSearch;
-  });
-
-  // Auto-slide carousel
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % carouselImages.length);
-    }, 4000); // Change slide every 4 seconds
+    resetTimeout();
+    timeoutRef.current = setTimeout(
+      () =>
+        setCurrentIndex((prevIndex) =>
+          prevIndex === images.length - 1 ? 0 : prevIndex + 1
+        ),
+      interval
+    );
 
-    return () => clearInterval(interval);
-  }, [carouselImages.length]);
+    return () => {
+      resetTimeout();
+    };
+  }, [currentIndex, images.length, interval]);
 
-  const addToCart = (productId: number) => {
-    const product = products.find(p => p.id === productId);
-    if (!product) return;
-
-    const existingItem = cartItems.find(item => item.id === productId);
-    
-    if (existingItem) {
-      setCartItems(cartItems.map(item => 
-        item.id === productId 
-          ? { ...item, quantity: item.quantity + 1 }
-          : item
-      ));
-    } else {
-      setCartItems([...cartItems, {
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        quantity: 1,
-        image: product.image
-      }]);
-    }
-
-    // Animation feedback
-    const button = document.querySelector(`[data-product-id="${productId}"]`);
-    if (button && cartIconRef.current) {
-      const buttonRect = button.getBoundingClientRect();
-      const cartRect = cartIconRef.current.getBoundingClientRect();
-      
-      // Create flying animation element
-      const flyingItem = document.createElement('div');
-      flyingItem.innerHTML = '🛒';
-      flyingItem.style.cssText = `
-        position: fixed;
-        left: ${buttonRect.left}px;
-        top: ${buttonRect.top}px;
-        font-size: 20px;
-        pointer-events: none;
-        z-index: 9999;
-        transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      `;
-      document.body.appendChild(flyingItem);
-      
-      // Animate to cart
-      setTimeout(() => {
-        flyingItem.style.left = `${cartRect.left}px`;
-        flyingItem.style.top = `${cartRect.top}px`;
-        flyingItem.style.transform = 'scale(0.5)';
-        flyingItem.style.opacity = '0';
-      }, 50);
-      
-      // Remove element after animation
-      setTimeout(() => {
-        if (document.body.contains(flyingItem)) {
-          document.body.removeChild(flyingItem);
-        }
-      }, 850);
-      
-      // Button feedback
-      (button as HTMLElement).innerHTML = 'Ditambahkan! ✓';
-      (button as HTMLElement).style.backgroundColor = '#10b981';
-      setTimeout(() => {
-        (button as HTMLElement).innerHTML = '+ Keranjang';
-        (button as HTMLElement).style.backgroundColor = '#f97316';
-      }, 1000);
-    }
+  const goToSlide = (slideIndex: number) => {
+    setCurrentIndex(slideIndex);
   };
 
-  const removeFromCart = (productId: number) => {
-    setCartItems(cartItems.filter(item => item.id !== productId));
+  const goToPrevSlide = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === 0 ? images.length - 1 : prevIndex - 1
+    );
   };
 
-  const updateQuantity = (productId: number, newQuantity: number) => {
-    if (newQuantity <= 0) {
-      removeFromCart(productId);
-      return;
-    }
-    setCartItems(cartItems.map(item => 
-      item.id === productId 
-        ? { ...item, quantity: newQuantity }
-        : item
-    ));
-  };
-
-  const getTotalPrice = () => {
-    return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
-  };
-
-  const getTotalItems = () => {
-    return cartItems.reduce((total, item) => total + item.quantity, 0);
+  const goToNextSlide = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === images.length - 1 ? 0 : prevIndex + 1
+    );
   };
 
   return (
-    <div style={{
-      backgroundColor: '#f5f5f5',
-      minHeight: '100vh',
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif'
+    <div style={{ position: 'relative', height: '100%', width: '100%', overflow: 'hidden', borderRadius: '6px' }}>
+      <div
+        style={{
+          display: 'flex',
+          height: '100%',
+          transition: 'transform 0.5s ease-in-out',
+          transform: `translateX(-${currentIndex * 100}%)`,
+        }}
+      >
+        {images.map((src, index) => (
+          <img
+            key={index}
+            src={src}
+            alt={`Banner ${index + 1}`}
+            style={{ width: '100%', height: '100%', objectFit: 'cover', flexShrink: 0 }}
+          />
+        ))}
+      </div>
+
+      {/* Previous Button */}
+      <button
+        onClick={goToPrevSlide}
+        style={{
+          position: 'absolute',
+          top: '50%',
+          left: '10px',
+          transform: 'translateY(-50%)',
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          color: 'white',
+          border: 'none',
+          borderRadius: '50%',
+          width: '30px',
+          height: '30px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: 'pointer',
+          fontSize: '18px',
+          zIndex: 10,
+        }}
+      >
+        &#10094;
+      </button>
+
+      {/* Next Button */}
+      <button
+        onClick={goToNextSlide}
+        style={{
+          position: 'absolute',
+          top: '50%',
+          right: '10px',
+          transform: 'translateY(-50%)',
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          color: 'white',
+          border: 'none',
+          borderRadius: '50%',
+          width: '30px',
+          height: '30px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: 'pointer',
+          fontSize: '18px',
+          zIndex: 10,
+        }}
+      >
+        &#10095;
+      </button>
+
+      {/* Navigation Dots */}
+      <div style={{ position: 'absolute', bottom: '10px', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '8px' }}>
+        {images.map((_, slideIndex) => (
+          <div
+            key={slideIndex}
+            onClick={() => goToSlide(slideIndex)}
+            style={{
+              height: '8px',
+              width: '8px',
+              borderRadius: '50%',
+              backgroundColor: currentIndex === slideIndex ? 'white' : 'rgba(255, 255, 255, 0.5)',
+              cursor: 'pointer',
+              transition: 'background-color 0.3s',
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+
+// --- Responsive Styles Component ---
+const ResponsiveStyles = () => (
+  <style>{`
+    @media (max-width: 768px) {
+      .top-bar-text, .top-bar-separator {
+        display: none;
+      }
+      .header-container {
+        gap: 16px !important;
+      }
+      .header-logo {
+        height: 32px !important;
+      }
+      .search-input {
+        font-size: 12px !important;
+      }
+      .main-content {
+        padding: 16px 8px !important;
+      }
+      .banners-grid {
+        display: block !important; /* Use block for robust stacking */
+        height: auto !important;
+      }
+       .banners-grid > div {
+        height: 120px !important;
+      }
+      .banners-grid > div:first-child {
+        margin-bottom: 16px; /* Add space between stacked banners */
+      }
+      .category-icons-container {
+        margin-top: 16px; /* Add space to prevent collision */
+        overflow-x: auto;
+        padding-bottom: 16px;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      .category-icons-container::-webkit-scrollbar {
+        display: none;
+      }
+      .category-icons-inner {
+        justify-content: flex-start !important;
+        gap: 16px;
+        padding: 0 8px;
+      }
+      .icon-component {
+        flex-shrink: 0;
+      }
+      .product-grid-item {
+        width: 50% !important;
+      }
+    }
+  `}</style>
+);
+
+
+// --- Helper Component for Category Icons (using Iconify) ---
+const IconComponent = ({ icon, text }: { icon: string; text:string; }) => (
+  <a href="#" onClick={(e) => e.preventDefault()} className="icon-component" style={{ 
+    display: 'flex', 
+    flexDirection: 'column', 
+    alignItems: 'center', 
+    textAlign: 'center', 
+    fontSize: '12px', 
+    color: '#4a4a4a',
+    textDecoration: 'none',
+    width: '80px'
+  }}>
+    <div style={{ 
+      width: '48px', 
+      height: '48px', 
+      marginBottom: '8px', 
+      display: 'flex', 
+      alignItems: 'center', 
+      justifyContent: 'center',
+      backgroundColor: '#fafafa',
+      borderRadius: '12px'
     }}>
-      {/* Animation Styles */}
-      <style jsx>{`
-        @keyframes bounce {
-          0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-          40% { transform: translateY(-10px); }
-          60% { transform: translateY(-5px); }
-        }
-        .bounce { animation: bounce 0.5s ease; }
-      `}</style>
+      <Icon icon={icon} style={{ fontSize: '28px', color: '#ee4d2d' }} />
+    </div>
+    <span>{text}</span>
+  </a>
+);
 
-      {/* Header */}
-      <header style={{
+// --- Self-Contained Product Card using Inline Styles ---
+const ProductCard = ({ product, onClick }: { product: any, onClick: () => void }) => {
+  const discount = Math.round(((product.price + 5000) - product.price) / (product.price + 5000) * 100);
+
+  return (
+    <div 
+      style={{
+        border: '1px solid #f0f0f0',
         backgroundColor: '#ffffff',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-        position: 'sticky',
-        top: 0,
-        zIndex: 50
-      }}>
-        <div style={{maxWidth: '1200px', margin: '0 auto', padding: '0 12px'}}>
-          <div style={{display: 'flex', alignItems: 'center', height: '60px', gap: '12px'}}>
-            {/* Logo */}
-            <div style={{display: 'flex', alignItems: 'center', gap: '8px', minWidth: 'fit-content'}}>
-              <img 
-                src="/logo-paperlisens.png" 
-                alt="Paperlisens"
-                onClick={() => typeof window !== 'undefined' && window.scrollTo({top: 0, behavior: 'smooth'})}
-                style={{
-                  height: '32px',
-                  width: 'auto',
-                  display: typeof window !== 'undefined' && window.innerWidth < 640 ? 'none' : 'block',
-                  cursor: 'pointer'
-                }}
-              />
-            </div>
+        overflow: 'hidden',
+        borderRadius: '3px',
+        display: 'flex',
+        flexDirection: 'column',
+        textDecoration: 'none',
+        color: 'inherit',
+        height: '100%',
+        boxShadow: '0 1px 1px 0 rgba(0,0,0,0.05)',
+        cursor: 'pointer'
+      }}
+      onClick={onClick}
+    >
+      <div style={{ display: 'block', textDecoration: 'none' }}>
+        <div style={{ position: 'relative', width: '100%', paddingTop: '100%', backgroundColor: '#fafafa' }}>
+          <img 
+            src={product.image} 
+            alt={product.name} 
+            style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }} 
+          />
+          <div style={{
+            position: 'absolute', top: '0px', right: '0px', backgroundColor: 'rgba(255, 212, 36, 0.9)',
+            padding: '2px 4px', textAlign: 'center', lineHeight: '1',
+          }}>
+            <div style={{ color: '#ee4d2d', fontSize: '12px', fontWeight: 'bold' }}>{discount}%</div>
+            <div style={{ color: 'white', fontSize: '9px', fontWeight: 'bold' }}>diskon</div>
+          </div>
+        </div>
+        <div style={{ padding: '8px' }}>
+          <p style={{ fontSize: '12px', color: 'rgba(0,0,0,0.8)', lineHeight: '1.4', height: '34px', overflow: 'hidden', marginBottom: '8px' }}>
+            {product.name}
+          </p>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <p style={{ fontSize: '16px', fontWeight: '500', color: '#ee4d2d', margin: 0 }}>
+              <span style={{ fontSize: '12px' }}>Rp</span>
+              {product.price.toLocaleString('id-ID')}
+            </p>
+            <p style={{ fontSize: '11px', color: '#757575', margin: 0 }}>
+              {product.sold > 1000 ? `${(product.sold / 1000).toFixed(1)}k` : product.sold} terjual
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
-            {/* Search Bar */}
-            <div style={{flex: 1, position: 'relative', minWidth: '0'}}>
+// --- Main Page Component ---
+export default function PaperlisensPage() {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedProduct, setSelectedProduct] = useState(null);
+
+  const localImages = ['/Cup A.png', '/Cup-Toast.png', '/Toast-es.png'];
+  const dummyProducts = Array.from({ length: 12 }, (_, i) => ({
+    id: i + 1,
+    name: `Contoh Produk ${i + 1}`,
+    price: 25000 + (i * 1000),
+    sold: 100 + (i * 50),
+    image: localImages[i % localImages.length],
+  }));
+  dummyProducts[0].name = 'Nama Produk Ini Sangat Panjang Sekali untuk Menguji Tampilan Teks Dua Baris';
+
+  const filteredProducts = dummyProducts.filter(product =>
+    product.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const handleProductClick = (product: any) => {
+    setSelectedProduct(product);
+  };
+
+  const handleBack = () => {
+    setSelectedProduct(null);
+  };
+
+  const mainBanners = ['/main banner.png', '/main banner 2.png'];
+
+  return (
+    <div style={{ backgroundColor: '#f5f5f5', minHeight: '100vh', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+      <ResponsiveStyles />
+
+      {/* ===== TOP BAR (with inline styles) ===== */}
+      <div style={{ backgroundColor: '#ee4d2d', color: 'white', fontSize: '12px', padding: '6px 0' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <a href="#" onClick={(e) => e.preventDefault()} className="top-bar-text" style={{ color: 'white', textDecoration: 'none' }}>Seller Centre</a>
+            <span className="top-bar-separator" style={{ borderLeft: '1px solid rgba(255,255,255,0.5)', height: '12px' }}></span>
+            <a href="#" onClick={(e) => e.preventDefault()} className="top-bar-text" style={{ color: 'white', textDecoration: 'none' }}>Download</a>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <a href="#" onClick={(e) => e.preventDefault()} style={{ color: 'white', textDecoration: 'none', fontWeight: 'bold' }}>paperlisens22</a>
+          </div>
+        </div>
+      </div>
+
+      {/* ===== HEADER (with inline styles for STICKY behavior) ===== */}
+      <header style={{ 
+        backgroundColor: '#ee4d2d', 
+        padding: '16px 0',
+        position: 'sticky', 
+        top: 0, 
+        zIndex: 1000 
+      }}>
+        <div className="header-container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 16px', display: 'flex', alignItems: 'center', gap: '32px' }}>
+          <a href="#" onClick={(e) => e.preventDefault()}>
+            <img src="/logo-paperlisens.png" alt="Paperlisens" className="header-logo" style={{ height: '40px', filter: 'brightness(0) invert(1)' }} />
+          </a>
+          <div style={{ flexGrow: 1 }}>
+            <div style={{ position: 'relative' }}>
               <input
                 type="text"
-                placeholder={typeof window !== 'undefined' && window.innerWidth < 640 ? "Cari produk..." : "Cari cup, wadah makanan, atau toko..."}
+                placeholder="Cari produk di Paperlisens..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '10px 36px 10px 12px',
-                  border: '2px solid #e5e7eb',
-                  borderRadius: '6px',
-                  fontSize: '14px',
-                  outline: 'none',
-                  transition: 'border-color 0.3s ease'
-                }}
-                onFocus={(e) => (e.target as HTMLInputElement).style.borderColor = '#f97316'}
-                onBlur={(e) => (e.target as HTMLInputElement).style.borderColor = '#e5e7eb'}
+                className="search-input"
+                style={{ width: '100%', padding: '10px 16px', paddingRight: '48px', borderRadius: '3px', border: 'none', fontSize: '14px' }}
               />
-              <div style={{
-                position: 'absolute',
-                right: '10px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                color: '#9ca3af',
-                fontSize: '16px'
-              }}>🔍</div>
-            </div>
-
-            {/* Cart & User */}
-            <div style={{display: 'flex', alignItems: 'center', gap: '8px', minWidth: 'fit-content'}}>
-              <div 
-                ref={cartIconRef}
-                onClick={() => setIsCartOpen(true)}
-                style={{position: 'relative', cursor: 'pointer', padding: '6px'}}
-              >
-                <span style={{fontSize: '20px'}}>🛒</span>
-                {getTotalItems() > 0 && (
-                  <div style={{
-                    position: 'absolute',
-                    top: '0px',
-                    right: '0px',
-                    backgroundColor: '#dc2626',
-                    color: 'white',
-                    borderRadius: '50%',
-                    width: '18px',
-                    height: '18px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '10px',
-                    fontWeight: '600'
-                  }}>{getTotalItems()}</div>
-                )}
-              </div>
+              <button style={{ 
+                position: 'absolute', right: '5px', top: '5px', bottom: '5px', width: '40px',
+                backgroundColor: '#ee4d2d', color: 'white', border: 'none', borderRadius: '3px', cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center' // Added for centering Icon
+              }}>
+                <Icon icon="material-symbols:search" style={{ fontSize: '20px', color: 'white' }} />
+              </button>
             </div>
           </div>
+          <a href='#' onClick={(e) => e.preventDefault()} style={{ position: 'relative', padding: '8px', display: 'flex', alignItems: 'center' }}>
+            <Icon icon="material-symbols:shopping-cart-outline" style={{ fontSize: '24px', color: 'white' }} />
+          </a>
         </div>
       </header>
 
-      {/* Auto-sliding Carousel */}
-      <div style={{
-        position: 'relative',
-        height: '400px',
-        overflow: 'hidden',
-        borderRadius: '0 0 12px 12px'
-      }}>
-        {carouselImages.map((image, index) => (
-          <div
-            key={index}
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              backgroundImage: `url(${image})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              opacity: index === currentSlide ? 1 : 0,
-              transition: 'opacity 1s ease-in-out'
-            }}
-          >
-            {/* Overlay */}
-            <div style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              background: 'linear-gradient(135deg, rgba(249, 115, 22, 0.7) 0%, rgba(234, 88, 12, 0.7) 100%)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
-              <div style={{textAlign: 'center', color: 'white', padding: '0 20px'}}>
-                <h2 style={{fontSize: '2.5rem', fontWeight: '700', marginBottom: '16px', margin: '0 0 16px 0'}}>
-                  Selamat Datang di Paperlisens! 🎉
-                </h2>
-                <p style={{fontSize: '1.25rem', opacity: 0.9, margin: 0}}>
-                  Marketplace terpercaya untuk wadah makanan & cup berkualitas tinggi
-                </p>
-              </div>
-            </div>
-          </div>
-        ))}
+      {/* ===== MAIN CONTENT (with inline styles for centering) ===== */}
+      <main className="main-content" style={{ maxWidth: '1200px', margin: '0 auto', padding: '24px 16px' }}>
         
-        {/* Carousel Indicators */}
-        <div style={{
-          position: 'absolute',
-          bottom: '20px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          display: 'flex',
-          gap: '8px'
-        }}>
-          {carouselImages.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentSlide(index)}
-              style={{
-                width: '12px',
-                height: '12px',
-                borderRadius: '50%',
-                border: 'none',
-                backgroundColor: index === currentSlide ? 'white' : 'rgba(255, 255, 255, 0.5)',
-                cursor: 'pointer',
-                transition: 'background-color 0.3s ease'
-              }}
-            />
-          ))}
-        </div>
-      </div>
-
-      <div style={{maxWidth: '1200px', margin: '0 auto', padding: '24px 16px'}}>
-
-        {/* Products Grid */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-          gap: '20px'
-        }}>
-          {filteredProducts.map(product => (
-            <div key={product.id} style={{
-              backgroundColor: 'white',
-              borderRadius: '12px',
-              overflow: 'hidden',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-              cursor: 'pointer',
-              transition: 'all 0.3s ease',
-              transform: 'translateY(0)'
-            }}
-            onMouseOver={(e) => {
-              e.currentTarget.style.transform = 'translateY(-4px)';
-              e.currentTarget.style.boxShadow = '0 8px 25px rgba(0,0,0,0.15)';
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
-            }}>
-              <div style={{position: 'relative'}}>
-                <img 
-                  src={product.image}
-                  alt={product.name}
-                  style={{
-                    width: '100%',
-                    height: '200px',
-                    objectFit: 'cover'
-                  }}
-                />
-                {product.discount > 0 && (
-                  <div style={{
-                    position: 'absolute',
-                    top: '8px',
-                    left: '8px',
-                    backgroundColor: '#dc2626',
-                    color: 'white',
-                    padding: '4px 8px',
-                    borderRadius: '4px',
-                    fontSize: '12px',
-                    fontWeight: '600'
-                  }}>
-                    {product.discount}% OFF
-                  </div>
-                )}
-                {product.stock < 20 && (
-                  <div style={{
-                    position: 'absolute',
-                    top: '8px',
-                    right: '8px',
-                    backgroundColor: '#f59e0b',
-                    color: 'white',
-                    padding: '4px 8px',
-                    borderRadius: '4px',
-                    fontSize: '12px',
-                    fontWeight: '600'
-                  }}>
-                    Stok {product.stock}
-                  </div>
-                )}
+        {selectedProduct ? (
+          <ProductDetail product={selectedProduct} onBack={handleBack} />
+        ) : (
+          <>
+            {/* --- Banners (with corrected height and inline grid) --- */}
+            <div className="banners-grid" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '16px', marginBottom: '24px' }}>
+              <div style={{ height: '192px', borderRadius: '6px', backgroundColor: '#e0e0e0' }}>
+                <BannerSlider images={mainBanners} />
               </div>
-              
-              <div style={{padding: '16px'}}>
-                <h4 style={{
-                  fontSize: '14px',
-                  fontWeight: '500',
-                  marginBottom: '8px',
-                  lineHeight: '1.4',
-                  color: '#1f2937',
-                  display: '-webkit-box',
-                  WebkitLineClamp: 2,
-                  WebkitBoxOrient: 'vertical',
-                  overflow: 'hidden'
-                }}>
-                  {product.name}
-                </h4>
-                
-                <div style={{display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px'}}>
-                  <div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
-                    <span style={{color: '#fbbf24', fontSize: '14px'}}>★</span>
-                    <span style={{fontSize: '13px', color: '#6b7280'}}>{product.rating}</span>
-                  </div>
-                  <span style={{fontSize: '13px', color: '#d1d5db'}}>|</span>
-                  <span style={{fontSize: '13px', color: '#6b7280'}}>{product.sold > 1000 ? `${(product.sold/1000).toFixed(1)}k` : product.sold} terjual</span>
-                </div>
-
-                <div style={{display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '8px'}}>
-                  <span style={{
-                    fontSize: '18px',
-                    fontWeight: '700',
-                    color: '#f97316'
-                  }}>
-                    Rp{product.price.toLocaleString()}
-                  </span>
-                  <div style={{fontSize: '12px', color: '#6b7280'}}>
-                    {product.unit}
-                  </div>
-                  {product.originalPrice > product.price && (
-                    <span style={{
-                      fontSize: '14px',
-                      color: '#9ca3af',
-                      textDecoration: 'line-through'
-                    }}>
-                      Rp{product.originalPrice.toLocaleString()}
-                    </span>
-                  )}
-                </div>
-
-                <div style={{
-                  fontSize: '12px',
-                  color: '#6b7280',
-                  marginBottom: '12px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '4px'
-                }}>
-                  📍 {product.location}
-                </div>
-
-                <button
-                  data-product-id={product.id}
-                  onClick={() => addToCart(product.id)}
-                  style={{
-                    width: '100%',
-                    padding: '10px',
-                    backgroundColor: '#f97316',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '8px',
-                    fontSize: '14px',
-                    fontWeight: '600',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease'
-                  }}
-                  onMouseOver={(e) => (e.target as HTMLElement).style.backgroundColor = '#ea580c'}
-                  onMouseOut={(e) => (e.target as HTMLElement).style.backgroundColor = '#f97316'}
-                >
-                  + Keranjang
-                </button>
+              <div style={{ display: 'grid', gridTemplateRows: '1fr 1fr', gap: '16px' }}>
+                <div style={{ backgroundColor: '#e0e0e0', borderRadius: '6px' }}><img src="/side_banner_1.png" alt="Side Banner 1" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '6px' }} /></div>
+                <div style={{ backgroundColor: '#e0e0e0', borderRadius: '6px' }}><img src="/side_banner_2.png" alt="Side Banner 2" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '6px' }} /></div>
               </div>
             </div>
-          ))}
-        </div>
 
-        {filteredProducts.length === 0 && (
-          <div style={{
-            textAlign: 'center',
-            padding: '60px 20px',
-            backgroundColor: 'white',
-            borderRadius: '12px',
-            marginTop: '20px'
-          }}>
-            <div style={{fontSize: '60px', marginBottom: '16px'}}>🔍</div>
-            <h3 style={{fontSize: '20px', fontWeight: '600', marginBottom: '8px', color: '#1f2937'}}>
-              Produk tidak ditemukan
-            </h3>
-            <p style={{color: '#6b7280', margin: 0}}>
-              Coba kata kunci lain atau ubah filter kategori
-            </p>
-          </div>
-        )}
-      </div>
-
-      {/* Cart Sidebar */}
-      {isCartOpen && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          backgroundColor: 'rgba(0,0,0,0.5)',
-          zIndex: 9999,
-          display: 'flex',
-          justifyContent: 'flex-end'
-        }} onClick={() => setIsCartOpen(false)}>
-          <div style={{
-            width: '400px',
-            height: '100%',
-            backgroundColor: 'white',
-            padding: '20px',
-            overflowY: 'auto',
-            boxShadow: '-4px 0 8px rgba(0,0,0,0.1)'
-          }} onClick={(e) => e.stopPropagation()}>
-            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px'}}>
-              <h3 style={{fontSize: '20px', fontWeight: '600', margin: 0}}>Keranjang ({getTotalItems()})</h3>
-              <button 
-                onClick={() => setIsCartOpen(false)}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  fontSize: '24px',
-                  cursor: 'pointer',
-                  padding: '5px'
-                }}
-              >×</button>
+            {/* --- Category Icons --- */}
+            <div className="category-icons-container" style={{ backgroundColor: 'white', padding: '16px 0', borderRadius: '6px', marginBottom: '24px', boxShadow: '0 1px 3px 0 rgba(0,0,0,0.1)' }}>
+              <div className="category-icons-inner" style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'flex-start' }}>
+                <IconComponent icon="mdi:tray-full" text="Paper Tray" />
+                <IconComponent icon="carbon:delivery-parcel" text="Box Take away" />
+                <IconComponent icon="mdi:pencil-box-outline" text="Tempat Pensil" />
+                <IconComponent icon="mdi:cupcake" text="Box Cupcake" />
+              </div>
             </div>
 
-            {cartItems.length === 0 ? (
-              <div style={{textAlign: 'center', padding: '40px 0'}}>
-                <div style={{fontSize: '60px', marginBottom: '16px'}}>🛒</div>
-                <p style={{color: '#6b7280'}}>Keranjang kosong</p>
+            {/* --- Products Section (with manual flexbox grid) --- */}
+            <div style={{ backgroundColor: 'white' }}>
+              <div style={{ padding: '16px', borderBottom: '4px solid #ee4d2d' }}>
+                <h2 style={{ fontSize: '18px', fontWeight: '500', color: '#ee4d2d' }}>REKOMENDASI</h2>
               </div>
-            ) : (
-              <>
-                <div style={{marginBottom: '20px'}}>
-                  {cartItems.map(item => (
-                    <div key={item.id} style={{
-                      display: 'flex',
-                      gap: '12px',
-                      padding: '12px',
-                      borderBottom: '1px solid #e5e7eb',
-                      alignItems: 'center'
-                    }}>
-                      <img src={item.image} alt={item.name} style={{
-                        width: '60px',
-                        height: '60px',
-                        borderRadius: '8px',
-                        objectFit: 'cover'
-                      }} />
-                      <div style={{flex: 1}}>
-                        <h4 style={{fontSize: '14px', fontWeight: '500', marginBottom: '4px', lineHeight: '1.3'}}>{item.name}</h4>
-                        <div style={{fontSize: '14px', fontWeight: '600', color: '#f97316'}}>
-                          Rp{item.price.toLocaleString()}
-                        </div>
-                        <div style={{display: 'flex', alignItems: 'center', gap: '8px', marginTop: '8px'}}>
-                          <button 
-                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                            style={{
-                              width: '24px',
-                              height: '24px',
-                              borderRadius: '4px',
-                              border: '1px solid #d1d5db',
-                              backgroundColor: 'white',
-                              cursor: 'pointer',
-                              fontSize: '14px'
-                            }}
-                          >-</button>
-                          <span style={{fontSize: '14px', minWidth: '20px', textAlign: 'center'}}>{item.quantity}</span>
-                          <button 
-                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                            style={{
-                              width: '24px',
-                              height: '24px',
-                              borderRadius: '4px',
-                              border: '1px solid #d1d5db',
-                              backgroundColor: 'white',
-                              cursor: 'pointer',
-                              fontSize: '14px'
-                            }}
-                          >+</button>
-                          <button 
-                            onClick={() => removeFromCart(item.id)}
-                            style={{
-                              marginLeft: 'auto',
-                              background: 'none',
-                              border: 'none',
-                              color: '#dc2626',
-                              cursor: 'pointer',
-                              fontSize: '16px'
-                            }}
-                          >🗑️</button>
-                        </div>
-                      </div>
+              <div style={{ padding: '16px' }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', margin: '-5px' }}>
+                  {filteredProducts.map((product) => (
+                    <div key={product.id} className="product-grid-item" style={{ padding: '5px', width: '16.666%', boxSizing: 'border-box' }}>
+                      <ProductCard product={product} onClick={() => handleProductClick(product)} />
                     </div>
                   ))}
                 </div>
-
-                <div style={{borderTop: '2px solid #e5e7eb', paddingTop: '16px'}}>
-                  <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '16px'}}>
-                    <span style={{fontSize: '18px', fontWeight: '600'}}>Total:</span>
-                    <span style={{fontSize: '18px', fontWeight: '700', color: '#f97316'}}>
-                      Rp{getTotalPrice().toLocaleString()}
-                    </span>
+                {filteredProducts.length === 0 && (
+                  <div style={{ textAlign: 'center', padding: '40px 0' }}>
+                    <p>Produk tidak ditemukan.</p>
                   </div>
-                  <button 
-                    onClick={() => {
-                      setIsCartOpen(false);
-                      setIsCheckoutOpen(true);
-                    }}
-                    style={{
-                      width: '100%',
-                      padding: '12px',
-                      backgroundColor: '#f97316',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '8px',
-                      fontSize: '16px',
-                      fontWeight: '600',
-                      cursor: 'pointer',
-                      transition: 'all 0.3s ease'
-                    }}
-                    onMouseOver={(e) => (e.target as HTMLElement).style.backgroundColor = '#ea580c'}
-                    onMouseOut={(e) => (e.target as HTMLElement).style.backgroundColor = '#f97316'}
-                  >
-                    Checkout
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* Login Modal */}
-      {isLoginOpen && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          backgroundColor: 'rgba(0,0,0,0.5)',
-          zIndex: 9999,
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center'
-        }} onClick={() => setIsLoginOpen(false)}>
-          <div style={{
-            backgroundColor: 'white',
-            padding: '32px',
-            borderRadius: '12px',
-            width: '400px',
-            maxWidth: '90%'
-          }} onClick={(e) => e.stopPropagation()}>
-            <h3 style={{fontSize: '24px', fontWeight: '600', marginBottom: '20px', textAlign: 'center'}}>Masuk ke Paperlisens</h3>
-            <form>
-              <div style={{marginBottom: '16px'}}>
-                <label style={{display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '500'}}>Email</label>
-                <input type="email" style={{
-                  width: '100%',
-                  padding: '12px',
-                  border: '1px solid #d1d5db',
-                  borderRadius: '8px',
-                  fontSize: '14px'
-                }} />
-              </div>
-              <div style={{marginBottom: '20px'}}>
-                <label style={{display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '500'}}>Password</label>
-                <input type="password" style={{
-                  width: '100%',
-                  padding: '12px',
-                  border: '1px solid #d1d5db',
-                  borderRadius: '8px',
-                  fontSize: '14px'
-                }} />
-              </div>
-              <button type="submit" style={{
-                width: '100%',
-                padding: '12px',
-                backgroundColor: '#f97316',
-                color: 'white',
-                border: 'none',
-                borderRadius: '8px',
-                fontSize: '16px',
-                fontWeight: '600',
-                cursor: 'pointer',
-                marginBottom: '16px'
-              }}>
-                Masuk
-              </button>
-              <div style={{textAlign: 'center'}}>
-                <a href="#" style={{color: '#f97316', fontSize: '14px', textDecoration: 'none'}}>
-                  Belum punya akun? Daftar
-                </a>
-              </div>
-            </form>
-            <button 
-              onClick={() => setIsLoginOpen(false)}
-              style={{
-                position: 'absolute',
-                top: '16px',
-                right: '16px',
-                background: 'none',
-                border: 'none',
-                fontSize: '24px',
-                cursor: 'pointer'
-              }}
-            >×</button>
-          </div>
-        </div>
-      )}
-
-      {/* Checkout Modal */}
-      {isCheckoutOpen && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          backgroundColor: 'rgba(0,0,0,0.5)',
-          zIndex: 9999,
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          padding: '20px'
-        }} onClick={() => setIsCheckoutOpen(false)}>
-          <div style={{
-            backgroundColor: 'white',
-            borderRadius: '12px',
-            width: '800px',
-            maxWidth: '100%',
-            maxHeight: '90vh',
-            overflowY: 'auto',
-            position: 'relative'
-          }} onClick={(e) => e.stopPropagation()}>
-            <div style={{padding: '24px'}}>
-              <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px'}}>
-                <h3 style={{fontSize: '24px', fontWeight: '600', margin: 0}}>Checkout</h3>
-                <button 
-                  onClick={() => setIsCheckoutOpen(false)}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    fontSize: '24px',
-                    cursor: 'pointer',
-                    padding: '5px'
-                  }}
-                >×</button>
-              </div>
-
-              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px'}}>
-                {/* Left Column - Shipping & Payment */}
-                <div>
-                  {/* Shipping Information */}
-                  <div style={{marginBottom: '32px'}}>
-                    <h4 style={{fontSize: '18px', fontWeight: '600', marginBottom: '16px', color: '#1f2937'}}>Informasi Pengiriman</h4>
-                    <form style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
-                      <div>
-                        <label style={{display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '500'}}>Nama Lengkap</label>
-                        <input 
-                          type="text"
-                          value={shippingInfo.name}
-                          onChange={(e) => setShippingInfo({...shippingInfo, name: e.target.value})}
-                          style={{
-                            width: '100%',
-                            padding: '10px',
-                            border: '1px solid #d1d5db',
-                            borderRadius: '6px',
-                            fontSize: '14px'
-                          }}
-                          placeholder="Masukkan nama lengkap"
-                        />
-                      </div>
-                      <div>
-                        <label style={{display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '500'}}>Nomor Telepon</label>
-                        <input 
-                          type="tel"
-                          value={shippingInfo.phone}
-                          onChange={(e) => setShippingInfo({...shippingInfo, phone: e.target.value})}
-                          style={{
-                            width: '100%',
-                            padding: '10px',
-                            border: '1px solid #d1d5db',
-                            borderRadius: '6px',
-                            fontSize: '14px'
-                          }}
-                          placeholder="08xxxxxxxxxx"
-                        />
-                      </div>
-                      <div>
-                        <label style={{display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '500'}}>Email (Opsional)</label>
-                        <input 
-                          type="email"
-                          value={shippingInfo.email}
-                          onChange={(e) => setShippingInfo({...shippingInfo, email: e.target.value})}
-                          style={{
-                            width: '100%',
-                            padding: '10px',
-                            border: '1px solid #d1d5db',
-                            borderRadius: '6px',
-                            fontSize: '14px'
-                          }}
-                          placeholder="email@example.com"
-                        />
-                      </div>
-                      <div>
-                        <label style={{display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '500'}}>Alamat Lengkap</label>
-                        <textarea 
-                          value={shippingInfo.address}
-                          onChange={(e) => setShippingInfo({...shippingInfo, address: e.target.value})}
-                          style={{
-                            width: '100%',
-                            padding: '10px',
-                            border: '1px solid #d1d5db',
-                            borderRadius: '6px',
-                            fontSize: '14px',
-                            minHeight: '80px',
-                            resize: 'vertical'
-                          }}
-                          placeholder="Jalan, RT/RW, Kelurahan, Kecamatan"
-                        />
-                      </div>
-                      <div style={{display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '12px'}}>
-                        <div>
-                          <label style={{display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '500'}}>Kota</label>
-                          <input 
-                            type="text"
-                            value={shippingInfo.city}
-                            onChange={(e) => setShippingInfo({...shippingInfo, city: e.target.value})}
-                            style={{
-                              width: '100%',
-                              padding: '10px',
-                              border: '1px solid #d1d5db',
-                              borderRadius: '6px',
-                              fontSize: '14px'
-                            }}
-                            placeholder="Jakarta"
-                          />
-                        </div>
-                        <div>
-                          <label style={{display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '500'}}>Kode Pos</label>
-                          <input 
-                            type="text"
-                            value={shippingInfo.postalCode}
-                            onChange={(e) => setShippingInfo({...shippingInfo, postalCode: e.target.value})}
-                            style={{
-                              width: '100%',
-                              padding: '10px',
-                              border: '1px solid #d1d5db',
-                              borderRadius: '6px',
-                              fontSize: '14px'
-                            }}
-                            placeholder="12345"
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <label style={{display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '500'}}>Catatan (Opsional)</label>
-                        <textarea 
-                          value={shippingInfo.notes}
-                          onChange={(e) => setShippingInfo({...shippingInfo, notes: e.target.value})}
-                          style={{
-                            width: '100%',
-                            padding: '10px',
-                            border: '1px solid #d1d5db',
-                            borderRadius: '6px',
-                            fontSize: '14px',
-                            minHeight: '60px',
-                            resize: 'vertical'
-                          }}
-                          placeholder="Catatan untuk kurir atau penjual"
-                        />
-                      </div>
-                    </form>
-                  </div>
-
-                  {/* Payment Method */}
-                  <div>
-                    <h4 style={{fontSize: '18px', fontWeight: '600', marginBottom: '16px', color: '#1f2937'}}>Metode Pembayaran</h4>
-                    <div style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
-                      {[
-                        { id: 'cod', name: 'Bayar di Tempat (COD)', icon: '💰', desc: 'Bayar saat barang sampai' },
-                        { id: 'transfer', name: 'Transfer Bank', icon: '🏦', desc: 'BCA, Mandiri, BNI, BRI' },
-                        { id: 'ewallet', name: 'E-Wallet', icon: '📱', desc: 'GoPay, OVO, DANA, ShopeePay' }
-                      ].map(method => (
-                        <div 
-                          key={method.id}
-                          onClick={() => setPaymentMethod(method.id)}
-                          style={{
-                            padding: '16px',
-                            border: `2px solid ${paymentMethod === method.id ? '#f97316' : '#e5e7eb'}`,
-                            borderRadius: '8px',
-                            cursor: 'pointer',
-                            transition: 'all 0.3s ease',
-                            backgroundColor: paymentMethod === method.id ? '#fef3f2' : 'white'
-                          }}
-                        >
-                          <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
-                            <span style={{fontSize: '20px'}}>{method.icon}</span>
-                            <div style={{flex: 1}}>
-                              <div style={{fontSize: '14px', fontWeight: '500', color: '#1f2937'}}>{method.name}</div>
-                              <div style={{fontSize: '12px', color: '#6b7280'}}>{method.desc}</div>
-                            </div>
-                            <div style={{
-                              width: '20px',
-                              height: '20px',
-                              borderRadius: '50%',
-                              border: `2px solid ${paymentMethod === method.id ? '#f97316' : '#d1d5db'}`,
-                              backgroundColor: paymentMethod === method.id ? '#f97316' : 'white',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center'
-                            }}>
-                              {paymentMethod === method.id && <div style={{width: '8px', height: '8px', backgroundColor: 'white', borderRadius: '50%'}} />}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Right Column - Order Summary */}
-                <div>
-                  <div style={{
-                    backgroundColor: '#f9fafb',
-                    padding: '20px',
-                    borderRadius: '8px',
-                    position: 'sticky',
-                    top: '20px'
-                  }}>
-                    <h4 style={{fontSize: '18px', fontWeight: '600', marginBottom: '16px', color: '#1f2937'}}>Ringkasan Pesanan</h4>
-                    
-                    <div style={{marginBottom: '16px'}}>
-                      {cartItems.map(item => (
-                        <div key={item.id} style={{
-                          display: 'flex',
-                          gap: '12px',
-                          padding: '8px 0',
-                          borderBottom: '1px solid #e5e7eb'
-                        }}>
-                          <img src={item.image} alt={item.name} style={{
-                            width: '50px',
-                            height: '50px',
-                            borderRadius: '6px',
-                            objectFit: 'cover'
-                          }} />
-                          <div style={{flex: 1}}>
-                            <div style={{fontSize: '13px', fontWeight: '500', marginBottom: '2px', lineHeight: '1.3'}}>{item.name}</div>
-                            <div style={{fontSize: '12px', color: '#6b7280'}}>Qty: {item.quantity}</div>
-                            <div style={{fontSize: '13px', fontWeight: '600', color: '#f97316'}}>Rp{(item.price * item.quantity).toLocaleString()}</div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div style={{borderTop: '2px solid #e5e7eb', paddingTop: '16px'}}>
-                      <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '8px'}}>
-                        <span style={{fontSize: '14px', color: '#6b7280'}}>Subtotal:</span>
-                        <span style={{fontSize: '14px', fontWeight: '500'}}>Rp{getTotalPrice().toLocaleString()}</span>
-                      </div>
-                      <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '8px'}}>
-                        <span style={{fontSize: '14px', color: '#6b7280'}}>Ongkir:</span>
-                        <span style={{fontSize: '14px', fontWeight: '500'}}>Rp15.000</span>
-                      </div>
-                      <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '16px', paddingTop: '8px', borderTop: '1px solid #e5e7eb'}}>
-                        <span style={{fontSize: '16px', fontWeight: '600'}}>Total:</span>
-                        <span style={{fontSize: '18px', fontWeight: '700', color: '#f97316'}}>Rp{(getTotalPrice() + 15000).toLocaleString()}</span>
-                      </div>
-                      
-                      <button 
-                        onClick={async () => {
-                          if (!shippingInfo.name || !shippingInfo.phone || !shippingInfo.address || !shippingInfo.city) {
-                            alert('Mohon lengkapi informasi pengiriman!');
-                            return;
-                          }
-
-                          setPaymentLoading(true);
-
-                          try {
-                            // Create order in database
-                            const orderData = {
-                              customerDetails: {
-                                first_name: shippingInfo.name,
-                                phone: shippingInfo.phone,
-                                email: shippingInfo.email || null,
-                                billing_address: {
-                                  address: shippingInfo.address,
-                                  city: shippingInfo.city,
-                                  postal_code: shippingInfo.postalCode || '00000'
-                                }
-                              },
-                              items: cartItems.map(item => ({
-                                id: item.id.toString(),
-                                price: item.price,
-                                quantity: item.quantity,
-                                name: item.name
-                              })),
-                              paymentMethod: paymentMethod,
-                              totalAmount: getTotalPrice() + 15000,
-                              notes: shippingInfo.notes || null
-                            };
-
-                            // Save order to database
-                            const orderResponse = await fetch('/api/orders', {
-                              method: 'POST',
-                              headers: {
-                                'Content-Type': 'application/json',
-                              },
-                              body: JSON.stringify(orderData)
-                            });
-
-                            if (!orderResponse.ok) {
-                              throw new Error('Failed to save order');
-                            }
-
-                            const orderResult = await orderResponse.json();
-                            const orderId = orderResult.data.orderNumber;
-                            const whatsappUrl = orderResult.data.whatsappUrl;
-                            setCurrentOrderId(orderId);
-
-                            // Directly redirect to WhatsApp for all orders
-                            setIsCheckoutOpen(false);
-                            setCartItems([]);
-                            
-                            // Open WhatsApp in new tab
-                            typeof window !== 'undefined' && window.open(whatsappUrl, '_blank');
-                            
-                            // Show success message
-                            setOrderConfirmed(true);
-                          } catch (error) {
-                            console.error('Payment error:', error);
-                            alert('Terjadi kesalahan saat memproses pembayaran. Silakan coba lagi.');
-                          } finally {
-                            setPaymentLoading(false);
-                          }
-                        }}
-                        disabled={paymentLoading}
-                        style={{
-                          width: '100%',
-                          padding: '12px',
-                          backgroundColor: paymentLoading ? '#9ca3af' : '#f97316',
-                          color: 'white',
-                          border: 'none',
-                          borderRadius: '8px',
-                          fontSize: '16px',
-                          fontWeight: '600',
-                          cursor: paymentLoading ? 'not-allowed' : 'pointer',
-                          transition: 'all 0.3s ease'
-                        }}
-                        onMouseOver={(e) => !paymentLoading && ((e.target as HTMLElement).style.backgroundColor = '#ea580c')}
-                        onMouseOut={(e) => !paymentLoading && ((e.target as HTMLElement).style.backgroundColor = '#f97316')}
-                      >
-                        {paymentLoading ? 'Memproses...' : 'Konfirmasi Pesanan'}
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                )}
               </div>
             </div>
-          </div>
-        </div>
-      )}
-
-      {/* Order Confirmation Modal */}
-      {orderConfirmed && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          backgroundColor: 'rgba(0,0,0,0.5)',
-          zIndex: 9999,
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          padding: '20px'
-        }} onClick={() => setOrderConfirmed(false)}>
-          <div style={{
-            backgroundColor: 'white',
-            padding: '32px',
-            borderRadius: '12px',
-            width: '500px',
-            maxWidth: '90%',
-            textAlign: 'center'
-          }} onClick={(e) => e.stopPropagation()}>
-            <div style={{fontSize: '60px', marginBottom: '20px'}}>✅</div>
-            <h3 style={{fontSize: '24px', fontWeight: '600', marginBottom: '12px', color: '#059669'}}>Pesanan Berhasil Dikirim!</h3>
-            <p style={{color: '#6b7280', marginBottom: '20px', lineHeight: '1.5'}}>
-              Pesanan Anda telah dikirim ke WhatsApp untuk diproses. 
-              Silakan lanjutkan di WhatsApp untuk konfirmasi dan pembayaran.
-            </p>
-            <div style={{
-              backgroundColor: '#f0fdf4',
-              padding: '16px',
-              borderRadius: '8px',
-              marginBottom: '20px',
-              textAlign: 'left'
-            }}>
-              <div style={{fontSize: '14px', fontWeight: '500', marginBottom: '8px', color: '#059669'}}>ID Pesanan: #{currentOrderId}</div>
-              <div style={{fontSize: '13px', color: '#6b7280'}}>WhatsApp: 081260001487</div>
-              <div style={{fontSize: '13px', color: '#6b7280'}}>Status: Menunggu konfirmasi</div>
-            </div>
-            <button 
-              onClick={() => setOrderConfirmed(false)}
-              style={{
-                width: '100%',
-                padding: '12px',
-                backgroundColor: '#f97316',
-                color: 'white',
-                border: 'none',
-                borderRadius: '8px',
-                fontSize: '16px',
-                fontWeight: '600',
-                cursor: 'pointer'
-              }}
-            >
-              Tutup
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Footer */}
-      <footer style={{
-        backgroundColor: '#1f2937',
-        color: 'white',
-        padding: '40px 0 20px',
-        marginTop: '60px'
-      }}>
-        <div style={{maxWidth: '1200px', margin: '0 auto', padding: '0 16px'}}>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-            gap: '32px',
-            marginBottom: '32px'
-          }}>
-            <div>
-              <div style={{display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px'}}>
-                <div style={{
-                  width: '32px',
-                  height: '32px',
-                  backgroundColor: '#f97316',
-                  borderRadius: '6px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '16px'
-                }}>📦</div>
-                <img src="/logo-paperlisens.png" alt="Paperlisens" style={{height: '36px', width: 'auto', margin: 0}} />
-              </div>
-              <p style={{color: '#9ca3af', lineHeight: '1.6', margin: 0}}>
-                Marketplace terpercaya untuk wadah makanan dan cup berkualitas tinggi.
-                Berbelanja aman, nyaman, dan terpercaya untuk kebutuhan bisnis F&B Anda.
-              </p>
-            </div>
-            <div>
-              <h4 style={{fontSize: '16px', fontWeight: '600', marginBottom: '16px', margin: '0 0 16px 0'}}>Layanan</h4>
-              <div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
-                <a href="#" style={{color: '#9ca3af', textDecoration: 'none', transition: 'color 0.3s ease'}}>Bantuan</a>
-                <a href="#" style={{color: '#9ca3af', textDecoration: 'none', transition: 'color 0.3s ease'}}>Cara Berbelanja</a>
-                <a href="#" style={{color: '#9ca3af', textDecoration: 'none', transition: 'color 0.3s ease'}}>Pengiriman</a>
-                <a href="#" style={{color: '#9ca3af', textDecoration: 'none', transition: 'color 0.3s ease'}}>Pembayaran</a>
-              </div>
-            </div>
-            <div>
-              <h4 style={{fontSize: '16px', fontWeight: '600', marginBottom: '16px', margin: '0 0 16px 0'}}>Tentang</h4>
-              <div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
-                <a href="#" style={{color: '#9ca3af', textDecoration: 'none', transition: 'color 0.3s ease'}}>Tentang Kami</a>
-                <a href="#" style={{color: '#9ca3af', textDecoration: 'none', transition: 'color 0.3s ease'}}>Karir</a>
-                <a href="#" style={{color: '#9ca3af', textDecoration: 'none', transition: 'color 0.3s ease'}}>Blog</a>
-                <a href="#" style={{color: '#9ca3af', textDecoration: 'none', transition: 'color 0.3s ease'}}>Kebijakan Privasi</a>
-              </div>
-            </div>
-          </div>
-          <div style={{
-            borderTop: '1px solid #374151',
-            paddingTop: '20px',
-            textAlign: 'center',
-            color: '#9ca3af',
-            fontSize: '14px'
-          }}>
-            <p style={{margin: 0}}>&copy; 2024 Paperlisens. All rights reserved. | 
-              <a href="/" style={{color: '#f97316', textDecoration: 'none', marginLeft: '8px'}}>
-                Kembali ke Dallas Company
-              </a>
-            </p>
-          </div>
-        </div>
-      </footer>
+          </>
+        )}
+      </main>
     </div>
   );
 }
