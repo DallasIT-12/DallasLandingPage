@@ -33,3 +33,12 @@
     *   `ClassicProductCardGrid` and `BannerSlider` images currently use `next/image`'s `<Image />` component.
     *   All other images (Navbar Logo, Footer Logo, "Bahan Unggulan", Paperlisens banners, Paperlisens Product Gallery) use standard `<img>` tags.
     *   `import Image from 'next/image';` is present in `src/app/page.tsx`.
+
+## Date: Thursday, 27 November 2025
+
+### Bug Fixes:
+
+1.  **Image Loading Issue (Ivory & Metalize):**
+    *   Fixed an issue where "BAHAN IVORY" and "BAHAN METALIZE" images were not loading on the live site (Linux environment).
+    *   **Cause:** File extension mismatch. The code referenced `.JPG` (uppercase), but the actual files in `public/` were `.jpg` (lowercase). Linux servers are case-sensitive.
+    *   **Fix:** Updated `src/app/page.tsx` to use `.jpg` extensions for these images.
