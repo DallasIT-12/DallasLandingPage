@@ -108,12 +108,23 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
   const [quantity, setQuantity] = useState(1);
 
   // Find the product from centralized data
-  const product = products.find(p => String(p.id) === slug);
+  const foundProduct = products.find(p => String(p.id) === slug);
 
   // Fallback if product not found (e.g., 404 page or redirect)
-  if (!product) {
+  if (!foundProduct) {
     return <div>Product not found!</div>; // TODO: Implement a proper 404 page or redirect
   }
+
+  // Normalize product data (add defaults for missing fields to match UI requirements)
+  const product = {
+    ...foundProduct,
+    images: [foundProduct.image], // Adapt single image to array
+    rating: 4.9,
+    reviewCount: 128,
+    originalPrice: Math.ceil(foundProduct.price * 1.15), // Mock original price (15% markup)
+    stock: 150,
+    weight: '1000 gr',
+  };
   
   // Adjusted related and other products to use centralized data
   const filteredProducts = products.filter(p => p.id !== product.id);
