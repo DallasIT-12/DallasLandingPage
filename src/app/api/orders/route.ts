@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
     // Format items for WhatsApp message
     const itemsList = items.map((item: any) => {
       const productName = productMapping[item.id as keyof typeof productMapping] || item.name;
-      return `• ${productName}\n  Qty: ${item.quantity} x Rp${item.price.toLocaleString()} = Rp${(item.price * item.quantity).toLocaleString()}`;
+      return `• ${productName}\n  Qty: ${item.quantity} x Rp${item.price.toLocaleString('id-ID')} = Rp${(item.price * item.quantity).toLocaleString('id-ID')}`;
     }).join('\n');
 
     // Create WhatsApp message
@@ -47,9 +47,9 @@ ${customerDetails.billing_address.postal_code ? `Kode Pos: ${customerDetails.bil
 *Detail Pesanan:*
 ${itemsList}
 
-*Subtotal: Rp${(totalAmount - 15000).toLocaleString()}*
+*Subtotal: Rp${(totalAmount - 15000).toLocaleString('id-ID')}*
 *Ongkir: Rp15.000*
-*TOTAL: Rp${totalAmount.toLocaleString()}*
+*TOTAL: Rp${totalAmount.toLocaleString('id-ID')}*
 
 *Metode Pembayaran:* ${paymentMethod === 'cod' ? 'Bayar di Tempat (COD)' : paymentMethod === 'transfer' ? 'Transfer Bank' : 'E-Wallet'}
 

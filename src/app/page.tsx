@@ -349,7 +349,7 @@ const BannerSlider = ({ images, interval = 10000 }: { images: string[], interval
             <a href="https://www.instagram.com/paperlisens22?igsh=bDl4OHI3d2d0eHV0" target="_blank" rel="noopener noreferrer" style={{color: '#000000'}} title="Instagram">
               <Icon icon="mdi:instagram" style={{ fontSize: '18px' }} />
             </a>
-            <a href="https://vt.tiktok.com/ZSf8cvXGB/?page=Mall" target="_blank" rel="noopener noreferrer" style={{color: '#000000'}} title="TikTok">
+            <a href="https://www.tiktok.com/@paperlisenss22" target="_blank" rel="noopener noreferrer" style={{color: '#000000'}} title="TikTok">
               <Icon icon="ic:baseline-tiktok" style={{ fontSize: '18px' }} />
             </a>
             <a href="https://id.shp.ee/tpQ9dbH" target="_blank" rel="noopener noreferrer" style={{color: '#000000'}} title="Shopee Paperlisens">
@@ -445,6 +445,121 @@ const BannerSlider = ({ images, interval = 10000 }: { images: string[], interval
                         Percetakan Offset Dallas adalah pionir dan pemimpin dalam industri percetakan offset di Kediri, dengan rekam jejak yang tak terputus sejak didirikan pada tahun 1983. Dengan pengalaman yang kaya selama lebih dari empat dekade, kami telah menguasai seni dan teknologi cetak, selalu mengutamakan kualitas tinggi untuk memenuhi dan melampaui kebutuhan spesifik setiap pelanggan.
                         Komitmen kami dibuktikan dengan layanan kepada puluhan ribu klien dari berbagai skala industri, menegaskan konsistensi dan keandalan hasil cetak kami.
                     </p>
+                </div>
+            </section>
+
+            {/* Why Choose Dallas Section */}
+            <section style={{
+                padding: isMediumMobile ? '64px 24px' : '100px 24px',
+                textAlign: 'center',
+                backgroundColor: '#1f2937',
+                color: '#ffffff',
+                borderTop: '1px solid rgba(255,255,255,0.1)'
+            }}>
+                <div style={{maxWidth: '1200px', margin: '0 auto'}}>
+                    <div style={{marginBottom: '64px'}}>
+                         <h2 style={{
+                            fontSize: isMediumMobile ? '1.75rem' : '2.25rem',
+                            fontWeight: '700',
+                            marginBottom: '16px',
+                            color: 'white'
+                        }}>
+                            Mengapa Memilih Percetakan Offset Dallas?
+                        </h2>
+                        <p style={{
+                            fontSize: isMediumMobile ? '1rem' : '1.125rem',
+                            color: '#9ca3af',
+                            fontWeight: '400'
+                        }}>
+                            Dedikasi pada Kualitas dan Ketepatan Waktu Sejak 1983.
+                        </p>
+                    </div>
+
+                    <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: isSmallMobile ? '1fr' : (isMediumMobile ? '1fr 1fr' : 'repeat(4, 1fr)'),
+                        gap: '32px',
+                        marginBottom: '64px'
+                    }}>
+                        {/* POIN 1: PENGALAMAN (LEGACY) */}
+                        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px'}}>
+                            <div style={{
+                                width: '80px', height: '80px',
+                                borderRadius: '50%',
+                                backgroundColor: 'rgba(255,255,255,0.05)',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                marginBottom: '8px'
+                            }}>
+                                <Icon icon="mdi:shield-check" width="40" height="40" color="#f97316" />
+                            </div>
+                            <h3 style={{fontSize: '1.25rem', fontWeight: '600'}}>Pengalaman 4 Dekade</h3>
+                            <p style={{color: '#9ca3af', fontSize: '0.95rem', lineHeight: '1.6'}}>
+                                Lebih dari 40 tahun berkarya memberikan kami keahlian mendalam untuk menangani berbagai kompleksitas proyek cetak Anda, dari skala kecil hingga produksi massal.
+                            </p>
+                        </div>
+
+                        {/* POIN 2: KUALITAS (PRECISION) */}
+                        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px'}}>
+                            <div style={{
+                                width: '80px', height: '80px',
+                                borderRadius: '50%',
+                                backgroundColor: 'rgba(255,255,255,0.05)',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                marginBottom: '8px'
+                            }}>
+                                <Icon icon="mdi:crosshairs-gps" width="40" height="40" color="#f97316" />
+                            </div>
+                            <h3 style={{fontSize: '1.25rem', fontWeight: '600'}}>Standar Kualitas Presisi</h3>
+                            <p style={{color: '#9ca3af', fontSize: '0.95rem', lineHeight: '1.6'}}>
+                                Kami memadukan ketelitian operator berpengalaman dengan teknologi mesin terkini untuk memastikan warna yang akurat, potongan yang rapi, dan hasil yang konsisten.
+                            </p>
+                        </div>
+
+                         {/* POIN 3: KONSULTASI (SOLUTION) */}
+                        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px'}}>
+                            <div style={{
+                                width: '80px', height: '80px',
+                                borderRadius: '50%',
+                                backgroundColor: 'rgba(255,255,255,0.05)',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                marginBottom: '8px'
+                            }}>
+                                <Icon icon="mdi:lightbulb-on-outline" width="40" height="40" color="#f97316" />
+                            </div>
+                            <h3 style={{fontSize: '1.25rem', fontWeight: '600'}}>Mitra Konsultasi Solutif</h3>
+                            <p style={{color: '#9ca3af', fontSize: '0.95rem', lineHeight: '1.6'}}>
+                                Kami lebih dari sekadar tukang cetak. Tim kami siap memberikan saran ahli mengenai pemilihan bahan, efisiensi biaya, hingga finishing terbaik untuk produk Anda.
+                            </p>
+                        </div>
+
+                         {/* POIN 4: WAKTU (PUNCTUALITY) */}
+                        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px'}}>
+                            <div style={{
+                                width: '80px', height: '80px',
+                                borderRadius: '50%',
+                                backgroundColor: 'rgba(255,255,255,0.05)',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                marginBottom: '8px'
+                            }}>
+                                <Icon icon="mdi:clock-check-outline" width="40" height="40" color="#f97316" />
+                            </div>
+                            <h3 style={{fontSize: '1.25rem', fontWeight: '600'}}>Jaminan Ketepatan Waktu</h3>
+                            <p style={{color: '#9ca3af', fontSize: '0.95rem', lineHeight: '1.6'}}>
+                                Kami menghargai bisnis Anda dengan menghargai waktu Anda. Dengan manajemen alur kerja yang terstruktur, kami berkomitmen menyelesaikan pesanan sesuai tenggat yang disepakati.
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Call to Action */}
+                    <div style={{
+                        borderTop: '1px solid rgba(255,255,255,0.1)',
+                        paddingTop: '40px',
+                        marginTop: '20px'
+                    }}>
+                        <h4 style={{fontSize: '1.25rem', fontWeight: '500', marginBottom: '24px', color: 'white', maxWidth: '800px', margin: '0 auto'}}>
+                            Percayakan citra bisnis Anda pada ahlinya. Hubungi Percetakan Offset Dallas hari ini untuk konsultasi proyek Anda.
+                        </h4>
+                    </div>
                 </div>
             </section>
 
@@ -672,10 +787,10 @@ const BannerSlider = ({ images, interval = 10000 }: { images: string[], interval
               gap: isLargeMobile ? '16px' : '24px'
             }}>
               {[
-                { name: 'Cup A', price: 'Rp 21.500', variant: 'Best Seller', rating: '4.9', sold: '15k+', image: '/dallas%20cup%20a.png' },
-                { name: 'Cup B', price: 'Rp 23.210', variant: 'Ekonomis', rating: '4.6', sold: '3.2k', image: '/dallas%20cup%20b.png' },
-                { name: 'Donat isi 3', price: 'Rp 37.770', variant: 'Premium', rating: '4.8', sold: '1.4k', image: '/dallas%20donat%20isi%203.png' },
-                { name: 'Donat isi 6', price: 'Rp 42.865', variant: 'Wholesale', rating: '4.8', sold: '1.2k', image: '/dallas%20donat%20isi%206.png' }
+                { name: 'Cup A', price: 'Rp 24.420 - 26.000', variant: 'Best Seller', rating: '4.9', sold: '15k+', image: '/dallas%20cup%20a.png' },
+                { name: 'Cup B', price: 'Rp 26.500 - 28.200', variant: 'Ekonomis', rating: '4.6', sold: '3.2k', image: '/dallas%20cup%20b.png' },
+                { name: 'Donat isi 3', price: 'Rp 30.800 - 66.250', variant: 'Premium', rating: '4.8', sold: '1.4k', image: '/dallas%20donat%20isi%203.png' },
+                { name: 'Donat isi 6', price: 'Rp 33.600 - 78.750', variant: 'Wholesale', rating: '4.8', sold: '1.2k', image: '/dallas%20donat%20isi%206.png' }
               ].map((product, index) => (
                 <div key={index} 
                      onClick={() => window.open('/paperlisens', '_blank')}
@@ -807,8 +922,8 @@ const BannerSlider = ({ images, interval = 10000 }: { images: string[], interval
             <div>
               <h4 style={{fontSize: '1.125rem', fontWeight: '500', marginBottom: '16px'}}>Contact</h4>
               <div style={{color: '#9ca3af', display: 'flex', flexDirection: 'column', gap: '8px'}}>
-                <p>Email: info@dallascompany.com</p>
-                <p>Phone: +1 (555) 123-4567</p>
+                <p>Email: <a href="mailto:percetakandallas@gmail.com" style={{color: '#9ca3af', textDecoration: 'underline'}}>percetakandallas@gmail.com</a></p>
+                <p>Phone: <a href="https://wa.me/6281260001487" target="_blank" rel="noopener noreferrer" style={{color: '#9ca3af', textDecoration: 'underline'}}>(+62) 812-6000-1487</a></p>
               </div>
             </div>
           </div>

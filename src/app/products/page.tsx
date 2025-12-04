@@ -1,6 +1,15 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Icon } from '@iconify/react';
+
+const smoothScroll = (e: React.MouseEvent, targetId: string) => {
+  e.preventDefault();
+  const target = document.querySelector(targetId);
+  if (target) {
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+};
 
 // 3D Floating Box Component with Prominent Real Image
 const FloatingCigaretteBox = ({ product, delay = 0 }: { product: Product, delay?: number }) => {
@@ -346,6 +355,66 @@ export default function ProductsPage() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [filteredProducts, setFilteredProducts] = useState(customBoxProducts);
 
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSmallMobile, setIsSmallMobile] = useState(false); // < 480px
+  const [isMediumMobile, setIsMediumMobile] = useState(false); // < 640px
+  const [isLargeMobile, setIsLargeMobile] = useState(false); // < 768px
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsSmallMobile(window.innerWidth < 480);
+      setIsMediumMobile(window.innerWidth < 640);
+      setIsLargeMobile(window.innerWidth < 768);
+    };
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
+
+  const navLinks = [
+    { href: '/', label: 'Home' },
+    { href: '/products', label: 'Custom Box Rokok' },
+    { href: '/KATALOG DALLAS.pdf', label: 'Katalog', download: true },
+    { href: '/paperlisens', label: 'Paperlisens' },
+    { href: '#contact', label: 'Kontak', isScroll: true },
+  ];
+
+  const renderNavLinks = () => navLinks.map(link => (
+    <a
+      key={link.label}
+      href={link.href}
+      download={link.download ? 'KATALOG DALLAS.pdf' : undefined}
+      onClick={(e) => {
+        if (link.isScroll) smoothScroll(e, link.href);
+        setIsMenuOpen(false);
+      }}
+      style={{
+        color: link.href === '/products' ? '#ffffff' : '#9ca3af', // Highlight 'Custom Box Rokok' on products page
+        textDecoration: 'none',
+        transition: 'all 0.3s ease',
+        cursor: 'pointer',
+        padding: isLargeMobile ? '16px 0' : '0',
+        textAlign: isLargeMobile ? 'center' : 'left',
+        borderBottom: isLargeMobile ? '1px solid rgba(55,65,81,0.5)' : 'none',
+        width: isLargeMobile ? '100%' : 'auto'
+      }}
+      onMouseOver={(e) => {
+        if (!isLargeMobile) {
+          (e.target as HTMLElement).style.color = '#ffffff';
+          (e.target as HTMLElement).style.transform = 'translateY(-2px)';
+        }
+      }}
+      onMouseOut={(e) => {
+        if (!isLargeMobile) {
+          (e.target as HTMLElement).style.color = link.href === '/products' ? '#ffffff' : '#9ca3af';
+          (e.target as HTMLElement).style.transform = 'translateY(0)';
+        }
+      }}
+    >
+      {link.label}
+    </a>
+  ));
+
   const categories = ['All', 'Premium', 'Standard', 'Eco'];
   const productsPerSlide = 4;
   const totalSlides = Math.ceil(filteredProducts.length / productsPerSlide);
@@ -374,61 +443,109 @@ export default function ProductsPage() {
 
   return (
     <div style={{
-      backgroundColor: '#000000',
-      color: '#ffffff',
+      backgroundColor: '#000000', 
+      color: '#ffffff', 
       minHeight: '100vh',
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif'
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif',
+      WebkitFontSmoothing: 'antialiased' // Added for consistency
     }}>
+      {/* Top Bar Contact Info & Social Media */}
+      <div style={{
+        backgroundColor: '#ffffff',
+        color: '#000000',
+        fontSize: '12px',
+        padding: isLargeMobile ? '4px 0' : '8px 0', // Reduced vertical padding for mobile
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        zIndex: 100,
+        borderBottom: '1px solid #e5e7eb'
+      }}>
+        <div style={{
+          maxWidth: '1280px',
+          margin: '0 auto',
+          padding: '0 24px',
+          display: 'flex',
+          justifyContent: isLargeMobile ? 'center' : 'space-between',
+          alignItems: 'center',
+          flexWrap: isLargeMobile ? 'wrap' : 'nowrap',
+          gap: isLargeMobile ? '8px' : '0'
+        }}>
+          <div style={{display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap', justifyContent: 'center'}}>
+            {!isLargeMobile && (
+              <span style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
+                <Icon icon="mdi:map-marker" style={{ fontSize: '14px' }} />
+                Jl. Kilisuci no 71, Singonegaran, Kec. Kota, Kota Kediri.
+              </span>
+            )}
+            <span style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
+              <Icon icon="mdi:phone" style={{ fontSize: '14px' }} />
+              {isLargeMobile ? '081260001487' : '081260001487 | 085946896488 | 085235531946'} {/* Display only one number on mobile */}
+            </span>
+          </div>
+          <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
+            <a href="https://www.instagram.com/paperlisens22?igsh=bDl4OHI3d2d0eHV0" target="_blank" rel="noopener noreferrer" style={{color: '#000000'}} title="Instagram">
+              <Icon icon="mdi:instagram" style={{ fontSize: '18px' }} />
+            </a>
+            <a href="https://www.tiktok.com/@paperlisenss22" target="_blank" rel="noopener noreferrer" style={{color: '#000000'}} title="TikTok">
+              <Icon icon="ic:baseline-tiktok" style={{ fontSize: '18px' }} />
+            </a>
+            <a href="https://id.shp.ee/tpQ9dbH" target="_blank" rel="noopener noreferrer" style={{color: '#000000'}} title="Shopee Paperlisens">
+              <Icon icon="ic:baseline-shopping-bag" style={{ fontSize: '18px' }} />
+            </a>
+            <a href="https://id.shp.ee/ZqzSum7" target="_blank" rel="noopener noreferrer" style={{color: '#000000'}} title="Shopee Tray&me">
+              <Icon icon="ic:baseline-shopping-bag" style={{ fontSize: '18px' }} />
+            </a>
+            <a href="https://www.facebook.com/share/1G3GADNMZi/" target="_blank" rel="noopener noreferrer" style={{color: '#000000'}} title="Facebook">
+              <Icon icon="mdi:facebook" style={{ fontSize: '18px' }} />
+            </a>
+          </div>
+        </div>
+      </div>
+
       {/* Navigation */}
       <nav style={{
         position: 'fixed',
-        top: 0,
+        top: '36px', // Adjusted to below the top bar
         width: '100%',
         zIndex: 50,
         backgroundColor: 'rgba(0,0,0,0.9)',
         backdropFilter: 'saturate(180%) blur(20px)',
         borderBottom: '1px solid rgba(55,65,81,0.3)',
-        padding: '16px 0'
       }}>
-        <div style={{maxWidth: '1280px', margin: '0 auto', padding: '0 24px'}}>
-          <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+        <div style={{maxWidth: '1280px', margin: '0 auto', padding: '0 24px', position: 'relative'}}>
+          <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0'}}>
             <a href="/" style={{textDecoration: 'none'}}>
               <img src="/logo1.png" alt="Percetakan Dallas" style={{height: '36px', width: 'auto'}} />
             </a>
-            <div style={{display: 'flex', gap: '32px'}}>
-              <a href="/" 
-                 style={{color: '#9ca3af', textDecoration: 'none', transition: 'all 0.3s ease', cursor: 'pointer'}}
-                 onMouseOver={(e) => {(e.target as HTMLElement).style.color = '#ffffff'; (e.target as HTMLElement).style.transform = 'translateY(-2px)'}}
-                 onMouseOut={(e) => {(e.target as HTMLElement).style.color = '#9ca3af'; (e.target as HTMLElement).style.transform = 'translateY(0)'}}>
-                Home
-              </a>
-              <a href="/products" 
-                 style={{color: '#ffffff', textDecoration: 'none', transition: 'all 0.3s ease', cursor: 'pointer'}}
-                 onMouseOver={(e) => {(e.target as HTMLElement).style.color = '#d1d5db'; (e.target as HTMLElement).style.transform = 'translateY(-2px)'}}
-                 onMouseOut={(e) => {(e.target as HTMLElement).style.color = '#ffffff'; (e.target as HTMLElement).style.transform = 'translateY(0)'}}>
-                Custom Box Rokok
-              </a>
-              <a href="/KATALOG DALLAS.pdf" 
-                 download="KATALOG DALLAS.pdf"
-                 style={{color: '#9ca3af', textDecoration: 'none', transition: 'all 0.3s ease', cursor: 'pointer'}}
-                 onMouseOver={(e) => {(e.target as HTMLElement).style.color = '#ffffff'; (e.target as HTMLElement).style.transform = 'translateY(-2px)'}}
-                 onMouseOut={(e) => {(e.target as HTMLElement).style.color = '#9ca3af'; (e.target as HTMLElement).style.transform = 'translateY(0)'}}>
-                Katalog
-              </a>
-              <a href="/paperlisens" 
-                 style={{color: '#9ca3af', textDecoration: 'none', transition: 'all 0.3s ease', cursor: 'pointer'}}
-                 onMouseOver={(e) => {(e.target as HTMLElement).style.color = '#ffffff'; (e.target as HTMLElement).style.transform = 'translateY(-2px)'}}
-                 onMouseOut={(e) => {(e.target as HTMLElement).style.color = '#9ca3af'; (e.target as HTMLElement).style.transform = 'translateY(0)'}}>
-                Paperlisens
-              </a>
-              <a href="/#contact" 
-                 style={{color: '#9ca3af', textDecoration: 'none', transition: 'all 0.3s ease', cursor: 'pointer'}}
-                 onMouseOver={(e) => {(e.target as HTMLElement).style.color = '#ffffff'; (e.target as HTMLElement).style.transform = 'translateY(-2px)'}}
-                 onMouseOut={(e) => {(e.target as HTMLElement).style.color = '#9ca3af'; (e.target as HTMLElement).style.transform = 'translateY(0)'}}>
-                Kontak
-              </a>
-            </div>
+
+            {isLargeMobile ? (
+              <button onClick={() => setIsMenuOpen(!isMenuOpen)} style={{background: 'none', border: 'none', color: 'white', fontSize: '24px'}}>
+                <Icon icon={isMenuOpen ? "mdi:close" : "mdi:menu"} />
+              </button>
+            ) : (
+              <div style={{display: 'flex', gap: '32px'}}>
+                {renderNavLinks()}
+              </div>
+            )}
           </div>
+
+          {isLargeMobile && isMenuOpen && (
+            <div style={{
+              position: 'absolute',
+              top: '100%',
+              left: 0,
+              right: 0,
+              backgroundColor: 'rgba(0,0,0,0.95)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              padding: '0 24px 16px',
+            }}>
+              {renderNavLinks()}
+            </div>
+          )}
         </div>
       </nav>
 
@@ -679,7 +796,7 @@ export default function ProductsPage() {
                       fontWeight: '600',
                       color: '#d97706'
                     }}>
-                      Rp {product.price.toLocaleString()}
+                      Rp {product?.price ? product.price.toLocaleString('id-ID') : '0'}
                     </span>
                     <span style={{
                       fontSize: '12px',
@@ -878,7 +995,7 @@ export default function ProductsPage() {
                 fontWeight: '600',
                 color: '#d97706'
               }}>
-                Rp {selectedProduct.price.toLocaleString()}
+                Rp {selectedProduct.price.toLocaleString('id-ID')}
               </span>
               <button
                 style={{
@@ -901,6 +1018,91 @@ export default function ProductsPage() {
           </div>
         </div>
       )}
+
+      {/* Footer */}
+      <footer id="contact" style={{
+        backgroundColor: '#111827', 
+        padding: '48px 0'
+      }}>
+        <div style={{maxWidth: '1280px', margin: '0 auto', padding: '0 24px'}}>
+          <div style={{
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
+            gap: '32px'
+          }}>
+            <div>
+              <div style={{display: 'flex', alignItems: 'center', marginBottom: '16px'}}>
+                <img src="/logo1.png" alt="Percetakan Dallas" style={{height: '40px', width: 'auto'}} />
+              </div>
+              <p style={{color: '#9ca3af'}}>
+                Premium quality products for discerning customers.
+              </p>
+            </div>
+            <div>
+              <h4 style={{fontSize: '1.125rem', fontWeight: '500', marginBottom: '16px'}}>Products</h4>
+              <div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
+                <a href="/KATALOG DALLAS.pdf" 
+                   download="KATALOG DALLAS.pdf"
+                   style={{color: '#9ca3af', textDecoration: 'none', transition: 'all 0.3s ease', cursor: 'pointer'}}
+                   onMouseOver={(e) => {(e.target as HTMLElement).style.color = '#ffffff'; (e.target as HTMLElement).style.paddingLeft = '8px'}}
+                   onMouseOut={(e) => {(e.target as HTMLElement).style.color = '#9ca3af'; (e.target as HTMLElement).style.paddingLeft = '0px'}}>
+                  Katalog
+                </a>
+                <a href="/paperlisens" 
+                   style={{color: '#9ca3af', textDecoration: 'none', transition: 'all 0.3s ease', cursor: 'pointer'}}
+                   onMouseOver={(e) => {(e.target as HTMLElement).style.color = '#ffffff'; (e.target as HTMLElement).style.paddingLeft = '8px'}}
+                   onMouseOut={(e) => {(e.target as HTMLElement).style.color = '#9ca3af'; (e.target as HTMLElement).style.paddingLeft = '0px'}}>
+                  Paperlisens
+                </a>
+              </div>
+            </div>
+            <div>
+              <h4 style={{fontSize: '1.125rem', fontWeight: '500', marginBottom: '16px'}}>Contact</h4>
+              <div style={{color: '#9ca3af', display: 'flex', flexDirection: 'column', gap: '8px'}}>
+                <p>Email: <a href="mailto:percetakandallas@gmail.com" style={{color: '#9ca3af', textDecoration: 'underline'}}>percetakandallas@gmail.com</a></p>
+                <p>Phone: <a href="https://wa.me/6281260001487" target="_blank" rel="noopener noreferrer" style={{color: '#9ca3af', textDecoration: 'underline'}}>(+62) 812-6000-1487</a></p>
+              </div>
+            </div>
+          </div>
+          <div style={{
+            borderTop: '1px solid #374151', 
+            marginTop: '32px', 
+            paddingTop: '32px', 
+            textAlign: 'center', 
+            color: '#9ca3af'
+          }}>
+            <p>&copy; 2024 Percetakan Dallas. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
+
+      {/* Floating WhatsApp Button */}
+      <a
+        href="https://wa.me/6281260001487?text=halo%20kak%20aku%20ingin%20tanya%20tanya"
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{
+          position: 'fixed',
+          bottom: '24px',
+          right: '24px',
+          backgroundColor: '#25D366',
+          color: 'white',
+          borderRadius: '50%',
+          width: '56px',
+          height: '56px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
+          zIndex: 999,
+          transition: 'transform 0.2s',
+        }}
+        onMouseOver={(e) => (e.currentTarget.style.transform = 'scale(1.05)')}
+        onMouseOut={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+        aria-label="Chat via WhatsApp"
+      >
+        <Icon icon="mdi:whatsapp" style={{ fontSize: '32px' }} />
+      </a>
     </div>
   );
 }

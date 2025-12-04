@@ -42,3 +42,20 @@
     *   Fixed an issue where "BAHAN IVORY" and "BAHAN METALIZE" images were not loading on the live site (Linux environment).
     *   **Cause:** File extension mismatch. The code referenced `.JPG` (uppercase), but the actual files in `public/` were `.jpg` (lowercase). Linux servers are case-sensitive.
     *   **Fix:** Updated `src/app/page.tsx` to use `.jpg` extensions for these images.
+
+## Date: Friday, 28 November 2025
+
+### Implemented Changes:
+
+1.  **TikTok Link Update:** The TikTok link in the navigation bar was updated to `https://www.tiktok.com/@paperlisenss22`.
+2.  **Footer Contact Information Update:**
+    *   The email address in the footer was changed to `percetakandallas@gmail.com` and made clickable.
+    *   The phone number in the footer was changed to `(+62) 812-6000-1487` and made a clickable WhatsApp link.
+3.  **`/paperlisens` Page Category Display:**
+    *   The icon-based category display was replaced with a grid of image-based `CategoryCard` components, featuring a hover zoom effect.
+    *   The image paths for these category cards were updated to:
+        *   "Paper Tray": `/paperlisens%20papertray.png`
+        *   "Box Take away": `/paperlisens%20box%20takeaway.png`
+        *   "Tempat Pensil": `/paperlisens%20tempat%20pensil.png`
+        *   "Box Cupcake": `/paperlisens%20cupcake.png`
+    *   All spaces in the image file paths were ensured to be URL-encoded with `%20`.
