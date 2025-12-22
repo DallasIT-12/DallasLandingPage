@@ -2,20 +2,22 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Icon } from '@iconify/react';
 import { motion } from 'framer-motion';
+import Footer from '@/components/layout/Footer';
 
 const ClassicProductCardGrid = () => {
   const categories = [
-    { title: "Skincare", img: "/foto skincare.png", desc: "Kemasan cetak premium dengan detail presisi, warna memukau, dan finishing elegan.", tags: ["Estetika", "Mewah"] },
-    { title: "Obat", img: "/foto obat.png", desc: "Solusi cetak kemasan farmasi standar regulasi, informasi jelas, dan presisi.", tags: ["Regulasi", "Aman"] },
-    { title: "Rokok", img: "/foto rokok.png", desc: "Cetak box rokok dengan detail grafis tajam dan material berkualitas tinggi.", tags: ["Tajam", "Konsisten"] },
-    { title: "Makanan", img: "/foto makanan.png", desc: "Warna cerah, desain menarik, dan material food-grade yang aman.", tags: ["Food-grade", "Menarik"] },
-    { title: "Buku", img: "/foto buku.png", desc: "Teks jelas, gambar tajam, binding kuat untuk pengalaman membaca terbaik.", tags: ["Binding Kuat"] },
-    { title: "Kalender", img: "/foto kalender.png", desc: "Desain menarik dan material terbaik, alat promosi fungsional.", tags: ["Fungsional"] },
-    { title: "Paperbag", img: "/foto paperbag.png", desc: "Paperbag kuat, stylish, dan mencerminkan identitas brand.", tags: ["Premium", "Kuat"] },
-    { title: "Stiker", img: "/foto sticker.png", desc: "Daya rekat optimal dan potongan presisi untuk branding.", tags: ["Presisi"] },
-    { title: "Brosur", img: "/foto brosur.png", desc: "Informasi jelas, gambar memukau, dan lipatan presisi.", tags: ["Informatif"] }
+    { title: "Kotak Hampers", slug: "kotak-hampers", img: "/kotak hampers.jpg", desc: "Kemasan cetak premium dengan detail presisi, warna memukau, dan finishing elegan.", tags: ["Estetika", "Mewah"] },
+    { title: "Kotak Bakery", slug: "kotak-bakery", img: "/kotak cake.jpg", desc: "Kemasan elegan dan fungsional untuk melindungi dan mempercantik produk bakery Anda.", tags: ["Elegan", "Food-Grade"] },
+    { title: "Rokok", slug: "rokok", img: "/custom rokok 3.jpg", desc: "Cetak box rokok dengan detail grafis tajam dan material berkualitas tinggi.", tags: ["Tajam", "Konsisten"] },
+    { title: "Kotak Nasi", slug: "kotak-nasi", img: "/mobile_banner_2.jpg", desc: "Kotak nasi praktis dan higienis untuk berbagai acara dan kebutuhan katering.", tags: ["Praktis", "Higienis"] },
+    { title: "Buku", slug: "buku", img: "/buku (6).jpg", desc: "Teks jelas, gambar tajam, binding kuat untuk pengalaman membaca terbaik.", tags: ["Binding Kuat"] },
+    { title: "Kalender", slug: "kalender", img: "/foto kalender.png", desc: "Desain menarik dan material terbaik, alat promosi fungsional.", tags: ["Fungsional"] },
+    { title: "Paperbag", slug: "paperbag", img: "/paperbag.jpg", desc: "Paperbag kuat, stylish, dan mencerminkan identitas brand.", tags: ["Premium", "Kuat"] },
+    { title: "Map", slug: "map", img: "/map.jpg", desc: "Cetak map custom untuk kebutuhan kantor, seminar, atau acara. Profesional dan fungsional.", tags: ["Profesional", "Fungsional"] },
+    { title: "Brosur", slug: "brosur", img: "/foto brosur.png", desc: "Informasi jelas, gambar memukau, dan lipatan presisi.", tags: ["Informatif"] }
   ];
 
   return (
@@ -29,54 +31,54 @@ const ClassicProductCardGrid = () => {
         margin: '0 auto'
       }}>
         {categories.map((category, i) => (
-          <motion.div
-            key={`${category.title}-${i}`}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: i * 0.1 }}
-            style={{
-              backgroundColor: '#f3f4f6',
-              borderRadius: '16px',
-              padding: '16px',
-              cursor: 'pointer',
-              height: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              transition: 'transform 0.3s ease',
-              transform: 'scale(1)',
-              border: '1px solid #e5e7eb'
-            }}
-            onMouseOver={(e) => {
-              e.currentTarget.style.transform = 'translateY(-8px)';
-              e.currentTarget.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.1)';
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = 'none';
-            }}
-          >
-            <img
-              src={category.img}
-              alt={category.title}
+          <Link key={category.slug} href={`/produk/${category.slug}`} style={{ textDecoration: 'none' }}>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
               style={{
-                width: '100%',
-                height: '250px',
-                borderRadius: '12px',
-                objectFit: 'cover',
-                marginBottom: '16px'
+                backgroundColor: '#f3f4f6',
+                borderRadius: '16px',
+                padding: '16px',
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                transition: 'transform 0.3s ease',
+                transform: 'scale(1)',
+                border: '1px solid #e5e7eb'
               }}
-            />
-            <h4 style={{ fontSize: '1.25rem', fontWeight: '500', marginBottom: '8px', color: '#111827' }}>{category.title}</h4>
-            <p style={{ color: '#4b5563', fontSize: '0.875rem', lineHeight: '1.5', marginBottom: '16px', flexGrow: 1 }}>{category.desc}</p>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: 'auto' }}>
-              {category.tags.map(tag => (
-                <span key={tag} style={{ backgroundColor: '#e5e7eb', color: '#4b5563', fontSize: '0.75rem', padding: '4px 10px', borderRadius: '9999px' }}>
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </motion.div>
+              onMouseOver={(e) => {
+                e.currentTarget.style.transform = 'translateY(-8px)';
+                e.currentTarget.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.1)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = 'none';
+              }}
+            >
+              <img
+                src={category.img}
+                alt={category.title}
+                style={{
+                  width: '100%',
+                  height: '250px',
+                  borderRadius: '12px',
+                  objectFit: 'cover',
+                  marginBottom: '16px'
+                }}
+              />
+              <h4 style={{ fontSize: '1.25rem', fontWeight: '500', marginBottom: '8px', color: '#111827' }}>{category.title}</h4>
+              <p style={{ color: '#4b5563', fontSize: '0.875rem', lineHeight: '1.5', marginBottom: '16px', flexGrow: 1 }}>{category.desc}</p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: 'auto' }}>
+                {category.tags.map(tag => (
+                  <span key={tag} style={{ backgroundColor: '#e5e7eb', color: '#4b5563', fontSize: '0.75rem', padding: '4px 10px', borderRadius: '9999px' }}>
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </motion.div>
+          </Link>
         ))}
       </div>
     </div>
@@ -127,14 +129,29 @@ export default function Home() {
   };
 
 // --- Banner Slider Component ---
-const BannerSlider = ({ images, interval = 10000 }: { images: string[], interval?: number }) => {
+const BannerSlider = ({ images, interval = 10000, transitionType = 'fade' }: { images: string[], interval?: number, transitionType?: 'fade' | 'slide' }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const minSwipeDistance = 50;
+
+  const resetTimer = () => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+  };
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+    resetTimer();
+    timerRef.current = setTimeout(() => {
+      goToNextSlide();
     }, interval);
-    return () => clearTimeout(timer);
+
+    return () => {
+      resetTimer();
+    };
   }, [currentIndex, images.length, interval]);
 
   const goToSlide = (slideIndex: number) => {
@@ -153,24 +170,74 @@ const BannerSlider = ({ images, interval = 10000 }: { images: string[], interval
     );
   };
 
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null); // Reset touch end on new touch
+    setTouchStart(e.targetTouches[0].clientX);
+    resetTimer(); // Pause timer on user interaction
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+
+    if (distance > minSwipeDistance) {
+      goToNextSlide();
+    } else if (distance < -minSwipeDistance) {
+      goToPrevSlide();
+    }
+    // The useEffect will restart the timer automatically when currentIndex changes
+  };
+
   return (
-    <div style={{ position: 'relative', height: '100%', width: '100%', overflow: 'hidden', backgroundColor: '#FFFFFF' }}>
-      {images.map((src, index) => (
-        <Image
-          key={src}
-          src={src}
-          alt={`Banner ${index + 1}`}
-          fill
-          priority={index === 0}
-          sizes="(max-width: 768px) 100vw, 80vw"
-          style={{
-            objectFit: 'cover',
-            objectPosition: 'center center',
-            opacity: currentIndex === index ? 1 : 0,
-            transition: 'opacity 1.5s ease-in-out',
-          }}
-        />
-      ))}
+    <div 
+      style={{ position: 'relative', height: '100%', width: '100%', overflow: 'hidden', backgroundColor: '#FFFFFF' }}
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
+    >
+      {transitionType === 'slide' ? (
+        <div style={{
+          display: 'flex',
+          height: '100%',
+          transition: 'transform 0.7s ease-in-out',
+          transform: `translateX(-${currentIndex * 100}%)`,
+        }}>
+          {images.map((src) => (
+            <div key={src} style={{ position: 'relative', width: '100%', height: '100%', flexShrink: 0 }}>
+              <Image
+                src={src}
+                alt={`Banner`}
+                fill
+                sizes="(max-width: 768px) 100vw, 80vw"
+                style={{ objectFit: 'cover', objectPosition: 'center center' }}
+                priority={images.indexOf(src) === 0}
+              />
+            </div>
+          ))}
+        </div>
+      ) : (
+        // Default fade transition
+        images.map((src, index) => (
+          <Image
+            key={src}
+            src={src}
+            alt={`Banner ${index + 1}`}
+            fill
+            priority={index === 0}
+            sizes="(max-width: 768px) 100vw, 80vw"
+            style={{
+              objectFit: 'cover',
+              objectPosition: 'center center',
+              opacity: currentIndex === index ? 1 : 0,
+              transition: 'opacity 1.5s ease-in-out',
+            }}
+          />
+        ))
+      )}
 
       {/* Previous Button */}
       <button
@@ -255,6 +322,17 @@ const BannerSlider = ({ images, interval = 10000 }: { images: string[], interval
     '/mobile_banner_8.jpg',
     '/mobile_banner_9.jpg'
   ]; 
+
+  const machineImages = [
+    '/foto mesin.png',
+    '/foto mesin (1).png',
+    '/foto mesin (2).png',
+    '/foto mesin (3).png',
+    '/foto mesin (4).png',
+    '/foto mesin (5).png',
+    '/foto mesin (6).png',
+    '/foto mesin (7).png'
+  ];
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSmallMobile, setIsSmallMobile] = useState(false); // < 480px
@@ -433,7 +511,7 @@ const BannerSlider = ({ images, interval = 10000 }: { images: string[], interval
               marginTop: '88px'
             }}>
               <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1 }}>
-                <BannerSlider images={isLargeMobile ? mobileBanners : desktopBanners} />
+                <BannerSlider images={isLargeMobile ? mobileBanners : desktopBanners} transitionType="slide" />
               </div>
             </section>
 
@@ -465,6 +543,53 @@ const BannerSlider = ({ images, interval = 10000 }: { images: string[], interval
                 </div>
             </section>
 
+            {/* About Us Section */}
+            <section style={{
+              padding: isMediumMobile ? '64px 24px' : '100px 24px',
+              backgroundColor: '#1f2937',
+              color: '#ffffff',
+              borderTop: '1px solid rgba(255,255,255,0.1)'
+            }}>
+              <div style={{
+                maxWidth: '1200px',
+                margin: '0 auto',
+                display: 'grid',
+                gridTemplateColumns: isLargeMobile ? '1fr' : '1fr 1fr',
+                gap: isLargeMobile ? '48px' : '64px',
+                alignItems: 'center'
+              }}>
+                {/* Text Column */}
+                <div style={{ order: isLargeMobile ? 2 : 1 }}>
+                  <h2 style={{
+                    fontSize: isMediumMobile ? '2rem' : '2.25rem',
+                    fontWeight: '600',
+                    marginBottom: '24px',
+                    lineHeight: '1.2'
+                  }}>
+                    Teknologi Modern untuk Hasil Presisi
+                  </h2>
+                  <p style={{
+                    fontSize: isMediumMobile ? '1rem' : '1.125rem',
+                    color: '#e5e7eb',
+                    lineHeight: '1.75',
+                    marginBottom: '16px'
+                  }}>
+                    Kami menggunakan mesin offset terkini untuk menjamin ketajaman detail dan konsistensi warna di setiap lembar. Didukung tim operator yang ahli, Percetakan Dallas siap menangani berbagai kebutuhan cetak Anda dengan cepat, rapi, dan efisien.
+                  </p>
+                </div>
+                {/* Image Slider Column */}
+                <div style={{ 
+                  order: isLargeMobile ? 1 : 2,
+                  height: isSmallMobile ? '280px' : (isLargeMobile ? '350px' : '450px'),
+                  borderRadius: '16px',
+                  overflow: 'hidden',
+                  boxShadow: '0 10px 25px -5px rgba(0,0,0,0.3)'
+                }}>
+                  <BannerSlider images={machineImages} interval={4000} />
+                </div>
+              </div>
+            </section>
+			
             {/* Why Choose Dallas Section */}
             <section style={{
                 padding: isMediumMobile ? '64px 24px' : '100px 24px',
@@ -681,50 +806,53 @@ const BannerSlider = ({ images, interval = 10000 }: { images: string[], interval
               gap: isLargeMobile ? '16px' : '24px'
             }}>
               {[
-                { name: 'ART PAPER', description: 'Kertas ini memiliki permukaan halus dan mengkilap, sehingga hasil cetak nya tajam dan berwarna cerah.', image: 'BAHAN-AP.jpg' },
-                { name: 'IVORY PAPER', description: 'Jenis kertas kemasan glossy/doff yang memadukan art carton dan matte paper, elegan sekaligus kuat.', image: 'BAHAN-IVORY.jpg' },
-                { name: 'Metalize', description: 'Kertas dengan lapisan logam tipis hasil proses metalisasi, tahan uap air dan cahaya.', image: 'BAHAN-METALIZE.jpg' },
-                { name: 'Duplex', description: 'Kertas karton daur ulang berlapis white liner, dengan satu sisi putih dan satu sisi abu-abu.', image: 'BAHAN-DC.jpg' }
+                { name: 'ART PAPER', slug: 'art-paper', description: 'Kertas ini memiliki permukaan halus dan mengkilap, sehingga hasil cetak nya tajam dan berwarna cerah.', image: 'BAHAN-AP.jpg' },
+                { name: 'IVORY PAPER', slug: 'ivory-paper', description: 'Jenis kertas kemasan glossy/doff yang memadukan art carton dan matte paper, elegan sekaligus kuat.', image: 'BAHAN-IVORY.jpg' },
+                { name: 'Tipping', slug: 'bahan-tipping', description: 'Kertas tipping khusus untuk filter rokok, sering digunakan untuk branding dengan cetakan logo atau garis.', image: 'BAHAN-TIPPING.jpg' },
+                { name: 'Duplex', slug: 'duplex', description: 'Kertas karton daur ulang berlapis white liner, dengan satu sisi putih dan satu sisi abu-abu.', image: 'BAHAN-DC.jpg' }
               ].map((product, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 50 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  style={{
-                    backgroundColor: '#f3f4f6',
-                    borderRadius: '16px',
-                    padding: '16px',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                    transform: 'translateY(0)'
-                  }}
-                  onMouseOver={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-8px)';
-                    e.currentTarget.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.1)';
-                  }}
-                  onMouseOut={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.boxShadow = 'none';
-                  }}
-                  onMouseDown={(e) => e.currentTarget.style.transform = 'translateY(-4px) scale(0.98)'}
-                  onMouseUp={(e) => e.currentTarget.style.transform = 'translateY(-8px) scale(1)'}
-                >
-                  <img
-                    src={product.image}
-                    alt={product.name}
+                <Link key={product.slug} href={`/produk/${product.slug}`} style={{ textDecoration: 'none', height: '100%' }}>
+                  <motion.div
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
                     style={{
-                      width: '100%',
-                      height: '250px',
-                      borderRadius: '12px',
-                      objectFit: 'cover',
-                      marginBottom: '12px'
+                      backgroundColor: '#f3f4f6',
+                      borderRadius: '16px',
+                      padding: '16px',
+                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                      transform: 'translateY(0)',
+                      height: '100%',
+                      display: 'flex',
+                      flexDirection: 'column'
                     }}
-                  />
-                  <h4 style={{ fontSize: '1.25rem', fontWeight: '500', marginBottom: '4px', color: '#111827' }}>{product.name}</h4>
-                  <p style={{ color: '#4b5563', fontSize: '0.875rem', lineHeight: '1.5' }}>{product.description}</p>
-                </motion.div>
+                    onMouseOver={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-8px)';
+                      e.currentTarget.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.1)';
+                    }}
+                    onMouseOut={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = 'none';
+                    }}
+                    onMouseDown={(e) => e.currentTarget.style.transform = 'translateY(-4px) scale(0.98)'}
+                    onMouseUp={(e) => e.currentTarget.style.transform = 'translateY(-8px) scale(1)'}
+                  >
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      style={{
+                        width: '100%',
+                        height: '250px',
+                        borderRadius: '12px',
+                        objectFit: 'cover',
+                        marginBottom: '12px'
+                      }}
+                    />
+                    <h4 style={{ fontSize: '1.25rem', fontWeight: '500', marginBottom: '4px', color: '#111827' }}>{product.name}</h4>
+                    <p style={{ color: '#4b5563', fontSize: '0.875rem', lineHeight: '1.5', flexGrow: 1 }}>{product.description}</p>
+                  </motion.div>
+                </Link>
               ))}
             </div>
           </div>
@@ -903,61 +1031,7 @@ const BannerSlider = ({ images, interval = 10000 }: { images: string[], interval
       </section>
 
       {/* Footer */}
-      <footer id="contact" style={{
-        backgroundColor: '#111827', 
-        padding: '48px 0'
-      }}>
-        <div style={{maxWidth: '1280px', margin: '0 auto', padding: '0 24px'}}>
-          <div style={{
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
-            gap: '32px'
-          }}>
-            <div>
-              <div style={{display: 'flex', alignItems: 'center', marginBottom: '16px'}}>
-                <img src="/logo1.png" alt="Percetakan Dallas" style={{height: '40px', width: 'auto'}} />
-              </div>
-              <p style={{color: '#9ca3af'}}>
-                Premium quality products for discerning customers.
-              </p>
-            </div>
-            <div>
-              <h4 style={{fontSize: '1.125rem', fontWeight: '500', marginBottom: '16px'}}>Products</h4>
-              <div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
-                <a href="/KATALOG DALLAS.pdf" 
-                   download="KATALOG DALLAS.pdf"
-                   style={{color: '#9ca3af', textDecoration: 'none', transition: 'all 0.3s ease', cursor: 'pointer'}}
-                   onMouseOver={(e) => {(e.target as HTMLElement).style.color = '#ffffff'; (e.target as HTMLElement).style.paddingLeft = '8px'}}
-                   onMouseOut={(e) => {(e.target as HTMLElement).style.color = '#9ca3af'; (e.target as HTMLElement).style.paddingLeft = '0px'}}>
-                  Katalog
-                </a>
-                <a href="/paperlisens" 
-                   style={{color: '#9ca3af', textDecoration: 'none', transition: 'all 0.3s ease', cursor: 'pointer'}}
-                   onMouseOver={(e) => {(e.target as HTMLElement).style.color = '#ffffff'; (e.target as HTMLElement).style.paddingLeft = '8px'}}
-                   onMouseOut={(e) => {(e.target as HTMLElement).style.color = '#9ca3af'; (e.target as HTMLElement).style.paddingLeft = '0px'}}>
-                  Paperlisens
-                </a>
-              </div>
-            </div>
-            <div>
-              <h4 style={{fontSize: '1.125rem', fontWeight: '500', marginBottom: '16px'}}>Contact</h4>
-              <div style={{color: '#9ca3af', display: 'flex', flexDirection: 'column', gap: '8px'}}>
-                <p>Email: <a href="mailto:percetakandallas@gmail.com" style={{color: '#9ca3af', textDecoration: 'underline'}}>percetakandallas@gmail.com</a></p>
-                <p>Phone: <a href="https://wa.me/6281260001487" target="_blank" rel="noopener noreferrer" style={{color: '#9ca3af', textDecoration: 'underline'}}>(+62) 812-6000-1487</a></p>
-              </div>
-            </div>
-          </div>
-          <div style={{
-            borderTop: '1px solid #374151', 
-            marginTop: '32px', 
-            paddingTop: '32px', 
-            textAlign: 'center', 
-            color: '#9ca3af'
-          }}>
-            <p>&copy; 2024 Percetakan Dallas. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
 
       {/* Floating WhatsApp Button */}
       <a
