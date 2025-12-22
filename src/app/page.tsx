@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { Icon } from '@iconify/react';
 import { motion } from 'framer-motion';
 
@@ -35,7 +36,7 @@ const ClassicProductCardGrid = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: i * 0.1 }}
             style={{
-              backgroundColor: '#1f2937',
+              backgroundColor: '#f3f4f6',
               borderRadius: '16px',
               padding: '16px',
               cursor: 'pointer',
@@ -43,11 +44,12 @@ const ClassicProductCardGrid = () => {
               display: 'flex',
               flexDirection: 'column',
               transition: 'transform 0.3s ease',
-              transform: 'scale(1)'
+              transform: 'scale(1)',
+              border: '1px solid #e5e7eb'
             }}
             onMouseOver={(e) => {
               e.currentTarget.style.transform = 'translateY(-8px)';
-              e.currentTarget.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.3)';
+              e.currentTarget.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.1)';
             }}
             onMouseOut={(e) => {
               e.currentTarget.style.transform = 'translateY(0)';
@@ -65,11 +67,11 @@ const ClassicProductCardGrid = () => {
                 marginBottom: '16px'
               }}
             />
-            <h4 style={{ fontSize: '1.25rem', fontWeight: '500', marginBottom: '8px', color: 'white' }}>{category.title}</h4>
-            <p style={{ color: '#9ca3af', fontSize: '0.875rem', lineHeight: '1.5', marginBottom: '16px', flexGrow: 1 }}>{category.desc}</p>
+            <h4 style={{ fontSize: '1.25rem', fontWeight: '500', marginBottom: '8px', color: '#111827' }}>{category.title}</h4>
+            <p style={{ color: '#4b5563', fontSize: '0.875rem', lineHeight: '1.5', marginBottom: '16px', flexGrow: 1 }}>{category.desc}</p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: 'auto' }}>
               {category.tags.map(tag => (
-                <span key={tag} style={{ backgroundColor: '#374151', color: '#d1d5db', fontSize: '0.75rem', padding: '4px 10px', borderRadius: '9999px' }}>
+                <span key={tag} style={{ backgroundColor: '#e5e7eb', color: '#4b5563', fontSize: '0.75rem', padding: '4px 10px', borderRadius: '9999px' }}>
                   {tag}
                 </span>
               ))}
@@ -154,16 +156,16 @@ const BannerSlider = ({ images, interval = 10000 }: { images: string[], interval
   return (
     <div style={{ position: 'relative', height: '100%', width: '100%', overflow: 'hidden', backgroundColor: '#FFFFFF' }}>
       {images.map((src, index) => (
-        <img
-          key={index}
+        <Image
+          key={src}
           src={src}
           alt={`Banner ${index + 1}`}
+          fill
+          priority={index === 0}
+          sizes="(max-width: 768px) 100vw, 80vw"
           style={{
-            position: 'absolute',
-            width: '100%',
-            height: '100%',
             objectFit: 'cover',
-            objectPosition: 'center center', // Explicitly center the image
+            objectPosition: 'center center',
             opacity: currentIndex === index ? 1 : 0,
             transition: 'opacity 1.5s ease-in-out',
           }}
@@ -241,7 +243,18 @@ const BannerSlider = ({ images, interval = 10000 }: { images: string[], interval
   );
 };
 
-  const mainBanners = ['/main banner dallas.png', '/main banner dallas 2.png', '/main banner dallas 3.png', '/main banner dallas 4.png'];
+  const desktopBanners = ['/main banner dallas.png', '/main banner dallas 2.png', '/main banner dallas 3.png', '/main banner dallas 4.png'];
+  const mobileBanners = [
+    '/mobile_banner_1.jpg',
+    '/mobile_banner_2.jpg',
+    '/mobile_banner_3.jpg',
+    '/mobile_banner_4.jpg',
+    '/mobile_banner_5.jpg',
+    '/mobile_banner_6.jpg',
+    '/mobile_banner_7.jpg',
+    '/mobile_banner_8.jpg',
+    '/mobile_banner_9.jpg'
+  ]; 
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSmallMobile, setIsSmallMobile] = useState(false); // < 480px
@@ -277,24 +290,25 @@ const BannerSlider = ({ images, interval = 10000 }: { images: string[], interval
         setIsMenuOpen(false);
       }}
       style={{
-        color: link.href === '/' ? '#ffffff' : '#9ca3af',
+        color: link.href === '/' ? '#000000' : '#4b5563',
         textDecoration: 'none',
         transition: 'all 0.3s ease',
         cursor: 'pointer',
         padding: isLargeMobile ? '16px 0' : '0',
         textAlign: isLargeMobile ? 'center' : 'left',
-        borderBottom: isLargeMobile ? '1px solid rgba(55,65,81,0.5)' : 'none',
-        width: isLargeMobile ? '100%' : 'auto'
+        borderBottom: isLargeMobile ? '1px solid rgba(229,231,235,0.5)' : 'none',
+        width: isLargeMobile ? '100%' : 'auto',
+        fontWeight: '500'
       }}
       onMouseOver={(e) => {
         if (!isLargeMobile) {
-          (e.target as HTMLElement).style.color = '#ffffff';
+          (e.target as HTMLElement).style.color = '#000000';
           (e.target as HTMLElement).style.transform = 'translateY(-2px)';
         }
       }}
       onMouseOut={(e) => {
         if (!isLargeMobile) {
-          (e.target as HTMLElement).style.color = link.href === '/' ? '#ffffff' : '#9ca3af';
+          (e.target as HTMLElement).style.color = link.href === '/' ? '#000000' : '#4b5563';
           (e.target as HTMLElement).style.transform = 'translateY(0)';
         }
       }}
@@ -365,24 +379,24 @@ const BannerSlider = ({ images, interval = 10000 }: { images: string[], interval
         </div>
       </div>
 
-      {/* Navigation */}
+      /* Navigation */
       <nav style={{
         position: 'fixed',
         top: '36px',
         width: '100%',
         zIndex: 50,
-        backgroundColor: 'rgba(0,0,0,0.9)',
+        backgroundColor: 'rgba(255,255,255,0.95)',
         backdropFilter: 'saturate(180%) blur(20px)',
-        borderBottom: '1px solid rgba(55,65,81,0.3)',
+        borderBottom: '1px solid rgba(229,231,235,0.5)',
       }}>
         <div style={{maxWidth: '1280px', margin: '0 auto', padding: '0 24px', position: 'relative'}}>
           <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0'}}>
             <a href="/" style={{textDecoration: 'none'}}>
-              <img src="/logo1.png" alt="Percetakan Dallas" style={{height: '36px', width: 'auto'}} />
+              <img src="/logo1.png" alt="Percetakan Dallas" style={{height: '36px', width: 'auto', filter: 'invert(1)'}} />
             </a>
 
             {isLargeMobile ? (
-              <button onClick={() => setIsMenuOpen(!isMenuOpen)} style={{background: 'none', border: 'none', color: 'white', fontSize: '24px'}}>
+              <button onClick={() => setIsMenuOpen(!isMenuOpen)} style={{background: 'none', border: 'none', color: '#000000', fontSize: '24px'}}>
                 <Icon icon={isMenuOpen ? "mdi:close" : "mdi:menu"} />
               </button>
             ) : (
@@ -398,11 +412,13 @@ const BannerSlider = ({ images, interval = 10000 }: { images: string[], interval
               top: '100%',
               left: 0,
               right: 0,
-              backgroundColor: 'rgba(0,0,0,0.95)',
+              backgroundColor: 'rgba(255,255,255,0.98)',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
               padding: '0 24px 16px',
+              borderBottom: '1px solid rgba(229,231,235,0.5)',
+              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
             }}>
               {renderNavLinks()}
             </div>
@@ -412,12 +428,12 @@ const BannerSlider = ({ images, interval = 10000 }: { images: string[], interval
 
             {/* Hero Section */}
             <section style={{
-              height: isLargeMobile ? '60vw' : 'calc(100vh - 88px)',
+              height: isLargeMobile ? '100vw' : 'calc(100vh - 88px)', // 100vw = Kotak di HP, Fullscreen di Desktop
               position: 'relative',
               marginTop: '88px'
             }}>
               <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1 }}>
-                <BannerSlider images={mainBanners} />
+                <BannerSlider images={isLargeMobile ? mobileBanners : desktopBanners} />
               </div>
             </section>
 
@@ -425,21 +441,22 @@ const BannerSlider = ({ images, interval = 10000 }: { images: string[], interval
             <section style={{
               padding: isMediumMobile ? '64px 24px' : '128px 24px',
               textAlign: 'center',
-              backgroundColor: '#1f2937',
-              color: '#ffffff'
+              backgroundColor: '#ffffff',
+              color: '#1f2937'
             }}>
                 <div style={{maxWidth: '800px', margin: '0 auto'}}>
                     <h2 style={{
                       fontSize: isMediumMobile ? '2rem' : '2.5rem',
                       fontWeight: '600',
                       marginBottom: '16px',
-                      lineHeight: '1.2'
+                      lineHeight: '1.2',
+                      color: '#111827'
                     }}>
                         Sejak 1983: Warisan Kepercayaan dan Kualitas Tak Tertandingi
                     </h2>
                     <p style={{
                       fontSize: isMediumMobile ? '1rem' : '1.125rem',
-                      color: '#e5e7eb',
+                      color: '#4b5563',
                       lineHeight: '1.75'
                     }}>
                         Percetakan Offset Dallas adalah pionir dan pemimpin dalam industri percetakan offset di Kediri, dengan rekam jejak yang tak terputus sejak didirikan pada tahun 1983. Dengan pengalaman yang kaya selama lebih dari empat dekade, kami telah menguasai seni dan teknologi cetak, selalu mengutamakan kualitas tinggi untuk memenuhi dan melampaui kebutuhan spesifik setiap pelanggan.
@@ -574,14 +591,13 @@ const BannerSlider = ({ images, interval = 10000 }: { images: string[], interval
                   fontSize: isMediumMobile ? '2.5rem' : (isLargeMobile ? '3rem' : '4rem'),
                   fontWeight: '300',
                   marginBottom: isMediumMobile ? '16px' : '24px',
-                  lineHeight: '1.1'
+                  lineHeight: '1.1',
+                  color: '#ffffff'
                 }}>
                   Premium Quality<br/>
                   <span style={{
                     fontWeight: '600',
-                    background: 'linear-gradient(to right, #ffffff, #9ca3af)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent'
+                    color: '#ffffff'
                   }}>
                     Products
                   </span>
@@ -608,6 +624,8 @@ const BannerSlider = ({ images, interval = 10000 }: { images: string[], interval
                      download="KATALOG DALLAS.pdf"
                      style={{
                        ...primaryButton,
+                       backgroundColor: '#ffffff',
+                       color: '#000000',
                        padding: isMediumMobile ? '10px 24px' : '12px 32px',
                        fontSize: isMediumMobile ? '14px' : '16px',
                        width: isSmallMobile ? '100%' : 'auto',
@@ -623,6 +641,8 @@ const BannerSlider = ({ images, interval = 10000 }: { images: string[], interval
                      onClick={(e) => smoothScroll(e, '#non-cigarettes')}
                      style={{
                        ...secondaryButton,
+                       color: '#ffffff',
+                       border: '1px solid #ffffff',
                        padding: isMediumMobile ? '10px 24px' : '12px 32px',
                        fontSize: isMediumMobile ? '14px' : '16px',
                        width: isSmallMobile ? '100%' : 'auto',
@@ -651,10 +671,10 @@ const BannerSlider = ({ images, interval = 10000 }: { images: string[], interval
       </section>
 
       {/* Restored Materials Section */}
-      <section style={{ padding: '100px 0', backgroundColor: '#111827' }}>
+      <section style={{ padding: '100px 0', backgroundColor: '#ffffff' }}>
         <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px' }}>
           <div style={{ marginTop: '0' }}>
-            <h3 style={{ fontSize: '2rem', fontWeight: '300', textAlign: 'center', marginBottom: '48px', color: 'white' }}>BEBERAPA BAHAN UNGGULAN KAMI</h3>
+            <h3 style={{ fontSize: '2rem', fontWeight: '300', textAlign: 'center', marginBottom: '48px', color: '#111827' }}>BEBERAPA BAHAN UNGGULAN KAMI</h3>
             <div style={{
               display: 'grid',
               gridTemplateColumns: isSmallMobile ? '1fr' : (isLargeMobile ? 'repeat(2, 1fr)' : 'repeat(auto-fit, minmax(250px, 1fr))'),
@@ -673,7 +693,7 @@ const BannerSlider = ({ images, interval = 10000 }: { images: string[], interval
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   style={{
-                    backgroundColor: '#1f2937',
+                    backgroundColor: '#f3f4f6',
                     borderRadius: '16px',
                     padding: '16px',
                     cursor: 'pointer',
@@ -682,7 +702,7 @@ const BannerSlider = ({ images, interval = 10000 }: { images: string[], interval
                   }}
                   onMouseOver={(e) => {
                     e.currentTarget.style.transform = 'translateY(-8px)';
-                    e.currentTarget.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.3)';
+                    e.currentTarget.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.1)';
                   }}
                   onMouseOut={(e) => {
                     e.currentTarget.style.transform = 'translateY(0)';
@@ -702,8 +722,8 @@ const BannerSlider = ({ images, interval = 10000 }: { images: string[], interval
                       marginBottom: '12px'
                     }}
                   />
-                  <h4 style={{ fontSize: '1.25rem', fontWeight: '500', marginBottom: '4px', color: 'white' }}>{product.name}</h4>
-                  <p style={{ color: '#9ca3af', fontSize: '0.875rem', lineHeight: '1.5' }}>{product.description}</p>
+                  <h4 style={{ fontSize: '1.25rem', fontWeight: '500', marginBottom: '4px', color: '#111827' }}>{product.name}</h4>
+                  <p style={{ color: '#4b5563', fontSize: '0.875rem', lineHeight: '1.5' }}>{product.description}</p>
                 </motion.div>
               ))}
             </div>
