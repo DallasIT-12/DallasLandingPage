@@ -344,7 +344,7 @@ const ProductCard = ({ product }: { product: any }) => {
 
   return (
     <div className="product-card">
-      <Link href={`/paperlisens/product/${product.id}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
+      <Link href={`/paperlisens/product/${product.productSlug}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
         
         {/* Image & Overlay Section */}
         <div className="card-image-wrapper">
@@ -472,9 +472,17 @@ export default function PaperlisensPage() {
   const { cartCount, setIsCartOpen } = useCart();
 
   // Use centralized data
-  const filteredProducts = searchQuery 
+  const allProducts = searchQuery 
     ? searchProducts(searchQuery) 
     : products;
+
+  // Deduplicate products based on base ID (e.g., 'pt-001' from 'pt-001-1')
+  const filteredProducts = allProducts.filter((p, index, self) => {
+     const baseId = p.id.replace(/-\d+$/, ''); // Remove '-1', '-2' suffix if present
+     // Find the *first* occurrence of this baseId in the array
+     const firstIndex = self.findIndex(t => t.id.replace(/-\d+$/, '') === baseId);
+     return index === firstIndex;
+  });
 
   const mainBanners = ['/main banner.png', '/main banner 2.png'];
 

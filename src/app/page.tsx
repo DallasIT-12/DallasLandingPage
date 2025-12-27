@@ -38,7 +38,7 @@ const ClassicProductCardGrid = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
               style={{
-                backgroundColor: '#f3f4f6',
+                backgroundColor: '#BDD8E9',
                 borderRadius: '16px',
                 padding: '16px',
                 height: '100%',
@@ -72,7 +72,7 @@ const ClassicProductCardGrid = () => {
               <p style={{ color: '#4b5563', fontSize: '0.875rem', lineHeight: '1.5', marginBottom: '16px', flexGrow: 1 }}>{category.desc}</p>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: 'auto' }}>
                 {category.tags.map(tag => (
-                  <span key={tag} style={{ backgroundColor: '#e5e7eb', color: '#4b5563', fontSize: '0.75rem', padding: '4px 10px', borderRadius: '9999px' }}>
+                  <span key={tag} style={{ backgroundColor: '#ffffff', color: '#4b5563', fontSize: '0.75rem', padding: '4px 10px', borderRadius: '9999px' }}>
                     {tag}
                   </span>
                 ))}
@@ -397,7 +397,7 @@ const BannerSlider = ({ images, interval = 10000, transitionType = 'fade' }: { i
   
   return (
     <div style={{
-      backgroundColor: '#000000', 
+      backgroundColor: '#001D39', 
       color: '#ffffff', 
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif',
       WebkitFontSmoothing: 'antialiased'
@@ -546,7 +546,7 @@ const BannerSlider = ({ images, interval = 10000, transitionType = 'fade' }: { i
             {/* About Us Section */}
             <section style={{
               padding: isMediumMobile ? '64px 24px' : '100px 24px',
-              backgroundColor: '#1f2937',
+              backgroundColor: '#0A4174',
               color: '#ffffff',
               borderTop: '1px solid rgba(255,255,255,0.1)'
             }}>
@@ -594,7 +594,7 @@ const BannerSlider = ({ images, interval = 10000, transitionType = 'fade' }: { i
             <section style={{
                 padding: isMediumMobile ? '64px 24px' : '100px 24px',
                 textAlign: 'center',
-                backgroundColor: '#1f2937',
+                backgroundColor: '#0A4174',
                 color: '#ffffff',
                 borderTop: '1px solid rgba(255,255,255,0.1)'
             }}>
@@ -628,7 +628,7 @@ const BannerSlider = ({ images, interval = 10000, transitionType = 'fade' }: { i
                             <div style={{
                                 width: '80px', height: '80px',
                                 borderRadius: '50%',
-                                backgroundColor: 'rgba(255,255,255,0.05)',
+                                backgroundColor: 'rgba(73, 118, 159, 0.2)',
                                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                                 marginBottom: '8px'
                             }}>
@@ -645,7 +645,7 @@ const BannerSlider = ({ images, interval = 10000, transitionType = 'fade' }: { i
                             <div style={{
                                 width: '80px', height: '80px',
                                 borderRadius: '50%',
-                                backgroundColor: 'rgba(255,255,255,0.05)',
+                                backgroundColor: 'rgba(73, 118, 159, 0.2)',
                                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                                 marginBottom: '8px'
                             }}>
@@ -662,7 +662,7 @@ const BannerSlider = ({ images, interval = 10000, transitionType = 'fade' }: { i
                             <div style={{
                                 width: '80px', height: '80px',
                                 borderRadius: '50%',
-                                backgroundColor: 'rgba(255,255,255,0.05)',
+                                backgroundColor: 'rgba(73, 118, 159, 0.2)',
                                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                                 marginBottom: '8px'
                             }}>
@@ -679,7 +679,7 @@ const BannerSlider = ({ images, interval = 10000, transitionType = 'fade' }: { i
                             <div style={{
                                 width: '80px', height: '80px',
                                 borderRadius: '50%',
-                                backgroundColor: 'rgba(255,255,255,0.05)',
+                                backgroundColor: 'rgba(73, 118, 159, 0.2)',
                                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                                 marginBottom: '8px'
                             }}>
@@ -709,7 +709,7 @@ const BannerSlider = ({ images, interval = 10000, transitionType = 'fade' }: { i
             <section style={{
                 padding: isMediumMobile ? '64px 24px' : '128px 24px',
                 textAlign: 'center',
-                backgroundColor: '#000000',
+                backgroundColor: '#001D39',
                 color: '#ffffff'
             }}>
                 <h1 style={{
@@ -783,7 +783,7 @@ const BannerSlider = ({ images, interval = 10000, transitionType = 'fade' }: { i
             </section>
 
       {/* Classic Product Card Grid Section */}
-      <section id="classic-products" className="bg-slate-900 py-[100px] px-4 sm:px-6 lg:px-8">
+      <section id="classic-products" className="bg-[#0A4174] py-[100px] px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
           <h2 className="text-4xl md:text-5xl lg:text-7xl font-light text-white leading-tight">
             Produk Unggulan Kami
@@ -818,10 +818,10 @@ const BannerSlider = ({ images, interval = 10000, transitionType = 'fade' }: { i
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                     style={{
-                      backgroundColor: '#f3f4f6',
+                      backgroundColor: '#BDD8E9',
                       borderRadius: '16px',
                       padding: '16px',
-                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                      transition: 'all 0.3s cubic-bezier(0.4, 0, 2, 1)',
                       transform: 'translateY(0)',
                       height: '100%',
                       display: 'flex',
@@ -862,7 +862,7 @@ const BannerSlider = ({ images, interval = 10000, transitionType = 'fade' }: { i
       {/* Non-Cigarette Products Section */}
       <section id="non-cigarettes" style={{
         padding: '80px 0', 
-        backgroundColor: '#000000'
+        backgroundColor: '#001D39'
       }}>
         <div style={{maxWidth: '1280px', margin: '0 auto', padding: '0 24px'}}>
           <div style={{textAlign: 'center', marginBottom: '48px'}}>
@@ -885,7 +885,7 @@ const BannerSlider = ({ images, interval = 10000, transitionType = 'fade' }: { i
           }}>
             {/* Card 1 */}
             <div style={{
-              backgroundColor: '#1f2937',
+              backgroundColor: '#0A4174',
               borderRadius: '24px',
               overflow: 'hidden',
               display: 'flex',
@@ -906,7 +906,7 @@ const BannerSlider = ({ images, interval = 10000, transitionType = 'fade' }: { i
 
             {/* Card 2 */}
             <div style={{
-              backgroundColor: '#1f2937',
+              backgroundColor: '#0A4174',
               borderRadius: '24px',
               overflow: 'hidden',
               display: 'flex',

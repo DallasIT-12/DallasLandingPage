@@ -100,6 +100,40 @@ const ProductCard = ({ product }: { product: any }) => (
   </Link>
 );
 
+// --- Description Formatter ---
+const DescriptionFormatter = ({ text }: { text: string }) => {
+  if (!text) return null;
+
+  // Split by newlines
+  const lines = text.split('\n');
+  
+  return (
+    <div className="description-content" style={{ lineHeight: '1.6', fontSize: '14px', color: '#555' }}>
+      {lines.map((line, index) => {
+        const trimmed = line.trim();
+        if (!trimmed) return <br key={index} />;
+        
+        // Check for list items (starting with - or • or number like "1.")
+        if (trimmed.startsWith('- ') || trimmed.startsWith('• ')) {
+           return (
+             <div key={index} style={{ display: 'flex', marginLeft: '8px' }}>
+               <span style={{ marginRight: '8px' }}>•</span>
+               <span>{trimmed.substring(2)}</span>
+             </div>
+           );
+        }
+        
+        // Simple headers (all caps and short) could be bold
+        if (trimmed === trimmed.toUpperCase() && trimmed.length < 50 && trimmed.length > 3) {
+            return <p key={index} style={{ fontWeight: 'bold', marginTop: '16px', marginBottom: '8px' }}>{trimmed}</p>;
+        }
+
+        return <p key={index} style={{ marginBottom: '8px' }}>{trimmed}</p>;
+      })}
+    </div>
+  );
+};
+
 export default function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
   const { addToCart, cartCount, setIsCartOpen } = useCart();
@@ -107,21 +141,35 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
 
-  // Find the product from centralized data
-  const foundProduct = products.find(p => String(p.id) === slug);
+  // Find the product from centralized data using productSlug instead of ID
+  const initialProduct = products.find(p => p.productSlug === slug);
 
+  // State to track the currently selected variant (defaults to the one from the URL)
+  const [selectedVariant, setSelectedVariant] = useState(initialProduct);
+  
   // Fallback if product not found (e.g., 404 page or redirect)
-  if (!foundProduct) {
-    return <div>Product not found!</div>; // TODO: Implement a proper 404 page or redirect
+  if (!selectedVariant) {
+    return (
+      <div style={{ padding: '40px', textAlign: 'center' }}>
+        <h2>Product not found</h2>
+        <Link href="/paperlisens" style={{ color: '#ee4d2d', textDecoration: 'underline' }}>Return to Shop</Link>
+      </div>
+    ); 
   }
+
+  // VARIATION LOGIC: Find all siblings that share the same base ID prefix
+  // e.g. 'pt-001-1' and 'pt-001-2' share base 'pt-001'
+  const currentBaseId = selectedVariant.id.replace(/-\d+$/, '');
+  const variations = products.filter(p => p.id.replace(/-\d+$/, '') === currentBaseId);
 
   // Normalize product data (add defaults for missing fields to match UI requirements)
   const product = {
-    ...foundProduct,
-    images: [foundProduct.image], // Adapt single image to array
+    ...selectedVariant,
+    // Use the 'images' array if available, otherwise wrap 'image' in an array as fallback
+    images: selectedVariant.images && selectedVariant.images.length > 0 ? selectedVariant.images : [selectedVariant.image],
     rating: 4.9,
     reviewCount: 128,
-    originalPrice: Math.ceil(foundProduct.price * 1.15), // Mock original price (15% markup)
+    originalPrice: Math.ceil(selectedVariant.price * 1.15), // Mock original price (15% markup)
     stock: 150,
     weight: '1000 gr',
   };
@@ -152,6 +200,11 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
 Mohon info ketersediaan stok. Terima kasih.`;
     
     window.open(`https://wa.me/6281260001487?text=${encodeURIComponent(message)}`, '_blank');
+  };
+
+  // Helper to extract clean variant name
+  const getVariantName = (p: any) => {
+      return p.variant || 'Standard';
   };
 
   return (
@@ -203,7 +256,7 @@ Mohon info ketersediaan stok. Terima kasih.`;
         
         {/* BREADCRUMB */}
         <div style={{ fontSize: '14px', color: '#555', marginBottom: '16px' }}>
-          <Link href="/paperlisens" style={{ textDecoration: 'none', color: '#ee4d2d' }}>Home</Link> &gt; <span>Product</span> &gt; {slug}
+          <Link href="/paperlisens" style={{ textDecoration: 'none', color: '#ee4d2d' }}>Home</Link> &gt; <span>Product</span> &gt; {product.name}
         </div>
 
         {/* PRODUCT MAIN SECTION */}
@@ -248,8 +301,48 @@ Mohon info ketersediaan stok. Terima kasih.`;
                  <div style={{ fontSize: '28px', fontWeight: 'bold', color: '#ee4d2d' }}>Rp {product.price.toLocaleString('id-ID')}</div>
               </div>
 
+              {/* VARIATION SELECTOR (Only if multiple variants exist) */}
+              {variations.length > 1 && (
+                <div style={{ marginBottom: '24px' }}>
+                  <div style={{ fontSize: '14px', color: '#757575', marginBottom: '8px' }}>Pilih Variasi:</div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                    {variations.map((v) => (
+                      <button
+                        key={v.id}
+                        onClick={() => {
+                            setSelectedVariant(v);
+                            setSelectedImage(0); // Reset gallery to first image of new variant
+                        }}
+                        style={{
+                          padding: '8px 16px',
+                          border: selectedVariant.id === v.id ? '1px solid #ee4d2d' : '1px solid #e0e0e0',
+                          backgroundColor: selectedVariant.id === v.id ? '#fff' : '#fff',
+                          color: selectedVariant.id === v.id ? '#ee4d2d' : '#333',
+                          borderRadius: '2px',
+                          cursor: 'pointer',
+                          fontSize: '14px',
+                          position: 'relative',
+                          overflow: 'hidden'
+                        }}
+                      >
+                        {getVariantName(v)}
+                        {selectedVariant.id === v.id && (
+                           <div style={{
+                               position: 'absolute', bottom: 0, right: 0, width: 0, height: 0, 
+                               borderStyle: 'solid', borderWidth: '0 0 10px 10px', 
+                               borderColor: 'transparent transparent #ee4d2d transparent'
+                           }}>
+                               <Icon icon="material-symbols:check-small" style={{ color: 'white', position: 'absolute', bottom: '-11px', right: '-2px', fontSize: '10px' }} />
+                           </div>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <div style={{ marginBottom: '24px', color: '#555', lineHeight: '1.6', fontSize: '14px' }}>
-                {product.description}
+                {/* Description moved to tab */}
               </div>
 
               {/* QUANTITY */}
@@ -324,14 +417,7 @@ Mohon info ketersediaan stok. Terima kasih.`;
            <div style={{ padding: '0 12px', lineHeight: '1.6', color: '#333' }}>
               {activeTab === 'deskripsi' && (
                 <div>
-                  <p>{product.description}</p>
-                  <p style={{ marginTop: '12px' }}>Keunggulan Produk:</p>
-                  <ul style={{ listStyleType: 'disc', paddingLeft: '20px' }}>
-                    <li>Bahan Food Grade, aman untuk makanan panas/berminyak.</li>
-                    <li>Ramah lingkungan (Eco Friendly).</li>
-                    <li>Desain praktis dan mudah dirakit.</li>
-                    <li>Cocok untuk branding usaha kuliner Anda.</li>
-                  </ul>
+                  <DescriptionFormatter text={product.description} />
                 </div>
               )}
               {activeTab === 'info' && (
