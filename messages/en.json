@@ -1,0 +1,224 @@
+{
+  "Navbar": {
+    "home": "Home",
+    "products": "Custom Cigarette Box",
+    "catalog": "Catalog",
+    "paperlisens": "Paperlisens",
+    "contact": "Contact"
+  },
+  "TopBar": {
+    "address": "Jl. Kilisuci no 71, Singonegaran, Kediri City."
+  },
+  "CompanyProfile": {
+    "title": "Since 1983: A Legacy of Trust and Unmatched Quality",
+    "description": "Dallas Offset Printing is a pioneer and leader in the offset printing industry in Kediri, with an unbroken track record since its establishment in 1983. With over four decades of rich experience, we have mastered the art and technology of printing, always prioritizing high quality to meet and exceed the specific needs of every customer. Our commitment is proven by our service to tens of thousands of clients from various industrial scales, affirming the consistency and reliability of our printing results."
+  },
+  "AboutUs": {
+    "title": "Modern Technology for Precise Results",
+    "description": "We use the latest offset machines to ensure detail sharpness and color consistency on every sheet. Supported by a team of expert operators, Dallas Printing is ready to handle your various printing needs quickly, neatly, and efficiently."
+  },
+  "WhyChoose": {
+    "title": "Why Choose Dallas Offset Printing?",
+    "subtitle": "Dedication to Quality and Punctuality Since 1983.",
+    "points": {
+      "experience": {
+        "title": "4 Decades of Experience",
+        "desc": "Over 40 years of work gives us deep expertise to handle the various complexities of your printing projects, from small scale to mass production."
+      },
+      "quality": {
+        "title": "Precision Quality Standards",
+        "desc": "We combine the precision of experienced operators with the latest machine technology to ensure accurate colors, neat cuts, and consistent results."
+      },
+      "consultation": {
+        "title": "Solution-Oriented Consultation Partner",
+        "desc": "We are more than just printers. Our team is ready to provide expert advice on material selection, cost efficiency, to the best finishing for your product."
+      },
+      "punctuality": {
+        "title": "Punctuality Guarantee",
+        "desc": "We value your business by valuing your time. With structured workflow management, we are committed to completing orders according to the agreed deadline."
+      }
+    },
+    "cta": "Entrust your business image to the experts. Contact Dallas Offset Printing today for your project consultation."
+  },
+  "PremiumQuality": {
+    "title": "Premium Quality",
+    "titleSpan": "Products",
+    "description": "Discover our exceptional range of cigarette and non-cigarette products",
+    "btnDownload": "Download Catalog",
+    "btnNonCigarette": "Non-Cigarette Products"
+  },
+  "FeaturedProducts": {
+    "title": "Our Featured Products",
+    "subtitle": "Find various high-quality printing solutions for your business needs."
+  },
+  "Materials": {
+    "title": "SOME OF OUR FEATURED MATERIALS",
+    "artPaper": {
+      "name": "ART PAPER",
+      "desc": "This paper has a smooth and glossy surface, so the print results are sharp and brightly colored."
+    },
+    "ivoryPaper": {
+      "name": "IVORY PAPER",
+      "desc": "A type of glossy/doff packaging paper that combines art carton and matte paper, elegant yet strong."
+    },
+    "tipping": {
+      "name": "Tipping",
+      "desc": "Special tipping paper for cigarette filters, often used for branding with logo prints or lines."
+    },
+    "duplex": {
+      "name": "Duplex",
+      "desc": "Recycled cardboard paper layered with white liner, with one white side and one gray side."
+    }
+  },
+  "NonCigarette": {
+    "title": "Quality Packaging Solutions Since 2022",
+    "description": "Paperlisens understands that packaging is the face of your culinary brand. Since 2022, we have been dedicated to providing the best papertrays and takeaway boxes through easy and fast online services. The trust of thousands of customers in various marketplaces proves our commitment to helping your business look more professional.",
+    "productsTitle": "Our Featured Products",
+    "card1": {
+      "title": "Versatile & Trendy Cup Solutions",
+      "desc": "Not just a container, but a stage for your culinary delights. From Cup Toast for grilled bread to various cup variants (Type A, B, Sakura, and Ice) designed with precision. This aesthetic tray shape is perfect for serving various finger foods, fried foods, or contemporary snacks to make them look fuller, attractive, and certainly Instagramable."
+    },
+    "card2": {
+      "title": "Donut Boxes in Various Sizes",
+      "desc": "Whatever your selling portion needs, we have the box! Available from personal sizes (contents 1 & 2) to family or hamper sizes (contents 3 & 6). Designed with sturdy material to keep the donut shape perfect and beautiful until it reaches the customer's hands."
+    },
+    "galleryTitle": "Featured Products on Paperlisens",
+    "btnBuy": "Buy at Paperlisens",
+    "btnViewAll": "View All Products at Paperlisens"
+  },
+  "Categories": {
+    "hampers": {
+      "title": "Hampers Box",
+      "desc": "Premium printed packaging with precise details, stunning colors, and elegant finishing.",
+      "tags": {
+        "tag1": "Aesthetic",
+        "tag2": "Luxury"
+      }
+    },
+    "bakery": {
+      "title": "Bakery Box",
+      "desc": "Elegant and functional packaging to protect and beautify your bakery products.",
+      "tags": {
+        "tag1": "Elegant",
+        "tag2": "Food-Grade"
+      }
+    },
+    "rokok": {
+      "title": "Cigarette Box",
+      "desc": "Printed cigarette boxes with sharp graphic details and high-quality materials.",
+      "tags": {
+        "tag1": "Sharp",
+        "tag2": "Consistent"
+      }
+    },
+    "nasi": {
+      "title": "Rice Box",
+      "desc": "Practical and hygienic rice boxes for various events and catering needs.",
+      "tags": {
+        "tag1": "Practical",
+        "tag2": "Hygienic"
+      }
+    },
+    "buku": {
+      "title": "Books",
+      "desc": "Clear text, sharp images, strong binding for the best reading experience.",
+      "tags": {
+        "tag1": "Strong Binding"
+      }
+    },
+    "kalender": {
+      "title": "Calendar",
+      "desc": "Attractive design and best materials, functional promotional tool.",
+      "tags": {
+        "tag1": "Functional"
+      }
+    },
+    "paperbag": {
+      "title": "Paperbag",
+      "desc": "Strong, stylish paperbags that reflect brand identity.",
+      "tags": {
+        "tag1": "Premium",
+        "tag2": "Strong"
+      }
+    },
+    "map": {
+      "title": "Folder",
+      "desc": "Custom printed folders for office needs, seminars, or events. Professional and functional.",
+      "tags": {
+        "tag1": "Professional",
+        "tag2": "Functional"
+      }
+    },
+    "brosur": {
+      "title": "Brochure",
+      "desc": "Clear information, stunning images, and precise folding.",
+      "tags": {
+        "tag1": "Informative"
+      }
+    }
+  },
+  "Footer": {
+    "description": "Premium quality products for discerning customers.",
+    "products": "Products",
+    "catalog": "Catalog",
+    "paperlisens": "Paperlisens",
+    "contact": "Contact",
+    "email": "Email",
+    "phone": "Phone",
+    "copyright": "© 2024 Percetakan Dallas. All rights reserved."
+  },
+  "Paperlisens": {
+    "backToDallas": "Back to Dallas",
+    "searchPlaceholder": "Search products in Paperlisens...",
+    "searchInCategory": "Search in {category}...",
+    "ourCategories": "OUR CATEGORIES",
+    "recommendation": "RECOMMENDATION",
+    "productNotFound": "Product not found.",
+    "filter": "Filter",
+    "priceRange": "Price Range",
+    "minPrice": "Min",
+    "maxPrice": "Max",
+    "apply": "APPLY",
+    "sortBy": "Sort By",
+    "bestSeller": "Best Seller",
+    "priceLowHigh": "Price: Low to High",
+    "priceHighLow": "Price: High to Low",
+    "home": "Home",
+    "category": "Category",
+    "product": "Product",
+    "noProductsFound": "No products found with these criteria.",
+    "rating": "Rating",
+    "sold": "Sold",
+    "selectVariant": "Select Variant:",
+    "quantity": "Quantity",
+    "available": "{count} pieces available",
+    "addToCart": "Add to Cart",
+    "orderNow": "Order Now",
+    "relatedProducts": "OTHER PRODUCTS FROM THIS SHOP",
+    "youMayAlsoLike": "YOU MIGHT ALSO LIKE",
+    "deskripsi": "Description",
+    "description": "Description",
+    "info": "Info",
+    "review": "Review",
+    "pengiriman": "Shipping",
+    "shipping": "Shipping",
+    "weight": "Weight",
+    "etalase": "Storefront",
+    "productNotFoundDetail": "Product not found",
+    "returnToShop": "Return to Shop",
+    "categories": {
+      "paperTray": "Paper Tray",
+      "boxTakeaway": "Box Takeaway",
+      "tempatPensil": "Pencil Case",
+      "boxCupcake": "Cupcake Box"
+    },
+    "shippingInfo": {
+      "from": "Shipping from Kediri City.",
+      "couriers": "Available couriers: JNE, J&T, SiCepat.",
+      "deadline": "Orders before 14.00 PM are shipped on the same day."
+    },
+    "reviewsCount": "from {count} reviews",
+    "dummyReview": "Great product, matches description. Fast shipping.",
+    "storefrontPremium": "Paperlisens Premium"
+  }
+}

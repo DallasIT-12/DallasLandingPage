@@ -1,6 +1,7 @@
 import pandas as pd
 import json
 import re
+import os
 
 def slugify(text):
     if not text:
@@ -9,6 +10,14 @@ def slugify(text):
     text = re.sub(r'[^\w\s-]', '', text)
     text = re.sub(r'[-\s]+', '-', text)
     return text.strip('-')
+
+# Pre-load public files to avoid listing directory repeatedly
+PUBLIC_DIR = 'public'
+try:
+    PUBLIC_FILES = [f for f in os.listdir(PUBLIC_DIR) if os.path.isfile(os.path.join(PUBLIC_DIR, f))]
+except FileNotFoundError:
+    PUBLIC_FILES = []
+    print("Warning: 'public' directory not found.")
 
 def process_image_list(img_str):
     if pd.isna(img_str) or str(img_str).strip() == '':
@@ -21,10 +30,50 @@ def process_image_list(img_str):
         p = part.strip()
         if not p:
             continue
-        if not p.startswith('/'):
-            p = '/' + p
-        p = p.replace(' ', '%20')
-        processed_list.append(p)
+            
+        # Clean path to get keyword (remove leading slash)
+        clean_p = p.lstrip('/')
+        
+        # Check for exact match in public files first (ignoring leading slash in input)
+        # Note: filenames in PUBLIC_FILES are just names, input might have path
+        found_files = []
+        
+        # 1. Exact match check
+        if clean_p in PUBLIC_FILES:
+            found_files.append(clean_p)
+        else:
+            # 2. Keyword/Prefix match
+            # Remove extension if present for the search keyword
+            keyword = os.path.splitext(clean_p)[0]
+            
+            # Find files that start with this keyword (case-insensitive)
+            # e.g. "box tart handle" -> "box tart handle.jpg", "box tart handle (1).jpg"
+            
+            matches = []
+            for f in PUBLIC_FILES:
+                # Check if filename starts with keyword
+                # We normalize both to lower case for comparison
+                if f.lower().startswith(keyword.lower()):
+                     matches.append(f)
+            
+            # Sort matches to ensure consistent order (e.g. 1, 2, 3)
+            # Simple alphanumeric sort might be enough, or natsort if needed.
+            matches.sort() 
+            found_files.extend(matches)
+            
+        if not found_files:
+            # If still nothing, just use the original input formatted as path (fallback)
+            if not p.startswith('/'):
+                p = '/' + p
+            p = p.replace(' ', '%20')
+            processed_list.append(p)
+        else:
+            # Add found files to processed list, formatted as URL paths
+            for f in found_files:
+                path = '/' + f
+                path = path.replace(' ', '%20')
+                if path not in processed_list:
+                    processed_list.append(path)
         
     return processed_list
 
@@ -119,7 +168,7 @@ def generate_ts():
                     "images": current_images,
                     "sold": int(row['sold']) if pd.notnull(row['sold']) else 0,
                     "description": description,
-                    "categorySlug": row['slug'] if pd.notnull(row['slug']) else "uncategorized"
+                    "categorySlug": slugify(row['category']) if pd.notnull(row['category']) else "uncategorized"
                 }
                 products.append(product)
         
@@ -135,9 +184,9 @@ def generate_ts():
             
             bs = chr(92)
             # Escape for JS string
-            safe_name = p['name'].replace(bs, bs+bs).replace("'", "\'\'")
-            safe_variant = p['variant'].replace(bs, bs+bs).replace("'", "\'\'")
-            safe_desc = p['description'].replace(bs, bs+bs).replace("'", "\'\'").replace("\n", "\\n")
+            safe_name = p['name'].replace(bs, bs+bs).replace("'", bs+"'")
+            safe_variant = p['variant'].replace(bs, bs+bs).replace("'", bs+"'")
+            safe_desc = p['description'].replace(bs, bs+bs).replace("'", bs+"'").replace("\n", "\\n")
             
             ts_content += f"    name: '{safe_name}',\n"
             ts_content += f"    variant: '{safe_variant}',\n"
