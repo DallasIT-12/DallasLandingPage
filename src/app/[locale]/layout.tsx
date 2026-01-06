@@ -17,7 +17,7 @@ export default async function LocaleLayout({
   params
 }: {
   children: React.ReactNode;
-  params: {locale: string};
+  params: Promise<{locale: string}>;
 }) {
   // Await params in Next.js 15+ if needed, but in 14 it's sync. 
   // However, it's safer to treat it as potentially async or just access it.
