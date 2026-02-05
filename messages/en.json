@@ -1,21 +1,28 @@
 {
+  "Common": {
+    "back": "Back",
+    "categoryNotFound": "Category Not Found",
+    "categoryNotFoundDesc": "Sorry, we could not find products for this category.",
+    "moreExamplesComing": "More examples for this category will be added soon."
+  },
   "Navbar": {
     "home": "Home",
     "products": "Custom Cigarette Box",
     "catalog": "Catalog",
     "paperlisens": "Paperlisens",
-    "contact": "Contact"
+    "contact": "Contact",
+    "about": "About Us"
   },
   "TopBar": {
     "address": "Jl. Kilisuci no 71, Singonegaran, Kediri City."
   },
   "CompanyProfile": {
-    "title": "Since 1983: A Legacy of Trust and Unmatched Quality",
-    "description": "Dallas Offset Printing is a pioneer and leader in the offset printing industry in Kediri, with an unbroken track record since its establishment in 1983. With over four decades of rich experience, we have mastered the art and technology of printing, always prioritizing high quality to meet and exceed the specific needs of every customer. Our commitment is proven by our service to tens of thousands of clients from various industrial scales, affirming the consistency and reliability of our printing results."
+    "title": "Experienced Since 1983: Maintaining Quality and Trust",
+    "description": "Dallas Offset Printing has been present as a partner in the printing industry in Kediri for more than four decades. Since its establishment in 1983, we have continued to innovate in integrating printing technology with consistent quality standards. With a portfolio serving tens of thousands of clients from various sectors, we are committed to providing reliable and precise printing solutions for every business need."
   },
   "AboutUs": {
     "title": "Modern Technology for Precise Results",
-    "description": "We use the latest offset machines to ensure detail sharpness and color consistency on every sheet. Supported by a team of expert operators, Dallas Printing is ready to handle your various printing needs quickly, neatly, and efficiently."
+    "description": "We use the latest machines to ensure detail sharpness and color consistency on every sheet. Supported by a team of expert operators, Dallas Printing is ready to handle your various printing needs quickly, neatly, and efficiently."
   },
   "WhyChoose": {
     "title": "Why Choose Dallas Offset Printing?",
@@ -49,7 +56,8 @@
   },
   "FeaturedProducts": {
     "title": "Our Featured Products",
-    "subtitle": "Find various high-quality printing solutions for your business needs."
+    "subtitle": "Find various high-quality printing solutions for your business needs.",
+    "viewDetails": "View Full Details"
   },
   "Materials": {
     "title": "SOME OF OUR FEATURED MATERIALS",
@@ -173,6 +181,9 @@
     "searchInCategory": "Search in {category}...",
     "ourCategories": "OUR CATEGORIES",
     "recommendation": "RECOMMENDATION",
+    "searchResults": "SEARCH RESULTS",
+    "loadMore": "Load More",
+    "galleryTitle": "OTHER PRODUCT GALLERY",
     "productNotFound": "Product not found.",
     "filter": "Filter",
     "priceRange": "Price Range",
@@ -210,7 +221,8 @@
       "paperTray": "Paper Tray",
       "boxTakeaway": "Box Takeaway",
       "tempatPensil": "Pencil Case",
-      "boxCupcake": "Cupcake Box"
+      "boxCupcake": "Cupcake Box",
+      "lainLain": "Others"
     },
     "shippingInfo": {
       "from": "Shipping from Kediri City.",
@@ -219,6 +231,22 @@
     },
     "reviewsCount": "from {count} reviews",
     "dummyReview": "Great product, matches description. Fast shipping.",
-    "storefrontPremium": "Paperlisens Premium"
+    "storefrontPremium": "Paperlisens Premium",
+    "featuredTag": "Featured",
+    "orderWa": "Order via WA"
+  },
+  "Promo": {
+    "title": "Special MSME Promo!",
+    "subtitle": "Realize Your Dream Packaging Now",
+    "description": "Get exclusive offers for <strong>Custom Packaging Starter Packs</strong> at affordable prices.",
+    "point1": "Free Design Consultation",
+    "point2": "Low MOQ (Suitable for MSMEs)",
+    "point3": "Premium Quality & Durable",
+    "cta": "Get Promo Now",
+    "later": "Maybe Later",
+    "whatsappMessage": "Hello, I am interested in the Custom Packaging Starter Pack Promo for MSMEs"
+  },
+  "TrustedBy": {
+    "title": "Trusted by Leading Brands"
   }
 }

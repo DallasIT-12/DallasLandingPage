@@ -1,21 +1,28 @@
 {
+  "Common": {
+    "back": "Kembali",
+    "categoryNotFound": "Kategori Tidak Ditemukan",
+    "categoryNotFoundDesc": "Maaf, kami tidak dapat menemukan produk untuk kategori ini.",
+    "moreExamplesComing": "Lebih banyak contoh gambar untuk kategori ini akan segera ditambahkan."
+  },
   "Navbar": {
     "home": "Home",
     "products": "Custom Box Rokok",
     "catalog": "Katalog",
     "paperlisens": "Paperlisens",
-    "contact": "Kontak"
+    "contact": "Kontak",
+    "about": "Tentang Kami"
   },
   "TopBar": {
     "address": "Jl. Kilisuci no 71, Singonegaran, Kec. Kota, Kota Kediri."
   },
   "CompanyProfile": {
-    "title": "Sejak 1983: Warisan Kepercayaan dan Kualitas Tak Tertandingi",
-    "description": "Percetakan Offset Dallas adalah pionir dan pemimpin dalam industri percetakan offset di Kediri, dengan rekam jejak yang tak terputus sejak didirikan pada tahun 1983. Dengan pengalaman yang kaya selama lebih dari empat dekade, kami telah menguasai seni dan teknologi cetak, selalu mengutamakan kualitas tinggi untuk memenuhi dan melampaui kebutuhan spesifik setiap pelanggan. Komitmen kami dibuktikan dengan layanan kepada puluhan ribu klien dari berbagai skala industri, menegaskan konsistensi dan keandalan hasil cetak kami."
+    "title": "Berpengalaman Sejak 1983: Menjaga Kualitas dan Kepercayaan",
+    "description": "Percetakan Offset Dallas telah hadir sebagai mitra industri percetakan di Kediri selama lebih dari empat dekade. Sejak berdiri pada tahun 1983, kami terus berinovasi dalam mengintegrasikan teknologi cetak dengan standar kualitas yang konsisten. Dengan portofolio melayani puluhan ribu klien dari berbagai sektor, kami berkomitmen untuk memberikan solusi cetak yang handal dan presisi bagi setiap kebutuhan bisnis Anda."
   },
   "AboutUs": {
     "title": "Teknologi Modern untuk Hasil Presisi",
-    "description": "Kami menggunakan mesin offset terkini untuk menjamin ketajaman detail dan konsistensi warna di setiap lembar. Didukung tim operator yang ahli, Percetakan Dallas siap menangani berbagai kebutuhan cetak Anda dengan cepat, rapi, dan efisien."
+    "description": "Kami menggunakan mesin terkini untuk menjamin ketajaman detail dan konsistensi warna di setiap lembar. Didukung tim operator yang ahli, Percetakan Dallas siap menangani berbagai kebutuhan cetak Anda dengan cepat, rapi, dan efisien."
   },
   "WhyChoose": {
     "title": "Mengapa Memilih Percetakan Offset Dallas?",
@@ -49,7 +56,8 @@
   },
   "FeaturedProducts": {
     "title": "Produk Unggulan Kami",
-    "subtitle": "Temukan berbagai solusi cetak berkualitas tinggi untuk kebutuhan bisnis Anda."
+    "subtitle": "Temukan berbagai solusi cetak berkualitas tinggi untuk kebutuhan bisnis Anda.",
+    "viewDetails": "Lihat Detail Selengkapnya"
   },
   "Materials": {
     "title": "BEBERAPA BAHAN UNGGULAN KAMI",
@@ -173,6 +181,9 @@
     "searchInCategory": "Cari di {category}...",
     "ourCategories": "KATEGORI KAMI",
     "recommendation": "REKOMENDASI",
+    "searchResults": "HASIL PENCARIAN",
+    "loadMore": "Muat Lebih Banyak",
+    "galleryTitle": "GALERI PRODUK LAINNYA",
     "productNotFound": "Produk tidak ditemukan.",
     "filter": "Filter",
     "priceRange": "Kisaran Harga",
@@ -210,7 +221,8 @@
       "paperTray": "Paper Tray",
       "boxTakeaway": "Box Take away",
       "tempatPensil": "Tempat Pensil",
-      "boxCupcake": "Box Cupcake"
+      "boxCupcake": "Box Cupcake",
+      "lainLain": "Lain-lain"
     },
     "shippingInfo": {
       "from": "Pengiriman dilakukan dari Kota Kediri.",
@@ -219,6 +231,22 @@
     },
     "reviewsCount": "dari {count} ulasan",
     "dummyReview": "Barang bagus, sesuai deskripsi. Pengiriman cepat.",
-    "storefrontPremium": "Paperlisens Premium"
+    "storefrontPremium": "Paperlisens Premium",
+    "featuredTag": "Unggulan",
+    "orderWa": "Pesan via WA"
+  },
+  "Promo": {
+    "title": "Promo Spesial UMKM!",
+    "subtitle": "Wujudkan Kemasan Impianmu Sekarang",
+    "description": "Dapatkan penawaran eksklusif <strong>Starterpack Cetak Kemasan Custom</strong> dengan harga terjangkau.",
+    "point1": "Gratis Konsultasi Desain",
+    "point2": "MOQ Rendah (Cocok untuk UMKM)",
+    "point3": "Kualitas Premium & Tahan Lama",
+    "cta": "Ambil Promo Sekarang",
+    "later": "Nanti saja",
+    "whatsappMessage": "Halo kak, saya tertarik dengan Promo Starterpack UMKM Cetak Custom"
+  },
+  "TrustedBy": {
+    "title": "Dipercaya Oleh Brand Ternama"
   }
 }

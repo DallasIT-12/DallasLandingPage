@@ -4,6 +4,9 @@ import { useState, useEffect } from 'react';
 import { Icon } from '@iconify/react';
 import Footer from '@/components/layout/Footer';
 import Image from 'next/image';
+import { Link, useRouter } from '@/i18n/routing';
+import LanguageSwitcher from '@/components/common/LanguageSwitcher';
+import { useTranslations } from 'next-intl';
 
 const smoothScroll = (e: React.MouseEvent, targetId: string) => {
   e.preventDefault();
@@ -276,6 +279,8 @@ const customBoxProducts: Product[] = [
 ];
 
 export default function ProductsPage() {
+  const t = useTranslations();
+  const router = useRouter();
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -334,49 +339,63 @@ export default function ProductsPage() {
   }, []);
 
   const navLinks = [
-    { href: '/', label: 'Home' },
-    { href: '/products', label: 'Custom Box Rokok' },
-    { href: '/KATALOG DALLAS.pdf', label: 'Katalog', download: true },
-    { href: '/paperlisens', label: 'Paperlisens' },
-    { href: '#contact', label: 'Kontak', isScroll: true },
+    { href: '/', label: t('Navbar.home') },
+    { href: '/about', label: t('Navbar.about') },
+    { href: '/products', label: t('Navbar.products') },
+    { href: '/KATALOG DALLAS.pdf', label: t('Navbar.catalog'), download: true },
+    { href: '/paperlisens', label: t('Navbar.paperlisens') },
+    { href: '#contact', label: t('Navbar.contact'), isScroll: true },
   ];
 
-  const renderNavLinks = () => navLinks.map(link => (
-    <a
-      key={link.label}
-      href={link.href}
-      download={link.download ? 'KATALOG DALLAS.pdf' : undefined}
-      onClick={(e) => {
-        if (link.isScroll) smoothScroll(e, link.href);
-        setIsMenuOpen(false);
-      }}
-      style={{
-        color: link.href === '/products' ? '#000000' : '#4b5563',
-        textDecoration: 'none',
-        transition: 'all 0.3s ease',
-        cursor: 'pointer',
-        padding: isLargeMobile ? '16px 0' : '0',
-        textAlign: isLargeMobile ? 'center' : 'left',
-        borderBottom: isLargeMobile ? '1px solid rgba(229,231,235,0.5)' : 'none',
-        width: isLargeMobile ? '100%' : 'auto',
-        fontWeight: '500'
-      }}
-      onMouseOver={(e) => {
-        if (!isLargeMobile) {
-          (e.target as HTMLElement).style.color = '#000000';
-          (e.target as HTMLElement).style.transform = 'translateY(-2px)';
-        }
-      }}
-      onMouseOut={(e) => {
-        if (!isLargeMobile) {
-          (e.target as HTMLElement).style.color = link.href === '/products' ? '#000000' : '#4b5563';
-          (e.target as HTMLElement).style.transform = 'translateY(0)';
-        }
-      }}
-    >
-      {link.label}
-    </a>
-  ));
+  const renderNavLinks = () => navLinks.map(link => {
+    if (link.isScroll) {
+        return (
+           <a
+            key={link.label}
+            href={link.href}
+            onClick={(e) => {
+              smoothScroll(e, link.href);
+              setIsMenuOpen(false);
+            }}
+            style={{
+              color: '#4b5563',
+              textDecoration: 'none',
+              transition: 'all 0.3s ease',
+              cursor: 'pointer',
+              padding: isLargeMobile ? '16px 0' : '0',
+              textAlign: isLargeMobile ? 'center' : 'left',
+              borderBottom: isLargeMobile ? '1px solid rgba(229,231,235,0.5)' : 'none',
+              width: isLargeMobile ? '100%' : 'auto',
+              fontWeight: '500'
+            }}
+          >
+            {link.label}
+          </a>
+        );
+    }
+    
+    return (
+      <Link
+        key={link.label}
+        href={link.href}
+        download={link.download ? 'KATALOG DALLAS.pdf' : undefined}
+        onClick={() => setIsMenuOpen(false)}
+        style={{
+          color: link.href === '/products' ? '#000000' : '#4b5563',
+          textDecoration: 'none',
+          transition: 'all 0.3s ease',
+          cursor: 'pointer',
+          padding: isLargeMobile ? '16px 0' : '0',
+          textAlign: isLargeMobile ? 'center' : 'left',
+          borderBottom: isLargeMobile ? '1px solid rgba(229,231,235,0.5)' : 'none',
+          width: isLargeMobile ? '100%' : 'auto',
+          fontWeight: '500'
+        }}
+      >
+        {link.label}
+      </Link>
+    )
+  });
 
   const categories = ['All', 'Premium', 'Standard', 'Eco'];
   const productsPerSlide = 4;
@@ -439,7 +458,7 @@ export default function ProductsPage() {
             {!isLargeMobile && (
               <span style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
                 <Icon icon="mdi:map-marker" style={{ fontSize: '14px' }} />
-                Jl. Kilisuci no 71, Singonegaran, Kec. Kota, Kota Kediri.
+                {t('TopBar.address')}
               </span>
             )}
             <span style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
@@ -448,21 +467,11 @@ export default function ProductsPage() {
             </span>
           </div>
           <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
-            <a href="https://www.instagram.com/paperlisens22?igsh=bDl4OHI3d2d0eHV0" target="_blank" rel="noopener noreferrer" style={{color: '#000000'}} title="Instagram">
-              <Icon icon="mdi:instagram" style={{ fontSize: '18px' }} />
-            </a>
-            <a href="https://www.tiktok.com/@paperlisenss22" target="_blank" rel="noopener noreferrer" style={{color: '#000000'}} title="TikTok">
-              <Icon icon="ic:baseline-tiktok" style={{ fontSize: '18px' }} />
-            </a>
-            <a href="https://id.shp.ee/tpQ9dbH" target="_blank" rel="noopener noreferrer" style={{color: '#000000'}} title="Shopee Paperlisens">
-              <Icon icon="ic:baseline-shopping-bag" style={{ fontSize: '18px' }} />
-            </a>
-            <a href="https://id.shp.ee/ZqzSum7" target="_blank" rel="noopener noreferrer" style={{color: '#000000'}} title="Shopee Tray&me">
-              <Icon icon="ic:baseline-shopping-bag" style={{ fontSize: '18px' }} />
-            </a>
-            <a href="https://www.facebook.com/share/1G3GADNMZi/" target="_blank" rel="noopener noreferrer" style={{color: '#000000'}} title="Facebook">
-              <Icon icon="mdi:facebook" style={{ fontSize: '18px' }} />
-            </a>
+            <a href="https://www.instagram.com/paperlisens22?igsh=bDl4OHI3d2d0eHV0" target="_blank" rel="noopener noreferrer" style={{color: '#000000'}}><Icon icon="mdi:instagram" style={{ fontSize: '18px' }} /></a>
+            <a href="https://www.tiktok.com/@paperlisenss22" target="_blank" rel="noopener noreferrer" style={{color: '#000000'}}><Icon icon="ic:baseline-tiktok" style={{ fontSize: '18px' }} /></a>
+            <a href="https://id.shp.ee/tpQ9dbH" target="_blank" rel="noopener noreferrer" style={{color: '#000000'}}><Icon icon="ic:baseline-shopping-bag" style={{ fontSize: '18px' }} /></a>
+            <a href="https://id.shp.ee/ZqzSum7" target="_blank" rel="noopener noreferrer" style={{color: '#000000'}}><Icon icon="ic:baseline-shopping-bag" style={{ fontSize: '18px' }} /></a>
+            <a href="https://www.facebook.com/share/1G3GADNMZi/" target="_blank" rel="noopener noreferrer" style={{color: '#000000'}}><Icon icon="mdi:facebook" style={{ fontSize: '18px' }} /></a>
           </div>
         </div>
       </div>
@@ -479,17 +488,18 @@ export default function ProductsPage() {
       }}>
         <div style={{maxWidth: '1280px', margin: '0 auto', padding: '0 24px', position: 'relative'}}>
           <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0'}}>
-            <a href="/" style={{textDecoration: 'none'}}>
+            <Link href="/" style={{textDecoration: 'none'}}>
               <img src="/logo1.png" alt="Percetakan Dallas" style={{height: '36px', width: 'auto', filter: 'invert(1)'}} />
-            </a>
+            </Link>
 
             {isLargeMobile ? (
               <button onClick={() => setIsMenuOpen(!isMenuOpen)} style={{background: 'none', border: 'none', color: '#000000', fontSize: '24px'}}>
                 <Icon icon={isMenuOpen ? "mdi:close" : "mdi:menu"} />
               </button>
             ) : (
-              <div style={{display: 'flex', gap: '32px'}}>
+              <div style={{display: 'flex', gap: '32px', alignItems: 'center'}}>
                 {renderNavLinks()}
+                <LanguageSwitcher />
               </div>
             )}
           </div>
@@ -509,6 +519,9 @@ export default function ProductsPage() {
               boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
             }}>
               {renderNavLinks()}
+              <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid rgba(229,231,235,0.5)', width: '100%', display: 'flex', justifyContent: 'center' }}>
+                <LanguageSwitcher />
+              </div>
             </div>
           )}
         </div>
