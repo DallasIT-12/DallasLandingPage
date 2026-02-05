@@ -1,7 +1,7 @@
 'use client';
 
 import { useParams, useRouter } from 'next/navigation';
-import { customBoxProducts, Product } from '../page';
+import { Product, customBoxProducts } from '@/data/customBoxProducts';
 import ProductDetail from '@/components/product/ProductDetail';
 import Footer from '@/components/layout/Footer';
 

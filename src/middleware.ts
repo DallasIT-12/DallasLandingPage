@@ -15,6 +15,17 @@ const intlMiddleware = createMiddleware({
 export default function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // Maintenance Mode Check
+  const isMaintenanceMode = process.env.MAINTENANCE_MODE === 'true';
+  const isMaintenancePath = pathname.match(/\/(id|en|zh)\/maintenance/);
+  const isAssetPath = pathname.match(/\.(png|jpg|jpeg|gif|svg|ico|webp|webm|mp4|pdf)$/) || pathname.startsWith('/_next');
+
+  if (isMaintenanceMode && !isMaintenancePath && !isAssetPath && !pathname.startsWith('/api')) {
+    const locale = pathname.split('/')[1] || 'id';
+    const targetLocale = ['en', 'id', 'zh'].includes(locale) ? locale : 'id';
+    return NextResponse.redirect(new URL(`/${targetLocale}/maintenance`, request.url));
+  }
+
   // Check for the NEXT_LOCALE cookie
   const hasLocaleCookie = request.cookies.has('NEXT_LOCALE');
   const localeCookie = request.cookies.get('NEXT_LOCALE')?.value;

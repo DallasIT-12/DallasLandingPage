@@ -235,6 +235,14 @@
     "featuredTag": "Featured",
     "orderWa": "Order via WA"
   },
+  "Maintenance": {
+    "title": "Under Maintenance",
+    "description": "We are currently updating our system to provide you with a better experience. We will be back shortly.",
+    "estimatedTime": "Estimated Completion Time:",
+    "hours": "Hours",
+    "contactWa": "Contact via WhatsApp",
+    "refresh": "Try Refresh"
+  },
   "Promo": {
     "title": "Special MSME Promo!",
     "subtitle": "Realize Your Dream Packaging Now",

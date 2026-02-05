@@ -235,6 +235,14 @@
     "featuredTag": "Unggulan",
     "orderWa": "Pesan via WA"
   },
+  "Maintenance": {
+    "title": "Sedang Pemeliharaan",
+    "description": "Kami sedang melakukan pembaruan sistem untuk memberikan layanan yang lebih baik. Kami akan segera kembali.",
+    "estimatedTime": "Estimasi Selesai Dalam:",
+    "hours": "Jam",
+    "contactWa": "Hubungi via WhatsApp",
+    "refresh": "Coba Segarkan"
+  },
   "Promo": {
     "title": "Promo Spesial UMKM!",
     "subtitle": "Wujudkan Kemasan Impianmu Sekarang",

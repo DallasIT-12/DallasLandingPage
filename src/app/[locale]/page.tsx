@@ -166,15 +166,15 @@ const ClassicProductCardGrid = () => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   
   const categories = [
-    { title: t('hampers.title'), slug: "kotak-hampers", img: "/kotak hampers.jpg", desc: t('hampers.desc'), tags: [t('hampers.tags.tag1'), t('hampers.tags.tag2')] },
-    { title: t('bakery.title'), slug: "kotak-bakery", img: "/kotak cake.jpg", desc: t('bakery.desc'), tags: [t('bakery.tags.tag1'), t('bakery.tags.tag2')] },
-    { title: t('rokok.title'), slug: "rokok", img: "/custom rokok 3.jpg", desc: t('rokok.desc'), tags: [t('rokok.tags.tag1'), t('rokok.tags.tag2')] },
+    { title: t('hampers.title'), slug: "kotak-hampers", img: "/kotak%20hampers.jpg", desc: t('hampers.desc'), tags: [t('hampers.tags.tag1'), t('hampers.tags.tag2')] },
+    { title: t('bakery.title'), slug: "kotak-bakery", img: "/kotak%20cake.jpg", desc: t('bakery.desc'), tags: [t('bakery.tags.tag1'), t('bakery.tags.tag2')] },
+    { title: t('rokok.title'), slug: "rokok", img: "/custom%20rokok%203.jpg", desc: t('rokok.desc'), tags: [t('rokok.tags.tag1'), t('rokok.tags.tag2')] },
     { title: t('nasi.title'), slug: "kotak-nasi", img: "/mobile_banner_2.jpg", desc: t('nasi.desc'), tags: [t('nasi.tags.tag1'), t('nasi.tags.tag2')] },
-    { title: t('buku.title'), slug: "buku", img: "/buku (6).jpg", desc: t('buku.desc'), tags: [t('buku.tags.tag1')] },
-    { title: t('kalender.title'), slug: "kalender", img: "/foto kalender.png", desc: t('kalender.desc'), tags: [t('kalender.tags.tag1')] },
+    { title: t('buku.title'), slug: "buku", img: "/buku%20(6).jpg", desc: t('buku.desc'), tags: [t('buku.tags.tag1')] },
+    { title: t('kalender.title'), slug: "kalender", img: "/foto%20kalender.png", desc: t('kalender.desc'), tags: [t('kalender.tags.tag1')] },
     { title: t('paperbag.title'), slug: "paperbag", img: "/paperbag.jpg", desc: t('paperbag.desc'), tags: [t('paperbag.tags.tag1'), t('paperbag.tags.tag2')] },
     { title: t('map.title'), slug: "map", img: "/map.jpg", desc: t('map.desc'), tags: [t('map.tags.tag1'), t('map.tags.tag2')] },
-    { title: t('brosur.title'), slug: "brosur", img: "/foto brosur.png", desc: t('brosur.desc'), tags: [t('brosur.tags.tag1')] }
+    { title: t('brosur.title'), slug: "brosur", img: "/foto%20brosur.png", desc: t('brosur.desc'), tags: [t('brosur.tags.tag1')] }
   ];
 
   return (
@@ -1294,10 +1294,10 @@ const BannerSlider = ({ images, interval = 10000, transitionType = 'fade' }: { i
               gap: isLargeMobile ? '16px' : '24px'
             }}>
               {[
-                { name: t('Materials.artPaper.name'), slug: 'art-paper', description: t('Materials.artPaper.desc'), image: 'BAHAN-AP.jpg' },
-                { name: t('Materials.ivoryPaper.name'), slug: 'ivory-paper', description: t('Materials.ivoryPaper.desc'), image: 'BAHAN-IVORY.jpg' },
-                { name: t('Materials.tipping.name'), slug: 'bahan-tipping', description: t('Materials.tipping.desc'), image: 'BAHAN-TIPPING.jpg' },
-                { name: t('Materials.duplex.name'), slug: 'duplex', description: t('Materials.duplex.desc'), image: 'BAHAN-DC.jpg' }
+                { name: t('Materials.artPaper.name'), slug: 'art-paper', description: t('Materials.artPaper.desc'), image: '/BAHAN-AP.jpg' },
+                { name: t('Materials.ivoryPaper.name'), slug: 'ivory-paper', description: t('Materials.ivoryPaper.desc'), image: '/BAHAN-IVORY.jpg' },
+                { name: t('Materials.tipping.name'), slug: 'bahan-tipping', description: t('Materials.tipping.desc'), image: '/BAHAN-TIPPING.jpg' },
+                { name: t('Materials.duplex.name'), slug: 'duplex', description: t('Materials.duplex.desc'), image: '/BAHAN-DC.jpg' }
               ].map((product, index) => (
                 <Link key={product.slug} href={`/produk/${product.slug}`} style={{ textDecoration: 'none', height: '100%' }}>
                   <motion.div
