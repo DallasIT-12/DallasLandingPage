@@ -148,7 +148,7 @@ const FloatingCigaretteBox = ({ product, delay = 0 }: { product: Product, delay?
   );
 };
 
-interface Product {
+export interface Product {
   id: string;
   name: string;
   description: string;
@@ -163,7 +163,7 @@ interface Product {
   packSize: string;
 }
 
-const customBoxProducts: Product[] = [
+export const customBoxProducts: Product[] = [
   {
     id: '1',
     name: 'Custom Box Premium Gold',
