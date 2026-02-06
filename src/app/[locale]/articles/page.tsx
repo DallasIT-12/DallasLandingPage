@@ -86,7 +86,7 @@ export default function ArticlesListPage() {
       slug: 'offset-vs-digital',
       excerpt: 'Mengungkap keunggulan mutlak teknologi cetak offset dalam menghasilkan kualitas premium dengan efisiensi biaya produksi maksimal.',
       date: '6 Februari 2026',
-      image: '/artikel.png',
+      image: '/artikel (1).png',
       category: 'Edukasi'
     },
     {
@@ -94,7 +94,7 @@ export default function ArticlesListPage() {
       slug: 'kertas-ivory',
       excerpt: 'Analisis komprehensif mengenai penggunaan kertas ivory untuk cetak kemasan premium, mulai dari gramasi hingga teknik finishing.',
       date: '5 Februari 2026',
-      image: '/BAHAN-IVORY.jpg',
+      image: '/artikel (3).png',
       category: 'Material'
     }
   ];

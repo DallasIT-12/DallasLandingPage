@@ -157,7 +157,7 @@ export default function IvoryArticlePage() {
             </p>
           </header>
 
-          <img src="/BAHAN-IVORY.jpg" alt="Kertas Ivory" style={{ width: '100%', borderRadius: '24px', marginBottom: isLargeMobile ? '32px' : '48px', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)' }} />
+          <img src="/artikel (3).png" alt="Kertas Ivory" style={{ width: '100%', borderRadius: '24px', marginBottom: isLargeMobile ? '32px' : '48px', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)' }} />
 
           <section style={{ fontSize: isLargeMobile ? '1rem' : '1.125rem', lineHeight: '1.8', color: '#334155' }}>
             <p style={{ marginBottom: '24px' }}>
