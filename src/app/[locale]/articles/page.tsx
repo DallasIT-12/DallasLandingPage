@@ -36,43 +36,86 @@ export default function ArticlesListPage() {
     { href: '#contact', label: t('Navbar.contact'), isScroll: true },
   ];
 
-  const renderNavLinks = () => navLinks.map(link => (
-    <Link
-      key={link.label}
-      href={link.href}
-      download={link.download ? 'KATALOG DALLAS.pdf' : undefined}
-      onClick={() => {
-        setIsMenuOpen(false);
-      }}
-      style={{
-        color: link.href === '/articles' ? '#000000' : '#4b5563',
-        textDecoration: 'none',
-        transition: 'all 0.3s ease',
-        cursor: 'pointer',
-        padding: isLargeMobile ? '16px 0' : '0',
-        textAlign: isLargeMobile ? 'center' : 'left',
-        borderBottom: isLargeMobile ? '1px solid rgba(229,231,235,0.5)' : 'none',
-        width: isLargeMobile ? '100%' : 'auto',
-        fontWeight: '500'
-      }}
-      onMouseOver={(e) => {
-        if (!isLargeMobile) {
-          (e.target as HTMLElement).style.color = '#000000';
-          (e.target as HTMLElement).style.transform = 'translateY(-2px)';
-        }
-      }}
-      onMouseOut={(e) => {
-        if (!isLargeMobile) {
-          (e.target as HTMLElement).style.color = link.href === '/articles' ? '#000000' : '#4b5563';
-          (e.target as HTMLElement).style.transform = 'translateY(0)';
-        }
-      }}
-    >
-      {link.label}
-    </Link>
-  ));
+  const renderNavLinks = () => navLinks.map(link => {
+    if (link.isScroll) {
+        return (
+           <Link
+            key={link.label}
+            href="/#contact"
+            onClick={() => setIsMenuOpen(false)}
+            style={{
+              color: '#4b5563',
+              textDecoration: 'none',
+              transition: 'all 0.3s ease',
+              cursor: 'pointer',
+              padding: isLargeMobile ? '16px 0' : '0',
+              textAlign: isLargeMobile ? 'center' : 'left',
+              borderBottom: isLargeMobile ? '1px solid rgba(229,231,235,0.5)' : 'none',
+              width: isLargeMobile ? '100%' : 'auto',
+              fontWeight: '500'
+            }}
+            onMouseOver={(e) => {
+              if (!isLargeMobile) {
+                (e.target as HTMLElement).style.color = '#000000';
+                (e.target as HTMLElement).style.transform = 'translateY(-2px)';
+              }
+            }}
+            onMouseOut={(e) => {
+              if (!isLargeMobile) {
+                (e.target as HTMLElement).style.color = '#4b5563';
+                (e.target as HTMLElement).style.transform = 'translateY(0)';
+              }
+            }}
+          >
+            {link.label}
+          </Link>
+        );
+    }
+    
+    return (
+      <Link
+        key={link.label}
+        href={link.href}
+        download={link.download ? 'KATALOG DALLAS.pdf' : undefined}
+        onClick={() => setIsMenuOpen(false)}
+        style={{
+          color: link.href === '/articles' ? '#000000' : '#4b5563',
+          textDecoration: 'none',
+          transition: 'all 0.3s ease',
+          cursor: 'pointer',
+          padding: isLargeMobile ? '16px 0' : '0',
+          textAlign: isLargeMobile ? 'center' : 'left',
+          borderBottom: isLargeMobile ? '1px solid rgba(229,231,235,0.5)' : 'none',
+          width: isLargeMobile ? '100%' : 'auto',
+          fontWeight: '500'
+        }}
+        onMouseOver={(e) => {
+          if (!isLargeMobile) {
+            (e.target as HTMLElement).style.color = '#000000';
+            (e.target as HTMLElement).style.transform = 'translateY(-2px)';
+          }
+        }}
+        onMouseOut={(e) => {
+          if (!isLargeMobile) {
+            (e.target as HTMLElement).style.color = link.href === '/articles' ? '#000000' : '#4b5563';
+            (e.target as HTMLElement).style.transform = 'translateY(0)';
+          }
+        }}
+      >
+        {link.label}
+      </Link>
+    )
+  });
 
   const articles = [
+    {
+      title: 'Kemasan Kertas vs Plastik: Kenapa Brand Besar Mulai Beralih ke Paper-Based Packaging?',
+      slug: 'kemasan-ramah-lingkungan',
+      excerpt: 'Memahami urgensi penggunaan kemasan ramah lingkungan untuk meningkatkan reputasi brand dan menjaga ekosistem bumi.',
+      date: '6 Februari 2026',
+      image: '/artikel (1).png',
+      category: 'Keberlanjutan'
+    },
     {
       title: '7 Ide Bisnis Tren 2026: Strategi Melejitkan Brand dengan Sentuhan Packaging Profesional',
       slug: 'ide-bisnis-tren-2026',
@@ -86,7 +129,7 @@ export default function ArticlesListPage() {
       slug: 'offset-vs-digital',
       excerpt: 'Mengungkap keunggulan mutlak teknologi cetak offset dalam menghasilkan kualitas premium dengan efisiensi biaya produksi maksimal.',
       date: '6 Februari 2026',
-      image: '/artikel (1).png',
+      image: '/artikel (3).png',
       category: 'Edukasi'
     },
     {
@@ -94,7 +137,7 @@ export default function ArticlesListPage() {
       slug: 'kertas-ivory',
       excerpt: 'Analisis komprehensif mengenai penggunaan kertas ivory untuk cetak kemasan premium, mulai dari gramasi hingga teknik finishing.',
       date: '5 Februari 2026',
-      image: '/artikel (3).png',
+      image: '/artikel (1).jpg',
       category: 'Material'
     }
   ];
@@ -106,20 +149,25 @@ export default function ArticlesListPage() {
         backgroundColor: '#ffffff',
         color: '#000000',
         fontSize: '12px',
-        padding: isLargeMobile ? '6px 0' : '8px 0',
+        padding: isLargeMobile ? '4px 0' : '8px 0',
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        zIndex: 100,
         borderBottom: '1px solid #e5e7eb'
       }}>
         <div style={{
           maxWidth: '1280px',
           margin: '0 auto',
-          padding: isLargeMobile ? '0 16px' : '0 24px',
+          padding: '0 24px',
           display: 'flex',
           justifyContent: isLargeMobile ? 'center' : 'space-between',
           alignItems: 'center',
           flexWrap: isLargeMobile ? 'wrap' : 'nowrap',
           gap: isLargeMobile ? '8px' : '0'
         }}>
-          <div style={{display: 'flex', alignItems: 'center', gap: isLargeMobile ? '12px' : '16px', flexWrap: 'wrap', justifyContent: 'center'}}>
+          <div style={{display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap', justifyContent: 'center'}}>
             {!isLargeMobile && (
               <span style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
                 <Icon icon="mdi:map-marker" style={{ fontSize: '14px' }} />
@@ -153,22 +201,22 @@ export default function ArticlesListPage() {
 
       {/* Navigation */}
       <nav style={{
-        position: 'sticky',
-        top: 0,
+        position: 'fixed',
+        top: '36px',
         width: '100%',
         zIndex: 50,
         backgroundColor: 'rgba(255,255,255,0.95)',
         backdropFilter: 'saturate(180%) blur(20px)',
         borderBottom: '1px solid rgba(229,231,235,0.5)',
       }}>
-        <div style={{maxWidth: '1280px', margin: '0 auto', padding: isLargeMobile ? '0 16px' : '0 24px', position: 'relative'}}>
-          <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: isLargeMobile ? '12px 0' : '16px 0'}}>
+        <div style={{maxWidth: '1280px', margin: '0 auto', padding: '0 24px', position: 'relative'}}>
+          <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0'}}>
             <Link href="/" style={{textDecoration: 'none'}}>
-              <img src="/logo1.png" alt="Percetakan Dallas" style={{height: isLargeMobile ? '28px' : '36px', width: 'auto', filter: 'invert(1)'}} />
+              <img src="/logo1.png" alt="Percetakan Dallas" style={{height: '36px', width: 'auto', filter: 'invert(1)'}} />
             </Link>
 
             {isLargeMobile ? (
-              <button onClick={() => setIsMenuOpen(!isMenuOpen)} style={{background: 'none', border: 'none', color: '#000000', fontSize: '24px', padding: '4px', cursor: 'pointer'}}>
+              <button onClick={() => setIsMenuOpen(!isMenuOpen)} style={{background: 'none', border: 'none', color: '#000000', fontSize: '24px'}}>
                 <Icon icon={isMenuOpen ? "mdi:close" : "mdi:menu"} />
               </button>
             ) : (
@@ -189,7 +237,7 @@ export default function ArticlesListPage() {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              padding: '0 16px 16px',
+              padding: '0 24px 16px',
               borderBottom: '1px solid rgba(229,231,235,0.5)',
               boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
             }}>
@@ -202,7 +250,7 @@ export default function ArticlesListPage() {
         </div>
       </nav>
 
-      <main style={{ maxWidth: '1280px', margin: '0 auto', padding: isLargeMobile ? '32px 16px' : '60px 24px' }}>
+      <main style={{ maxWidth: '1280px', margin: '120px auto 0', padding: isLargeMobile ? '32px 16px' : '60px 24px' }}>
         <header style={{ marginBottom: isLargeMobile ? '32px' : '60px', textAlign: 'center' }}>
           <h1 style={{ fontSize: isSmallMobile ? '1.75rem' : (isLargeMobile ? '2.25rem' : '3.5rem'), fontWeight: '800', color: '#001D39', marginBottom: '16px', lineHeight: '1.2' }}>{t('Navbar.articles')}</h1>
           <p style={{ fontSize: isLargeMobile ? '1rem' : '1.25rem', color: '#64748b', maxWidth: '800px', margin: '0 auto', padding: isLargeMobile ? '0 8px' : '0' }}>Wawasan mendalam mengenai industri percetakan dan pengemasan premium.</p>
@@ -244,6 +292,4 @@ export default function ArticlesListPage() {
       <Footer />
     </div>
   );
-
 }
-
