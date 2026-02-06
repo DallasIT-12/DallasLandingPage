@@ -625,6 +625,7 @@ const BannerSlider = ({ images, interval = 10000, transitionType = 'fade' }: { i
     { href: '/products', label: t('Navbar.products') },
     { href: '/KATALOG DALLAS.pdf', label: t('Navbar.catalog'), download: true },
     { href: '/paperlisens', label: t('Navbar.paperlisens') },
+    { href: '/articles', label: t('Navbar.articles') },
     { href: '#contact', label: t('Navbar.contact'), isScroll: true },
   ];
 
@@ -971,7 +972,7 @@ const BannerSlider = ({ images, interval = 10000, transitionType = 'fade' }: { i
                     marginBottom: '20px',
                     letterSpacing: '-0.02em'
                   }}>
-                    Harga Bersahabat, <span style={{ color: '#0A4174' }}>Kualitas Hebat</span>
+                    Harga Minimal, <span style={{ color: '#0A4174' }}>Kualitas Maksimal</span>
                   </h2>
                   <div style={{ 
                     width: '80px', 

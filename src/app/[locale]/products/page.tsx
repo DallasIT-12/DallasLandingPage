@@ -216,6 +216,7 @@ export default function ProductsPage() {
     { href: '/products', label: t('Navbar.products') },
     { href: '/KATALOG DALLAS.pdf', label: t('Navbar.catalog'), download: true },
     { href: '/paperlisens', label: t('Navbar.paperlisens') },
+    { href: '/articles', label: t('Navbar.articles') },
     { href: '#contact', label: t('Navbar.contact'), isScroll: true },
   ];
 
