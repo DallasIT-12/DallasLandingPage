@@ -228,7 +228,7 @@ export default function ArticlesListPage() {
                   </div>
                   <h2 style={{ fontSize: isLargeMobile ? '1.15rem' : '1.5rem', fontWeight: '700', marginBottom: '12px', lineHeight: '1.3', color: '#001D39' }}>{article.title}</h2>
                   <p style={{ color: '#64748b', lineHeight: '1.6', marginBottom: '24px', fontSize: isLargeMobile ? '0.9rem' : '1rem', flex: 1 }}>{article.excerpt}</p>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto', pt: '12px', borderTop: '1px solid #f1f5f9', paddingTop: '16px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto', borderTop: '1px solid #f1f5f9', paddingTop: '16px' }}>
                     <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>{article.date}</span>
                     <span style={{ color: '#0A4174', fontWeight: '700', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.9rem' }}>
                       Baca Selengkapnya <Icon icon="mdi:arrow-right" />
