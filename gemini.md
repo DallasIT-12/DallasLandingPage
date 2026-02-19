@@ -97,3 +97,32 @@
     *   Replaced standard `<img>` tags with Next.js `<Image />` component in the "GALERI PRODUK LAINNYA" section.
     *   Added `sizes` prop for proper responsive image loading.
     *   Moved hover scale effect to CSS (`.gallery-image`) for cleaner code and performance.
+
+## Date: Friday, 6 February 2026
+
+### Accomplishments Summary:
+
+1.  **Professional Articles Section:**
+    *   **Articles List Page (`/articles`):** Created a responsive gallery of articles. Each card is now fully clickable and features hover effects.
+    *   **New Article: 7 Ide Bisnis Tren 2026:** A comprehensive guide on 7 trending business ideas (Skincare, Catering, Hampers, etc.) with explanations, trending reasons, and product examples.
+    *   **New Article: Kemasan Kertas vs Plastik:** Educational content highlighting the environmental issues caused by plastic and the benefits of switching to paper-based packaging.
+    *   **Updated Article: Offset vs Digital Printing:** Paraphrased to emphasize the industrial superiority and cost-efficiency of offset printing for business scaling.
+    *   **Updated Article: Kertas Ivory:** Updated with technical details and professional imagery.
+
+2.  **Educational Material Pages:**
+    *   Enhanced the **"Bahan Unggulan"** section on the homepage. Clicking on material cards (Art Paper, Ivory, Tipping, Duplex) now navigates to a dedicated educational page at `/produk/[slug]`.
+    *   Each material page includes: **Penjelasan (Explanation)**, **Bisa Dibuat Apa Saja? (Applications)**, and **Macam / Ketebalan (Varieties)**.
+
+3.  **Unified Navigation & Branding:**
+    *   **Header Synchronization:** Standardized the **Top Bar and Navbar** across all sub-pages (articles, materials, product details) to perfectly mirror the homepage.
+    *   **Fixed Headers:** Both the Top Bar and Navbar are now `fixed` at the top of the screen on all pages.
+    *   **Contact Info Sync:** Updated all headers to display the full address and **all three phone numbers** on desktop view (081260001487 | 085946896488 | 085235531946).
+    *   **Social & Marketplace Links:** Re-integrated Shopee (Paperlisens & Tray&me), Facebook, TikTok, and Instagram icons into all headers.
+    *   **Call to Action:** Standardized all promotional buttons to **"Hubungi Kami Sekarang"**.
+    *   **Homepage Update:** Changed "Harga Bersahabat" heading to **"Harga Minimal, Kualitas Maksimal"**.
+
+4.  **Technical & Mobile Optimizations:**
+    *   **Mobile "Fit":** Adjusted font sizes (scaled titles from 3.5rem to 1.75rem), reduced paddings, and ensured layout containers fit perfectly on small screens.
+    *   **Scrollable Elements:** Made technical tables and long lists horizontally scrollable on mobile to prevent layout breakage.
+    *   **TypeScript Fixes:** Resolved build errors caused by invalid style properties (e.g., removed `pt` property).
+    *   **Image Management:** Re-assigned high-quality numbered images (`artikel (1).jpg`, `artikel (1).png`, `artikel (2).png`, `artikel (3).png`) to their respective articles for visual consistency.

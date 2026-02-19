@@ -1,279 +1,163 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-
-interface OrderItem {
-  id: string;
-  quantity: number;
-  unitPrice: number;
-  totalPrice: number;
-  product: {
-    id: string;
-    name: string;
-    price: number;
-  };
-}
-
-interface Customer {
-  id: string;
-  name: string;
-  phone: string;
-  email?: string;
-  address: string;
-  city: string;
-  postalCode: string;
-}
-
-interface Order {
-  id: string;
-  orderNumber: string;
-  status: string;
-  paymentMethod: string;
-  totalAmount: number;
-  notes?: string;
-  createdAt: string;
-  customer: Customer;
-  orderItems: OrderItem[];
-}
-
-const statusColors = {
-  PENDING: '#fbbf24',
-  CONFIRMED: '#3b82f6',
-  PROCESSING: '#8b5cf6',
-  SHIPPED: '#06b6d4',
-  DELIVERED: '#10b981',
-  CANCELLED: '#ef4444'
-};
-
-const statusLabels = {
-  PENDING: 'Pending',
-  CONFIRMED: 'Dikonfirmasi',
-  PROCESSING: 'Diproses',
-  SHIPPED: 'Dikirim',
-  DELIVERED: 'Selesai',
-  CANCELLED: 'Dibatalkan'
-};
+import { Icon } from '@iconify/react';
+import Link from 'next/link';
 
 export default function AdminDashboard() {
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [searchTerm, setSearchTerm] = useState('');
+  const stats = [
+    { name: 'Total Produk', value: '48', icon: 'lucide:package', color: 'text-blue-400', bg: 'bg-blue-500/10', trend: '+12% bln ini' },
+    { name: 'Kategori', value: '5', icon: 'lucide:grid', color: 'text-emerald-400', bg: 'bg-emerald-500/10', trend: 'Stabil' },
+    { name: 'WhatsApp Click', value: '1.2k', icon: 'lucide:phone-outgoing', color: 'text-amber-400', bg: 'bg-amber-500/10', trend: '+24% bln ini' },
+    { name: 'Artikel Aktif', value: '4', icon: 'lucide:file-text', color: 'text-rose-400', bg: 'bg-rose-500/10', trend: '+1 baru' },
+  ];
 
-  useEffect(() => {
-    // No longer fetching from database - show WhatsApp redirect message
-    setLoading(false);
-  }, []);
-
-  const updateOrderStatus = async (orderId: string, newStatus: string) => {
-    try {
-      const response = await fetch(`/api/orders/${orderId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ status: newStatus }),
-      });
-
-      if (response.ok) {
-        // Update local state
-        setOrders(orders.map(order => 
-          order.id === orderId ? { ...order, status: newStatus } : order
-        ));
-        if (selectedOrder && selectedOrder.id === orderId) {
-          setSelectedOrder({ ...selectedOrder, status: newStatus });
-        }
-      }
-    } catch (error) {
-      console.error('Failed to update order status:', error);
-    }
-  };
-
-  const filteredOrders = orders.filter(order => {
-    const matchesStatus = statusFilter === 'all' || order.status === statusFilter;
-    const matchesSearch = searchTerm === '' || 
-      order.orderNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.customer.phone.includes(searchTerm);
-    
-    return matchesStatus && matchesSearch;
-  });
-
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('id-ID', {
-      style: 'currency',
-      currency: 'IDR',
-      minimumFractionDigits: 0
-    }).format(amount);
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('id-ID', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
-
-  if (loading) {
-    return (
-      <div style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh',
-        backgroundColor: '#f8fafc'
-      }}>
-        <div style={{fontSize: '18px', color: '#64748b'}}>Loading...</div>
-      </div>
-    );
-  }
+  const recentActivity = [
+    { user: 'Admin', action: 'Update Harga', target: 'Cup A Motif', time: '2 jam yang lalu' },
+    { user: 'Admin', action: 'Tambah Artikel', target: 'Ide Bisnis 2026', time: '5 jam yang lalu' },
+    { user: 'System', action: 'Sync Database', target: '48 Item Success', time: '12 jam yang lalu' },
+  ];
 
   return (
-    <div style={{ backgroundColor: '#f8fafc', minHeight: '100vh' }}>
-      {/* Header */}
-      <div style={{
-        backgroundColor: 'white',
-        boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-        padding: '16px 0'
-      }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 16px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h1 style={{ 
-              fontSize: '24px', 
-              fontWeight: '700', 
-              color: '#1f2937', 
-              margin: 0 
-            }}>
-              📊 Admin Dashboard - Paperlisens
+    <div className="space-y-10 animate-in fade-in duration-700">
+      {/* Welcome Banner */}
+      <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-[#1e293b] via-[#1e293b] to-[#0f172a] p-10 border border-white/5 shadow-2xl">
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
+          <div className="max-w-xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#d6bd98]/10 border border-[#d6bd98]/20 text-[#d6bd98] text-[10px] font-black uppercase tracking-widest mb-4">
+              <span className="w-1.5 h-1.5 bg-[#d6bd98] rounded-full animate-pulse" />
+              Sistem Aktif
+            </div>
+            <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight leading-none">
+              Halo, <span className="text-[#d6bd98]">Administrator</span>
             </h1>
-            <div style={{
-              backgroundColor: '#f97316',
-              color: 'white',
-              padding: '8px 16px',
-              borderRadius: '6px',
-              fontSize: '14px',
-              fontWeight: '500'
-            }}>
-              Total Pesanan: {orders.length}
+            <p className="text-slate-400 mt-4 text-lg font-medium">
+              Kelola seluruh operasional digital Dallas Company dan Paperlisens dari satu panel kendali.
+            </p>
+          </div>
+          <div className="flex gap-4">
+            <div className="p-4 bg-white/5 rounded-3xl border border-white/10 backdrop-blur-sm">
+              <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Server Status</p>
+              <p className="text-emerald-400 font-bold flex items-center gap-2">
+                <Icon icon="lucide:check-circle" /> Online
+              </p>
+            </div>
+            <div className="p-4 bg-white/5 rounded-3xl border border-white/10 backdrop-blur-sm">
+              <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Region</p>
+              <p className="text-slate-200 font-bold flex items-center gap-2">
+                <Icon icon="lucide:globe" /> ID-JKT
+              </p>
+            </div>
+          </div>
+        </div>
+        {/* Abstract Background patterns */}
+        <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-[#d6bd98]/5 to-transparent pointer-events-none" />
+      </div>
+
+      {/* Main Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        {/* Left Column: Stats & Quick Actions */}
+        <div className="lg:col-span-3 space-y-8">
+          {/* Stats Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {stats.map((stat) => (
+              <div 
+                key={stat.name} 
+                className="group relative overflow-hidden rounded-3xl bg-[#1e293b] p-6 border border-white/5 hover:border-[#d6bd98]/30 transition-all duration-500 shadow-lg"
+              >
+                <div className={`w-12 h-12 rounded-2xl ${stat.bg} flex items-center justify-center ${stat.color} mb-4 shadow-inner group-hover:scale-110 transition-transform`}>
+                  <Icon icon={stat.icon} className="text-2xl" />
+                </div>
+                <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{stat.name}</p>
+                <div className="flex items-end gap-3 mt-1">
+                  <p className="text-3xl font-black text-white">{stat.value}</p>
+                  <p className="text-[10px] font-bold text-emerald-500 mb-1.5">{stat.trend}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Quick Actions */}
+          <div className="bg-[#1e293b] rounded-[2.5rem] p-10 border border-white/5 shadow-xl">
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center gap-3">
+                <div className="w-1.5 h-8 bg-[#d6bd98] rounded-full" />
+                <h3 className="text-xl font-black text-white uppercase tracking-wider">Aksi Cepat Manajemen</h3>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+              <Link 
+                href="/admin/paperlisens/products" 
+                className="group p-8 rounded-[2rem] bg-white/5 border border-white/5 hover:bg-[#d6bd98] transition-all duration-500"
+              >
+                <div className="w-14 h-14 rounded-2xl bg-[#d6bd98]/10 group-hover:bg-[#1e293b]/20 flex items-center justify-center mb-6 transition-colors">
+                  <Icon icon="lucide:package-plus" className="text-3xl text-[#d6bd98] group-hover:text-[#1e293b]" />
+                </div>
+                <h4 className="text-xl font-bold text-white group-hover:text-[#1e293b] mb-1">Katalog Produk</h4>
+                <p className="text-sm text-slate-400 group-hover:text-[#1e293b]/70 font-medium">Update harga & stok Paperlisens.</p>
+              </Link>
+
+              <Link 
+                href="/admin/articles" 
+                className="group p-8 rounded-[2rem] bg-white/5 border border-white/5 hover:bg-blue-500 transition-all duration-500"
+              >
+                <div className="w-14 h-14 rounded-2xl bg-blue-500/10 group-hover:bg-[#1e293b]/20 flex items-center justify-center mb-6 transition-colors">
+                  <Icon icon="lucide:file-edit" className="text-3xl text-blue-400 group-hover:text-white" />
+                </div>
+                <h4 className="text-xl font-bold text-white group-hover:text-white mb-1">Editor Artikel</h4>
+                <p className="text-sm text-slate-400 group-hover:text-white/70 font-medium">Tulis konten edukatif & promosi.</p>
+              </Link>
+
+              <Link 
+                href="/admin/paperlisens/categories" 
+                className="group p-8 rounded-[2rem] bg-white/5 border border-white/5 hover:bg-emerald-500 transition-all duration-500"
+              >
+                <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 group-hover:bg-[#1e293b]/20 flex items-center justify-center mb-6 transition-colors">
+                  <Icon icon="lucide:layout-grid" className="text-3xl text-emerald-400 group-hover:text-white" />
+                </div>
+                <h4 className="text-xl font-bold text-white group-hover:text-white mb-1">Kategori</h4>
+                <p className="text-sm text-slate-400 group-hover:text-white/70 font-medium">Atur klasifikasi produk jualan.</p>
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Column: Activity Log & Status */}
+        <div className="space-y-8">
+          <div className="bg-[#1e293b] rounded-[2.5rem] p-8 border border-white/5 shadow-xl h-full flex flex-col">
+            <div className="flex items-center gap-3 mb-8">
+              <div className="w-1.5 h-6 bg-amber-500 rounded-full" />
+              <h3 className="text-sm font-black text-white uppercase tracking-widest">Aktivitas Terbaru</h3>
+            </div>
+            
+            <div className="space-y-6 flex-1">
+              {recentActivity.map((act, i) => (
+                <div key={i} className="relative pl-6 pb-6 border-l border-white/10 last:pb-0">
+                  <div className="absolute -left-[5px] top-0 w-2 h-2 bg-amber-500 rounded-full shadow-[0_0_8px_#f59e0b]" />
+                  <p className="text-xs font-black text-[#d6bd98] uppercase tracking-tighter mb-1">{act.user}</p>
+                  <p className="text-sm font-bold text-slate-200">{act.action}</p>
+                  <p className="text-[10px] text-slate-500 font-medium mt-1">{act.target} &bull; {act.time}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-8 pt-8 border-t border-white/5">
+              <div className="p-4 rounded-2xl bg-white/5 border border-white/5 space-y-4">
+                <div className="flex items-center justify-between">
+                  <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Database Sync</p>
+                  <span className="text-[10px] font-bold text-emerald-500">100%</span>
+                </div>
+                <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+                  <div className="w-full h-full bg-emerald-500 rounded-full" />
+                </div>
+              </div>
+              <button className="mt-6 w-full py-4 bg-[#d6bd98] text-[#111827] rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-white transition-all shadow-lg active:scale-95">
+                Semua Log
+              </button>
             </div>
           </div>
         </div>
       </div>
-
-      <div style={{ maxWidth: '800px', margin: '0 auto', padding: '24px 16px' }}>
-        {/* WhatsApp Management Message */}
-        <div style={{
-          backgroundColor: 'white',
-          padding: '40px',
-          borderRadius: '12px',
-          textAlign: 'center',
-          boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
-        }}>
-          <div style={{ fontSize: '80px', marginBottom: '24px' }}>📱</div>
-          <h2 style={{ 
-            fontSize: '28px', 
-            fontWeight: '700', 
-            marginBottom: '16px', 
-            color: '#1f2937' 
-          }}>
-            Manajemen Pesanan via WhatsApp
-          </h2>
-          <p style={{ 
-            fontSize: '16px', 
-            color: '#6b7280', 
-            marginBottom: '32px', 
-            lineHeight: '1.6' 
-          }}>
-            Sistem telah diperbarui untuk mengelola semua pesanan melalui WhatsApp. 
-            Semua order dari website akan langsung dikirim ke WhatsApp untuk diproses.
-          </p>
-          
-          <div style={{
-            backgroundColor: '#f0fdf4',
-            border: '2px solid #22c55e',
-            borderRadius: '8px',
-            padding: '20px',
-            marginBottom: '32px',
-            textAlign: 'left'
-          }}>
-            <h3 style={{ 
-              fontSize: '18px', 
-              fontWeight: '600', 
-              marginBottom: '12px', 
-              color: '#16a34a',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px'
-            }}>
-              ✅ Keunggulan Sistem Baru:
-            </h3>
-            <ul style={{ 
-              color: '#15803d', 
-              lineHeight: '1.8',
-              margin: 0,
-              paddingLeft: '20px'
-            }}>
-              <li>Tidak perlu database - lebih stabil dan cepat</li>
-              <li>Pelanggan tetap bisa isi form lengkap di website</li>
-              <li>Pesan otomatis dibuat dengan format rapi</li>
-              <li>Komunikasi langsung dengan pelanggan via WhatsApp</li>
-              <li>Tidak ada masalah deployment atau koneksi database</li>
-            </ul>
-          </div>
-
-          <div style={{
-            backgroundColor: '#fef3f2',
-            border: '1px solid #f97316',
-            borderRadius: '8px',
-            padding: '16px',
-            marginBottom: '32px'
-          }}>
-            <div style={{ 
-              fontSize: '14px', 
-              color: '#ea580c', 
-              fontWeight: '600',
-              marginBottom: '8px'
-            }}>
-              📞 Nomor WhatsApp Admin:
-            </div>
-            <div style={{ 
-              fontSize: '20px', 
-              fontWeight: '700', 
-              color: '#dc2626',
-              fontFamily: 'monospace'
-            }}>
-              081260001487
-            </div>
-          </div>
-
-          <a
-            href="https://wa.me/6281260001487?text=Halo admin, saya ingin mengecek pesanan terbaru."
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              display: 'inline-block',
-              padding: '16px 32px',
-              backgroundColor: '#25d366',
-              color: 'white',
-              textDecoration: 'none',
-              borderRadius: '8px',
-              fontSize: '16px',
-              fontWeight: '600',
-              transition: 'all 0.3s ease'
-            }}
-            onMouseOver={(e) => (e.target as HTMLElement).style.backgroundColor = '#1db954'}
-            onMouseOut={(e) => (e.target as HTMLElement).style.backgroundColor = '#25d366'}
-          >
-            💬 Buka WhatsApp Admin
-          </a>
-        </div>
-      </div>
-
     </div>
   );
 }

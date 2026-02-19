@@ -56,7 +56,7 @@
     "btnNonCigarette": "Non-Cigarette Products"
   },
   "FeaturedProducts": {
-    "title": "Produk Unggulan Kami",
+    "title": "Portofolio Kami",
     "subtitle": "Temukan berbagai solusi cetak berkualitas tinggi untuk kebutuhan bisnis Anda.",
     "viewDetails": "Lihat Detail Selengkapnya"
   },
@@ -82,7 +82,7 @@
   "NonCigarette": {
     "title": "Solusi Kemasan Berkualitas Sejak 2022",
     "description": "Paperlisens memahami bahwa kemasan adalah wajah brand kuliner Anda. Sejak 2022, kami berdedikasi menyediakan papertray dan box takeaway terbaik melalui layanan online yang mudah dan cepat. Kepercayaan ribuan pelanggan di berbagai marketplace membuktikan komitmen kami dalam membantu bisnis Anda tampil lebih profesional.",
-    "productsTitle": "Produk Unggulan Kami",
+    "productsTitle": "Portofolio Kami",
     "card1": {
       "title": "Solusi Cup Serbaguna & Trendi",
       "desc": "Bukan sekadar wadah, tapi panggung untuk sajian kuliner Anda. Mulai dari Cup Toast untuk roti panggang, hingga berbagai varian cup (Tipe A, B, Sakura, dan Es) yang dirancang presisi. Bentuk tray yang estetik ini sangat pas untuk menyajikan aneka finger food, gorengan, atau jajanan kekinian agar terlihat lebih penuh, menarik, dan pastinya Instagramable."
@@ -177,6 +177,7 @@
     "copyright": "© 2024 Percetakan Dallas. Hak cipta dilindungi undang-undang."
   },
   "Paperlisens": {
+    "loading": "Memuat...",
     "backToDallas": "Kembali ke Dallas",
     "searchPlaceholder": "Cari produk di Paperlisens...",
     "searchInCategory": "Cari di {category}...",
@@ -254,6 +255,55 @@
     "cta": "Ambil Promo Sekarang",
     "later": "Nanti saja",
     "whatsappMessage": "Halo kak, saya tertarik dengan Promo Starterpack UMKM Cetak Custom"
+  },
+  "CustomBoxProducts": {
+    "pageTitle": "Custom Box Rokok",
+    "pageSubtitle": "Layanan percetakan kotak rokok custom dengan berbagai pilihan finishing premium",
+    "filterAll": "Semua",
+    "filterPremium": "Premium",
+    "filterStandard": "Standar",
+    "filterGeneral": "General",
+    "finishing": "Finishing",
+    "category": "Kategori",
+    "service": "Layanan",
+    "special": "Keterangan",
+    "minOrder": "Min. Order",
+    "chatWhatsApp": "Chat WhatsApp untuk Info Harga",
+    "whatsappMessage": "Halo, saya tertarik dengan produk {productName}. Bisa info harga?",
+    "products": {
+      "premiumFull": {
+        "name": "Premium Box - Emboss + Hotprint + Spot UV",
+        "description": "Kemasan premium dengan 3 finishing: emboss untuk efek timbul, hotprint foil metalik, dan spot UV untuk kilau di area tertentu."
+      },
+      "premiumEmbossHotprint": {
+        "name": "Premium Box - Emboss + Hotprint",
+        "description": "Kemasan premium dengan 2 finishing: emboss untuk efek timbul dan hotprint foil metalik untuk kilau emas/perak."
+      },
+      "premiumHotprintSpotUV": {
+        "name": "Premium Box - Hotprint + Spot UV",
+        "description": "Kemasan premium dengan 2 finishing: hotprint foil metalik dan spot UV untuk efek glossy kontras pada logo."
+      },
+      "standardEmboss": {
+        "name": "Standard Box - Finishing Emboss",
+        "description": "Kemasan standar dengan finishing emboss, membuat logo dan desain tampil timbul (arise) untuk kesan elegan."
+      },
+      "standardHotprint": {
+        "name": "Standard Box - Finishing Hotprint",
+        "description": "Kemasan standar dengan finishing hotprint, menghasilkan efek foil metalik kilau pada logo dan teks."
+      },
+      "standardSpotUV": {
+        "name": "Standard Box - Finishing Spot UV",
+        "description": "Kemasan standar dengan finishing spot UV, memberikan lapisan glossy mengkilap pada area tertentu seperti logo."
+      },
+      "standardUV": {
+        "name": "Standard Box - Finishing UV",
+        "description": "Kemasan standar dengan UV coating merata di seluruh permukaan, warna lebih cerah dan tahan gores."
+      },
+      "generalBox": {
+        "name": "General Box - Tanpa Finishing",
+        "description": "Kemasan kotak rokok standar tanpa finishing tambahan. Cocok untuk kebutuhan kemasan dasar dengan harga terjangkau."
+      }
+    }
   },
   "TrustedBy": {
     "title": "Dipercaya Oleh Brand Ternama"

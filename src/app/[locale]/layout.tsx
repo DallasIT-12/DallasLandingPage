@@ -31,8 +31,8 @@ export default async function LocaleLayout({
  
   return (
     <html lang={locale}>
-      <body>
-        <NextIntlClientProvider messages={messages}>
+      <body className="antialiased">
+        <NextIntlClientProvider locale={locale} messages={messages}>
           <CartProvider>
             {children}
             <CartModal />

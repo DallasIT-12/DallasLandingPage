@@ -69,8 +69,45 @@ npx prisma migrate deploy
 npx prisma migrate reset
 ```
 
+## 📦 Paperlisens Products (New)
+
+### Setup Paperlisens Database
+
+1. **Dapatkan API Keys** dari Supabase Dashboard:
+   - Settings → API → Project URL (`NEXT_PUBLIC_SUPABASE_URL`)
+   - Settings → API → anon public (`NEXT_PUBLIC_SUPABASE_ANON_KEY`)
+   - Settings → API → service_role (`SUPABASE_SERVICE_ROLE_KEY`) - untuk admin/write
+
+2. **Tambahkan ke `.env.local`**:
+   ```
+   NEXT_PUBLIC_SUPABASE_URL="https://xxx.supabase.co"
+   NEXT_PUBLIC_SUPABASE_ANON_KEY="eyJ..."
+   SUPABASE_SERVICE_ROLE_KEY="eyJ..."  # untuk seed & admin
+   ```
+
+3. **Jalankan migration SQL** di Supabase SQL Editor:
+   - Buka `supabase/migrations/001_paperlisens_products.sql`
+   - Copy isinya ke Supabase Dashboard → SQL Editor → New Query
+   - Run
+
+4. **Optional: Schema produk + variants** (satu key, banyak variant, nama/deskripsi sama):
+   - Jalankan `supabase/migrations/002_products_and_variants.sql`
+   - Admin: "Add Product (base)" → isi key, nama, deskripsi → "Add Variant" untuk tiap varian (harga, image beda)
+
+5. **Seed produk existing** (optional):
+   ```bash
+   npm run db:seed-paperlisens
+   ```
+
+6. **Manage products** via:
+   - Admin: `/admin/paperlisens/products` - Tambah/edit/hapus produk
+   - Supabase Dashboard: Table Editor → paperlisens_products
+
+Tanpa Supabase: Website tetap jalan dengan fallback ke data static di `src/data/products.ts`.
+
 ## 📊 Fitur Database
 
+- **Paperlisens Products**: Katalog produk Paperlisens (box cupcake, paper tray, dll)
 - **Customer Management**: Data pelanggan dengan phone unique
 - **Product Catalog**: Produk kotak rokok custom  
 - **Order System**: Sistem pesanan lengkap dengan status tracking

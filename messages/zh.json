@@ -55,7 +55,7 @@
     "btnNonCigarette": "非香烟产品"
   },
   "FeaturedProducts": {
-    "title": "我们的特色产品",
+    "title": "我们的作品集",
     "subtitle": "为您的业务需求寻找各种高质量的印刷解决方案。",
     "viewDetails": "查看详细信息"
   },
@@ -81,7 +81,7 @@
   "NonCigarette": {
     "title": "自2022年以来的优质包装解决方案",
     "description": "Paperlisens 明白包装是您烹饪品牌的门面。自2022年以来，我们致力于通过简单快捷的在线服务提供最好的纸托盘和外卖盒。成千上万客户在各个市场的信任证明了我们要帮助您的企业看起来更专业的承诺。",
-    "productsTitle": "我们的特色产品",
+    "productsTitle": "我们的作品集",
     "card1": {
       "title": "多功能时尚杯子解决方案",
       "desc": "不仅仅是一个容器，更是您美食的舞台。从用于烤面包的 Cup Toast 到各种杯子变体（A型、B型、Sakura和Ice），设计精准。这种美观的托盘形状非常适合盛放各种手指食物、油炸食品或现代小吃，使它们看起来更丰满、更有吸引力，当然也更适合拍照发 Instagram。"
@@ -176,6 +176,7 @@
     "copyright": "© 2024 Percetakan Dallas. 保留所有权利。"
   },
   "Paperlisens": {
+    "loading": "加载中...",
     "backToDallas": "回到 Dallas",
     "searchPlaceholder": "在 Paperlisens 中搜索产品...",
     "searchInCategory": "在 {category} 中搜索...",
@@ -222,7 +223,8 @@
       "boxTakeaway": "外卖盒",
       "tempatPensil": "笔盒",
       "boxCupcake": "纸杯蛋糕盒",
-      "lainLain": "其他"
+      "lainLain": "其他",
+      "kartonGelombang": "瓦楞纸箱"
     },
     "shippingInfo": {
       "from": "从 Kediri 市发货。",
@@ -245,6 +247,55 @@
     "cta": "立即获取优惠",
     "later": "稍后再说",
     "whatsappMessage": "你好，我对中小微企业定制包装入门包优惠感兴趣"
+  },
+  "CustomBoxProducts": {
+    "pageTitle": "定制烟盒",
+    "pageSubtitle": "定制烟盒印刷服务，多种高级表面处理选择",
+    "filterAll": "全部",
+    "filterPremium": "高级",
+    "filterStandard": "标准",
+    "filterGeneral": "普通",
+    "finishing": "表面处理",
+    "category": "类别",
+    "service": "服务",
+    "special": "说明",
+    "minOrder": "最低订购量",
+    "chatWhatsApp": "WhatsApp 咨询价格",
+    "whatsappMessage": "你好，我对{productName}感兴趣。能告诉我价格吗？",
+    "products": {
+      "premiumFull": {
+        "name": "高级套装 - 压花 + 烫印 + 局部UV",
+        "description": "高级包装，三种表面处理：压花凸起效果、金属箔烫印、以及特定区域的UV光泽。"
+      },
+      "premiumEmbossHotprint": {
+        "name": "高级套装 - 压花 + 烫印",
+        "description": "高级包装，两种表面处理：压花凸起效果和金属箔烫印金银光泽。"
+      },
+      "premiumHotprintSpotUV": {
+        "name": "高级套装 - 烫印 + 局部UV",
+        "description": "高级包装，两种表面处理：金属箔烫印和局部UV光泽对比效果。"
+      },
+      "standardEmboss": {
+        "name": "标准盒 - 压花处理",
+        "description": "标准包装，压花处理使标志和设计呈凸起效果，展现优雅印象。"
+      },
+      "standardHotprint": {
+        "name": "标准盒 - 烫印处理",
+        "description": "标准包装，烫印处理在标志和文字上产生金属箔光泽效果。"
+      },
+      "standardSpotUV": {
+        "name": "标准盒 - 局部UV处理",
+        "description": "标准包装，局部UV处理在标志等特定区域施加光泽层。"
+      },
+      "standardUV": {
+        "name": "标准盒 - UV涂层",
+        "description": "标准包装，UV涂层均匀覆盖整个表面，颜色更鲜艳且耐刮擦。"
+      },
+      "generalBox": {
+        "name": "普通盒 - 无表面处理",
+        "description": "标准烟盒包装，无额外表面处理。适合基本包装需求，价格实惠。"
+      }
+    }
   },
   "TrustedBy": {
     "title": "深受知名品牌信赖"

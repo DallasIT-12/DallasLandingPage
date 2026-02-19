@@ -19,11 +19,12 @@ export default function CartModal() {
   if (!isCartOpen) return null;
 
   const handleCheckout = () => {
-    const itemsList = cartItems.map((item, index) => 
-      `${index + 1}. ${item.name} (${item.quantity}x) - Rp ${(item.price * item.quantity).toLocaleString('id-ID')}`
-    ).join('\n');
+    const itemsList = cartItems.map((item, index) => {
+      const variantInfo = item.variantName ? ` [${item.variantName}]` : '';
+      return `${index + 1}. *${item.name}${variantInfo}*\n   ${item.quantity} pcs x Rp ${item.price.toLocaleString('id-ID')} = Rp ${(item.price * item.quantity).toLocaleString('id-ID')}`;
+    }).join('\n\n');
 
-    const message = `Halo Paperlisens, saya ingin memesan:\n\n${itemsList}\n\n*Total Belanja:* Rp ${cartTotal.toLocaleString('id-ID')}\n\nMohon info ketersediaan stok dan total ongkir. Terima kasih.`;
+    const message = `Halo Paperlisens,\n\nSaya ingin memesan beberapa produk dari keranjang belanja saya:\n\n${itemsList}\n\n*Total Keseluruhan:* Rp ${cartTotal.toLocaleString('id-ID')}\n\nMohon konfirmasi ketersediaan stok dan rincian pembayarannya. Terima kasih!`;
     
     window.open(`https://wa.me/6281260001487?text=${encodeURIComponent(message)}`, '_blank');
   };
@@ -81,8 +82,13 @@ export default function CartModal() {
                     <img src={item.image} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   </div>
                   <div style={{ flex: 1 }}>
-                    <h4 style={{ margin: '0 0 4px 0', fontSize: '13px', fontWeight: '500', lineHeight: '1.4', maxHeight: '36px', overflow: 'hidden' }}>{item.name}</h4>
-                    <div style={{ color: '#ee4d2d', fontWeight: 'bold', fontSize: '14px', marginBottom: '8px' }}>
+                    <h4 style={{ margin: '0 0 2px 0', fontSize: '13px', fontWeight: '500', lineHeight: '1.4', maxHeight: '36px', overflow: 'hidden' }}>{item.name}</h4>
+                    {item.variantName && (
+                      <div style={{ fontSize: '11px', color: '#666', marginBottom: '4px', backgroundColor: '#f5f5f5', display: 'inline-block', padding: '1px 6px', borderRadius: '2px' }}>
+                        Varian: {item.variantName}
+                      </div>
+                    )}
+                    <div style={{ color: '#40534c', fontWeight: 'bold', fontSize: '14px', marginBottom: '8px' }}>
                       Rp {item.price.toLocaleString('id-ID')}
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -120,27 +126,30 @@ export default function CartModal() {
           <div style={{ padding: '16px', borderTop: '1px solid #e5e7eb', backgroundColor: '#f9f9f9' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px', fontSize: '16px', fontWeight: 'bold' }}>
               <span>Total:</span>
-              <span style={{ color: '#ee4d2d' }}>Rp {cartTotal.toLocaleString('id-ID')}</span>
+              <span style={{ color: '#40534c' }}>Rp {cartTotal.toLocaleString('id-ID')}</span>
             </div>
             <button 
               onClick={handleCheckout}
               style={{ 
                 width: '100%', 
-                backgroundColor: '#ee4d2d', 
-                color: 'white', 
+                backgroundColor: '#40534c', 
+                color: '#d6bd98', 
                 border: 'none', 
-                padding: '12px', 
-                borderRadius: '4px', 
+                padding: '14px', 
+                borderRadius: '8px', 
                 fontSize: '16px', 
-                fontWeight: '600', 
+                fontWeight: 'bold', 
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '8px'
+                gap: '10px',
+                transition: 'all 0.2s',
+                textTransform: 'uppercase',
+                letterSpacing: '1px'
               }}
             >
-              <Icon icon="mdi:whatsapp" width="20" /> Checkout via WhatsApp
+              <Icon icon="mdi:whatsapp" width="22" /> Pesan Sekarang
             </button>
           </div>
         )}

@@ -2,158 +2,174 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
 import { Link, useRouter } from '@/i18n/routing';
 import { Icon } from '@iconify/react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Footer from '@/components/layout/Footer';
 import LanguageSwitcher from '@/components/common/LanguageSwitcher';
 import { useTranslations } from 'next-intl';
 
-const PromoModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
+const Footer = dynamic(() => import('@/components/layout/Footer'), { ssr: false });
+
+const PromoBanner = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
   const t = useTranslations('Promo');
+  const [isExpanded, setIsExpanded] = useState(false);
 
   return (
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
+          initial={{ y: 120, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: 120, opacity: 0 }}
+          transition={{ type: 'spring', damping: 25, stiffness: 300 }}
           style={{
             position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            backgroundColor: 'rgba(0, 0, 0, 0.7)',
-            zIndex: 9999, // Ensure it's on top of everything
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            padding: '20px'
+            bottom: '24px',
+            right: '24px',
+            left: '24px',
+            maxWidth: '480px',
+            marginLeft: 'auto',
+            zIndex: 9999,
+            borderRadius: '20px',
+            overflow: 'hidden',
+            boxShadow: '0 20px 60px -15px rgba(0, 0, 0, 0.4), 0 0 20px rgba(212, 160, 23, 0.1)'
           }}
-          onClick={onClose}
         >
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0, y: 20 }}
-            animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.9, opacity: 0, y: 20 }}
-            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            style={{
-              backgroundColor: '#ffffff',
-              borderRadius: '20px',
-              maxWidth: '500px',
-              width: '100%',
-              overflow: 'hidden',
-              position: 'relative',
-              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
+          {/* Compact Banner (always visible) */}
+          <div
+            onClick={(e) => {
+              // Ignore clicks on the close button to prevent expanding when trying to close
+              if ((e.target as HTMLElement).closest('button')) {
+                return;
+              }
+              setIsExpanded(!isExpanded);
             }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Close Button */}
-            <button
-              onClick={onClose}
-              style={{
-                position: 'absolute',
-                top: '16px',
-                right: '16px',
-                background: 'rgba(0,0,0,0.1)',
-                border: 'none',
-                borderRadius: '50%',
-                width: '32px',
-                height: '32px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                zIndex: 10
-              }}
-            >
-              <Icon icon="mdi:close" style={{ fontSize: '20px', color: '#374151' }} />
-            </button>
-
-            {/* Header Image / Pattern */}
-            <div style={{
+            style={{
               background: 'linear-gradient(135deg, #0A4174 0%, #001D39 100%)',
-              padding: '40px 30px',
-              textAlign: 'center',
+              padding: '16px 20px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '14px',
+              cursor: 'pointer',
               position: 'relative',
               overflow: 'hidden'
+            }}
+          >
+            {/* Decorative glow */}
+            <div style={{ position: 'absolute', top: '-30px', right: '-30px', width: '100px', height: '100px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(212, 160, 23, 0.15) 0%, transparent 70%)', pointerEvents: 'none' }} />
+
+            <div style={{
+              width: '44px',
+              height: '44px',
+              borderRadius: '14px',
+              background: 'linear-gradient(135deg, #D4A017, #B8860B)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+              boxShadow: '0 4px 12px rgba(212, 160, 23, 0.3)'
             }}>
-               {/* Decorative Circles */}
-               <div style={{ position: 'absolute', top: '-20%', left: '-10%', width: '150px', height: '150px', borderRadius: '50%', background: 'rgba(255,255,255,0.1)' }}></div>
-               <div style={{ position: 'absolute', bottom: '-20%', right: '-10%', width: '100px', height: '100px', borderRadius: '50%', background: 'rgba(255,255,255,0.1)' }}></div>
-               
-               <Icon icon="mdi:star-shooting-outline" style={{ fontSize: '64px', color: '#FCD34D', marginBottom: '16px' }} />
-               <h2 style={{ color: '#ffffff', fontSize: '1.75rem', fontWeight: '700', margin: 0, lineHeight: 1.2 }}>
-                 {t('title')}
-               </h2>
-               <p style={{ color: '#BDD8E9', marginTop: '8px', fontSize: '0.95rem' }}>
-                 {t('subtitle')}
-               </p>
+              <Icon icon="mdi:gift-outline" style={{ fontSize: '24px', color: '#fff' }} />
             </div>
 
-            {/* Content */}
-            <div style={{ padding: '30px' }}>
-              <div style={{ marginBottom: '24px', textAlign: 'center' }}>
-                <p 
-                  style={{ color: '#4b5563', fontSize: '1rem', lineHeight: '1.6', marginBottom: '20px' }}
-                  dangerouslySetInnerHTML={{ __html: t.raw('description') }}
-                />
-                
-                <ul style={{ textAlign: 'left', display: 'inline-block', color: '#374151', fontSize: '0.95rem', listStyle: 'none', padding: 0 }}>
-                  <li style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
-                    <Icon icon="mdi:check-circle" style={{ color: '#059669', marginRight: '8px', fontSize: '18px' }} />
-                    {t('point1')}
-                  </li>
-                  <li style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
-                    <Icon icon="mdi:check-circle" style={{ color: '#059669', marginRight: '8px', fontSize: '18px' }} />
-                    {t('point2')}
-                  </li>
-                  <li style={{ display: 'flex', alignItems: 'center' }}>
-                    <Icon icon="mdi:check-circle" style={{ color: '#059669', marginRight: '8px', fontSize: '18px' }} />
-                    {t('point3')}
-                  </li>
-                </ul>
-              </div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <h4 style={{ color: '#ffffff', fontSize: '0.95rem', fontWeight: '700', margin: 0, lineHeight: 1.3 }}>
+                {t('title')}
+              </h4>
+              <p style={{ color: '#BDD8E9', fontSize: '0.8rem', margin: '2px 0 0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                {t('subtitle')}
+              </p>
+            </div>
 
-              {/* CTA Button */}
-              <a
-                href={`https://wa.me/6281260001487?text=${encodeURIComponent(t('whatsappMessage'))}`}
-                target="_blank"
-                rel="noopener noreferrer"
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+              <Icon
+                icon={isExpanded ? 'mdi:chevron-down' : 'mdi:chevron-up'}
+                style={{ fontSize: '20px', color: '#BDD8E9', transition: 'transform 0.3s' }}
+              />
+              <button
+                onClick={(e) => { e.stopPropagation(); onClose(); }}
                 style={{
+                  background: 'rgba(255,255,255,0.1)',
+                  border: 'none',
+                  borderRadius: '50%',
+                  width: '28px',
+                  height: '28px',
                   display: 'flex',
-                  justifyContent: 'center',
                   alignItems: 'center',
-                  gap: '10px',
-                  backgroundColor: '#25D366',
-                  color: '#ffffff',
-                  textDecoration: 'none',
-                  padding: '16px',
-                  borderRadius: '12px',
-                  fontWeight: '600',
-                  fontSize: '1.1rem',
-                  transition: 'background-color 0.2s',
-                  boxShadow: '0 4px 6px -1px rgba(37, 211, 102, 0.3)'
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  transition: 'background 0.2s',
+                  position: 'relative',
+                  zIndex: 10
                 }}
-                onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#20bd5a')}
-                onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#25D366')}
               >
-                <Icon icon="mdi:whatsapp" style={{ fontSize: '24px' }} />
-                {t('cta')}
-              </a>
-              
-              <div style={{ textAlign: 'center', marginTop: '16px' }}>
-                <button 
-                  onClick={onClose}
-                  style={{ background: 'none', border: 'none', color: '#9ca3af', fontSize: '0.875rem', cursor: 'pointer', textDecoration: 'underline' }}
-                >
-                  {t('later')}
-                </button>
-              </div>
+                <Icon icon="mdi:close" style={{ fontSize: '16px', color: '#BDD8E9' }} />
+              </button>
             </div>
-          </motion.div>
+          </div>
+
+          {/* Expanded Content */}
+          <AnimatePresence>
+            {isExpanded && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.3, ease: 'easeInOut' }}
+                style={{ overflow: 'hidden' }}
+              >
+                <div style={{ backgroundColor: '#ffffff', padding: '24px' }}>
+                  <p
+                    style={{ color: '#4b5563', fontSize: '0.9rem', lineHeight: '1.6', marginBottom: '16px' }}
+                    dangerouslySetInnerHTML={{ __html: t.raw('description') }}
+                  />
+
+                  <ul style={{ color: '#374151', fontSize: '0.85rem', listStyle: 'none', padding: 0, marginBottom: '20px' }}>
+                    <li style={{ display: 'flex', alignItems: 'center', marginBottom: '6px' }}>
+                      <Icon icon="mdi:check-circle" style={{ color: '#059669', marginRight: '8px', fontSize: '16px', flexShrink: 0 }} />
+                      {t('point1')}
+                    </li>
+                    <li style={{ display: 'flex', alignItems: 'center', marginBottom: '6px' }}>
+                      <Icon icon="mdi:check-circle" style={{ color: '#059669', marginRight: '8px', fontSize: '16px', flexShrink: 0 }} />
+                      {t('point2')}
+                    </li>
+                    <li style={{ display: 'flex', alignItems: 'center' }}>
+                      <Icon icon="mdi:check-circle" style={{ color: '#059669', marginRight: '8px', fontSize: '16px', flexShrink: 0 }} />
+                      {t('point3')}
+                    </li>
+                  </ul>
+
+                  {/* CTA Button */}
+                  <a
+                    href={`https://wa.me/6281260001487?text=${encodeURIComponent(t('whatsappMessage'))}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      gap: '10px',
+                      backgroundColor: '#25D366',
+                      color: '#ffffff',
+                      textDecoration: 'none',
+                      padding: '14px',
+                      borderRadius: '14px',
+                      fontWeight: '600',
+                      fontSize: '1rem',
+                      transition: 'all 0.2s',
+                      boxShadow: '0 4px 12px rgba(37, 211, 102, 0.3)'
+                    }}
+                    onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#20bd5a')}
+                    onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#25D366')}
+                  >
+                    <Icon icon="mdi:whatsapp" style={{ fontSize: '22px' }} />
+                    {t('cta')}
+                  </a>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </motion.div>
       )}
     </AnimatePresence>
@@ -164,17 +180,157 @@ const ClassicProductCardGrid = () => {
   const t = useTranslations('Categories');
   const tFeatured = useTranslations('FeaturedProducts');
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  
+
   const categories = [
-    { title: t('hampers.title'), slug: "kotak-hampers", img: "/kotak%20hampers.jpg", desc: t('hampers.desc'), tags: [t('hampers.tags.tag1'), t('hampers.tags.tag2')] },
-    { title: t('bakery.title'), slug: "kotak-bakery", img: "/kotak%20cake.jpg", desc: t('bakery.desc'), tags: [t('bakery.tags.tag1'), t('bakery.tags.tag2')] },
-    { title: t('rokok.title'), slug: "rokok", img: "/custom%20rokok%203.jpg", desc: t('rokok.desc'), tags: [t('rokok.tags.tag1'), t('rokok.tags.tag2')] },
-    { title: t('nasi.title'), slug: "kotak-nasi", img: "/mobile_banner_2.jpg", desc: t('nasi.desc'), tags: [t('nasi.tags.tag1'), t('nasi.tags.tag2')] },
-    { title: t('buku.title'), slug: "buku", img: "/buku%20(6).jpg", desc: t('buku.desc'), tags: [t('buku.tags.tag1')] },
-    { title: t('kalender.title'), slug: "kalender", img: "/foto%20kalender.png", desc: t('kalender.desc'), tags: [t('kalender.tags.tag1')] },
-    { title: t('paperbag.title'), slug: "paperbag", img: "/paperbag.jpg", desc: t('paperbag.desc'), tags: [t('paperbag.tags.tag1'), t('paperbag.tags.tag2')] },
-    { title: t('map.title'), slug: "map", img: "/map.jpg", desc: t('map.desc'), tags: [t('map.tags.tag1'), t('map.tags.tag2')] },
-    { title: t('brosur.title'), slug: "brosur", img: "/foto%20brosur.png", desc: t('brosur.desc'), tags: [t('brosur.tags.tag1')] }
+    {
+      title: t('hampers.title'),
+      slug: "kotak-hampers",
+      img: "/kotak%20hampers.jpg",
+      desc: t('hampers.desc'),
+      tags: [t('hampers.tags.tag1'), t('hampers.tags.tag2')],
+      images: [
+        "/box hampers kraft (1).jpg", "/box hampers kraft (2).jpg", "/box hampers kraft (3).jpg",
+        "/box hampers natal (1).jpg", "/box hampers natal (2).jpg", "/box hampers natal (3).jpg",
+        "/gable box (1).jpg", "/gable box (10).jpg", "/gable box (11).jpg", "/gable box (12).jpg",
+        "/gable box (13).jpg", "/gable box (14).jpg", "/gable box (15).jpg", "/gable box (16).jpg",
+        "/gable box (17).jpg", "/gable box (18).jpg", "/gable box (19).jpg", "/gable box (2).jpg",
+        "/gable box (20).jpg", "/gable box (3).jpg", "/gable box (4).jpg", "/gable box (5).jpg",
+        "/gable box (6).jpg", "/gable box (7).jpg", "/gable box (8).jpg", "/gable box (9).jpg",
+        "/gable box idul fitri (1).jpg", "/gable box idul fitri (2).jpg", "/gable box idul fitri (3).jpg",
+        "/gable box idul fitri (4).jpg", "/gable box idul fitri (5).jpg", "/gable box idul fitri (6).jpg",
+        "/gable box idul fitri (7).jpg", "/gable box idul fitri (8).jpg", "/hardbox (1).jpg",
+        "/hardbox (2).jpg", "/hardbox (3).jpg", "/kotak hampers.jpg"
+      ]
+    },
+    {
+      title: t('bakery.title'),
+      slug: "kotak-bakery",
+      img: "/kotak%20cake.jpg",
+      desc: t('bakery.desc'),
+      tags: [t('bakery.tags.tag1'), t('bakery.tags.tag2')],
+      images: [
+        "/box donat motif (1).jpg", "/box donat motif (1).png", "/box donat motif (2).jpg",
+        "/box donat motif (2).png", "/box donat motif (3).jpg", "/box donat motif (3).png",
+        "/box donat motif (4).jpg", "/box donat motif (4).png", "/box donat motif (5).jpg",
+        "/box donat motif (6).jpg", "/box donat motif.jpg", "/box roti bakar (1).jpg",
+        "/box roti bakar (2).jpg", "/box roti bakar (3).jpg", "/box slice cake-1.jpeg",
+        "/box slice cake-2.jpeg", "/box slice cake.jpeg", "/box tart handle (1).jpg",
+        "/box tart handle (2).jpg", "/box tart handle (3).jpg", "/box tart handle (4).jpg",
+        "/box tart handle (5).jpg", "/box tart handle (6).jpg", "/cheese cake (1).jpg",
+        "/cheese cake (2).jpg", "/cheese cake (3).jpg", "/cheese cake (4).jpg",
+        "/cupcake isi 12 (1).jpg", "/cupcake isi 12 (2).jpg", "/cupcake isi 12 (3).jpg",
+        "/cupcake isi 12 (4).jpg", "/cupcake isi 12 (5).jpg", "/cupcake isi 12 (6).jpg",
+        "/cupcake isi 16 (1).jpg", "/cupcake isi 16 (2).jpg", "/cupcake isi 16 (3).jpg",
+        "/cupcake isi 16 (4).jpg", "/cupcake isi 16 (5).jpg", "/cupcake isi 4 (1).jpg",
+        "/cupcake isi 4 (2).jpg", "/cupcake isi 4 (3).jpg", "/cupcake isi 4 (4).jpg",
+        "/cupcake isi 4 motif (1).jpg", "/cupcake isi 4 motif (2).jpg", "/cupcake isi 4 motif (3).jpg",
+        "/cupcake isi 4 motif (4).jpg", "/cupcake isi 4 motif (5).jpg", "/cupcake isi 6 (1).jpg",
+        "/cupcake isi 6 (2).jpg", "/cupcake isi 6 (3).jpg", "/cupcake isi 9 (1).jpg",
+        "/cupcake isi 9 (2).jpg", "/cupcake isi 9 (3).jpg", "/cupcake isi 9 (4).jpg",
+        "/cupcake isi 9 (5).jpg", "/cupcake isi 9 (6).jpg", "/cupcake isi 9 (7).jpg",
+        "/cupcake isi 9 (8).jpg", "/cupcake isi 9 (9).jpg", "/dallas donat isi 3.png",
+        "/dallas donat isi 6.png", "/donat isi 1(1).jpg", "/donat isi 1(2).jpg", "/donat isi 1.jpg",
+        "/kotak cake.jpg", "/kotak cupcake isi 4 (1).jpg", "/kotak cupcake isi 4 (2).jpg",
+        "/kotak cupcake isi 4 (3).jpg", "/kotak cupcake isi 4 (4).jpg", "/kotak cupcake isi 4 (5).jpg",
+        "/kotak cupcake isi 4 (6).jpg", "/kotak cupcake isi 4 (7).jpg", "/kotak cupcake isi 6 (1).jpg",
+        "/kotak cupcake isi 6 (2).jpg", "/kotak cupcake isi 6 (3).jpg", "/kotak cupcake isi 6 (4).jpg",
+        "/kotak cupcake motif isi 1 (1).jpg", "/kotak cupcake motif isi 1 (2).jpg",
+        "/kotak rollcake (1).jpg", "/kotak rollcake (2).jpg", "/kotak rollcake (3).jpg",
+        "/kotak rollcake (4).jpg", "/kotak rollcake (5).jpg", "/kotak rollcake (6).jpg",
+        "/kotak rollcake (7).jpg", "/kotak rollcake (8).jpg", "/kotak rollcake (9).jpg",
+        "/kotak rollcake mika (1).jpg", "/kotak rollcake mika (2).jpg", "/kotak rollcake mika (3).jpg",
+        "/kotak rollcake mika (4).jpg", "/paperlisens cupcake.png", "/tenteng cupcake isi 6 (1).jpg",
+        "/tenteng cupcake isi 6 (2).jpg", "/tenteng cupcake isi 6 (3).jpg", "/tenteng cupcake isi 6 (4).jpg",
+        "/tusuk roti (1).jpg", "/tusuk roti (2).jpg"
+      ]
+    },
+    {
+      title: t('rokok.title'),
+      slug: "rokok",
+      img: "/custom%20rokok%203.jpg",
+      desc: t('rokok.desc'),
+      tags: [t('rokok.tags.tag1'), t('rokok.tags.tag2')],
+      images: [
+        "/custom rokok (1).jpg", "/custom rokok (10).jpg", "/custom rokok (11).jpg",
+        "/custom rokok (12).jpg", "/custom rokok (13).jpg", "/custom rokok (14).jpg",
+        "/custom rokok (15).jpg", "/custom rokok (16).jpg", "/custom rokok (17).jpg",
+        "/custom rokok (18).jpg", "/custom rokok (19).jpg", "/custom rokok (2).jpg",
+        "/custom rokok (20).jpg", "/custom rokok (21).jpg", "/custom rokok (22).jpg",
+        "/custom rokok (23).jpg", "/custom rokok (24).jpg", "/custom rokok (3).jpg",
+        "/custom rokok (4).jpg", "/custom rokok (5).jpg", "/custom rokok (6).jpg",
+        "/custom rokok (7).jpg", "/custom rokok (8).jpg", "/custom rokok (9).jpg",
+        "/custom rokok 1.jpg", "/custom rokok 2.jpg", "/custom rokok 3.jpg",
+        "/custom rokok 4.jpg", "/custom rokok.jpg", "/foto rokok 1.png",
+        "/foto rokok.png", "/kotak rokok 1.png"
+      ]
+    },
+    {
+      title: t('nasi.title'),
+      slug: "kotak-nasi",
+      img: "/mobile_banner_2.jpg",
+      desc: t('nasi.desc'),
+      tags: [t('nasi.tags.tag1'), t('nasi.tags.tag2')],
+      images: [
+        "/kotak nasi (1).jpg", "/kotak nasi (2).jpg", "/kotak nasi (3).jpg",
+        "/kotak nasi (4).jpg", "/kotak nasi (5).jpg", "/kotak nasi (6).jpg",
+        "/kotak nasi (7).jpg", "/kotak nasi (8).jpg", "/kotak nasi (9).jpg"
+      ]
+    },
+    {
+      title: t('buku.title'),
+      slug: "buku",
+      img: "/buku%20(6).jpg",
+      desc: t('buku.desc'),
+      tags: [t('buku.tags.tag1')],
+      images: [
+        "/buku (1).jpg", "/buku (2).jpg", "/buku (3).jpg",
+        "/buku (4).jpg", "/buku (5).jpg", "/buku (6).jpg",
+        "/buku (7).jpg", "/buku (8).jpg", "/buku (9).jpg", "/foto buku.png"
+      ]
+    },
+    {
+      title: t('kalender.title'),
+      slug: "kalender",
+      img: "/foto%20kalender.png",
+      desc: t('kalender.desc'),
+      tags: [t('kalender.tags.tag1')],
+      images: [
+        "/foto kalender.png", "/kalender (1).jpg", "/kalender (2).jpg",
+        "/kalender (3).jpg", "/kalender (4).jpg", "/kalender.jpg"
+      ]
+    },
+    {
+      title: t('paperbag.title'),
+      slug: "paperbag",
+      img: "/paperbag.jpg",
+      desc: t('paperbag.desc'),
+      tags: [t('paperbag.tags.tag1'), t('paperbag.tags.tag2')],
+      images: [
+        "/foto paperbag.png", "/paperbag (1).jpg", "/paperbag (2).jpg",
+        "/paperbag (3).jpg", "/paperbag (4).jpg", "/paperbag (5).jpg",
+        "/paperbag (6).jpg", "/paperbag (7).jpg", "/paperbag (8).jpg", "/paperbag.jpg"
+      ]
+    },
+    {
+      title: t('map.title'),
+      slug: "map",
+      img: "/map.jpg",
+      desc: t('map.desc'),
+      tags: [t('map.tags.tag1'), t('map.tags.tag2')],
+      images: [
+        "/map (1).jpg", "/map (10).jpg", "/map (11).jpg", "/map (2).jpg",
+        "/map (3).jpg", "/map (4).jpg", "/map (5).jpg", "/map (6).jpg",
+        "/map (7).jpg", "/map (8).jpg", "/map (9).jpg", "/map.jpg"
+      ]
+    },
+    {
+      title: t('brosur.title'),
+      slug: "brosur",
+      img: "/foto%20brosur.png",
+      desc: t('brosur.desc'),
+      tags: [t('brosur.tags.tag1')],
+      images: ["/foto brosur.png"]
+    }
   ];
 
   return (
@@ -189,7 +345,6 @@ const ClassicProductCardGrid = () => {
       }}>
         {categories.map((category, i) => (
           <motion.div
-            layoutId={category.slug}
             key={category.slug}
             onClick={() => setSelectedId(category.slug)}
             initial={{ opacity: 0, y: 20 }}
@@ -197,36 +352,72 @@ const ClassicProductCardGrid = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: i * 0.1 }}
             style={{
-              backgroundColor: '#BDD8E9',
-              borderRadius: '16px',
-              padding: '16px',
+              background: 'linear-gradient(145deg, #0A4174 0%, #001D39 100%)',
+              borderRadius: '20px',
+              overflow: 'hidden',
               height: '100%',
               display: 'flex',
               flexDirection: 'column',
               cursor: 'pointer',
-              border: '1px solid #e5e7eb'
+              border: '1px solid rgba(10, 65, 116, 0.2)',
+              boxShadow: '0 4px 20px rgba(0, 29, 57, 0.15)',
+              transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
             }}
-            whileHover={{ scale: 1.02, y: -8, boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)' }}
+            whileHover={{ scale: 1.02, y: -8, boxShadow: '0 20px 50px -10px rgba(0, 29, 57, 0.35), 0 0 30px rgba(212, 160, 23, 0.1)' }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.border = '1px solid rgba(212, 160, 23, 0.4)';
+              const img = e.currentTarget.querySelector('.portfolio-card-img') as HTMLElement;
+              if (img) img.style.transform = 'scale(1.08)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.border = '1px solid rgba(10, 65, 116, 0.2)';
+              const img = e.currentTarget.querySelector('.portfolio-card-img') as HTMLElement;
+              if (img) img.style.transform = 'scale(1)';
+            }}
           >
-            <motion.img
-              src={category.img}
-              alt={category.title}
-              style={{
-                width: '100%',
-                height: '250px',
-                borderRadius: '12px',
-                objectFit: 'cover',
-                marginBottom: '16px'
-              }}
-            />
-            <motion.h4 style={{ fontSize: '1.25rem', fontWeight: '500', marginBottom: '8px', color: '#111827' }}>{category.title}</motion.h4>
-            <motion.p style={{ color: '#4b5563', fontSize: '0.875rem', lineHeight: '1.5', marginBottom: '16px', flexGrow: 1 }}>{category.desc}</motion.p>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: 'auto' }}>
-              {category.tags.map(tag => (
-                <span key={tag} style={{ backgroundColor: '#ffffff', color: '#4b5563', fontSize: '0.75rem', padding: '4px 10px', borderRadius: '9999px' }}>
-                  {tag}
-                </span>
-              ))}
+            <div style={{ position: 'relative', width: '100%', height: '250px', overflow: 'hidden' }}>
+              <Image
+                src={category.img}
+                alt={category.title}
+                fill
+                sizes="(max-width: 768px) 100vw, 400px"
+                className="portfolio-card-img"
+                style={{ objectFit: 'cover', transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)' }}
+                loading="lazy"
+              />
+              {/* Gradient overlay */}
+              <div style={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                right: 0,
+                height: '80px',
+                background: 'linear-gradient(to top, rgba(0,15,30,0.7), transparent)',
+                pointerEvents: 'none'
+              }} />
+            </div>
+            <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+              <motion.h4 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '10px', color: '#ffffff' }}>{category.title}</motion.h4>
+              <motion.p style={{ color: '#9ca3af', fontSize: '0.875rem', lineHeight: '1.6', marginBottom: '16px', flexGrow: 1 }}>{category.desc}</motion.p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '16px' }}>
+                {category.tags.map(tag => (
+                  <span key={tag} style={{
+                    backgroundColor: 'rgba(255,255,255,0.08)',
+                    border: '1px solid rgba(255,255,255,0.12)',
+                    color: '#d1d5db',
+                    fontSize: '0.75rem',
+                    padding: '4px 12px',
+                    borderRadius: '8px',
+                    fontWeight: '500'
+                  }}>
+                    {tag}
+                  </span>
+                ))}
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#D4A017', fontSize: '13px', fontWeight: '600' }}>
+                <span>{tFeatured('viewDetails')}</span>
+                <span>→</span>
+              </div>
             </div>
           </motion.div>
         ))}
@@ -245,7 +436,7 @@ const ClassicProductCardGrid = () => {
               left: 0,
               width: '100%',
               height: '100%',
-              backgroundColor: 'rgba(0, 0, 0, 0.6)',
+              backgroundColor: 'rgba(0, 0, 0, 0.9)',
               zIndex: 100,
               display: 'flex',
               justifyContent: 'center',
@@ -254,84 +445,172 @@ const ClassicProductCardGrid = () => {
             }}
           >
             {categories.map(category => {
-                if (category.slug !== selectedId) return null;
-                return (
-                  <motion.div
-                    layoutId={selectedId}
-                    key={selectedId}
-                    onClick={(e) => e.stopPropagation()}
-                    style={{
-                      backgroundColor: '#ffffff',
-                      borderRadius: '24px',
-                      overflow: 'hidden',
-                      width: '100%',
-                      maxWidth: '800px',
-                      maxHeight: '90vh',
-                      overflowY: 'auto',
-                      position: 'relative',
-                      display: 'flex',
-                      flexDirection: 'column'
-                    }}
-                  >
-                     <motion.div style={{ position: 'relative', height: '300px' }}>
-                        <motion.img
-                            src={category.img}
-                            alt={category.title}
-                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                        />
-                        <button
-                            onClick={() => setSelectedId(null)}
-                            style={{
-                                position: 'absolute',
-                                top: '16px',
-                                right: '16px',
-                                background: 'rgba(0,0,0,0.5)',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '50%',
-                                width: '36px',
-                                height: '36px',
-                                cursor: 'pointer',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-                            }}
-                        >
-                            <Icon icon="mdi:close" style={{fontSize: '20px'}} />
-                        </button>
-                     </motion.div>
-                     
-                     <div style={{ padding: '32px' }}>
-                        <motion.h2 style={{ fontSize: '2rem', fontWeight: '600', marginBottom: '16px', color: '#111827' }}>{category.title}</motion.h2>
-                        <motion.div style={{ display: 'flex', gap: '8px', marginBottom: '24px', flexWrap: 'wrap' }}>
-                             {category.tags.map(tag => (
-                                <span key={tag} style={{ backgroundColor: '#f3f4f6', color: '#374151', fontSize: '0.875rem', padding: '6px 12px', borderRadius: '9999px', fontWeight: '500' }}>
-                                  {tag}
-                                </span>
-                              ))}
-                        </motion.div>
-                        <motion.p style={{ fontSize: '1.125rem', lineHeight: '1.75', color: '#4b5563', marginBottom: '32px' }}>
-                            {category.desc}
-                        </motion.p>
-                        
-                        <div style={{ display: 'flex', gap: '16px', justifyContent: 'flex-end' }}>
-                            <Link href={`/produk/${category.slug}`}
-                                style={{
-                                    padding: '12px 24px',
-                                    backgroundColor: '#0A4174',
-                                    color: 'white',
-                                    borderRadius: '12px',
-                                    textDecoration: 'none',
-                                    fontWeight: '500',
-                                    display: 'inline-block'
-                                }}
-                            >
-                                {tFeatured('viewDetails')}
-                            </Link>
-                        </div>
-                     </div>
+              if (category.slug !== selectedId) return null;
+              return (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                  transition={{ duration: 0.25, ease: 'easeOut' }}
+                  key={selectedId}
+                  onClick={(e) => e.stopPropagation()}
+                  style={{
+                    background: 'linear-gradient(145deg, #1a1d23 0%, #13161b 50%, #0d0f13 100%)',
+                    borderRadius: '24px',
+                    overflow: 'hidden',
+                    width: '100%',
+                    maxWidth: '800px',
+                    maxHeight: '90vh',
+                    overflowY: 'auto',
+                    position: 'relative',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    border: '1px solid rgba(212, 160, 23, 0.2)',
+                    boxShadow: '0 0 60px rgba(0,0,0,0.5), 0 0 30px rgba(212, 160, 23, 0.05)'
+                  }}
+                >
+                  <motion.div style={{ position: 'relative', height: '350px' }}>
+                    <Image
+                      src={category.img}
+                      alt={category.title}
+                      fill
+                      sizes="800px"
+                      style={{ objectFit: 'cover' }}
+                      loading="lazy"
+                    />
+                    {/* Gradient overlay on image */}
+                    <div style={{
+                      position: 'absolute',
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      height: '150px',
+                      background: 'linear-gradient(to top, #13161b, transparent)',
+                      pointerEvents: 'none'
+                    }} />
+                    {/* Close button */}
+                    <button
+                      onClick={() => setSelectedId(null)}
+                      style={{
+                        position: 'absolute',
+                        top: '16px',
+                        right: '16px',
+                        background: 'rgba(0,0,0,0.6)',
+                        backdropFilter: 'blur(8px)',
+                        color: '#D4A017',
+                        border: '1px solid rgba(212, 160, 23, 0.3)',
+                        borderRadius: '50%',
+                        width: '40px',
+                        height: '40px',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        transition: 'all 0.3s ease'
+                      }}
+                    >
+                      <Icon icon="mdi:close" style={{ fontSize: '20px' }} />
+                    </button>
                   </motion.div>
-                );
+
+                  <div style={{ padding: '32px 32px 36px' }}>
+                    {/* Decorator */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+                      <span style={{ width: '24px', height: '1px', background: 'linear-gradient(90deg, transparent, #D4A017)' }} />
+                      <span style={{ fontSize: '11px', fontWeight: '700', letterSpacing: '2px', color: '#D4A017', textTransform: 'uppercase' }}>PORTFOLIO</span>
+                      <span style={{ width: '24px', height: '1px', background: 'linear-gradient(90deg, #D4A017, transparent)' }} />
+                    </div>
+
+                    <motion.h2 style={{ fontSize: '2rem', fontWeight: '700', marginBottom: '8px', color: '#ffffff' }}>{category.title}</motion.h2>
+                    <div style={{ width: '40px', height: '2px', background: 'linear-gradient(90deg, #D4A017, #B8860B)', borderRadius: '2px', marginBottom: '20px' }} />
+
+                    <motion.div style={{ display: 'flex', gap: '8px', marginBottom: '24px', flexWrap: 'wrap' }}>
+                      {category.tags.map(tag => (
+                        <span key={tag} style={{
+                          backgroundColor: 'rgba(255,255,255,0.06)',
+                          border: '1px solid rgba(255,255,255,0.1)',
+                          color: '#d1d5db',
+                          fontSize: '0.875rem',
+                          padding: '6px 14px',
+                          borderRadius: '10px',
+                          fontWeight: '500'
+                        }}>
+                          {tag}
+                        </span>
+                      ))}
+                    </motion.div>
+
+                    <motion.p style={{ fontSize: '1.05rem', lineHeight: '1.8', color: '#9ca3af', marginBottom: '32px' }}>
+                      {category.desc}
+                    </motion.p>
+
+                    {/* Image Gallery */}
+                    {/* @ts-ignore */}
+                    {category.images && category.images.length > 0 && (
+                      <div style={{ marginBottom: '32px' }}>
+                        <h3 style={{ fontSize: '1.1rem', fontWeight: '600', color: '#D4A017', marginBottom: '16px', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                          Product Gallery
+                        </h3>
+                        <div style={{
+                          display: 'grid',
+                          gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
+                          gap: '12px'
+                        }}>
+                          {/* @ts-ignore */}
+                          {category.images.slice(0, 24).map((img, idx) => (
+                            <motion.div
+                              key={idx}
+                              initial={{ opacity: 0, scale: 0.9 }}
+                              whileInView={{ opacity: 1, scale: 1 }}
+                              transition={{ duration: 0.3, delay: idx * 0.05 }}
+                              viewport={{ once: true }}
+                              style={{
+                                position: 'relative',
+                                aspectRatio: '1',
+                                borderRadius: '12px',
+                                overflow: 'hidden',
+                                border: '1px solid rgba(255,255,255,0.08)',
+                                boxShadow: '0 4px 10px rgba(0,0,0,0.2)'
+                              }}
+                              whileHover={{ scale: 1.05, zIndex: 10, borderColor: 'rgba(212, 160, 23, 0.5)' }}
+                            >
+                              <Image
+                                src={img}
+                                alt={`${category.title} ${idx + 1}`}
+                                fill
+                                sizes="200px"
+                                style={{ objectFit: 'cover' }}
+                                loading="lazy"
+                              />
+                            </motion.div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    <div style={{ display: 'flex', gap: '16px', justifyContent: 'flex-end' }}>
+                      <Link href={`/produk/${category.slug}`}
+                        style={{
+                          padding: '14px 32px',
+                          background: 'linear-gradient(135deg, #D4A017, #B8860B)',
+                          color: 'white',
+                          borderRadius: '14px',
+                          textDecoration: 'none',
+                          fontWeight: '600',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                          fontSize: '0.95rem',
+                          boxShadow: '0 4px 15px rgba(212, 160, 23, 0.3)',
+                          transition: 'all 0.3s ease'
+                        }}
+                      >
+                        {tFeatured('viewDetails')} →
+                      </Link>
+                    </div>
+                  </div>
+                </motion.div>
+              );
             })}
           </motion.div>
         )}
@@ -345,16 +624,40 @@ export default function Home() {
   const router = useRouter();
   const [showPromo, setShowPromo] = useState(false);
 
+  // Smart promo: scroll-triggered + localStorage 24h cooldown
   useEffect(() => {
-    const timer = setTimeout(() => {
-      // Check if user has already seen the promo in this session (optional, but good UX)
-      // For now, we'll just show it every time after refresh for demonstration
-      setShowPromo(true);
-    }, 2000); // 2 seconds delay
+    const COOLDOWN_MS = 24 * 60 * 60 * 1000; // 24 hours
+    const lastDismissed = localStorage.getItem('promo_dismissed_at');
 
-    return () => clearTimeout(timer);
+    // Skip if dismissed within cooldown period
+    if (lastDismissed && Date.now() - Number(lastDismissed) < COOLDOWN_MS) {
+      return;
+    }
+
+    const handleScroll = () => {
+      const scrollPercent = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+      if (scrollPercent > 0.3) {
+        setShowPromo(true);
+        window.removeEventListener('scroll', handleScroll);
+      }
+    };
+
+    // Small delay before attaching listener to avoid showing on initial scroll restoration
+    const timer = setTimeout(() => {
+      window.addEventListener('scroll', handleScroll, { passive: true });
+    }, 1000);
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
-  
+
+  const handleClosePromo = () => {
+    setShowPromo(false);
+    localStorage.setItem('promo_dismissed_at', String(Date.now()));
+  };
+
   const smoothScroll = (e: React.MouseEvent, targetId: string) => {
     e.preventDefault();
     const target = document.querySelector(targetId);
@@ -397,187 +700,187 @@ export default function Home() {
     transform: 'scale(1)'
   };
 
-// --- Banner Slider Component ---
-const BannerSlider = ({ images, interval = 10000, transitionType = 'fade' }: { images: string[], interval?: number, transitionType?: 'fade' | 'slide' }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [touchStart, setTouchStart] = useState<number | null>(null);
-  const [touchEnd, setTouchEnd] = useState<number | null>(null);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  // --- Banner Slider Component ---
+  const BannerSlider = ({ images, interval = 10000, transitionType = 'fade' }: { images: string[], interval?: number, transitionType?: 'fade' | 'slide' }) => {
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [touchStart, setTouchStart] = useState<number | null>(null);
+    const [touchEnd, setTouchEnd] = useState<number | null>(null);
+    const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const minSwipeDistance = 50;
+    const minSwipeDistance = 50;
 
-  const resetTimer = () => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
-  };
-
-  useEffect(() => {
-    resetTimer();
-    timerRef.current = setTimeout(() => {
-      goToNextSlide();
-    }, interval);
-
-    return () => {
-      resetTimer();
+    const resetTimer = () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
     };
-  }, [currentIndex, images.length, interval]);
 
-  const goToSlide = (slideIndex: number) => {
-    setCurrentIndex(slideIndex);
-  };
+    useEffect(() => {
+      resetTimer();
+      timerRef.current = setTimeout(() => {
+        goToNextSlide();
+      }, interval);
 
-  const goToPrevSlide = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? images.length - 1 : prevIndex - 1
-    );
-  };
+      return () => {
+        resetTimer();
+      };
+    }, [currentIndex, images.length, interval]);
 
-  const goToNextSlide = () => {
-    setCurrentIndex((prevIndex) =>
-      (prevIndex + 1) % images.length
-    );
-  };
+    const goToSlide = (slideIndex: number) => {
+      setCurrentIndex(slideIndex);
+    };
 
-  const onTouchStart = (e: React.TouchEvent) => {
-    setTouchEnd(null); // Reset touch end on new touch
-    setTouchStart(e.targetTouches[0].clientX);
-    resetTimer(); // Pause timer on user interaction
-  };
+    const goToPrevSlide = () => {
+      setCurrentIndex((prevIndex) =>
+        prevIndex === 0 ? images.length - 1 : prevIndex - 1
+      );
+    };
 
-  const onTouchMove = (e: React.TouchEvent) => {
-    setTouchEnd(e.targetTouches[0].clientX);
-  };
+    const goToNextSlide = () => {
+      setCurrentIndex((prevIndex) =>
+        (prevIndex + 1) % images.length
+      );
+    };
 
-  const onTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
-    const distance = touchStart - touchEnd;
+    const onTouchStart = (e: React.TouchEvent) => {
+      setTouchEnd(null); // Reset touch end on new touch
+      setTouchStart(e.targetTouches[0].clientX);
+      resetTimer(); // Pause timer on user interaction
+    };
 
-    if (distance > minSwipeDistance) {
-      goToNextSlide();
-    } else if (distance < -minSwipeDistance) {
-      goToPrevSlide();
-    }
-    // The useEffect will restart the timer automatically when currentIndex changes
-  };
+    const onTouchMove = (e: React.TouchEvent) => {
+      setTouchEnd(e.targetTouches[0].clientX);
+    };
 
-  return (
-    <div 
-      style={{ position: 'relative', height: '100%', width: '100%', overflow: 'hidden', backgroundColor: '#FFFFFF' }}
-      onTouchStart={onTouchStart}
-      onTouchMove={onTouchMove}
-      onTouchEnd={onTouchEnd}
-    >
-      {transitionType === 'slide' ? (
-        <div style={{
-          display: 'flex',
-          height: '100%',
-          transition: 'transform 0.7s ease-in-out',
-          transform: `translateX(-${currentIndex * 100}%)`,
-        }}>
-          {images.map((src) => (
-            <div key={src} style={{ position: 'relative', width: '100%', height: '100%', flexShrink: 0 }}>
-              <Image
-                src={src}
-                alt={`Banner`}
-                fill
-                sizes="(max-width: 768px) 100vw, 80vw"
-                style={{ objectFit: 'cover', objectPosition: 'center center' }}
-                priority={images.indexOf(src) === 0}
-              />
-            </div>
+    const onTouchEnd = () => {
+      if (!touchStart || !touchEnd) return;
+      const distance = touchStart - touchEnd;
+
+      if (distance > minSwipeDistance) {
+        goToNextSlide();
+      } else if (distance < -minSwipeDistance) {
+        goToPrevSlide();
+      }
+      // The useEffect will restart the timer automatically when currentIndex changes
+    };
+
+    return (
+      <div
+        style={{ position: 'relative', height: '100%', width: '100%', overflow: 'hidden', backgroundColor: '#FFFFFF' }}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+      >
+        {transitionType === 'slide' ? (
+          <div style={{
+            display: 'flex',
+            height: '100%',
+            transition: 'transform 0.7s ease-in-out',
+            transform: `translateX(-${currentIndex * 100}%)`,
+          }}>
+            {images.map((src) => (
+              <div key={src} style={{ position: 'relative', width: '100%', height: '100%', flexShrink: 0 }}>
+                <Image
+                  src={src}
+                  alt={`Banner`}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 80vw"
+                  style={{ objectFit: 'cover', objectPosition: 'center center' }}
+                  priority={images.indexOf(src) === 0}
+                />
+              </div>
+            ))}
+          </div>
+        ) : (
+          // Default fade transition
+          images.map((src, index) => (
+            <Image
+              key={src}
+              src={src}
+              alt={`Banner ${index + 1}`}
+              fill
+              priority={index === 0}
+              sizes="(max-width: 768px) 100vw, 80vw"
+              style={{
+                objectFit: 'cover',
+                objectPosition: 'center center',
+                opacity: currentIndex === index ? 1 : 0,
+                transition: 'opacity 1.5s ease-in-out',
+              }}
+            />
+          ))
+        )}
+
+        {/* Previous Button */}
+        <button
+          onClick={goToPrevSlide}
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '10px',
+            transform: 'translateY(-50%)',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            color: 'white',
+            border: 'none',
+            borderRadius: '50%',
+            width: '30px',
+            height: '30px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            fontSize: '18px',
+            zIndex: 10,
+          }}
+        >
+          &#10094;
+        </button>
+
+        {/* Next Button */}
+        <button
+          onClick={goToNextSlide}
+          style={{
+            position: 'absolute',
+            top: '50%',
+            right: '10px',
+            transform: 'translateY(-50%)',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            color: 'white',
+            border: 'none',
+            borderRadius: '50%',
+            width: '30px',
+            height: '30px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            fontSize: '18px',
+            zIndex: 10,
+          }}
+        >
+          &#10095;
+        </button>
+
+        {/* Navigation Dots */}
+        <div style={{ position: 'absolute', bottom: '10px', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '8px', zIndex: 10 }}>
+          {images.map((_, slideIndex) => (
+            <div
+              key={slideIndex}
+              onClick={() => goToSlide(slideIndex)}
+              style={{
+                height: '8px',
+                width: '8px',
+                borderRadius: '50%',
+                backgroundColor: currentIndex === slideIndex ? 'white' : 'rgba(255, 255, 255, 0.5)',
+                cursor: 'pointer',
+                transition: 'background-color 0.3s',
+              }}
+            />
           ))}
         </div>
-      ) : (
-        // Default fade transition
-        images.map((src, index) => (
-          <Image
-            key={src}
-            src={src}
-            alt={`Banner ${index + 1}`}
-            fill
-            priority={index === 0}
-            sizes="(max-width: 768px) 100vw, 80vw"
-            style={{
-              objectFit: 'cover',
-              objectPosition: 'center center',
-              opacity: currentIndex === index ? 1 : 0,
-              transition: 'opacity 1.5s ease-in-out',
-            }}
-          />
-        ))
-      )}
-
-      {/* Previous Button */}
-      <button
-        onClick={goToPrevSlide}
-        style={{
-          position: 'absolute',
-          top: '50%',
-          left: '10px',
-          transform: 'translateY(-50%)',
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          color: 'white',
-          border: 'none',
-          borderRadius: '50%',
-          width: '30px',
-          height: '30px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          cursor: 'pointer',
-          fontSize: '18px',
-          zIndex: 10,
-        }}
-      >
-        &#10094;
-      </button>
-
-      {/* Next Button */}
-      <button
-        onClick={goToNextSlide}
-        style={{
-          position: 'absolute',
-          top: '50%',
-          right: '10px',
-          transform: 'translateY(-50%)',
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          color: 'white',
-          border: 'none',
-          borderRadius: '50%',
-          width: '30px',
-          height: '30px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          cursor: 'pointer',
-          fontSize: '18px',
-          zIndex: 10,
-        }}
-      >
-        &#10095;
-      </button>
-
-      {/* Navigation Dots */}
-      <div style={{ position: 'absolute', bottom: '10px', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '8px', zIndex: 10 }}>
-        {images.map((_, slideIndex) => (
-          <div
-            key={slideIndex}
-            onClick={() => goToSlide(slideIndex)}
-            style={{
-              height: '8px',
-              width: '8px',
-              borderRadius: '50%',
-              backgroundColor: currentIndex === slideIndex ? 'white' : 'rgba(255, 255, 255, 0.5)',
-              cursor: 'pointer',
-              transition: 'background-color 0.3s',
-            }}
-          />
-        ))}
       </div>
-    </div>
-  );
-};
+    );
+  };
 
   const desktopBanners = ['/main banner dallas.png', '/main banner dallas 2.png', '/main banner dallas 3.png', '/main banner dallas 4.png'];
   const mobileBanners = [
@@ -590,7 +893,7 @@ const BannerSlider = ({ images, interval = 10000, transitionType = 'fade' }: { i
     '/mobile_banner_7.jpg',
     '/mobile_banner_8.jpg',
     '/mobile_banner_9.jpg'
-  ]; 
+  ];
 
   const machineImages = [
     '/foto mesin.png',
@@ -607,6 +910,7 @@ const BannerSlider = ({ images, interval = 10000, transitionType = 'fade' }: { i
   const [isSmallMobile, setIsSmallMobile] = useState(false); // < 480px
   const [isMediumMobile, setIsMediumMobile] = useState(false); // < 640px
   const [isLargeMobile, setIsLargeMobile] = useState(false); // < 768px
+  const [screenReady, setScreenReady] = useState(false);
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -615,6 +919,7 @@ const BannerSlider = ({ images, interval = 10000, transitionType = 'fade' }: { i
       setIsLargeMobile(window.innerWidth < 768);
     };
     checkScreenSize();
+    setScreenReady(true);
     window.addEventListener('resize', checkScreenSize);
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
@@ -630,54 +935,17 @@ const BannerSlider = ({ images, interval = 10000, transitionType = 'fade' }: { i
   ];
 
   const renderNavLinks = () => navLinks.map(link => {
-      if (link.isScroll) {
-          return (
-             <a
-              key={link.label}
-              href={link.href}
-              onClick={(e) => {
-                smoothScroll(e, link.href);
-                setIsMenuOpen(false);
-              }}
-              style={{
-                color: '#4b5563',
-                textDecoration: 'none',
-                transition: 'all 0.3s ease',
-                cursor: 'pointer',
-                padding: isLargeMobile ? '16px 0' : '0',
-                textAlign: isLargeMobile ? 'center' : 'left',
-                borderBottom: isLargeMobile ? '1px solid rgba(229,231,235,0.5)' : 'none',
-                width: isLargeMobile ? '100%' : 'auto',
-                fontWeight: '500'
-              }}
-              onMouseOver={(e) => {
-                if (!isLargeMobile) {
-                  (e.target as HTMLElement).style.color = '#000000';
-                  (e.target as HTMLElement).style.transform = 'translateY(-2px)';
-                }
-              }}
-              onMouseOut={(e) => {
-                if (!isLargeMobile) {
-                  (e.target as HTMLElement).style.color = '#4b5563';
-                  (e.target as HTMLElement).style.transform = 'translateY(0)';
-                }
-              }}
-            >
-              {link.label}
-            </a>
-          );
-      }
-      
+    if (link.isScroll) {
       return (
-        <Link
+        <a
           key={link.label}
           href={link.href}
-          download={link.download ? 'KATALOG DALLAS.pdf' : undefined}
-          onClick={() => {
+          onClick={(e) => {
+            smoothScroll(e, link.href);
             setIsMenuOpen(false);
           }}
           style={{
-            color: link.href === '/' ? '#000000' : '#4b5563',
+            color: '#4b5563',
             textDecoration: 'none',
             transition: 'all 0.3s ease',
             cursor: 'pointer',
@@ -695,24 +963,83 @@ const BannerSlider = ({ images, interval = 10000, transitionType = 'fade' }: { i
           }}
           onMouseOut={(e) => {
             if (!isLargeMobile) {
-              (e.target as HTMLElement).style.color = link.href === '/' ? '#000000' : '#4b5563';
+              (e.target as HTMLElement).style.color = '#4b5563';
               (e.target as HTMLElement).style.transform = 'translateY(0)';
             }
           }}
         >
           {link.label}
-        </Link>
+        </a>
+      );
+    }
+
+    return (
+      <Link
+        key={link.label}
+        href={link.href}
+        download={link.download ? 'KATALOG DALLAS.pdf' : undefined}
+        onClick={() => {
+          setIsMenuOpen(false);
+        }}
+        style={{
+          color: link.href === '/' ? '#000000' : '#4b5563',
+          textDecoration: 'none',
+          transition: 'all 0.3s ease',
+          cursor: 'pointer',
+          padding: isLargeMobile ? '16px 0' : '0',
+          textAlign: isLargeMobile ? 'center' : 'left',
+          borderBottom: isLargeMobile ? '1px solid rgba(229,231,235,0.5)' : 'none',
+          width: isLargeMobile ? '100%' : 'auto',
+          fontWeight: '500'
+        }}
+        onMouseOver={(e) => {
+          if (!isLargeMobile) {
+            (e.target as HTMLElement).style.color = '#000000';
+            (e.target as HTMLElement).style.transform = 'translateY(-2px)';
+          }
+        }}
+        onMouseOut={(e) => {
+          if (!isLargeMobile) {
+            (e.target as HTMLElement).style.color = link.href === '/' ? '#000000' : '#4b5563';
+            (e.target as HTMLElement).style.transform = 'translateY(0)';
+          }
+        }}
+      >
+        {link.label}
+      </Link>
     )
   });
-  
+
+  if (!screenReady) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#001D39'
+      }}>
+        <div style={{
+          width: '40px',
+          height: '40px',
+          border: '3px solid rgba(255,255,255,0.1)',
+          borderTopColor: '#ffffff',
+          borderRadius: '50%',
+          animation: 'spin 0.8s linear infinite'
+        }} />
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      </div>
+    );
+  }
+
   return (
     <div style={{
-      backgroundColor: '#001D39', 
-      color: '#ffffff', 
+      backgroundColor: '#001D39',
+      color: '#ffffff',
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif',
       WebkitFontSmoothing: 'antialiased'
     }}>
-      <PromoModal isOpen={showPromo} onClose={() => setShowPromo(false)} />
+      <PromoBanner isOpen={showPromo} onClose={handleClosePromo} />
 
       {/* Top Bar Contact Info & Social Media */}
       <div style={{
@@ -737,32 +1064,32 @@ const BannerSlider = ({ images, interval = 10000, transitionType = 'fade' }: { i
           flexWrap: isLargeMobile ? 'wrap' : 'nowrap',
           gap: isLargeMobile ? '8px' : '0'
         }}>
-          <div style={{display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap', justifyContent: 'center'}}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap', justifyContent: 'center' }}>
             {!isLargeMobile && (
-              <span style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                 <Icon icon="mdi:map-marker" style={{ fontSize: '14px' }} />
                 {t('TopBar.address')}
               </span>
             )}
-            <span style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
               <Icon icon="mdi:phone" style={{ fontSize: '14px' }} />
               {isLargeMobile ? '081260001487' : '081260001487 | 085946896488 | 085235531946'} {/* Display only one number on mobile */}
             </span>
           </div>
-          <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
-            <a href="https://www.instagram.com/paperlisens22?igsh=bDl4OHI3d2d0eHV0" target="_blank" rel="noopener noreferrer" style={{color: '#000000'}} title="Instagram">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <a href="https://www.instagram.com/paperlisens22?igsh=bDl4OHI3d2d0eHV0" target="_blank" rel="noopener noreferrer" style={{ color: '#000000' }} title="Instagram">
               <Icon icon="mdi:instagram" style={{ fontSize: '18px' }} />
             </a>
-            <a href="https://www.tiktok.com/@paperlisenss22" target="_blank" rel="noopener noreferrer" style={{color: '#000000'}} title="TikTok">
+            <a href="https://www.tiktok.com/@paperlisenss22" target="_blank" rel="noopener noreferrer" style={{ color: '#000000' }} title="TikTok">
               <Icon icon="ic:baseline-tiktok" style={{ fontSize: '18px' }} />
             </a>
-            <a href="https://id.shp.ee/tpQ9dbH" target="_blank" rel="noopener noreferrer" style={{color: '#000000'}} title="Shopee Paperlisens">
+            <a href="https://id.shp.ee/tpQ9dbH" target="_blank" rel="noopener noreferrer" style={{ color: '#000000' }} title="Shopee Paperlisens">
               <Icon icon="ic:baseline-shopping-bag" style={{ fontSize: '18px' }} />
             </a>
-            <a href="https://id.shp.ee/ZqzSum7" target="_blank" rel="noopener noreferrer" style={{color: '#000000'}} title="Shopee Tray&me">
+            <a href="https://id.shp.ee/ZqzSum7" target="_blank" rel="noopener noreferrer" style={{ color: '#000000' }} title="Shopee Tray&me">
               <Icon icon="ic:baseline-shopping-bag" style={{ fontSize: '18px' }} />
             </a>
-            <a href="https://www.facebook.com/share/1G3GADNMZi/" target="_blank" rel="noopener noreferrer" style={{color: '#000000'}} title="Facebook">
+            <a href="https://www.facebook.com/share/1G3GADNMZi/" target="_blank" rel="noopener noreferrer" style={{ color: '#000000' }} title="Facebook">
               <Icon icon="mdi:facebook" style={{ fontSize: '18px' }} />
             </a>
           </div>
@@ -779,18 +1106,18 @@ const BannerSlider = ({ images, interval = 10000, transitionType = 'fade' }: { i
         backdropFilter: 'saturate(180%) blur(20px)',
         borderBottom: '1px solid rgba(229,231,235,0.5)',
       }}>
-        <div style={{maxWidth: '1280px', margin: '0 auto', padding: '0 24px', position: 'relative'}}>
-          <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0'}}>
-            <Link href="/" style={{textDecoration: 'none'}}>
-              <img src="/logo1.png" alt="Percetakan Dallas" style={{height: '36px', width: 'auto', filter: 'invert(1)'}} />
+        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px', position: 'relative' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0' }}>
+            <Link href="/" style={{ textDecoration: 'none' }}>
+              <Image src="/logo1.png" alt="Percetakan Dallas" width={360} height={108} style={{ height: '36px', width: 'auto', filter: 'invert(1)' }} priority />
             </Link>
 
             {isLargeMobile ? (
-              <button onClick={() => setIsMenuOpen(!isMenuOpen)} style={{background: 'none', border: 'none', color: '#000000', fontSize: '24px'}}>
+              <button onClick={() => setIsMenuOpen(!isMenuOpen)} style={{ background: 'none', border: 'none', color: '#000000', fontSize: '24px' }}>
                 <Icon icon={isMenuOpen ? "mdi:close" : "mdi:menu"} />
               </button>
             ) : (
-              <div style={{display: 'flex', gap: '32px', alignItems: 'center'}}>
+              <div style={{ display: 'flex', gap: '32px', alignItems: 'center' }}>
                 {renderNavLinks()}
                 <LanguageSwitcher />
               </div>
@@ -820,464 +1147,475 @@ const BannerSlider = ({ images, interval = 10000, transitionType = 'fade' }: { i
         </div>
       </nav>
 
-            {/* Premium Quality Section with Video Background */}
-            <section style={{
-                height: isLargeMobile ? '100vw' : 'calc(100vh - 88px)',
-                position: 'relative',
-                marginTop: '88px',
+      {/* Premium Quality Section with Video Background */}
+      <section style={{
+        height: isLargeMobile ? '100vw' : 'calc(100vh - 88px)',
+        position: 'relative',
+        marginTop: '88px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        textAlign: 'center',
+        overflow: 'hidden',
+        color: '#ffffff'
+      }}>
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="metadata"
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            zIndex: 1
+          }}
+        >
+          <source src="/vidio.webm" type="video/webm" />
+        </video>
+
+        {/* Overlay to ensure text readability */}
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          backgroundColor: 'rgba(0, 0, 0, 0.6)',
+          zIndex: 2
+        }}></div>
+
+        <div style={{ position: 'relative', zIndex: 3, padding: '0 24px' }}>
+          <h1 style={{
+            fontSize: isMediumMobile ? '2.5rem' : (isLargeMobile ? '3rem' : '4rem'),
+            fontWeight: '300',
+            marginBottom: isMediumMobile ? '16px' : '24px',
+            lineHeight: '1.1',
+            color: '#ffffff'
+          }}>
+            {t('PremiumQuality.title')}<br />
+            <span style={{
+              fontWeight: '600',
+              color: '#ffffff'
+            }}>
+              {t('PremiumQuality.titleSpan')}
+            </span>
+          </h1>
+          <p style={{
+            fontSize: isMediumMobile ? '1rem' : (isLargeMobile ? '1.25rem' : '1.5rem'),
+            color: '#e5e7eb',
+            fontWeight: '300',
+            maxWidth: '600px',
+            margin: '0 auto',
+            marginBottom: isMediumMobile ? '32px' : '48px'
+          }}>
+            {t('PremiumQuality.description')}
+          </p>
+          <div style={{
+            display: 'flex',
+            gap: '12px',
+            justifyContent: 'center',
+            flexWrap: 'wrap',
+            flexDirection: isSmallMobile ? 'column' : 'row',
+            alignItems: 'center'
+          }}>
+            <a href="/KATALOG DALLAS.pdf"
+              download="KATALOG DALLAS.pdf"
+              style={{
+                ...primaryButton,
+                backgroundColor: '#ffffff',
+                color: '#000000',
+                padding: isMediumMobile ? '10px 24px' : '12px 32px',
+                fontSize: isMediumMobile ? '14px' : '16px',
+                width: isSmallMobile ? '100%' : 'auto',
+                maxWidth: isSmallMobile ? '280px' : 'none'
+              }}
+              onMouseOver={(e) => { (e.target as HTMLElement).style.transform = 'scale(1.05)'; (e.target as HTMLElement).style.backgroundColor = '#f3f4f6' }}
+              onMouseOut={(e) => { (e.target as HTMLElement).style.transform = 'scale(1)'; (e.target as HTMLElement).style.backgroundColor = '#ffffff' }}
+              onMouseDown={(e) => (e.target as HTMLElement).style.transform = 'scale(0.95)'}
+              onMouseUp={(e) => (e.target as HTMLElement).style.transform = 'scale(1.05)'}>
+              {t('PremiumQuality.btnDownload')}
+            </a>
+            <a href="https://wa.me/6281260001487?text=Halo%20kak%2C%20saya%20ingin%20tanya%20produk%20percetakan"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                ...secondaryButton,
+                color: '#ffffff',
+                border: '1px solid #ffffff',
+                padding: isMediumMobile ? '10px 24px' : '12px 32px',
+                fontSize: isMediumMobile ? '14px' : '16px',
+                width: isSmallMobile ? '100%' : 'auto',
+                maxWidth: isSmallMobile ? '280px' : 'none',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                textAlign: 'center',
-                overflow: 'hidden',
-                color: '#ffffff'
+                gap: '8px'
+              }}
+              onMouseOver={(e) => { (e.target as HTMLElement).style.transform = 'scale(1.05)'; (e.target as HTMLElement).style.backgroundColor = '#ffffff'; (e.target as HTMLElement).style.color = '#000000' }}
+              onMouseOut={(e) => { (e.target as HTMLElement).style.transform = 'scale(1)'; (e.target as HTMLElement).style.backgroundColor = 'transparent'; (e.target as HTMLElement).style.color = '#ffffff' }}
+              onMouseDown={(e) => (e.target as HTMLElement).style.transform = 'scale(0.95)'}
+              onMouseUp={(e) => (e.target as HTMLElement).style.transform = 'scale(1.05)'}>
+              <Icon icon="mdi:whatsapp" style={{ fontSize: '20px' }} />
+              {t('Paperlisens.orderWa')}
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Price Promotion Section */}
+      <section style={{
+        padding: isMediumMobile ? '80px 24px' : '120px 24px',
+        backgroundColor: '#f8fafc',
+        position: 'relative',
+        overflow: 'hidden'
+      }}>
+        {/* Decorative background elements */}
+        <div style={{
+          position: 'absolute',
+          top: '-10%',
+          right: '-5%',
+          width: '400px',
+          height: '400px',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(10, 65, 116, 0.03) 0%, rgba(255, 255, 255, 0) 70%)',
+          zIndex: 0
+        }}></div>
+
+        <div style={{ maxWidth: '1200px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            style={{ textAlign: 'center', marginBottom: '64px' }}
+          >
+            <h2 style={{
+              fontSize: isMediumMobile ? '2.25rem' : '3rem',
+              fontWeight: '800',
+              color: '#001D39',
+              marginBottom: '20px',
+              letterSpacing: '-0.02em'
             }}>
-                <video
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                        zIndex: 1
-                    }}
-                >
-                    <source src="/vidio.webm" type="video/webm" />
-                </video>
-                
-                {/* Overlay to ensure text readability */}
-                <div style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    width: '100%',
-                    height: '100%',
-                    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-                    zIndex: 2
-                }}></div>
-
-                <div style={{ position: 'relative', zIndex: 3, padding: '0 24px' }}>
-                    <h1 style={{
-                      fontSize: isMediumMobile ? '2.5rem' : (isLargeMobile ? '3rem' : '4rem'),
-                      fontWeight: '300',
-                      marginBottom: isMediumMobile ? '16px' : '24px',
-                      lineHeight: '1.1',
-                      color: '#ffffff'
-                    }}>
-                      {t('PremiumQuality.title')}<br/>
-                      <span style={{
-                        fontWeight: '600',
-                        color: '#ffffff'
-                      }}>
-                        {t('PremiumQuality.titleSpan')}
-                      </span>
-                    </h1>
-                    <p style={{
-                      fontSize: isMediumMobile ? '1rem' : (isLargeMobile ? '1.25rem' : '1.5rem'),
-                      color: '#e5e7eb',
-                      fontWeight: '300',
-                      maxWidth: '600px',
-                      margin: '0 auto',
-                      marginBottom: isMediumMobile ? '32px' : '48px'
-                    }}>
-                      {t('PremiumQuality.description')}
-                    </p>
-                    <div style={{
-                      display: 'flex',
-                      gap: '12px',
-                      justifyContent: 'center',
-                      flexWrap: 'wrap',
-                      flexDirection: isSmallMobile ? 'column' : 'row',
-                      alignItems: 'center'
-                    }}>
-                      <a href="/KATALOG DALLAS.pdf"
-                         download="KATALOG DALLAS.pdf"
-                         style={{
-                           ...primaryButton,
-                           backgroundColor: '#ffffff',
-                           color: '#000000',
-                           padding: isMediumMobile ? '10px 24px' : '12px 32px',
-                           fontSize: isMediumMobile ? '14px' : '16px',
-                           width: isSmallMobile ? '100%' : 'auto',
-                           maxWidth: isSmallMobile ? '280px' : 'none'
-                         }}
-                         onMouseOver={(e) => {(e.target as HTMLElement).style.transform = 'scale(1.05)'; (e.target as HTMLElement).style.backgroundColor = '#f3f4f6'}}
-                         onMouseOut={(e) => {(e.target as HTMLElement).style.transform = 'scale(1)'; (e.target as HTMLElement).style.backgroundColor = '#ffffff'}}
-                         onMouseDown={(e) => (e.target as HTMLElement).style.transform = 'scale(0.95)'}
-                         onMouseUp={(e) => (e.target as HTMLElement).style.transform = 'scale(1.05)'}>
-                        {t('PremiumQuality.btnDownload')}
-                      </a>
-                      <a href="https://wa.me/6281260001487?text=Halo%20kak%2C%20saya%20ingin%20tanya%20produk%20percetakan"
-                         target="_blank"
-                         rel="noopener noreferrer"
-                         style={{
-                           ...secondaryButton,
-                           color: '#ffffff',
-                           border: '1px solid #ffffff',
-                           padding: isMediumMobile ? '10px 24px' : '12px 32px',
-                           fontSize: isMediumMobile ? '14px' : '16px',
-                           width: isSmallMobile ? '100%' : 'auto',
-                           maxWidth: isSmallMobile ? '280px' : 'none',
-                           display: 'flex',
-                           alignItems: 'center',
-                           justifyContent: 'center',
-                           gap: '8px'
-                         }}
-                         onMouseOver={(e) => {(e.target as HTMLElement).style.transform = 'scale(1.05)'; (e.target as HTMLElement).style.backgroundColor = '#ffffff'; (e.target as HTMLElement).style.color = '#000000'}}
-                         onMouseOut={(e) => {(e.target as HTMLElement).style.transform = 'scale(1)'; (e.target as HTMLElement).style.backgroundColor = 'transparent'; (e.target as HTMLElement).style.color = '#ffffff'}}
-                         onMouseDown={(e) => (e.target as HTMLElement).style.transform = 'scale(0.95)'}
-                         onMouseUp={(e) => (e.target as HTMLElement).style.transform = 'scale(1.05)'}>
-                        <Icon icon="mdi:whatsapp" style={{ fontSize: '20px' }} />
-                        {t('Paperlisens.orderWa')}
-                      </a>
-                    </div>
-                </div>
-            </section>
-
-            {/* Price Promotion Section */}
-            <section style={{
-              padding: isMediumMobile ? '80px 24px' : '120px 24px',
-              backgroundColor: '#f8fafc',
-              position: 'relative',
-              overflow: 'hidden'
+              Harga Minimal, <span style={{ color: '#0A4174' }}>Kualitas Maksimal</span>
+            </h2>
+            <div style={{
+              width: '80px',
+              height: '4px',
+              backgroundColor: '#0A4174',
+              margin: '0 auto 24px',
+              borderRadius: '2px'
+            }}></div>
+            <p style={{
+              color: '#4b5563',
+              fontSize: isMediumMobile ? '1.1rem' : '1.25rem',
+              maxWidth: '700px',
+              margin: '0 auto'
             }}>
-              {/* Decorative background elements */}
-              <div style={{
-                position: 'absolute',
-                top: '-10%',
-                right: '-5%',
-                width: '400px',
-                height: '400px',
-                borderRadius: '50%',
-                background: 'radial-gradient(circle, rgba(10, 65, 116, 0.03) 0%, rgba(255, 255, 255, 0) 70%)',
-                zIndex: 0
-              }}></div>
+              Solusi cetak profesional dengan efisiensi biaya yang mendukung akselerasi bisnis Anda.
+            </p>
+          </motion.div>
 
-              <div style={{ maxWidth: '1200px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
-                <motion.div 
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  style={{ textAlign: 'center', marginBottom: '64px' }}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: isSmallMobile ? '1fr' : (isMediumMobile ? '1fr 1fr' : 'repeat(3, 1fr)'),
+            gap: '32px'
+          }}>
+            {[
+              {
+                title: 'Custom Box & Packaging',
+                price: 'Rp 200',
+                desc: 'Box rokok, hampers, dan packaging produk dengan bahan berkualitas tinggi.',
+                icon: 'mdi:package-variant-closed',
+                color: '#0A4174',
+                delay: 0.1
+              },
+              {
+                title: 'Packaging Kuliner',
+                price: 'Rp 300',
+                desc: 'Paper tray, box donat, dan takeaway box food-grade yang higienis.',
+                icon: 'mdi:food-takeout-box',
+                color: '#059669',
+                delay: 0.2
+              },
+              {
+                title: 'Buku & Publikasi',
+                price: 'Harga Grosir',
+                desc: 'Cetak buku, katalog, dan kalender dengan binding kuat & hasil presisi.',
+                icon: 'mdi:book-open-page-variant',
+                color: '#f97316',
+                delay: 0.3
+              }
+            ].map((item, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: item.delay }}
+                whileHover={{
+                  y: -12,
+                  boxShadow: '0 25px 50px -12px rgba(10, 65, 116, 0.15)',
+                  borderColor: item.color
+                }}
+                style={{
+                  padding: '48px 32px',
+                  borderRadius: '24px',
+                  backgroundColor: '#ffffff',
+                  border: '2px solid transparent',
+                  boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.05)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  textAlign: 'center',
+                  transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                  cursor: 'default'
+                }}
+              >
+                <motion.div
+                  whileHover={{ rotate: 10, scale: 1.1 }}
+                  style={{
+                    width: '80px',
+                    height: '80px',
+                    borderRadius: '20px',
+                    backgroundColor: `${item.color}10`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginBottom: '28px',
+                    transition: 'all 0.3s ease'
+                  }}
                 >
-                  <h2 style={{ 
-                    fontSize: isMediumMobile ? '2.25rem' : '3rem', 
-                    fontWeight: '800', 
-                    color: '#001D39', 
-                    marginBottom: '20px',
-                    letterSpacing: '-0.02em'
-                  }}>
-                    Harga Minimal, <span style={{ color: '#0A4174' }}>Kualitas Maksimal</span>
-                  </h2>
-                  <div style={{ 
-                    width: '80px', 
-                    height: '4px', 
-                    backgroundColor: '#0A4174', 
-                    margin: '0 auto 24px',
-                    borderRadius: '2px'
-                  }}></div>
-                  <p style={{ 
-                    color: '#4b5563', 
-                    fontSize: isMediumMobile ? '1.1rem' : '1.25rem',
-                    maxWidth: '700px',
-                    margin: '0 auto'
-                  }}>
-                    Solusi cetak profesional dengan efisiensi biaya yang mendukung akselerasi bisnis Anda.
-                  </p>
+                  <Icon icon={item.icon} style={{ fontSize: '40px', color: item.color }} />
                 </motion.div>
-
+                <h3 style={{ fontSize: '1.5rem', fontWeight: '700', marginBottom: '16px', color: '#111827' }}>{item.title}</h3>
                 <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: isSmallMobile ? '1fr' : (isMediumMobile ? '1fr 1fr' : 'repeat(3, 1fr)'),
-                  gap: '32px'
+                  fontSize: '1.75rem',
+                  fontWeight: '800',
+                  color: item.color,
+                  marginBottom: '8px',
+                  display: 'inline-block',
+                  padding: '4px 16px',
+                  backgroundColor: `${item.color}08`,
+                  borderRadius: '12px'
                 }}>
-                  {[
-                    {
-                      title: 'Custom Box & Packaging',
-                      price: 'Rp 200',
-                      desc: 'Box rokok, hampers, dan packaging produk dengan bahan berkualitas tinggi.',
-                      icon: 'mdi:package-variant-closed',
-                      color: '#0A4174',
-                      delay: 0.1
-                    },
-                    {
-                      title: 'Packaging Kuliner',
-                      price: 'Rp 300',
-                      desc: 'Paper tray, box donat, dan takeaway box food-grade yang higienis.',
-                      icon: 'mdi:food-takeout-box',
-                      color: '#059669',
-                      delay: 0.2
-                    },
-                    {
-                      title: 'Buku & Publikasi',
-                      price: 'Harga Grosir',
-                      desc: 'Cetak buku, katalog, dan kalender dengan binding kuat & hasil presisi.',
-                      icon: 'mdi:book-open-page-variant',
-                      color: '#f97316',
-                      delay: 0.3
-                    }
-                  ].map((item, idx) => (
-                    <motion.div
-                      key={idx}
-                      initial={{ opacity: 0, y: 30 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.5, delay: item.delay }}
-                      whileHover={{ 
-                        y: -12, 
-                        boxShadow: '0 25px 50px -12px rgba(10, 65, 116, 0.15)',
-                        borderColor: item.color
-                      }}
-                      style={{
-                        padding: '48px 32px',
-                        borderRadius: '24px',
-                        backgroundColor: '#ffffff',
-                        border: '2px solid transparent',
-                        boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.05)',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        textAlign: 'center',
-                        transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-                        cursor: 'default'
-                      }}
-                    >
-                      <motion.div 
-                        whileHover={{ rotate: 10, scale: 1.1 }}
-                        style={{
-                          width: '80px',
-                          height: '80px',
-                          borderRadius: '20px',
-                          backgroundColor: `${item.color}10`,
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          marginBottom: '28px',
-                          transition: 'all 0.3s ease'
-                        }}
-                      >
-                        <Icon icon={item.icon} style={{ fontSize: '40px', color: item.color }} />
-                      </motion.div>
-                      <h3 style={{ fontSize: '1.5rem', fontWeight: '700', marginBottom: '16px', color: '#111827' }}>{item.title}</h3>
-                      <div style={{
-                        fontSize: '1.75rem',
-                        fontWeight: '800',
-                        color: item.color,
-                        marginBottom: '8px',
-                        display: 'inline-block',
-                        padding: '4px 16px',
-                        backgroundColor: `${item.color}08`,
-                        borderRadius: '12px'
-                      }}>
-                        <span style={{ fontSize: '0.9rem', fontWeight: '600', opacity: 0.8, verticalAlign: 'middle', marginRight: '4px' }}>Mulai</span>
-                        {item.price}{item.price.includes('Rp') ? <span style={{ fontSize: '1rem', fontWeight: '500', opacity: 0.7 }}> /pcs</span> : ''}
-                      </div>
-                      <p style={{ color: '#6b7280', fontSize: '1rem', lineHeight: '1.6', marginBottom: '24px', flexGrow: 1 }}>
-                        {item.desc}
-                      </p>
-                      <a 
-                        href={`https://wa.me/6281260001487?text=Halo%20kak%2C%20saya%20tertarik%20ingin%20konsultasi%20dan%20pesan%20${encodeURIComponent(item.title)}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{
-                          width: '100%',
-                          padding: '14px',
-                          borderRadius: '12px',
-                          backgroundColor: item.color,
-                          color: '#ffffff',
-                          textDecoration: 'none',
-                          fontWeight: '600',
-                          fontSize: '0.95rem',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          gap: '8px',
-                          transition: 'opacity 0.2s'
-                        }}
-                        onMouseOver={(e) => (e.currentTarget.style.opacity = '0.9')}
-                        onMouseOut={(e) => (e.currentTarget.style.opacity = '1')}
-                      >
-                        <Icon icon="mdi:whatsapp" style={{ fontSize: '20px' }} />
-                        Konsultasi & Pesan Sekarang
-                      </a>
-                    </motion.div>
-                  ))}
+                  <span style={{ fontSize: '0.9rem', fontWeight: '600', opacity: 0.8, verticalAlign: 'middle', marginRight: '4px' }}>Mulai</span>
+                  {item.price}{item.price.includes('Rp') ? <span style={{ fontSize: '1rem', fontWeight: '500', opacity: 0.7 }}> /pcs</span> : ''}
                 </div>
-              </div>
-            </section>
+                <p style={{ color: '#6b7280', fontSize: '1rem', lineHeight: '1.6', marginBottom: '24px', flexGrow: 1 }}>
+                  {item.desc}
+                </p>
+                <a
+                  href={`https://wa.me/6281260001487?text=Halo%20kak%2C%20saya%20tertarik%20ingin%20konsultasi%20dan%20pesan%20${encodeURIComponent(item.title)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    width: '100%',
+                    padding: '14px',
+                    borderRadius: '12px',
+                    backgroundColor: item.color,
+                    color: '#ffffff',
+                    textDecoration: 'none',
+                    fontWeight: '600',
+                    fontSize: '0.95rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px',
+                    transition: 'opacity 0.2s'
+                  }}
+                  onMouseOver={(e) => (e.currentTarget.style.opacity = '0.9')}
+                  onMouseOut={(e) => (e.currentTarget.style.opacity = '1')}
+                >
+                  <Icon icon="mdi:whatsapp" style={{ fontSize: '20px' }} />
+                  Konsultasi & Pesan Sekarang
+                </a>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-            {/* Trusted By Section (Marquee) */}
-            <section style={{
-              padding: '60px 0',
-              backgroundColor: '#f9fafb',
-              borderTop: '1px solid #e5e7eb',
-              borderBottom: '1px solid #e5e7eb',
-              overflow: 'hidden'
+      {/* Trusted By Section (Marquee) */}
+      <section style={{
+        padding: '60px 0',
+        backgroundColor: '#f9fafb',
+        borderTop: '1px solid #e5e7eb',
+        borderBottom: '1px solid #e5e7eb',
+        overflow: 'hidden'
+      }}>
+        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px', textAlign: 'center', marginBottom: '40px' }}>
+          <h3 style={{ fontSize: '1.5rem', fontWeight: '700', color: '#1f2937', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            {t('TrustedBy.title')}
+          </h3>
+        </div>
+
+        <div style={{ display: 'flex', overflow: 'hidden', width: '100%', position: 'relative' }}>
+          {/* Marquee Group 1 */}
+          <div className="animate-marquee" style={{ display: 'flex', gap: '80px', paddingRight: '80px', minWidth: '100%', flexShrink: 0, alignItems: 'center' }}>
+            {Array.from({ length: 25 }, (_, i) => `/logo brand (${i + 1}).jpg`).map((src, idx) => (
+              <div key={`logo-1-${idx}`} style={{ position: 'relative', width: '220px', height: '140px', flexShrink: 0 }}>
+                <Image
+                  src={src}
+                  alt={`Brand Partner ${idx + 1}`}
+                  fill
+                  sizes="220px"
+                  style={{ objectFit: 'contain' }}
+                  loading="lazy"
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* Marquee Group 2 (Duplicate) */}
+          <div className="animate-marquee" style={{ display: 'flex', gap: '80px', paddingRight: '80px', minWidth: '100%', flexShrink: 0, alignItems: 'center' }}>
+            {Array.from({ length: 25 }, (_, i) => `/logo brand (${i + 1}).jpg`).map((src, idx) => (
+              <div key={`logo-2-${idx}`} style={{ position: 'relative', width: '220px', height: '140px', flexShrink: 0 }}>
+                <Image
+                  src={src}
+                  alt={`Brand Partner ${idx + 1}`}
+                  fill
+                  sizes="220px"
+                  style={{ objectFit: 'contain' }}
+                  loading="lazy"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Why Choose Dallas Section */}
+      <section style={{
+        padding: isMediumMobile ? '64px 24px' : '100px 24px',
+        textAlign: 'center',
+        backgroundColor: '#0A4174',
+        color: '#ffffff',
+        borderTop: '1px solid rgba(255,255,255,0.1)'
+      }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <div style={{ marginBottom: '64px' }}>
+            <h2 style={{
+              fontSize: isMediumMobile ? '1.75rem' : '2.25rem',
+              fontWeight: '700',
+              marginBottom: '16px',
+              color: 'white'
             }}>
-              <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px', textAlign: 'center', marginBottom: '40px' }}>
-                <h3 style={{ fontSize: '1.5rem', fontWeight: '700', color: '#1f2937', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                  {useTranslations('TrustedBy')('title')}
-                </h3>
-              </div>
-              
-              <div style={{ display: 'flex', overflow: 'hidden', width: '100%', position: 'relative' }}>
-                {/* Marquee Group 1 */}
-                <div className="animate-marquee" style={{ display: 'flex', gap: '80px', paddingRight: '80px', minWidth: '100%', flexShrink: 0, alignItems: 'center' }}>
-                  {Array.from({ length: 25 }, (_, i) => `/logo brand (${i + 1}).jpg`).map((src, idx) => (
-                    <div key={`logo-1-${idx}`} style={{ width: '220px', height: '140px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                       <img 
-                         src={src} 
-                         alt={`Brand Partner ${idx + 1}`} 
-                         style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', transition: 'transform 0.3s' }}
-                         className="hover:scale-110"
-                       />
-                    </div>
-                  ))}
-                </div>
-                
-                {/* Marquee Group 2 (Duplicate) */}
-                <div className="animate-marquee" style={{ display: 'flex', gap: '80px', paddingRight: '80px', minWidth: '100%', flexShrink: 0, alignItems: 'center' }}>
-                   {Array.from({ length: 25 }, (_, i) => `/logo brand (${i + 1}).jpg`).map((src, idx) => (
-                    <div key={`logo-2-${idx}`} style={{ width: '220px', height: '140px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                       <img 
-                         src={src} 
-                         alt={`Brand Partner ${idx + 1}`} 
-                         style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', transition: 'transform 0.3s' }}
-                         className="hover:scale-110"
-                       />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </section>
-
-            {/* Why Choose Dallas Section */}
-            <section style={{
-                padding: isMediumMobile ? '64px 24px' : '100px 24px',
-                textAlign: 'center',
-                backgroundColor: '#0A4174',
-                color: '#ffffff',
-                borderTop: '1px solid rgba(255,255,255,0.1)'
+              {t('WhyChoose.title')}
+            </h2>
+            <p style={{
+              fontSize: isMediumMobile ? '1rem' : '1.125rem',
+              color: '#9ca3af',
+              fontWeight: '400'
             }}>
-                <div style={{maxWidth: '1200px', margin: '0 auto'}}>
-                    <div style={{marginBottom: '64px'}}>
-                         <h2 style={{
-                            fontSize: isMediumMobile ? '1.75rem' : '2.25rem',
-                            fontWeight: '700',
-                            marginBottom: '16px',
-                            color: 'white'
-                        }}>
-                            {t('WhyChoose.title')}
-                        </h2>
-                        <p style={{
-                            fontSize: isMediumMobile ? '1rem' : '1.125rem',
-                            color: '#9ca3af',
-                            fontWeight: '400'
-                        }}>
-                            {t('WhyChoose.subtitle')}
-                        </p>
-                    </div>
+              {t('WhyChoose.subtitle')}
+            </p>
+          </div>
 
-                    <div style={{
-                        display: 'grid',
-                        gridTemplateColumns: isSmallMobile ? '1fr' : (isMediumMobile ? '1fr 1fr' : 'repeat(4, 1fr)'),
-                        gap: '32px',
-                        marginBottom: '64px'
-                    }}>
-                        {/* POIN 1: PENGALAMAN (LEGACY) */}
-                        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px'}}>
-                            <div style={{
-                                width: '80px', height: '80px',
-                                borderRadius: '50%',
-                                backgroundColor: 'rgba(73, 118, 159, 0.2)',
-                                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                marginBottom: '8px'
-                            }}>
-                                <Icon icon="mdi:shield-check" width="40" height="40" color="#f97316" />
-                            </div>
-                            <h3 style={{fontSize: '1.25rem', fontWeight: '600'}}>{t('WhyChoose.points.experience.title')}</h3>
-                            <p style={{color: '#9ca3af', fontSize: '0.95rem', lineHeight: '1.6'}}>
-                                {t('WhyChoose.points.experience.desc')}
-                            </p>
-                        </div>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: isSmallMobile ? '1fr' : (isMediumMobile ? '1fr 1fr' : 'repeat(4, 1fr)'),
+            gap: '32px',
+            marginBottom: '64px'
+          }}>
+            {/* POIN 1: PENGALAMAN (LEGACY) */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
+              <div style={{
+                width: '80px', height: '80px',
+                borderRadius: '50%',
+                backgroundColor: 'rgba(73, 118, 159, 0.2)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                marginBottom: '8px'
+              }}>
+                <Icon icon="mdi:shield-check" width="40" height="40" color="#f97316" />
+              </div>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: '600' }}>{t('WhyChoose.points.experience.title')}</h3>
+              <p style={{ color: '#9ca3af', fontSize: '0.95rem', lineHeight: '1.6' }}>
+                {t('WhyChoose.points.experience.desc')}
+              </p>
+            </div>
 
-                        {/* POIN 2: KUALITAS (PRECISION) */}
-                        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px'}}>
-                            <div style={{
-                                width: '80px', height: '80px',
-                                borderRadius: '50%',
-                                backgroundColor: 'rgba(73, 118, 159, 0.2)',
-                                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                marginBottom: '8px'
-                            }}>
-                                <Icon icon="mdi:crosshairs-gps" width="40" height="40" color="#f97316" />
-                            </div>
-                            <h3 style={{fontSize: '1.25rem', fontWeight: '600'}}>{t('WhyChoose.points.quality.title')}</h3>
-                            <p style={{color: '#9ca3af', fontSize: '0.95rem', lineHeight: '1.6'}}>
-                                {t('WhyChoose.points.quality.desc')}
-                            </p>
-                        </div>
+            {/* POIN 2: KUALITAS (PRECISION) */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
+              <div style={{
+                width: '80px', height: '80px',
+                borderRadius: '50%',
+                backgroundColor: 'rgba(73, 118, 159, 0.2)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                marginBottom: '8px'
+              }}>
+                <Icon icon="mdi:crosshairs-gps" width="40" height="40" color="#f97316" />
+              </div>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: '600' }}>{t('WhyChoose.points.quality.title')}</h3>
+              <p style={{ color: '#9ca3af', fontSize: '0.95rem', lineHeight: '1.6' }}>
+                {t('WhyChoose.points.quality.desc')}
+              </p>
+            </div>
 
-                         {/* POIN 3: KONSULTASI (SOLUTION) */}
-                        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px'}}>
-                            <div style={{
-                                width: '80px', height: '80px',
-                                borderRadius: '50%',
-                                backgroundColor: 'rgba(73, 118, 159, 0.2)',
-                                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                marginBottom: '8px'
-                            }}>
-                                <Icon icon="mdi:lightbulb-on-outline" width="40" height="40" color="#f97316" />
-                            </div>
-                            <h3 style={{fontSize: '1.25rem', fontWeight: '600'}}>{t('WhyChoose.points.consultation.title')}</h3>
-                            <p style={{color: '#9ca3af', fontSize: '0.95rem', lineHeight: '1.6'}}>
-                                {t('WhyChoose.points.consultation.desc')}
-                            </p>
-                        </div>
+            {/* POIN 3: KONSULTASI (SOLUTION) */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
+              <div style={{
+                width: '80px', height: '80px',
+                borderRadius: '50%',
+                backgroundColor: 'rgba(73, 118, 159, 0.2)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                marginBottom: '8px'
+              }}>
+                <Icon icon="mdi:lightbulb-on-outline" width="40" height="40" color="#f97316" />
+              </div>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: '600' }}>{t('WhyChoose.points.consultation.title')}</h3>
+              <p style={{ color: '#9ca3af', fontSize: '0.95rem', lineHeight: '1.6' }}>
+                {t('WhyChoose.points.consultation.desc')}
+              </p>
+            </div>
 
-                         {/* POIN 4: WAKTU (PUNCTUALITY) */}
-                        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px'}}>
-                            <div style={{
-                                width: '80px', height: '80px',
-                                borderRadius: '50%',
-                                backgroundColor: 'rgba(73, 118, 159, 0.2)',
-                                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                marginBottom: '8px'
-                            }}>
-                                <Icon icon="mdi:clock-check-outline" width="40" height="40" color="#f97316" />
-                            </div>
-                            <h3 style={{fontSize: '1.25rem', fontWeight: '600'}}>{t('WhyChoose.points.punctuality.title')}</h3>
-                            <p style={{color: '#9ca3af', fontSize: '0.95rem', lineHeight: '1.6'}}>
-                                {t('WhyChoose.points.punctuality.desc')}
-                            </p>
-                        </div>
-                    </div>
+            {/* POIN 4: WAKTU (PUNCTUALITY) */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
+              <div style={{
+                width: '80px', height: '80px',
+                borderRadius: '50%',
+                backgroundColor: 'rgba(73, 118, 159, 0.2)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                marginBottom: '8px'
+              }}>
+                <Icon icon="mdi:clock-check-outline" width="40" height="40" color="#f97316" />
+              </div>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: '600' }}>{t('WhyChoose.points.punctuality.title')}</h3>
+              <p style={{ color: '#9ca3af', fontSize: '0.95rem', lineHeight: '1.6' }}>
+                {t('WhyChoose.points.punctuality.desc')}
+              </p>
+            </div>
+          </div>
 
-                    {/* Call to Action */}
-                    <div style={{
-                        borderTop: '1px solid rgba(255,255,255,0.1)',
-                        paddingTop: '40px',
-                        marginTop: '20px'
-                    }}>
-                        <h4 style={{fontSize: '1.25rem', fontWeight: '500', marginBottom: '24px', color: 'white', maxWidth: '800px', margin: '0 auto'}}>
-                            {t('WhyChoose.cta')}
-                        </h4>
-                    </div>
-                </div>
-            </section>
+          {/* Call to Action */}
+          <div style={{
+            borderTop: '1px solid rgba(255,255,255,0.1)',
+            paddingTop: '40px',
+            marginTop: '20px'
+          }}>
+            <h4 style={{ fontSize: '1.25rem', fontWeight: '500', marginBottom: '24px', color: 'white', maxWidth: '800px', margin: '0 auto' }}>
+              {t('WhyChoose.cta')}
+            </h4>
+          </div>
+        </div>
+      </section>
 
-            {/* Classic Product Card Grid Section */}
-      <section id="classic-products" className="bg-[#0A4174] py-[100px] px-4 sm:px-6 lg:px-8">
+      {/* Classic Product Card Grid Section */}
+      <section id="classic-products" style={{ backgroundColor: '#ffffff', padding: '100px 0' }} className="px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl lg:text-7xl font-light text-white leading-tight">
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px', marginBottom: '20px' }}>
+            <span style={{ width: '40px', height: '1px', background: 'linear-gradient(90deg, transparent, #D4A017)' }} />
+            <span style={{ fontSize: '12px', fontWeight: '700', letterSpacing: '3px', textTransform: 'uppercase', color: '#D4A017' }}>EXCLUSIVE</span>
+            <span style={{ width: '40px', height: '1px', background: 'linear-gradient(90deg, #D4A017, transparent)' }} />
+          </div>
+          <h2 className="text-4xl md:text-5xl lg:text-7xl font-light leading-tight" style={{ color: '#001D39' }}>
             {t('FeaturedProducts.title')}
           </h2>
-          <p className="max-w-2xl mx-auto text-base md:text-xl lg:text-2xl font-light text-slate-400 mb-20">
+          <div style={{ width: '60px', height: '2px', background: 'linear-gradient(90deg, #D4A017, #B8860B)', margin: '20px auto 0', borderRadius: '2px' }} />
+          <p className="max-w-2xl mx-auto text-base md:text-xl lg:text-2xl font-light mb-20" style={{ marginTop: '20px', color: '#4b5563' }}>
             {t('FeaturedProducts.subtitle')}<br /><br />
           </p>
         </div>
@@ -1327,17 +1665,16 @@ const BannerSlider = ({ images, interval = 10000, transitionType = 'fade' }: { i
                     onMouseDown={(e) => e.currentTarget.style.transform = 'translateY(-4px) scale(0.98)'}
                     onMouseUp={(e) => e.currentTarget.style.transform = 'translateY(-8px) scale(1)'}
                   >
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      style={{
-                        width: '100%',
-                        height: '250px',
-                        borderRadius: '12px',
-                        objectFit: 'cover',
-                        marginBottom: '12px'
-                      }}
-                    />
+                    <div style={{ position: 'relative', width: '100%', height: '250px', borderRadius: '12px', overflow: 'hidden', marginBottom: '12px' }}>
+                      <Image
+                        src={product.image}
+                        alt={product.name}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 300px"
+                        style={{ objectFit: 'cover' }}
+                        loading="lazy"
+                      />
+                    </div>
                     <h4 style={{ fontSize: '1.25rem', fontWeight: '500', marginBottom: '4px', color: '#111827' }}>{product.name}</h4>
                     <p style={{ color: '#4b5563', fontSize: '0.875rem', lineHeight: '1.5', flexGrow: 1 }}>{product.description}</p>
                   </motion.div>
@@ -1350,201 +1687,225 @@ const BannerSlider = ({ images, interval = 10000, transitionType = 'fade' }: { i
 
       {/* Non-Cigarette Products Section */}
       <section id="non-cigarettes" style={{
-        padding: '80px 0', 
+        padding: '80px 0',
         backgroundColor: '#001D39'
       }}>
-        <div style={{maxWidth: '1280px', margin: '0 auto', padding: '0 24px'}}>
-          <div style={{textAlign: 'center', marginBottom: '48px'}}>
-            <h2 style={{fontSize: '3rem', fontWeight: '300', marginBottom: '24px'}}>{t('NonCigarette.title')}</h2>
-            <p style={{fontSize: '1.25rem', color: '#9ca3af', maxWidth: '800px', margin: '0 auto'}}>
+        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+            <h2 style={{ fontSize: '3rem', fontWeight: '300', marginBottom: '24px' }}>{t('NonCigarette.title')}</h2>
+            <p style={{ fontSize: '1.25rem', color: '#9ca3af', maxWidth: '800px', margin: '0 auto' }}>
               {t('NonCigarette.description')}
             </p>
           </div>
-          <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', 
-            gap: '32px', 
-            marginTop: '64px' 
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: '32px',
+            marginTop: '64px'
           }}>
             {[
               { src: "/mesin potong.png", alt: "Mesin Potong Canggih" },
               { src: "/foto%20(9).jpg", alt: "Proses Produksi Berkualitas" }
             ].map((img, idx) => (
-              <div key={idx} style={{ 
-                position: 'relative', 
-                height: '350px', 
-                borderRadius: '24px', 
-                overflow: 'hidden', 
-                boxShadow: '0 20px 40px -10px rgba(0,0,0,0.3)', 
-                border: '1px solid rgba(255,255,255,0.1)' 
+              <div key={idx} style={{
+                position: 'relative',
+                height: '350px',
+                borderRadius: '24px',
+                overflow: 'hidden',
+                boxShadow: '0 20px 40px -10px rgba(0,0,0,0.3)',
+                border: '1px solid rgba(255,255,255,0.1)'
               }}>
-                 <img 
-                   src={img.src} 
-                   alt={img.alt} 
-                   style={{ 
-                     width: '100%', 
-                     height: '100%', 
-                     objectFit: 'cover', 
-                     transition: 'transform 0.5s ease',
-                     cursor: 'pointer'
-                   }} 
-                   onMouseOver={e => e.currentTarget.style.transform = 'scale(1.05)'}
-                   onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}
-                 />
+                <Image
+                  src={img.src}
+                  alt={img.alt}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  style={{
+                    objectFit: 'cover',
+                    transition: 'transform 0.5s ease',
+                    cursor: 'pointer'
+                  }}
+                  loading="lazy"
+                />
               </div>
             ))}
           </div>
           <br /><br />
-          <h3 style={{fontSize: '2rem', fontWeight: '300', textAlign: 'center', marginBottom: '48px'}}>{t('NonCigarette.productsTitle')}</h3>
+          {/* Portfolio Title */}
+          <div style={{ textAlign: 'center', marginBottom: '56px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px', marginBottom: '16px' }}>
+              <span style={{ width: '40px', height: '1px', background: 'linear-gradient(90deg, transparent, #D4A017)' }} />
+              <span style={{ fontSize: '12px', fontWeight: '700', letterSpacing: '3px', textTransform: 'uppercase', color: '#D4A017' }}>EXCLUSIVE</span>
+              <span style={{ width: '40px', height: '1px', background: 'linear-gradient(90deg, #D4A017, transparent)' }} />
+            </div>
+            <h3 style={{ fontSize: isLargeMobile ? '1.75rem' : '2.25rem', fontWeight: '300', letterSpacing: '2px' }}>{t('NonCigarette.productsTitle')}</h3>
+            <div style={{ width: '60px', height: '2px', background: 'linear-gradient(90deg, #D4A017, #B8860B)', margin: '16px auto 0', borderRadius: '2px' }} />
+          </div>
+
+          {/* Portfolio Cards */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
+            gridTemplateColumns: isLargeMobile ? '1fr' : 'repeat(2, 1fr)',
             gap: '32px',
             alignItems: 'stretch'
           }}>
-            {/* Card 1 */}
-            <div style={{
-              backgroundColor: '#0A4174',
-              borderRadius: '24px',
-              overflow: 'hidden',
-              display: 'flex',
-              flexDirection: 'column'
-            }}>
-              <img
-                src="/paperlisens%20produk%20unggulan%20(1).png"
-                alt="Solusi Cup Serbaguna & Trendi"
-                style={{ width: '100%', height: '300px', objectFit: 'cover' }}
-              />
-              <div style={{ padding: '32px', flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-                <h4 style={{ fontSize: '1.5rem', fontWeight: '500', marginBottom: '16px', color: '#ffffff' }}>{t('NonCigarette.card1.title')}</h4>
-                <p style={{ color: '#9ca3af', fontSize: '1rem', lineHeight: '1.6' }}>
-                  {t('NonCigarette.card1.desc')}
-                </p>
+            {[
+              { image: '/paperlisens%20produk%20unggulan%20(1).png', alt: 'Solusi Cup Serbaguna & Trendi', titleKey: 'card1.title', descKey: 'card1.desc' },
+              { image: '/paperlisens%20produk%20unggulan%20(2).jpg', alt: 'Kotak Donat Berbagai Ukuran', titleKey: 'card2.title', descKey: 'card2.desc' }
+            ].map((card, idx) => (
+              <div key={idx} style={{
+                borderRadius: '24px',
+                overflow: 'hidden',
+                display: 'flex',
+                flexDirection: 'column',
+                background: 'linear-gradient(145deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%)',
+                border: '1px solid rgba(255,255,255,0.1)',
+                transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                cursor: 'pointer'
+              }}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.border = '1px solid rgba(212, 160, 23, 0.4)';
+                  e.currentTarget.style.boxShadow = '0 20px 60px -15px rgba(0,0,0,0.5), 0 0 30px rgba(212, 160, 23, 0.08)';
+                  e.currentTarget.style.transform = 'translateY(-8px)';
+                  const img = e.currentTarget.querySelector('.portfolio-img') as HTMLElement;
+                  if (img) img.style.transform = 'scale(1.05)';
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.border = '1px solid rgba(255,255,255,0.1)';
+                  e.currentTarget.style.boxShadow = 'none';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  const img = e.currentTarget.querySelector('.portfolio-img') as HTMLElement;
+                  if (img) img.style.transform = 'scale(1)';
+                }}
+              >
+                <div style={{ position: 'relative', width: '100%', height: isLargeMobile ? '280px' : '360px', overflow: 'hidden' }}>
+                  <Image
+                    src={card.image}
+                    alt={card.alt}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="portfolio-img"
+                    style={{ objectFit: 'cover', transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)' }}
+                    loading="lazy"
+                  />
+                  {/* Dark gradient overlay at bottom */}
+                  <div style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    height: '100px',
+                    background: 'linear-gradient(to top, rgba(0,29,57,0.8), transparent)',
+                    pointerEvents: 'none'
+                  }} />
+                  {/* Featured badge */}
+                  <div style={{
+                    position: 'absolute',
+                    top: '16px',
+                    left: '16px',
+                    background: 'linear-gradient(135deg, #D4A017, #B8860B)',
+                    color: '#fff',
+                    padding: '6px 14px',
+                    borderRadius: '20px',
+                    fontSize: '11px',
+                    fontWeight: '700',
+                    letterSpacing: '1px',
+                    textTransform: 'uppercase',
+                    boxShadow: '0 4px 12px rgba(212, 160, 23, 0.3)'
+                  }}>
+                    ★ FEATURED
+                  </div>
+                </div>
+                <div style={{ padding: '28px 28px 32px', flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+                  <h4 style={{ fontSize: '1.35rem', fontWeight: '600', marginBottom: '14px', color: '#ffffff', lineHeight: '1.3' }}>
+                    {t(`NonCigarette.${card.titleKey}`)}
+                  </h4>
+                  <p style={{ color: '#9ca3af', fontSize: '0.95rem', lineHeight: '1.7', flexGrow: 1 }}>
+                    {t(`NonCigarette.${card.descKey}`)}
+                  </p>
+                  <div style={{ marginTop: '20px', display: 'flex', alignItems: 'center', gap: '8px', color: '#D4A017', fontSize: '14px', fontWeight: '600' }}>
+                    <span>{t('NonCigarette.btnBuy')}</span>
+                    <span style={{ transition: 'transform 0.3s ease' }}>→</span>
+                  </div>
+                </div>
               </div>
-            </div>
-
-            {/* Card 2 */}
-            <div style={{
-              backgroundColor: '#0A4174',
-              borderRadius: '24px',
-              overflow: 'hidden',
-              display: 'flex',
-              flexDirection: 'column'
-            }}>
-              <img
-                src="/paperlisens%20produk%20unggulan%20(2).png"
-                alt="Kotak Donat Berbagai Ukuran"
-                style={{ width: '100%', height: '300px', objectFit: 'cover' }}
-              />
-              <div style={{ padding: '32px', flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-                <h4 style={{ fontSize: '1.5rem', fontWeight: '500', marginBottom: '16px', color: '#ffffff' }}>{t('NonCigarette.card2.title')}</h4>
-                <p style={{ color: '#9ca3af', fontSize: '1rem', lineHeight: '1.6' }}>
-                  {t('NonCigarette.card2.desc')}
-                </p>
-              </div>
-            </div>
+            ))}
           </div>
-          
-          {/* Paperlisens Product Gallery */}
-          <div style={{marginTop: '80px'}}>
-            <h3 style={{fontSize: '2rem', fontWeight: '300', textAlign: 'center', marginBottom: '48px'}}>{t('NonCigarette.galleryTitle')}</h3>
+
+          {/* Photo Gallery - Premium Masonry */}
+          <div style={{ marginTop: '80px' }}>
+            <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+              <span style={{ fontSize: '0.875rem', fontWeight: '600', letterSpacing: '3px', textTransform: 'uppercase', color: '#D4A017', display: 'block', marginBottom: '12px' }}>GALLERY</span>
+              <h3 style={{ fontSize: '2.25rem', fontWeight: '300', color: '#ffffff', lineHeight: '1.3' }}>{t('NonCigarette.galleryTitle')}</h3>
+              <div style={{ width: '60px', height: '2px', backgroundColor: '#D4A017', margin: '16px auto 0' }} />
+            </div>
             <div style={{
               display: 'grid',
-              gridTemplateColumns: isLargeMobile ? '1fr' : 'repeat(auto-fit, minmax(280px, 1fr))',
-              gap: isLargeMobile ? '16px' : '24px'
+              gridTemplateColumns: isLargeMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
+              gap: isLargeMobile ? '8px' : '12px',
+              gridAutoRows: isLargeMobile ? '140px' : '180px'
             }}>
               {[
-                { name: 'Cup A', price: 'Rp 24.420 - 26.000', variant: 'Best Seller', rating: '4.9', sold: '15k+', image: '/dallas%20cup%20a.png' },
-                { name: 'Cup B', price: 'Rp 26.500 - 28.200', variant: 'Ekonomis', rating: '4.6', sold: '3.2k', image: '/dallas%20cup%20b.png' },
-                { name: 'Donat isi 3', price: 'Rp 30.800 - 66.250', variant: 'Premium', rating: '4.8', sold: '1.4k', image: '/dallas%20donat%20isi%203.png' },
-                { name: 'Donat isi 6', price: 'Rp 33.600 - 78.750', variant: 'Wholesale', rating: '4.8', sold: '1.2k', image: '/dallas%20donat%20isi%206.png' }
-              ].map((product, index) => (
-                <div key={index} 
-                     onClick={() => router.push('/paperlisens')}
-                     style={{
-                       backgroundColor: '#ffffff',
-                       color: '#000000',
-                       borderRadius: '16px',
-                       padding: '0',
-                       cursor: 'pointer',
-                       transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                       transform: 'translateY(0)',
-                       border: '1px solid #e5e7eb',
-                       overflow: 'hidden'
-                     }}
-                     onMouseOver={(e) => {
-                       e.currentTarget.style.transform = 'translateY(-4px)';
-                       e.currentTarget.style.boxShadow = '0 10px 25px -3px rgba(0, 0, 0, 0.1)';
-                     }}
-                     onMouseOut={(e) => {
-                       e.currentTarget.style.transform = 'translateY(0)';
-                       e.currentTarget.style.boxShadow = 'none';
-                     }}
-                     onMouseDown={(e) => e.currentTarget.style.transform = 'translateY(-2px) scale(0.98)'}
-                     onMouseUp={(e) => e.currentTarget.style.transform = 'translateY(-4px) scale(1)'}>
-                  <img 
-                    src={product.image}
-                    alt={product.name}
-                    style={{
-                      width: '100%',
-                      height: '180px',
-                      objectFit: 'cover'
-                    }}
+                '/foto (412).jpg', '/foto (264).jpg', '/foto (120).jpg', '/foto (176).jpg',
+                '/foto (310).jpg', '/foto (154).jpg', '/foto (431).jpg', '/foto (436).jpg',
+                '/foto (96).jpg', '/foto (435).jpg', '/foto (69).jpg', '/foto (612).jpg',
+                '/foto (517).jpg', '/foto (510).jpg', '/foto (127).jpg', '/foto (365).jpg',
+                '/foto (185).jpg', '/foto (84).jpg', '/foto (187).jpg', '/foto (151).jpg',
+                '/foto (432).jpg', '/foto (165).jpg', '/foto (159).jpg', '/foto (172).jpg'
+              ].map((img, index) => (
+                <div key={index} style={{
+                  position: 'relative',
+                  borderRadius: '12px',
+                  overflow: 'hidden',
+                  gridRow: index % 5 === 0 ? 'span 2' : 'span 1',
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 16px rgba(0,0,0,0.3)'
+                }}>
+                  <Image
+                    src={img}
+                    alt={`Gallery ${index + 1}`}
+                    fill
+                    sizes="(max-width: 768px) 50vw, 25vw"
+                    style={{ objectFit: 'cover', transition: 'transform 0.5s ease' }}
+                    loading="lazy"
+                    onMouseOver={(e) => (e.currentTarget.style.transform = 'scale(1.08)')}
+                    onMouseOut={(e) => (e.currentTarget.style.transform = 'scale(1)')}
                   />
-                  <div style={{padding: '16px'}}>
-                    <h4 style={{fontSize: '1.125rem', fontWeight: '500', marginBottom: '8px', lineHeight: '1.4'}}>{product.name}</h4>
-                    <div style={{display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px'}}>
-                      <div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
-                        <span style={{color: '#fbbf24', fontSize: '14px'}}>★</span>
-                        <span style={{fontSize: '14px', color: '#6b7280'}}>{product.rating}</span>
-                      </div>
-                      <span style={{fontSize: '14px', color: '#6b7280'}}>|</span>
-                      <span style={{fontSize: '14px', color: '#6b7280'}}>{product.sold} terjual</span>
-                    </div>
-                    <div style={{display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px'}}>
-                      <span style={{fontSize: '1.25rem', fontWeight: '600', color: '#dc2626'}}>{product.price}</span>
-                      <span style={{fontSize: '0.75rem', backgroundColor: '#ecfdf5', color: '#059669', padding: '2px 6px', borderRadius: '4px', fontWeight: '500'}}>{product.variant}</span>
-                    </div>
-                    <div style={{
-                      backgroundColor: '#059669',
-                      color: 'white',
-                      padding: '8px 12px',
-                      borderRadius: '8px',
-                      textAlign: 'center',
-                      fontSize: '0.875rem',
-                      fontWeight: '500',
-                      marginTop: '12px'
-                    }}>
-                      {t('NonCigarette.btnBuy')}
-                    </div>
-                  </div>
+                  <div style={{
+                    position: 'absolute', inset: 0,
+                    background: 'linear-gradient(to top, rgba(0,29,57,0.6) 0%, transparent 50%)',
+                    opacity: 0,
+                    transition: 'opacity 0.3s ease',
+                    pointerEvents: 'none'
+                  }}
+                    className="gallery-hover-overlay"
+                  />
                 </div>
               ))}
             </div>
-            
-            {/* View All Products Button */}
-            <div style={{textAlign: 'center', marginTop: '48px'}}>
-              <button
-                onClick={() => router.push('/paperlisens')}
-                style={{
-                  backgroundColor: '#059669',
-                  color: 'white',
-                  padding: '16px 32px',
-                  borderRadius: '50px',
-                  border: 'none',
-                  fontSize: '1.125rem',
-                  fontWeight: '500',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease',
-                  transform: 'scale(1)'
-                }}
-                onMouseOver={(e) => {(e.target as HTMLElement).style.transform = 'scale(1.05)'; (e.target as HTMLElement).style.backgroundColor = '#047857'}}
-                onMouseOut={(e) => {(e.target as HTMLElement).style.transform = 'scale(1)'; (e.target as HTMLElement).style.backgroundColor = '#059669'}}
-                onMouseDown={(e) => (e.target as HTMLElement).style.transform = 'scale(0.95)'}
-                onMouseUp={(e) => (e.target as HTMLElement).style.transform = 'scale(1.05)'}>
-                {t('NonCigarette.btnViewAll')}
-              </button>
-            </div>
+          </div>
+
+          {/* View All Products Button */}
+          <div style={{ textAlign: 'center', marginTop: '48px' }}>
+            <button
+              onClick={() => router.push('/paperlisens')}
+              style={{
+                background: 'linear-gradient(135deg, #D4A017, #B8860B)',
+                color: '#ffffff',
+                padding: '16px 40px',
+                borderRadius: '50px',
+                border: 'none',
+                fontSize: '1rem',
+                fontWeight: '600',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                letterSpacing: '0.5px',
+                boxShadow: '0 8px 24px rgba(212, 160, 23, 0.3)'
+              }}
+              onMouseOver={(e) => { (e.target as HTMLElement).style.transform = 'scale(1.05)'; (e.target as HTMLElement).style.boxShadow = '0 12px 32px rgba(212, 160, 23, 0.4)' }}
+              onMouseOut={(e) => { (e.target as HTMLElement).style.transform = 'scale(1)'; (e.target as HTMLElement).style.boxShadow = '0 8px 24px rgba(212, 160, 23, 0.3)' }}>
+              {t('NonCigarette.btnViewAll')}
+            </button>
           </div>
         </div>
       </section>

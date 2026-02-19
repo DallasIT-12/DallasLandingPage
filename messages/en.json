@@ -56,7 +56,7 @@
     "btnNonCigarette": "Non-Cigarette Products"
   },
   "FeaturedProducts": {
-    "title": "Our Featured Products",
+    "title": "Our Portfolio",
     "subtitle": "Find various high-quality printing solutions for your business needs.",
     "viewDetails": "View Full Details"
   },
@@ -82,7 +82,7 @@
   "NonCigarette": {
     "title": "Quality Packaging Solutions Since 2022",
     "description": "Paperlisens understands that packaging is the face of your culinary brand. Since 2022, we have been dedicated to providing the best papertrays and takeaway boxes through easy and fast online services. The trust of thousands of customers in various marketplaces proves our commitment to helping your business look more professional.",
-    "productsTitle": "Our Featured Products",
+    "productsTitle": "Our Portfolio",
     "card1": {
       "title": "Versatile & Trendy Cup Solutions",
       "desc": "Not just a container, but a stage for your culinary delights. From Cup Toast for grilled bread to various cup variants (Type A, B, Sakura, and Ice) designed with precision. This aesthetic tray shape is perfect for serving various finger foods, fried foods, or contemporary snacks to make them look fuller, attractive, and certainly Instagramable."
@@ -177,6 +177,7 @@
     "copyright": "© 2024 Percetakan Dallas. All rights reserved."
   },
   "Paperlisens": {
+    "loading": "Loading...",
     "backToDallas": "Back to Dallas",
     "searchPlaceholder": "Search products in Paperlisens...",
     "searchInCategory": "Search in {category}...",
@@ -220,10 +221,11 @@
     "returnToShop": "Return to Shop",
     "categories": {
       "paperTray": "Paper Tray",
-      "boxTakeaway": "Box Takeaway",
+      "boxTakeaway": "Takeaway Box",
       "tempatPensil": "Pencil Case",
       "boxCupcake": "Cupcake Box",
-      "lainLain": "Others"
+      "lainLain": "Others",
+      "kartonGelombang": "Corrugated Cardboard"
     },
     "shippingInfo": {
       "from": "Shipping from Kediri City.",
@@ -254,6 +256,55 @@
     "cta": "Get Promo Now",
     "later": "Maybe Later",
     "whatsappMessage": "Hello, I am interested in the Custom Packaging Starter Pack Promo for MSMEs"
+  },
+  "CustomBoxProducts": {
+    "pageTitle": "Custom Cigarette Box",
+    "pageSubtitle": "Custom cigarette box printing services with various premium finishing options",
+    "filterAll": "All",
+    "filterPremium": "Premium",
+    "filterStandard": "Standard",
+    "filterGeneral": "General",
+    "finishing": "Finishing",
+    "category": "Category",
+    "service": "Service",
+    "special": "Description",
+    "minOrder": "Min. Order",
+    "chatWhatsApp": "Chat WhatsApp for Price Info",
+    "whatsappMessage": "Hello, I am interested in {productName}. Can you share the price?",
+    "products": {
+      "premiumFull": {
+        "name": "Premium Box - Emboss + Hotprint + Spot UV",
+        "description": "Premium packaging with 3 finishing types: emboss for raised effect, metallic foil hotprint, and spot UV for glossy shine on specific areas."
+      },
+      "premiumEmbossHotprint": {
+        "name": "Premium Box - Emboss + Hotprint",
+        "description": "Premium packaging with 2 finishing types: emboss for raised effect and metallic foil hotprint for gold/silver shine."
+      },
+      "premiumHotprintSpotUV": {
+        "name": "Premium Box - Hotprint + Spot UV",
+        "description": "Premium packaging with 2 finishing types: metallic foil hotprint and spot UV for glossy contrast effect on logos."
+      },
+      "standardEmboss": {
+        "name": "Standard Box - Finishing Emboss",
+        "description": "Standard packaging with emboss finishing, making logos and designs appear raised for an elegant impression."
+      },
+      "standardHotprint": {
+        "name": "Standard Box - Finishing Hotprint",
+        "description": "Standard packaging with hotprint finishing, producing metallic foil shine effects on logos and text."
+      },
+      "standardSpotUV": {
+        "name": "Standard Box - Finishing Spot UV",
+        "description": "Standard packaging with spot UV finishing, applying a glossy layer on specific areas like logos."
+      },
+      "standardUV": {
+        "name": "Standard Box - Finishing UV",
+        "description": "Standard packaging with UV coating evenly across the surface, making colors brighter and scratch-resistant."
+      },
+      "generalBox": {
+        "name": "General Box - No Finishing",
+        "description": "Standard cigarette box packaging without additional finishing. Suitable for basic packaging needs at an affordable price."
+      }
+    }
   },
   "TrustedBy": {
     "title": "Trusted by Leading Brands"

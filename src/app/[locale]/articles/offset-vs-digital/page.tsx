@@ -14,6 +14,7 @@ export default function OffsetVsDigitalArticle() {
   const [isSmallMobile, setIsSmallMobile] = useState(false);
   const [isMediumMobile, setIsMediumMobile] = useState(false);
   const [isLargeMobile, setIsLargeMobile] = useState(false);
+  const [screenReady, setScreenReady] = useState(false);
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -22,6 +23,7 @@ export default function OffsetVsDigitalArticle() {
       setIsLargeMobile(window.innerWidth < 768);
     };
     checkScreenSize();
+    setScreenReady(true);
     window.addEventListener('resize', checkScreenSize);
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
@@ -110,6 +112,15 @@ export default function OffsetVsDigitalArticle() {
     );
   });
 
+  if (!screenReady) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#ffffff' }}>
+        <div style={{ width: '40px', height: '40px', border: '3px solid rgba(0,29,57,0.1)', borderTopColor: '#001D39', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      </div>
+    );
+  }
+
   return (
     <div style={{ backgroundColor: '#ffffff', minHeight: '100vh', color: '#1e293b', overflowX: 'hidden' }}>
       {/* Top Bar Contact Info & Social Media */}
@@ -135,32 +146,32 @@ export default function OffsetVsDigitalArticle() {
           flexWrap: 'nowrap',
           gap: '8px'
         }}>
-          <div style={{display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap', justifyContent: 'center'}}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap', justifyContent: 'center' }}>
             {!isLargeMobile && (
-              <span style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                 <Icon icon="mdi:map-marker" style={{ fontSize: '14px' }} />
                 {t('TopBar.address')}
               </span>
             )}
-            <span style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
               <Icon icon="mdi:phone" style={{ fontSize: '14px' }} />
               {isLargeMobile ? '081260001487' : '081260001487 | 085946896488 | 085235531946'}
             </span>
           </div>
-          <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
-            <a href="https://www.instagram.com/paperlisens22?igsh=bDl4OHI3d2d0eHV0" target="_blank" rel="noopener noreferrer" style={{color: '#000000'}} title="Instagram">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <a href="https://www.instagram.com/paperlisens22?igsh=bDl4OHI3d2d0eHV0" target="_blank" rel="noopener noreferrer" style={{ color: '#000000' }} title="Instagram">
               <Icon icon="mdi:instagram" style={{ fontSize: '18px' }} />
             </a>
-            <a href="https://www.tiktok.com/@paperlisenss22" target="_blank" rel="noopener noreferrer" style={{color: '#000000'}} title="TikTok">
+            <a href="https://www.tiktok.com/@paperlisenss22" target="_blank" rel="noopener noreferrer" style={{ color: '#000000' }} title="TikTok">
               <Icon icon="ic:baseline-tiktok" style={{ fontSize: '18px' }} />
             </a>
-            <a href="https://id.shp.ee/tpQ9dbH" target="_blank" rel="noopener noreferrer" style={{color: '#000000'}} title="Shopee Paperlisens">
+            <a href="https://id.shp.ee/tpQ9dbH" target="_blank" rel="noopener noreferrer" style={{ color: '#000000' }} title="Shopee Paperlisens">
               <Icon icon="ic:baseline-shopping-bag" style={{ fontSize: '18px' }} />
             </a>
-            <a href="https://id.shp.ee/ZqzSum7" target="_blank" rel="noopener noreferrer" style={{color: '#000000'}} title="Shopee Tray&me">
+            <a href="https://id.shp.ee/ZqzSum7" target="_blank" rel="noopener noreferrer" style={{ color: '#000000' }} title="Shopee Tray&me">
               <Icon icon="ic:baseline-shopping-bag" style={{ fontSize: '18px' }} />
             </a>
-            <a href="https://www.facebook.com/share/1G3GADNMZi/" target="_blank" rel="noopener noreferrer" style={{color: '#000000'}} title="Facebook">
+            <a href="https://www.facebook.com/share/1G3GADNMZi/" target="_blank" rel="noopener noreferrer" style={{ color: '#000000' }} title="Facebook">
               <Icon icon="mdi:facebook" style={{ fontSize: '18px' }} />
             </a>
           </div>
@@ -177,18 +188,18 @@ export default function OffsetVsDigitalArticle() {
         backdropFilter: 'saturate(180%) blur(20px)',
         borderBottom: '1px solid rgba(229,231,235,0.5)',
       }}>
-        <div style={{maxWidth: '1280px', margin: '0 auto', padding: '0 24px', position: 'relative'}}>
-          <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0'}}>
-            <Link href="/" style={{textDecoration: 'none'}}>
-              <img src="/logo1.png" alt="Percetakan Dallas" style={{height: '36px', width: 'auto', filter: 'invert(1)'}} />
+        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px', position: 'relative' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0' }}>
+            <Link href="/" style={{ textDecoration: 'none' }}>
+              <img src="/logo1.png" alt="Percetakan Dallas" style={{ height: '36px', width: 'auto', filter: 'invert(1)' }} />
             </Link>
 
             {isLargeMobile ? (
-              <button onClick={() => setIsMenuOpen(!isMenuOpen)} style={{background: 'none', border: 'none', color: '#000000', fontSize: '24px'}}>
+              <button onClick={() => setIsMenuOpen(!isMenuOpen)} style={{ background: 'none', border: 'none', color: '#000000', fontSize: '24px' }}>
                 <Icon icon={isMenuOpen ? "mdi:close" : "mdi:menu"} />
               </button>
             ) : (
-              <div style={{display: 'flex', gap: '32px', alignItems: 'center'}}>
+              <div style={{ display: 'flex', gap: '32px', alignItems: 'center' }}>
                 {renderNavLinks()}
                 <LanguageSwitcher />
               </div>
@@ -218,10 +229,10 @@ export default function OffsetVsDigitalArticle() {
             </p>
           </header>
 
-          <img 
-            src="/artikel (3).png" 
-            alt="Kenapa Bisnis Besar Selalu Memilih Offset Printing" 
-            style={{ width: '100%', borderRadius: '24px', marginBottom: isLargeMobile ? '32px' : '48px', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)' }} 
+          <img
+            src="/artikel (3).png"
+            alt="Kenapa Bisnis Besar Selalu Memilih Offset Printing"
+            style={{ width: '100%', borderRadius: '24px', marginBottom: isLargeMobile ? '32px' : '48px', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)' }}
           />
 
           <section style={{ fontSize: isLargeMobile ? '1rem' : '1.125rem', lineHeight: '1.8', color: '#334155' }}>
@@ -238,7 +249,7 @@ export default function OffsetVsDigitalArticle() {
             <p style={{ marginBottom: '20px' }}>
               Meskipun digital printing hadir for kebutuhan instan, teknologi ini memiliki banyak batasan yang tidak dimiliki oleh mesin offset profesional:
             </p>
-            
+
             <ul style={{ paddingLeft: '20px', marginBottom: '24px' }}>
               <li style={{ marginBottom: '12px' }}><strong>Kualitas Warna yang Presisi:</strong> Offset menggunakan tinta basah <strong>CMYK</strong> dan warna khusus <strong>Pantone</strong>. Ini menjamin warna logo brand Anda akan selalu sama persis, sesuatu yang sulit dicapai oleh toner digital yang warnanya sering berubah-ubah di tiap sesi cetak.</li>
               <li style={{ marginBottom: '12px' }}><strong>Efisiensi Harga Skala Besar:</strong> Inilah alasan utama kenapa <strong>percetakan offset</strong> selalu dipilih for <strong>cetak packaging makanan</strong> atau <strong>kotak rokok</strong>. Semakin banyak Anda mencetak, harga per pcs akan turun drastis—bahkan bisa mencapai 1/10 dari harga digital printing.</li>
@@ -247,7 +258,7 @@ export default function OffsetVsDigitalArticle() {
             </ul>
 
             <h2 style={{ fontSize: isLargeMobile ? '1.5rem' : '2rem', fontWeight: '700', color: '#001D39', marginTop: isLargeMobile ? '32px' : '48px', marginBottom: '16px' }}>Perbandingan Biaya: Investasi vs Pemborosan</h2>
-            
+
             <div style={{ overflowX: 'auto', marginBottom: '32px', WebkitOverflowScrolling: 'touch' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse', border: '1px solid #e2e8f0', minWidth: '600px' }}>
                 <thead>

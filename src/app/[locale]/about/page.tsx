@@ -74,6 +74,7 @@ export default function AboutPage() {
   const [isSmallMobile, setIsSmallMobile] = useState(false);
   const [isMediumMobile, setIsMediumMobile] = useState(false);
   const [isLargeMobile, setIsLargeMobile] = useState(false);
+  const [screenReady, setScreenReady] = useState(false);
 
   const machineImages = [
     '/foto mesin.png',
@@ -93,6 +94,7 @@ export default function AboutPage() {
       setIsLargeMobile(window.innerWidth < 768);
     };
     checkScreenSize();
+    setScreenReady(true);
     window.addEventListener('resize', checkScreenSize);
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
@@ -109,28 +111,28 @@ export default function AboutPage() {
 
   const renderNavLinks = () => navLinks.map(link => {
     if (link.isScroll) {
-        return (
-           <a
-            key={link.label}
-            href={link.href}
-            onClick={() => setIsMenuOpen(false)}
-            style={{
-              color: '#4b5563',
-              textDecoration: 'none',
-              transition: 'all 0.3s ease',
-              cursor: 'pointer',
-              padding: isLargeMobile ? '16px 0' : '0',
-              textAlign: isLargeMobile ? 'center' : 'left',
-              borderBottom: isLargeMobile ? '1px solid rgba(229,231,235,0.5)' : 'none',
-              width: isLargeMobile ? '100%' : 'auto',
-              fontWeight: '500'
-            }}
-          >
-            {link.label}
-          </a>
-        );
+      return (
+        <a
+          key={link.label}
+          href={link.href}
+          onClick={() => setIsMenuOpen(false)}
+          style={{
+            color: '#4b5563',
+            textDecoration: 'none',
+            transition: 'all 0.3s ease',
+            cursor: 'pointer',
+            padding: isLargeMobile ? '16px 0' : '0',
+            textAlign: isLargeMobile ? 'center' : 'left',
+            borderBottom: isLargeMobile ? '1px solid rgba(229,231,235,0.5)' : 'none',
+            width: isLargeMobile ? '100%' : 'auto',
+            fontWeight: '500'
+          }}
+        >
+          {link.label}
+        </a>
+      );
     }
-    
+
     return (
       <Link
         key={link.label}
@@ -154,9 +156,18 @@ export default function AboutPage() {
     )
   });
 
+  if (!screenReady) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#ffffff' }}>
+        <div style={{ width: '40px', height: '40px', border: '3px solid rgba(0,29,57,0.1)', borderTopColor: '#001D39', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      </div>
+    );
+  }
+
   return (
     <div style={{ backgroundColor: '#ffffff', color: '#1f2937', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif' }}>
-      
+
       {/* Top Bar (Same as Home) */}
       <div style={{
         backgroundColor: '#ffffff',
@@ -180,24 +191,24 @@ export default function AboutPage() {
           flexWrap: isLargeMobile ? 'wrap' : 'nowrap',
           gap: isLargeMobile ? '8px' : '0'
         }}>
-          <div style={{display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap', justifyContent: 'center'}}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap', justifyContent: 'center' }}>
             {!isLargeMobile && (
-              <span style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                 <Icon icon="mdi:map-marker" style={{ fontSize: '14px' }} />
                 {t('TopBar.address')}
               </span>
             )}
-            <span style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
               <Icon icon="mdi:phone" style={{ fontSize: '14px' }} />
               {isLargeMobile ? '081260001487' : '081260001487 | 085946896488 | 085235531946'}
             </span>
           </div>
-          <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
-            <a href="https://www.instagram.com/paperlisens22?igsh=bDl4OHI3d2d0eHV0" target="_blank" rel="noopener noreferrer" style={{color: '#000000'}}><Icon icon="mdi:instagram" style={{ fontSize: '18px' }} /></a>
-            <a href="https://www.tiktok.com/@paperlisenss22" target="_blank" rel="noopener noreferrer" style={{color: '#000000'}}><Icon icon="ic:baseline-tiktok" style={{ fontSize: '18px' }} /></a>
-            <a href="https://id.shp.ee/tpQ9dbH" target="_blank" rel="noopener noreferrer" style={{color: '#000000'}}><Icon icon="ic:baseline-shopping-bag" style={{ fontSize: '18px' }} /></a>
-            <a href="https://id.shp.ee/ZqzSum7" target="_blank" rel="noopener noreferrer" style={{color: '#000000'}}><Icon icon="ic:baseline-shopping-bag" style={{ fontSize: '18px' }} /></a>
-            <a href="https://www.facebook.com/share/1G3GADNMZi/" target="_blank" rel="noopener noreferrer" style={{color: '#000000'}}><Icon icon="mdi:facebook" style={{ fontSize: '18px' }} /></a>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <a href="https://www.instagram.com/paperlisens22?igsh=bDl4OHI3d2d0eHV0" target="_blank" rel="noopener noreferrer" style={{ color: '#000000' }}><Icon icon="mdi:instagram" style={{ fontSize: '18px' }} /></a>
+            <a href="https://www.tiktok.com/@paperlisenss22" target="_blank" rel="noopener noreferrer" style={{ color: '#000000' }}><Icon icon="ic:baseline-tiktok" style={{ fontSize: '18px' }} /></a>
+            <a href="https://id.shp.ee/tpQ9dbH" target="_blank" rel="noopener noreferrer" style={{ color: '#000000' }}><Icon icon="ic:baseline-shopping-bag" style={{ fontSize: '18px' }} /></a>
+            <a href="https://id.shp.ee/ZqzSum7" target="_blank" rel="noopener noreferrer" style={{ color: '#000000' }}><Icon icon="ic:baseline-shopping-bag" style={{ fontSize: '18px' }} /></a>
+            <a href="https://www.facebook.com/share/1G3GADNMZi/" target="_blank" rel="noopener noreferrer" style={{ color: '#000000' }}><Icon icon="mdi:facebook" style={{ fontSize: '18px' }} /></a>
           </div>
         </div>
       </div>
@@ -212,18 +223,18 @@ export default function AboutPage() {
         backdropFilter: 'saturate(180%) blur(20px)',
         borderBottom: '1px solid rgba(229,231,235,0.5)',
       }}>
-        <div style={{maxWidth: '1280px', margin: '0 auto', padding: '0 24px', position: 'relative'}}>
-          <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0'}}>
-            <Link href="/" style={{textDecoration: 'none'}}>
-              <img src="/logo1.png" alt="Percetakan Dallas" style={{height: '36px', width: 'auto', filter: 'invert(1)'}} />
+        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px', position: 'relative' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0' }}>
+            <Link href="/" style={{ textDecoration: 'none' }}>
+              <img src="/logo1.png" alt="Percetakan Dallas" style={{ height: '36px', width: 'auto', filter: 'invert(1)' }} />
             </Link>
 
             {isLargeMobile ? (
-              <button onClick={() => setIsMenuOpen(!isMenuOpen)} style={{background: 'none', border: 'none', color: '#000000', fontSize: '24px'}}>
+              <button onClick={() => setIsMenuOpen(!isMenuOpen)} style={{ background: 'none', border: 'none', color: '#000000', fontSize: '24px' }}>
                 <Icon icon={isMenuOpen ? "mdi:close" : "mdi:menu"} />
               </button>
             ) : (
-              <div style={{display: 'flex', gap: '32px', alignItems: 'center'}}>
+              <div style={{ display: 'flex', gap: '32px', alignItems: 'center' }}>
                 {renderNavLinks()}
                 <LanguageSwitcher />
               </div>
@@ -254,13 +265,13 @@ export default function AboutPage() {
       </nav>
 
       {/* Hero Header */}
-      <header style={{ 
-        paddingTop: isLargeMobile ? '180px' : '220px', 
-        paddingBottom: isLargeMobile ? '100px' : '140px', 
+      <header style={{
+        paddingTop: isLargeMobile ? '180px' : '220px',
+        paddingBottom: isLargeMobile ? '100px' : '140px',
         backgroundImage: 'linear-gradient(rgba(0, 29, 57, 0.65), rgba(0, 29, 57, 0.65)), url("/about_us.png")',
         backgroundSize: 'cover',
         backgroundPosition: isLargeMobile ? 'center 20%' : 'center',
-        color: 'white', 
+        color: 'white',
         textAlign: 'center',
         display: 'flex',
         flexDirection: 'column',
@@ -268,23 +279,23 @@ export default function AboutPage() {
         alignItems: 'center',
         minHeight: isLargeMobile ? '350px' : '480px'
       }}>
-         <h1 style={{ 
-           fontSize: isSmallMobile ? '1.85rem' : (isMediumMobile ? '2.25rem' : '4.5rem'), 
-           fontWeight: '700',
-           lineHeight: '1.2',
-           padding: '0 20px'
-         }}>
-           {t('Navbar.about')}
-         </h1>
-         <p style={{ 
-           color: '#BDD8E9', 
-           marginTop: '20px', 
-           fontSize: isSmallMobile ? '1rem' : '1.25rem',
-           padding: '0 20px',
-           maxWidth: '800px'
-         }}>
-           Percetakan Offset Dallas Kediri
-         </p>
+        <h1 style={{
+          fontSize: isSmallMobile ? '1.85rem' : (isMediumMobile ? '2.25rem' : '4.5rem'),
+          fontWeight: '700',
+          lineHeight: '1.2',
+          padding: '0 20px'
+        }}>
+          {t('Navbar.about')}
+        </h1>
+        <p style={{
+          color: '#BDD8E9',
+          marginTop: '20px',
+          fontSize: isSmallMobile ? '1rem' : '1.25rem',
+          padding: '0 20px',
+          maxWidth: '800px'
+        }}>
+          Percetakan Offset Dallas Kediri
+        </p>
       </header>
 
       {/* 1. Company Profile Section */}
@@ -331,7 +342,7 @@ export default function AboutPage() {
               {t('AboutUs.description')}
             </p>
           </div>
-          <div style={{ 
+          <div style={{
             order: isLargeMobile ? 1 : 2,
             height: isSmallMobile ? '280px' : (isLargeMobile ? '350px' : '450px'),
             borderRadius: '16px',
@@ -350,20 +361,20 @@ export default function AboutPage() {
             {t('WhyChoose.title')}
           </h2>
           <div style={{ display: 'grid', gridTemplateColumns: isSmallMobile ? '1fr' : (isMediumMobile ? '1fr 1fr' : 'repeat(4, 1fr)'), gap: '32px' }}>
-             {[
-               { icon: "mdi:shield-check", title: t('WhyChoose.points.experience.title'), desc: t('WhyChoose.points.experience.desc') },
-               { icon: "mdi:crosshairs-gps", title: t('WhyChoose.points.quality.title'), desc: t('WhyChoose.points.quality.desc') },
-               { icon: "mdi:lightbulb-on-outline", title: t('WhyChoose.points.consultation.title'), desc: t('WhyChoose.points.consultation.desc') },
-               { icon: "mdi:clock-check-outline", title: t('WhyChoose.points.punctuality.title'), desc: t('WhyChoose.points.punctuality.desc') }
-             ].map((item, i) => (
-               <div key={i} style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <div style={{ width: '80px', height: '80px', borderRadius: '50%', backgroundColor: 'rgba(73, 118, 159, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px' }}>
-                    <Icon icon={item.icon} style={{ fontSize: '40px', color: '#f97316' }} />
-                  </div>
-                  <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '12px' }}>{item.title}</h3>
-                  <p style={{ color: '#6b7280', fontSize: '0.95rem', lineHeight: '1.6' }}>{item.desc}</p>
-               </div>
-             ))}
+            {[
+              { icon: "mdi:shield-check", title: t('WhyChoose.points.experience.title'), desc: t('WhyChoose.points.experience.desc') },
+              { icon: "mdi:crosshairs-gps", title: t('WhyChoose.points.quality.title'), desc: t('WhyChoose.points.quality.desc') },
+              { icon: "mdi:lightbulb-on-outline", title: t('WhyChoose.points.consultation.title'), desc: t('WhyChoose.points.consultation.desc') },
+              { icon: "mdi:clock-check-outline", title: t('WhyChoose.points.punctuality.title'), desc: t('WhyChoose.points.punctuality.desc') }
+            ].map((item, i) => (
+              <div key={i} style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <div style={{ width: '80px', height: '80px', borderRadius: '50%', backgroundColor: 'rgba(73, 118, 159, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px' }}>
+                  <Icon icon={item.icon} style={{ fontSize: '40px', color: '#f97316' }} />
+                </div>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '12px' }}>{item.title}</h3>
+                <p style={{ color: '#6b7280', fontSize: '0.95rem', lineHeight: '1.6' }}>{item.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>

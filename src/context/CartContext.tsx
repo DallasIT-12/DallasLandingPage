@@ -3,8 +3,11 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
 export interface CartItem {
-  id: string;
+  id: string; // unique ID (product_id + variant_id)
+  productId: string;
+  variantId?: string;
   name: string;
+  variantName?: string;
   price: number;
   image: string;
   quantity: number;
@@ -12,7 +15,7 @@ export interface CartItem {
 
 interface CartContextType {
   cartItems: CartItem[];
-  addToCart: (product: any, quantity: number) => void;
+  addToCart: (product: any, quantity: number, variant?: any) => void;
   removeFromCart: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
@@ -48,22 +51,34 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [cartItems, isMounted]);
 
-  const addToCart = (product: any, quantity: number) => {
+  const addToCart = (product: any, quantity: number, variant?: any) => {
     setCartItems((prev) => {
-      const productId = String(product.id);
-      const existingItem = prev.find((item) => item.id === productId);
+      // Create a truly unique ID for this product + variant combination
+      const baseId = String(product.id);
+      const variantId = variant ? String(variant.id) : 'default';
+      const uniqueId = `${baseId}-${variantId}`;
+
+      const existingItem = prev.find((item) => item.id === uniqueId);
+      
       if (existingItem) {
         return prev.map((item) =>
-          item.id === productId
+          item.id === uniqueId
             ? { ...item, quantity: item.quantity + quantity }
             : item
         );
       }
+
+      // Determine correct display name and variant name
+      const variantName = variant ? (variant.variant_name || variant.variant || 'Standard') : undefined;
+
       return [...prev, { 
-        id: productId, 
-        name: product.name, 
-        price: product.price, 
-        image: product.images ? product.images[0] : product.image, 
+        id: uniqueId,
+        productId: baseId,
+        variantId: variant ? variantId : undefined,
+        name: product.localizedName || product.name, 
+        variantName: variantName,
+        price: variant ? variant.price : product.price, 
+        image: variant?.image || (product.images ? product.images[0] : product.image), 
         quantity 
       }];
     });
