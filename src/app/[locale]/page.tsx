@@ -189,15 +189,15 @@ const ClassicProductCardGrid = () => {
       desc: t('hampers.desc'),
       tags: [t('hampers.tags.tag1'), t('hampers.tags.tag2')],
       images: [
-        "/box hampers kraft (1).jpg", "/box hampers kraft (2).jpg", "/box hampers kraft (3).jpg",
-        "/box hampers natal (1).jpg", "/box hampers natal (2).jpg", "/box hampers natal (3).jpg",
+        "/box hampers kraft (1).webp", "/box hampers kraft (2).webp", "/box hampers kraft (3).webp",
+        "/box hampers natal (1).webp", "/box hampers natal (2).webp", "/box hampers natal (3).webp",
         "/gable box (1).jpg", "/gable box (10).jpg", "/gable box (11).jpg", "/gable box (12).jpg",
         "/gable box (13).jpg", "/gable box (14).jpg", "/gable box (15).jpg", "/gable box (16).jpg",
         "/gable box (17).jpg", "/gable box (18).jpg", "/gable box (19).jpg", "/gable box (2).jpg",
         "/gable box (20).jpg", "/gable box (3).jpg", "/gable box (4).jpg", "/gable box (5).jpg",
         "/gable box (6).jpg", "/gable box (7).jpg", "/gable box (8).jpg", "/gable box (9).jpg",
-        "/gable box idul fitri (1).jpg", "/gable box idul fitri (2).jpg", "/gable box idul fitri (3).jpg",
-        "/gable box idul fitri (4).jpg", "/gable box idul fitri (5).jpg", "/gable box idul fitri (6).jpg",
+        "/gable box idul fitri (1).webp", "/gable box idul fitri (2).webp", "/gable box idul fitri (3).webp",
+        "/gable box idul fitri (4).webp", "/gable box idul fitri (5).jpg", "/gable box idul fitri (6).jpg",
         "/gable box idul fitri (7).jpg", "/gable box idul fitri (8).jpg", "/hardbox (1).jpg",
         "/hardbox (2).jpg", "/hardbox (3).jpg", "/kotak hampers.jpg"
       ]
@@ -209,15 +209,15 @@ const ClassicProductCardGrid = () => {
       desc: t('bakery.desc'),
       tags: [t('bakery.tags.tag1'), t('bakery.tags.tag2')],
       images: [
-        "/box donat motif (1).jpg", "/box donat motif (1).png", "/box donat motif (2).jpg",
-        "/box donat motif (2).png", "/box donat motif (3).jpg", "/box donat motif (3).png",
-        "/box donat motif (4).jpg", "/box donat motif (4).png", "/box donat motif (5).jpg",
-        "/box donat motif (6).jpg", "/box donat motif.jpg", "/box roti bakar (1).jpg",
-        "/box roti bakar (2).jpg", "/box roti bakar (3).jpg", "/box slice cake-1.jpeg",
-        "/box slice cake-2.jpeg", "/box slice cake.jpeg", "/box tart handle (1).jpg",
-        "/box tart handle (2).jpg", "/box tart handle (3).jpg", "/box tart handle (4).jpg",
-        "/box tart handle (5).jpg", "/box tart handle (6).jpg", "/cheese cake (1).jpg",
-        "/cheese cake (2).jpg", "/cheese cake (3).jpg", "/cheese cake (4).jpg",
+        "/box donat motif (1).webp", "/box donat motif (1).webp", "/box donat motif (2).webp",
+        "/box donat motif (2).webp", "/box donat motif (3).webp", "/box donat motif (3).webp",
+        "/box donat motif (4).webp", "/box donat motif (4).webp", "/box donat motif (5).webp",
+        "/box donat motif (6).webp", "/box donat motif.webp", "/box roti bakar (1).webp",
+        "/box roti bakar (2).webp", "/box roti bakar (3).webp", "/box slice cake-1.webp",
+        "/box slice cake-2.webp", "/box slice cake.webp", "/box tart handle (1).webp",
+        "/box tart handle (2).webp", "/box tart handle (3).webp", "/box tart handle (4).webp",
+        "/box tart handle (5).webp", "/box tart handle (6).webp", "/cheese cake (1).webp",
+        "/cheese cake (2).webp", "/cheese cake (3).webp", "/cheese cake (4).webp",
         "/cupcake isi 12 (1).jpg", "/cupcake isi 12 (2).jpg", "/cupcake isi 12 (3).jpg",
         "/cupcake isi 12 (4).jpg", "/cupcake isi 12 (5).jpg", "/cupcake isi 12 (6).jpg",
         "/cupcake isi 16 (1).jpg", "/cupcake isi 16 (2).jpg", "/cupcake isi 16 (3).jpg",
@@ -279,13 +279,13 @@ const ClassicProductCardGrid = () => {
     {
       title: t('buku.title'),
       slug: "buku",
-      img: "/buku%20(6).jpg",
+      img: "/buku%20(6).webp",
       desc: t('buku.desc'),
       tags: [t('buku.tags.tag1')],
       images: [
-        "/buku (1).jpg", "/buku (2).jpg", "/buku (3).jpg",
-        "/buku (4).jpg", "/buku (5).jpg", "/buku (6).jpg",
-        "/buku (7).jpg", "/buku (8).jpg", "/buku (9).jpg", "/foto buku.png"
+        "/buku (1).webp", "/buku (2).webp", "/buku (3).webp",
+        "/buku (4).webp", "/buku (5).webp", "/buku (6).webp",
+        "/buku (7).webp", "/buku (8).webp", "/buku (9).webp", "/foto buku.png"
       ]
     },
     {
@@ -551,13 +551,18 @@ const ClassicProductCardGrid = () => {
                         <h3 style={{ fontSize: '1.1rem', fontWeight: '600', color: '#D4A017', marginBottom: '16px', textTransform: 'uppercase', letterSpacing: '1px' }}>
                           Product Gallery
                         </h3>
+                        {/* Define state for showing more images inside the mapping if possible, or use a simpler approach since we can't easily add state inside map.
+                            Actually, we can't add state inside this map callback.
+                            Alternative: We will just show a fixed reasonable amount (e.g., 12) to ensure performance, 
+                            and the "View Details" button encourages users to see the full list on the product page.
+                        */}
                         <div style={{
                           display: 'grid',
                           gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
                           gap: '12px'
                         }}>
                           {/* @ts-ignore */}
-                          {category.images.slice(0, 24).map((img, idx) => (
+                          {category.images.slice(0, 12).map((img, idx) => (
                             <motion.div
                               key={idx}
                               initial={{ opacity: 0, scale: 0.9 }}
@@ -578,13 +583,19 @@ const ClassicProductCardGrid = () => {
                                 src={img}
                                 alt={`${category.title} ${idx + 1}`}
                                 fill
-                                sizes="200px"
+                                sizes="(max-width: 768px) 33vw, 150px"
                                 style={{ objectFit: 'cover' }}
                                 loading="lazy"
                               />
                             </motion.div>
                           ))}
                         </div>
+                        {/* @ts-ignore */}
+                        {category.images.length > 12 && (
+                          <div style={{ marginTop: '12px', textAlign: 'center' }}>
+                            <span style={{ color: '#9ca3af', fontSize: '0.875rem' }}>+ {category.images.length - 12} more images available locally</span>
+                          </div>
+                        )}
                       </div>
                     )}
 
@@ -1633,10 +1644,10 @@ export default function Home() {
               gap: isLargeMobile ? '16px' : '24px'
             }}>
               {[
-                { name: t('Materials.artPaper.name'), slug: 'art-paper', description: t('Materials.artPaper.desc'), image: '/BAHAN-AP.jpg' },
-                { name: t('Materials.ivoryPaper.name'), slug: 'ivory-paper', description: t('Materials.ivoryPaper.desc'), image: '/BAHAN-IVORY.jpg' },
-                { name: t('Materials.tipping.name'), slug: 'bahan-tipping', description: t('Materials.tipping.desc'), image: '/BAHAN-TIPPING.jpg' },
-                { name: t('Materials.duplex.name'), slug: 'duplex', description: t('Materials.duplex.desc'), image: '/BAHAN-DC.jpg' }
+                { name: t('Materials.artPaper.name'), slug: 'art-paper', description: t('Materials.artPaper.desc'), image: '/BAHAN-AP.webp' },
+                { name: t('Materials.ivoryPaper.name'), slug: 'ivory-paper', description: t('Materials.ivoryPaper.desc'), image: '/BAHAN-IVORY.webp' },
+                { name: t('Materials.tipping.name'), slug: 'bahan-tipping', description: t('Materials.tipping.desc'), image: '/BAHAN-TIPPING.webp' },
+                { name: t('Materials.duplex.name'), slug: 'duplex', description: t('Materials.duplex.desc'), image: '/BAHAN-DC.webp' }
               ].map((product, index) => (
                 <Link key={product.slug} href={`/produk/${product.slug}`} style={{ textDecoration: 'none', height: '100%' }}>
                   <motion.div

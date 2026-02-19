@@ -41,12 +41,26 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     if (!supabase) return NextResponse.json({ error: 'DB not configured' }, { status: 503 });
 
     try {
-      const { data: bBySlug } = await supabase.from('paperlisens_products_base').select('*').eq('product_slug', slug).maybeSingle();
+      // Use JOIN to get base + variants in one call for New Schema
+      // @ts-ignore
+      const { data: bBySlug } = await supabase
+        .from('paperlisens_products_base')
+        .select('*, variants:paperlisens_product_variants(*)')
+        .eq('product_slug', slug)
+        .maybeSingle();
+
       let base = bBySlug;
       if (base) {
-        const { data: variants } = await supabase.from('paperlisens_product_variants').select('*').eq('product_id', base.id);
+        // Variants are now embedded in base.variants
+        // @ts-ignore
+        const variants = base.variants || [];
+
         const byId = new Map<string, any[]>();
-        byId.set(base.id, (variants || []).map(v => ({...v, images: Array.isArray(v.images) ? v.images : (v.images ? JSON.parse(v.images) : [])})));
+        byId.set(base.id, variants.map((v: any) => ({
+          ...v,
+          images: Array.isArray(v.images) ? v.images : (v.images ? JSON.parse(v.images) : [])
+        })));
+
         const [flattened] = flattenBaseAndVariants([base], byId);
         if (flattened) {
           // Kirimkan thumbnail asli dari base agar tidak tertukar dengan foto varian di admin
@@ -57,7 +71,9 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
           });
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      console.error('New schema single fetch error:', e);
+    }
 
     const { data, error } = await supabase.from('paperlisens_products').select('*').eq('product_slug', slug).single();
     if (!error && data) {
@@ -75,7 +91,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
     const { products } = await import('@/data/products');
     const staticProd = products.find((p: any) => p.productSlug === slug);
-    if (staticProd) return NextResponse.json(toProduct({...staticProd, product_slug: staticProd.productSlug}));
+    if (staticProd) return NextResponse.json(toProduct({ ...staticProd, product_slug: staticProd.productSlug }));
 
     return NextResponse.json({ error: 'Not found' }, { status: 404 });
   } catch (err) {
@@ -104,7 +120,7 @@ export async function PUT(
       // JANGAN memotong ID lagi (pt-011 -> pt adalah kesalahan). 
       // Gunakan ID unik baru untuk setiap entitas produk utama.
       const uniqueBaseId = `prod-${slug.slice(0, 15)}-${Math.random().toString(36).substr(2, 5)}`;
-      
+
       const { data: newBase, error: insErr } = await supabase.from('paperlisens_products_base').insert({
         id: uniqueBaseId,
         product_slug: slug,
@@ -125,7 +141,7 @@ export async function PUT(
 
     if (base) {
       console.log(`UPDATING_BASE: ${base.id}`);
-      
+
       // 1. UPDATE INFO UTAMA (BASE)
       const { error: updateErr } = await supabase.from('paperlisens_products_base').update({
         name: body.name,
@@ -135,7 +151,7 @@ export async function PUT(
         description_en: body.description_en || null,
         description_zh: body.description_zh || null,
         category: body.category,
-        slug: body.slug, 
+        slug: body.slug,
         image: body.image || '/placeholder.png',
         images: Array.isArray(body.images) ? body.images : [],
         attr_label_1: body.attr_label_1 || 'Pilih Variasi',
@@ -156,7 +172,7 @@ export async function PUT(
         for (let i = 0; i < body.variants.length; i++) {
           const v = body.variants[i];
           const variantId = `${base.id}-v${i + 1}-${Math.random().toString(36).substr(2, 3)}`;
-          
+
           await supabase.from('paperlisens_product_variants').insert({
             id: variantId,
             product_id: base.id,
@@ -209,7 +225,7 @@ export async function PATCH(
           await supabase.from('paperlisens_product_variants').update({ sold: (firstV.sold || 0) + 1 }).eq('id', firstV.id);
         }
       }
-      
+
       // Also try old table
       const { data: oldData } = await supabase.from('paperlisens_products').select('sold').eq('product_slug', slug).maybeSingle();
       if (oldData) {
@@ -232,15 +248,15 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
 
     // Cari ID base sebelum hapus agar varian ikut terhapus (cascade)
     const { data: base } = await supabase.from('paperlisens_products_base').select('id').eq('product_slug', slug).maybeSingle();
-    
+
     if (base) {
       await supabase.from('paperlisens_product_variants').delete().eq('product_id', base.id);
       await supabase.from('paperlisens_products_base').delete().eq('id', base.id);
     }
-    
+
     // Hapus juga dari tabel lama
     await supabase.from('paperlisens_products').delete().eq('product_slug', slug);
-    
+
     return NextResponse.json({ success: true });
   } catch (err) {
     return NextResponse.json({ error: 'Delete failed' }, { status: 500 });

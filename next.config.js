@@ -16,6 +16,13 @@ const nextConfig = {
   skipTrailingSlashRedirect: true,
   images: {
     formats: ['image/webp'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'hwzmqjiuxgdepwvkcuay.supabase.co',
+        pathname: '/storage/v1/object/public/**',
+      },
+    ],
   },
   async headers() {
     return [

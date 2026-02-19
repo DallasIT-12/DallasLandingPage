@@ -63,25 +63,34 @@ export async function GET(request: NextRequest) {
     if (supabase) {
       // 1. Ambil dari New Schema (Base + Variants)
       try {
-        let baseQuery = supabase.from('paperlisens_products_base').select('*');
+        // 1. Ambil dari New Schema (Base + Variants) using JOIN
+        let baseQuery = supabase
+          .from('paperlisens_products_base')
+          .select('*, variants:paperlisens_product_variants(*)');
+
         if (category) baseQuery = baseQuery.eq('slug', category);
         if (search?.trim()) {
           baseQuery = baseQuery.or(`name.ilike.%${search}%,category.ilike.%${search}%`);
         }
+
+        // @ts-ignore
         const { data: bases } = await baseQuery;
 
         if (bases && bases.length > 0) {
-          const { data: variants } = await supabase
-            .from('paperlisens_product_variants')
-            .select('*')
-            .in('product_id', bases.map(b => b.id));
-
           const byProductId = new Map<string, any[]>();
-          for (const v of variants || []) {
-            const list = byProductId.get(v.product_id) || [];
-            list.push({ ...v, images: Array.isArray(v.images) ? v.images : (v.images ? JSON.parse(v.images) : []) });
-            byProductId.set(v.product_id, list);
+
+          for (const b of bases) {
+            // @ts-ignore
+            const variants = b.variants || [];
+            if (variants.length > 0) {
+              const list = variants.map((v: any) => ({
+                ...v,
+                images: Array.isArray(v.images) ? v.images : (v.images ? JSON.parse(v.images) : [])
+              }));
+              byProductId.set(b.id, list);
+            }
           }
+
           const formattedBases = flattenBaseAndVariants(bases, byProductId);
           allMergedProducts = [...allMergedProducts, ...formattedBases];
         }
@@ -98,11 +107,11 @@ export async function GET(request: NextRequest) {
         const { data: flatData } = await query;
         if (flatData && flatData.length > 0) {
           const formattedFlat = mergeProductsByName(flatData.map(row => toProduct(row)));
-          
+
           // HANYA masukkan produk flat yang belum ada di New Schema (berdasarkan slug)
           const existingSlugs = new Set(allMergedProducts.map(p => p.productSlug));
           const filteredFlat = formattedFlat.filter(p => !existingSlugs.has(p.productSlug));
-          
+
           allMergedProducts = [...allMergedProducts, ...filteredFlat];
         }
       } catch (e) { console.error('Flat schema fetch error:', e); }
@@ -170,12 +179,12 @@ export async function POST(request: NextRequest) {
     // Add base product (try new schema first)
     // Jika ID kosong atau mengandung 'new-', paksa generate ID baru agar tidak bentrok
     const rawId = body.id || body.productKey;
-    const baseId = (!rawId || String(rawId).startsWith('new-')) 
+    const baseId = (!rawId || String(rawId).startsWith('new-'))
       ? `prod-${Date.now().toString(36)}-${Math.random().toString(36).substr(2, 5)}`
       : rawId;
 
     const productSlug = body.productSlug || body.product_slug || (body.name || baseId).replace(/\s+/g, '-').toLowerCase();
-    
+
     try {
       // Cek apakah slug sudah ada untuk menghindari 'menimpa' data via slug
       const { data: existing } = await supabase.from('paperlisens_products_base').select('id').eq('product_slug', productSlug).maybeSingle();
@@ -214,7 +223,7 @@ export async function POST(request: NextRequest) {
             const vSlug = v.variant_slug || `${productSlug}-v${i + 1}-${Math.random().toString(36).substr(2, 3)}`;
             // Selalu generate ID baru untuk varian saat POST (produk baru)
             const vId = `${baseId}-v${i + 1}-${Math.random().toString(36).substr(2, 3)}`;
-            
+
             await supabase.from('paperlisens_product_variants').insert({
               id: vId,
               product_id: baseId,
@@ -249,7 +258,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Fallback: old flat table
-    const fallbackId = (!body.id || String(body.id).startsWith('new-')) 
+    const fallbackId = (!body.id || String(body.id).startsWith('new-'))
       ? `pl-${Date.now().toString(36)}-${Math.random().toString(36).substr(2, 3)}`
       : body.id;
 

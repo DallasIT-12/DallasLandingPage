@@ -208,7 +208,15 @@ const ProductCard = ({ product }: { product: any }) => {
     <div className="product-card">
       <Link href={`/paperlisens/product/${product.productSlug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
         <div className="card-image-wrapper">
-          <img src={displayImage} alt={productName} className="card-image" loading="lazy" />
+          <Image
+            src={displayImage}
+            alt={productName}
+            fill
+            sizes="(max-width: 768px) 50vw, 25vw"
+            className="card-image"
+            style={{ objectFit: 'cover' }}
+            loading="lazy"
+          />
           <div style={{ position: 'absolute', top: 0, right: 0, backgroundColor: '#d6bd98', padding: '4px 8px', textAlign: 'center', zIndex: 2 }}>
             <div style={{ color: '#1a3636', fontSize: '12px', fontWeight: 'bold' }}>{discountPercent}%</div>
             <div style={{ color: '#40534c', fontSize: '10px', fontWeight: 'bold' }}>OFF</div>
