@@ -15,7 +15,7 @@
     "about": "About Us"
   },
   "TopBar": {
-    "address": "Jl. Kilisuci no 71, Singonegaran, Kediri City."
+    "address": "Jl. Kilisuci No.71, Setono Pande, Kec. Kota, Kota Kediri."
   },
   "CompanyProfile": {
     "title": "Experienced Since 1983: Maintaining Quality and Trust",
@@ -303,6 +303,32 @@
       "generalBox": {
         "name": "General Box - No Finishing",
         "description": "Standard cigarette box packaging without additional finishing. Suitable for basic packaging needs at an affordable price."
+      }
+    }
+  },
+  "Pricing": {
+    "title": "Minimal Price,",
+    "titleSpan": "Maximum Quality",
+    "subtitle": "Professional printing solutions with cost efficiency to support your business acceleration.",
+    "startFrom": "Starts from",
+    "perPcs": "/pcs",
+    "consultation": "Consult & Order Now",
+    "whatsappMessage": "Hello, I am interested in consulting and ordering {productName}",
+    "cards": {
+      "packaging": {
+        "title": "Custom Box & Packaging",
+        "price": "Rp 200",
+        "desc": "Cigarette boxes, hampers, and product packaging with high-quality materials."
+      },
+      "culinary": {
+        "title": "Culinary Packaging",
+        "price": "Rp 300",
+        "desc": "Paper trays, donut boxes, and hygienic food-grade takeaway boxes."
+      },
+      "publications": {
+        "title": "Books & Publications",
+        "price": "Wholesale Price",
+        "desc": "Book printing, catalogs, and calendars with strong binding & precise results."
       }
     }
   },

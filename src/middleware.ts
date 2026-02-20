@@ -60,21 +60,18 @@ export default function middleware(request: NextRequest) {
       response.headers.set('Pragma', 'no-cache');
       return response;
     } else {
-      // If no cookie (or invalid), redirect to the selection page
-      const response = NextResponse.redirect(new URL('/select-language', request.url));
+      // If no cookie, default to 'id'
+      const response = NextResponse.redirect(new URL('/id', request.url));
       response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
       response.headers.set('Pragma', 'no-cache');
       return response;
     }
   }
 
-  // First-time visitor (no locale cookie) on any page → send to language selection
-  if (!isValidLocale && !pathname.startsWith('/admin') && !pathname.startsWith('/api')) {
-    const response = NextResponse.redirect(new URL('/select-language', request.url));
-    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
-    response.headers.set('Pragma', 'no-cache');
-    return response;
-  }
+  // First-time visitor check removed - we now default to /id at root, and let next-intl handle other paths or direct access.
+  // If a user accesses a non-locale path that isn't root, next-intl middleware usually handles it or we can add specific logic if needed.
+  // But for now, ensuring root goes to /id covers the main SEO and UX concern.
+
 
   // Delegate to next-intl middleware for other paths
   return intlMiddleware(request);

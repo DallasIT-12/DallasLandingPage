@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
@@ -185,27 +185,27 @@ const ClassicProductCardGrid = () => {
     {
       title: t('hampers.title'),
       slug: "kotak-hampers",
-      img: "/kotak%20hampers.jpg",
+      img: "/kotak%20hampers.webp",
       desc: t('hampers.desc'),
       tags: [t('hampers.tags.tag1'), t('hampers.tags.tag2')],
       images: [
         "/box hampers kraft (1).webp", "/box hampers kraft (2).webp", "/box hampers kraft (3).webp",
         "/box hampers natal (1).webp", "/box hampers natal (2).webp", "/box hampers natal (3).webp",
-        "/gable box (1).jpg", "/gable box (10).jpg", "/gable box (11).jpg", "/gable box (12).jpg",
-        "/gable box (13).jpg", "/gable box (14).jpg", "/gable box (15).jpg", "/gable box (16).jpg",
-        "/gable box (17).jpg", "/gable box (18).jpg", "/gable box (19).jpg", "/gable box (2).jpg",
-        "/gable box (20).jpg", "/gable box (3).jpg", "/gable box (4).jpg", "/gable box (5).jpg",
-        "/gable box (6).jpg", "/gable box (7).jpg", "/gable box (8).jpg", "/gable box (9).jpg",
+        "/gable box (1).webp", "/gable box (10).webp", "/gable box (11).webp", "/gable box (12).webp",
+        "/gable box (13).webp", "/gable box (14).webp", "/gable box (15).webp", "/gable box (16).webp",
+        "/gable box (17).webp", "/gable box (18).webp", "/gable box (19).webp", "/gable box (2).webp",
+        "/gable box (20).webp", "/gable box (3).webp", "/gable box (4).webp", "/gable box (5).webp",
+        "/gable box (6).webp", "/gable box (7).webp", "/gable box (8).webp", "/gable box (9).webp",
         "/gable box idul fitri (1).webp", "/gable box idul fitri (2).webp", "/gable box idul fitri (3).webp",
-        "/gable box idul fitri (4).webp", "/gable box idul fitri (5).jpg", "/gable box idul fitri (6).jpg",
-        "/gable box idul fitri (7).jpg", "/gable box idul fitri (8).jpg", "/hardbox (1).jpg",
-        "/hardbox (2).jpg", "/hardbox (3).jpg", "/kotak hampers.jpg"
+        "/gable box idul fitri (4).webp", "/gable box idul fitri (5).webp", "/gable box idul fitri (6).webp",
+        "/gable box idul fitri (7).webp", "/gable box idul fitri (8).webp", "/hardbox (1).webp",
+        "/hardbox (2).webp", "/hardbox (3).webp", "/kotak hampers.webp"
       ]
     },
     {
       title: t('bakery.title'),
       slug: "kotak-bakery",
-      img: "/kotak%20cake.jpg",
+      img: "/kotak%20cake.webp",
       desc: t('bakery.desc'),
       tags: [t('bakery.tags.tag1'), t('bakery.tags.tag2')],
       images: [
@@ -218,62 +218,62 @@ const ClassicProductCardGrid = () => {
         "/box tart handle (2).webp", "/box tart handle (3).webp", "/box tart handle (4).webp",
         "/box tart handle (5).webp", "/box tart handle (6).webp", "/cheese cake (1).webp",
         "/cheese cake (2).webp", "/cheese cake (3).webp", "/cheese cake (4).webp",
-        "/cupcake isi 12 (1).jpg", "/cupcake isi 12 (2).jpg", "/cupcake isi 12 (3).jpg",
-        "/cupcake isi 12 (4).jpg", "/cupcake isi 12 (5).jpg", "/cupcake isi 12 (6).jpg",
-        "/cupcake isi 16 (1).jpg", "/cupcake isi 16 (2).jpg", "/cupcake isi 16 (3).jpg",
-        "/cupcake isi 16 (4).jpg", "/cupcake isi 16 (5).jpg", "/cupcake isi 4 (1).jpg",
-        "/cupcake isi 4 (2).jpg", "/cupcake isi 4 (3).jpg", "/cupcake isi 4 (4).jpg",
-        "/cupcake isi 4 motif (1).jpg", "/cupcake isi 4 motif (2).jpg", "/cupcake isi 4 motif (3).jpg",
-        "/cupcake isi 4 motif (4).jpg", "/cupcake isi 4 motif (5).jpg", "/cupcake isi 6 (1).jpg",
-        "/cupcake isi 6 (2).jpg", "/cupcake isi 6 (3).jpg", "/cupcake isi 9 (1).jpg",
-        "/cupcake isi 9 (2).jpg", "/cupcake isi 9 (3).jpg", "/cupcake isi 9 (4).jpg",
-        "/cupcake isi 9 (5).jpg", "/cupcake isi 9 (6).jpg", "/cupcake isi 9 (7).jpg",
-        "/cupcake isi 9 (8).jpg", "/cupcake isi 9 (9).jpg", "/dallas donat isi 3.png",
-        "/dallas donat isi 6.png", "/donat isi 1(1).jpg", "/donat isi 1(2).jpg", "/donat isi 1.jpg",
-        "/kotak cake.jpg", "/kotak cupcake isi 4 (1).jpg", "/kotak cupcake isi 4 (2).jpg",
-        "/kotak cupcake isi 4 (3).jpg", "/kotak cupcake isi 4 (4).jpg", "/kotak cupcake isi 4 (5).jpg",
-        "/kotak cupcake isi 4 (6).jpg", "/kotak cupcake isi 4 (7).jpg", "/kotak cupcake isi 6 (1).jpg",
-        "/kotak cupcake isi 6 (2).jpg", "/kotak cupcake isi 6 (3).jpg", "/kotak cupcake isi 6 (4).jpg",
-        "/kotak cupcake motif isi 1 (1).jpg", "/kotak cupcake motif isi 1 (2).jpg",
-        "/kotak rollcake (1).jpg", "/kotak rollcake (2).jpg", "/kotak rollcake (3).jpg",
-        "/kotak rollcake (4).jpg", "/kotak rollcake (5).jpg", "/kotak rollcake (6).jpg",
-        "/kotak rollcake (7).jpg", "/kotak rollcake (8).jpg", "/kotak rollcake (9).jpg",
-        "/kotak rollcake mika (1).jpg", "/kotak rollcake mika (2).jpg", "/kotak rollcake mika (3).jpg",
-        "/kotak rollcake mika (4).jpg", "/paperlisens cupcake.png", "/tenteng cupcake isi 6 (1).jpg",
-        "/tenteng cupcake isi 6 (2).jpg", "/tenteng cupcake isi 6 (3).jpg", "/tenteng cupcake isi 6 (4).jpg",
-        "/tusuk roti (1).jpg", "/tusuk roti (2).jpg"
+        "/cupcake isi 12 (1).webp", "/cupcake isi 12 (2).webp", "/cupcake isi 12 (3).webp",
+        "/cupcake isi 12 (4).webp", "/cupcake isi 12 (5).webp", "/cupcake isi 12 (6).webp",
+        "/cupcake isi 16 (1).webp", "/cupcake isi 16 (2).webp", "/cupcake isi 16 (3).webp",
+        "/cupcake isi 16 (4).webp", "/cupcake isi 16 (5).webp", "/cupcake isi 4 (1).webp",
+        "/cupcake isi 4 (2).webp", "/cupcake isi 4 (3).webp", "/cupcake isi 4 (4).webp",
+        "/cupcake isi 4 motif (1).webp", "/cupcake isi 4 motif (2).webp", "/cupcake isi 4 motif (3).webp",
+        "/cupcake isi 4 motif (4).webp", "/cupcake isi 4 motif (5).webp", "/cupcake isi 6 (1).webp",
+        "/cupcake isi 6 (2).webp", "/cupcake isi 6 (3).webp", "/cupcake isi 9 (1).webp",
+        "/cupcake isi 9 (2).webp", "/cupcake isi 9 (3).webp", "/cupcake isi 9 (4).webp",
+        "/cupcake isi 9 (5).webp", "/cupcake isi 9 (6).webp", "/cupcake isi 9 (7).webp",
+        "/cupcake isi 9 (8).webp", "/cupcake isi 9 (9).webp", "/dallas donat isi 3.webp",
+        "/dallas donat isi 6.webp", "/donat isi 1(1).webp", "/donat isi 1(2).webp", "/donat isi 1.webp",
+        "/kotak cake.webp", "/kotak cupcake isi 4 (1).webp", "/kotak cupcake isi 4 (2).webp",
+        "/kotak cupcake isi 4 (3).webp", "/kotak cupcake isi 4 (4).webp", "/kotak cupcake isi 4 (5).webp",
+        "/kotak cupcake isi 4 (6).webp", "/kotak cupcake isi 4 (7).webp", "/kotak cupcake isi 6 (1).webp",
+        "/kotak cupcake isi 6 (2).webp", "/kotak cupcake isi 6 (3).webp", "/kotak cupcake isi 6 (4).webp",
+        "/kotak cupcake motif isi 1 (1).webp", "/kotak cupcake motif isi 1 (2).webp",
+        "/kotak rollcake (1).webp", "/kotak rollcake (2).webp", "/kotak rollcake (3).webp",
+        "/kotak rollcake (4).webp", "/kotak rollcake (5).webp", "/kotak rollcake (6).webp",
+        "/kotak rollcake (7).webp", "/kotak rollcake (8).webp", "/kotak rollcake (9).webp",
+        "/kotak rollcake mika (1).webp", "/kotak rollcake mika (2).webp", "/kotak rollcake mika (3).webp",
+        "/kotak rollcake mika (4).webp", "/paperlisens cupcake.webp", "/tenteng cupcake isi 6 (1).webp",
+        "/tenteng cupcake isi 6 (2).webp", "/tenteng cupcake isi 6 (3).webp", "/tenteng cupcake isi 6 (4).webp",
+        "/tusuk roti (1).webp", "/tusuk roti (2).webp"
       ]
     },
     {
       title: t('rokok.title'),
       slug: "rokok",
-      img: "/custom%20rokok%203.jpg",
+      img: "/custom%20rokok%203.webp",
       desc: t('rokok.desc'),
       tags: [t('rokok.tags.tag1'), t('rokok.tags.tag2')],
       images: [
-        "/custom rokok (1).jpg", "/custom rokok (10).jpg", "/custom rokok (11).jpg",
-        "/custom rokok (12).jpg", "/custom rokok (13).jpg", "/custom rokok (14).jpg",
-        "/custom rokok (15).jpg", "/custom rokok (16).jpg", "/custom rokok (17).jpg",
-        "/custom rokok (18).jpg", "/custom rokok (19).jpg", "/custom rokok (2).jpg",
-        "/custom rokok (20).jpg", "/custom rokok (21).jpg", "/custom rokok (22).jpg",
-        "/custom rokok (23).jpg", "/custom rokok (24).jpg", "/custom rokok (3).jpg",
-        "/custom rokok (4).jpg", "/custom rokok (5).jpg", "/custom rokok (6).jpg",
-        "/custom rokok (7).jpg", "/custom rokok (8).jpg", "/custom rokok (9).jpg",
-        "/custom rokok 1.jpg", "/custom rokok 2.jpg", "/custom rokok 3.jpg",
-        "/custom rokok 4.jpg", "/custom rokok.jpg", "/foto rokok 1.png",
-        "/foto rokok.png", "/kotak rokok 1.png"
+        "/custom rokok (1).webp", "/custom rokok (10).webp", "/custom rokok (11).webp",
+        "/custom rokok (12).webp", "/custom rokok (13).webp", "/custom rokok (14).webp",
+        "/custom rokok (15).webp", "/custom rokok (16).webp", "/custom rokok (17).webp",
+        "/custom rokok (18).webp", "/custom rokok (19).webp", "/custom rokok (2).webp",
+        "/custom rokok (20).webp", "/custom rokok (21).webp", "/custom rokok (22).webp",
+        "/custom rokok (23).webp", "/custom rokok (24).webp", "/custom rokok (3).webp",
+        "/custom rokok (4).webp", "/custom rokok (5).webp", "/custom rokok (6).webp",
+        "/custom rokok (7).webp", "/custom rokok (8).webp", "/custom rokok (9).webp",
+        "/custom rokok 1.webp", "/custom rokok 2.webp", "/custom rokok 3.webp",
+        "/custom rokok 4.webp", "/custom rokok.webp", "/foto rokok 1.webp",
+        "/foto rokok.webp", "/kotak rokok 1.webp"
       ]
     },
     {
       title: t('nasi.title'),
       slug: "kotak-nasi",
-      img: "/mobile_banner_2.jpg",
+      img: "/kotak%20nasi%20(1).webp",
       desc: t('nasi.desc'),
       tags: [t('nasi.tags.tag1'), t('nasi.tags.tag2')],
       images: [
-        "/kotak nasi (1).jpg", "/kotak nasi (2).jpg", "/kotak nasi (3).jpg",
-        "/kotak nasi (4).jpg", "/kotak nasi (5).jpg", "/kotak nasi (6).jpg",
-        "/kotak nasi (7).jpg", "/kotak nasi (8).jpg", "/kotak nasi (9).jpg"
+        "/kotak nasi (1).webp", "/kotak nasi (2).webp", "/kotak nasi (3).webp",
+        "/kotak nasi (4).webp", "/kotak nasi (5).webp", "/kotak nasi (6).webp",
+        "/kotak nasi (7).webp", "/kotak nasi (8).webp", "/kotak nasi (9).webp"
       ]
     },
     {
@@ -285,51 +285,51 @@ const ClassicProductCardGrid = () => {
       images: [
         "/buku (1).webp", "/buku (2).webp", "/buku (3).webp",
         "/buku (4).webp", "/buku (5).webp", "/buku (6).webp",
-        "/buku (7).webp", "/buku (8).webp", "/buku (9).webp", "/foto buku.png"
+        "/buku (7).webp", "/buku (8).webp", "/buku (9).webp", "/foto buku.webp"
       ]
     },
     {
       title: t('kalender.title'),
       slug: "kalender",
-      img: "/foto%20kalender.png",
+      img: "/foto%20kalender.webp",
       desc: t('kalender.desc'),
       tags: [t('kalender.tags.tag1')],
       images: [
-        "/foto kalender.png", "/kalender (1).jpg", "/kalender (2).jpg",
-        "/kalender (3).jpg", "/kalender (4).jpg", "/kalender.jpg"
+        "/foto kalender.webp", "/kalender (1).webp", "/kalender (2).webp",
+        "/kalender (3).webp", "/kalender (4).webp", "/kalender.webp"
       ]
     },
     {
       title: t('paperbag.title'),
       slug: "paperbag",
-      img: "/paperbag.jpg",
+      img: "/paperbag.webp",
       desc: t('paperbag.desc'),
       tags: [t('paperbag.tags.tag1'), t('paperbag.tags.tag2')],
       images: [
-        "/foto paperbag.png", "/paperbag (1).jpg", "/paperbag (2).jpg",
-        "/paperbag (3).jpg", "/paperbag (4).jpg", "/paperbag (5).jpg",
-        "/paperbag (6).jpg", "/paperbag (7).jpg", "/paperbag (8).jpg", "/paperbag.jpg"
+        "/foto paperbag.webp", "/paperbag (1).webp", "/paperbag (2).webp",
+        "/paperbag (3).webp", "/paperbag (4).webp", "/paperbag (5).webp",
+        "/paperbag (6).webp", "/paperbag (7).webp", "/paperbag (8).webp", "/paperbag.webp"
       ]
     },
     {
       title: t('map.title'),
       slug: "map",
-      img: "/map.jpg",
+      img: "/map.webp",
       desc: t('map.desc'),
       tags: [t('map.tags.tag1'), t('map.tags.tag2')],
       images: [
-        "/map (1).jpg", "/map (10).jpg", "/map (11).jpg", "/map (2).jpg",
-        "/map (3).jpg", "/map (4).jpg", "/map (5).jpg", "/map (6).jpg",
-        "/map (7).jpg", "/map (8).jpg", "/map (9).jpg", "/map.jpg"
+        "/map (1).webp", "/map (10).webp", "/map (11).webp", "/map (2).webp",
+        "/map (3).webp", "/map (4).webp", "/map (5).webp", "/map (6).webp",
+        "/map (7).webp", "/map (8).webp", "/map (9).webp", "/map.webp"
       ]
     },
     {
       title: t('brosur.title'),
       slug: "brosur",
-      img: "/foto%20brosur.png",
+      img: "/foto%20brosur.webp",
       desc: t('brosur.desc'),
       tags: [t('brosur.tags.tag1')],
-      images: ["/foto brosur.png"]
+      images: ["/foto brosur.webp"]
     }
   ];
 
@@ -632,6 +632,7 @@ const ClassicProductCardGrid = () => {
 
 export default function Home() {
   const t = useTranslations();
+  const tPricing = useTranslations('Pricing');
   const router = useRouter();
   const [showPromo, setShowPromo] = useState(false);
 
@@ -893,28 +894,28 @@ export default function Home() {
     );
   };
 
-  const desktopBanners = ['/main banner dallas.png', '/main banner dallas 2.png', '/main banner dallas 3.png', '/main banner dallas 4.png'];
+  const desktopBanners = ['/main banner dallas.webp', '/main banner dallas 2.webp', '/main banner dallas 3.webp', '/main banner dallas 4.webp'];
   const mobileBanners = [
-    '/mobile_banner_1.jpg',
-    '/mobile_banner_2.jpg',
-    '/mobile_banner_3.jpg',
-    '/mobile_banner_4.jpg',
-    '/mobile_banner_5.jpg',
-    '/mobile_banner_6.jpg',
-    '/mobile_banner_7.jpg',
-    '/mobile_banner_8.jpg',
-    '/mobile_banner_9.jpg'
+    '/mobile_banner_1.webp',
+    '/mobile_banner_2.webp',
+    '/mobile_banner_3.webp',
+    '/mobile_banner_4.webp',
+    '/mobile_banner_5.webp',
+    '/mobile_banner_6.webp',
+    '/mobile_banner_7.webp',
+    '/mobile_banner_8.webp',
+    '/mobile_banner_9.webp'
   ];
 
   const machineImages = [
-    '/foto mesin.png',
-    '/foto mesin (1).png',
-    '/foto mesin (2).png',
-    '/foto mesin (3).png',
-    '/foto mesin (4).png',
-    '/foto mesin (5).png',
-    '/foto mesin (6).png',
-    '/foto mesin (7).png'
+    '/foto mesin.webp',
+    '/foto mesin (1).webp',
+    '/foto mesin (2).webp',
+    '/foto mesin (3).webp',
+    '/foto mesin (4).webp',
+    '/foto mesin (5).webp',
+    '/foto mesin (6).webp',
+    '/foto mesin (7).webp'
   ];
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -1120,7 +1121,7 @@ export default function Home() {
         <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px', position: 'relative' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0' }}>
             <Link href="/" style={{ textDecoration: 'none' }}>
-              <Image src="/logo1.png" alt="Percetakan Dallas" width={360} height={108} style={{ height: '36px', width: 'auto', filter: 'invert(1)' }} priority />
+              <Image src="/logo1.webp" alt="Percetakan Dallas" width={360} height={108} style={{ height: '36px', width: 'auto', filter: 'invert(1)' }} priority />
             </Link>
 
             {isLargeMobile ? (
@@ -1311,7 +1312,7 @@ export default function Home() {
               marginBottom: '20px',
               letterSpacing: '-0.02em'
             }}>
-              Harga Minimal, <span style={{ color: '#0A4174' }}>Kualitas Maksimal</span>
+              {tPricing('title')} <span style={{ color: '#0A4174' }}>{tPricing('titleSpan')}</span>
             </h2>
             <div style={{
               width: '80px',
@@ -1326,7 +1327,7 @@ export default function Home() {
               maxWidth: '700px',
               margin: '0 auto'
             }}>
-              Solusi cetak profesional dengan efisiensi biaya yang mendukung akselerasi bisnis Anda.
+              {tPricing('subtitle')}
             </p>
           </motion.div>
 
@@ -1337,25 +1338,25 @@ export default function Home() {
           }}>
             {[
               {
-                title: 'Custom Box & Packaging',
-                price: 'Rp 200',
-                desc: 'Box rokok, hampers, dan packaging produk dengan bahan berkualitas tinggi.',
+                title: tPricing('cards.packaging.title'),
+                price: tPricing('cards.packaging.price'),
+                desc: tPricing('cards.packaging.desc'),
                 icon: 'mdi:package-variant-closed',
                 color: '#0A4174',
                 delay: 0.1
               },
               {
-                title: 'Packaging Kuliner',
-                price: 'Rp 300',
-                desc: 'Paper tray, box donat, dan takeaway box food-grade yang higienis.',
+                title: tPricing('cards.culinary.title'),
+                price: tPricing('cards.culinary.price'),
+                desc: tPricing('cards.culinary.desc'),
                 icon: 'mdi:food-takeout-box',
                 color: '#059669',
                 delay: 0.2
               },
               {
-                title: 'Buku & Publikasi',
-                price: 'Harga Grosir',
-                desc: 'Cetak buku, katalog, dan kalender dengan binding kuat & hasil presisi.',
+                title: tPricing('cards.publications.title'),
+                price: tPricing('cards.publications.price'),
+                desc: tPricing('cards.publications.desc'),
                 icon: 'mdi:book-open-page-variant',
                 color: '#f97316',
                 delay: 0.3
@@ -1413,14 +1414,14 @@ export default function Home() {
                   backgroundColor: `${item.color}08`,
                   borderRadius: '12px'
                 }}>
-                  <span style={{ fontSize: '0.9rem', fontWeight: '600', opacity: 0.8, verticalAlign: 'middle', marginRight: '4px' }}>Mulai</span>
-                  {item.price}{item.price.includes('Rp') ? <span style={{ fontSize: '1rem', fontWeight: '500', opacity: 0.7 }}> /pcs</span> : ''}
+                  <span style={{ fontSize: '0.9rem', fontWeight: '600', opacity: 0.8, verticalAlign: 'middle', marginRight: '4px' }}>{tPricing('startFrom')}</span>
+                  {item.price}{(item.price.includes('Rp') || item.price.includes('印尼盾')) ? <span style={{ fontSize: '1rem', fontWeight: '500', opacity: 0.7 }}> {tPricing('perPcs')}</span> : ''}
                 </div>
                 <p style={{ color: '#6b7280', fontSize: '1rem', lineHeight: '1.6', marginBottom: '24px', flexGrow: 1 }}>
                   {item.desc}
                 </p>
                 <a
-                  href={`https://wa.me/6281260001487?text=Halo%20kak%2C%20saya%20tertarik%20ingin%20konsultasi%20dan%20pesan%20${encodeURIComponent(item.title)}`}
+                  href={`https://wa.me/6281260001487?text=${encodeURIComponent(tPricing('whatsappMessage', { productName: item.title }))}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{
@@ -1442,7 +1443,7 @@ export default function Home() {
                   onMouseOut={(e) => (e.currentTarget.style.opacity = '1')}
                 >
                   <Icon icon="mdi:whatsapp" style={{ fontSize: '20px' }} />
-                  Konsultasi & Pesan Sekarang
+                  {tPricing('consultation')}
                 </a>
               </motion.div>
             ))}
@@ -1715,8 +1716,8 @@ export default function Home() {
             marginTop: '64px'
           }}>
             {[
-              { src: "/mesin potong.png", alt: "Mesin Potong Canggih" },
-              { src: "/foto%20(9).jpg", alt: "Proses Produksi Berkualitas" }
+              { src: "/mesin potong.webp", alt: "Mesin Potong Canggih" },
+              { src: "/foto%20(9).webp", alt: "Proses Produksi Berkualitas" }
             ].map((img, idx) => (
               <div key={idx} style={{
                 position: 'relative',
@@ -1761,8 +1762,8 @@ export default function Home() {
             alignItems: 'stretch'
           }}>
             {[
-              { image: '/paperlisens%20produk%20unggulan%20(1).png', alt: 'Solusi Cup Serbaguna & Trendi', titleKey: 'card1.title', descKey: 'card1.desc' },
-              { image: '/paperlisens%20produk%20unggulan%20(2).jpg', alt: 'Kotak Donat Berbagai Ukuran', titleKey: 'card2.title', descKey: 'card2.desc' }
+              { image: '/paperlisens%20produk%20unggulan%20(1).webp', alt: 'Solusi Cup Serbaguna & Trendi', titleKey: 'card1.title', descKey: 'card1.desc' },
+              { image: '/paperlisens%20produk%20unggulan%20(2).webp', alt: 'Kotak Donat Berbagai Ukuran', titleKey: 'card2.title', descKey: 'card2.desc' }
             ].map((card, idx) => (
               <div key={idx} style={{
                 borderRadius: '24px',
@@ -1857,12 +1858,12 @@ export default function Home() {
               gridAutoRows: isLargeMobile ? '140px' : '180px'
             }}>
               {[
-                '/foto (412).jpg', '/foto (264).jpg', '/foto (120).jpg', '/foto (176).jpg',
-                '/foto (310).jpg', '/foto (154).jpg', '/foto (431).jpg', '/foto (436).jpg',
-                '/foto (96).jpg', '/foto (435).jpg', '/foto (69).jpg', '/foto (612).jpg',
-                '/foto (517).jpg', '/foto (510).jpg', '/foto (127).jpg', '/foto (365).jpg',
-                '/foto (185).jpg', '/foto (84).jpg', '/foto (187).jpg', '/foto (151).jpg',
-                '/foto (432).jpg', '/foto (165).jpg', '/foto (159).jpg', '/foto (172).jpg'
+                '/foto (412).webp', '/foto (264).webp', '/foto (120).webp', '/foto (176).webp',
+                '/foto (310).webp', '/foto (154).webp', '/foto (431).webp', '/foto (436).webp',
+                '/foto (96).webp', '/foto (435).webp', '/foto (69).webp', '/foto (612).webp',
+                '/foto (517).webp', '/foto (510).webp', '/foto (127).webp', '/foto (365).webp',
+                '/foto (185).webp', '/foto (84).webp', '/foto (187).webp', '/foto (151).webp',
+                '/foto (432).webp', '/foto (165).webp', '/foto (159).webp', '/foto (172).webp'
               ].map((img, index) => (
                 <div key={index} style={{
                   position: 'relative',

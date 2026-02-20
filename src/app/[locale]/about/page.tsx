@@ -77,14 +77,14 @@ export default function AboutPage() {
   const [screenReady, setScreenReady] = useState(false);
 
   const machineImages = [
-    '/foto mesin.png',
-    '/foto mesin (1).png',
-    '/foto mesin (2).png',
-    '/foto mesin (3).png',
-    '/foto mesin (4).png',
-    '/foto mesin (5).png',
-    '/foto mesin (6).png',
-    '/foto mesin (7).png'
+    '/foto mesin.webp',
+    '/foto mesin (1).webp',
+    '/foto mesin (2).webp',
+    '/foto mesin (3).webp',
+    '/foto mesin (4).webp',
+    '/foto mesin (5).webp',
+    '/foto mesin (6).webp',
+    '/foto mesin (7).webp'
   ];
 
   useEffect(() => {
@@ -226,7 +226,7 @@ export default function AboutPage() {
         <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px', position: 'relative' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0' }}>
             <Link href="/" style={{ textDecoration: 'none' }}>
-              <img src="/logo1.png" alt="Percetakan Dallas" style={{ height: '36px', width: 'auto', filter: 'invert(1)' }} />
+              <img src="/logo1.webp" alt="Percetakan Dallas" style={{ height: '36px', width: 'auto', filter: 'invert(1)' }} />
             </Link>
 
             {isLargeMobile ? (
@@ -268,7 +268,7 @@ export default function AboutPage() {
       <header style={{
         paddingTop: isLargeMobile ? '180px' : '220px',
         paddingBottom: isLargeMobile ? '100px' : '140px',
-        backgroundImage: 'linear-gradient(rgba(0, 29, 57, 0.65), rgba(0, 29, 57, 0.65)), url("/about_us.png")',
+        backgroundImage: 'linear-gradient(rgba(0, 29, 57, 0.65), rgba(0, 29, 57, 0.65)), url("/about_us.webp")',
         backgroundSize: 'cover',
         backgroundPosition: isLargeMobile ? 'center 20%' : 'center',
         color: 'white',

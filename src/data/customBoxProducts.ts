@@ -15,7 +15,7 @@ export interface Product {
 }
 
 export const customBoxProducts: Product[] = [
-  // === PREMIUM (2-3 finishing) ===
+  //PREMIUM (2-3 finishing)
   {
     id: '1',
     slug: 'premium-emboss-hotprint-spot-uv',
@@ -23,7 +23,7 @@ export const customBoxProducts: Product[] = [
     name: 'Premium Box - Emboss + Hotprint + Spot UV',
     description: 'Kemasan premium dengan 3 finishing: emboss untuk efek timbul, hotprint foil metalik, dan spot UV untuk kilau di area tertentu.',
     price: 0,
-    image: '/kotak rokok 1.png',
+    image: '/kotak rokok 1.webp',
     category: 'Premium',
     subcategory: 'Cigarette',
     brand: 'Dallas Custom',
@@ -38,7 +38,7 @@ export const customBoxProducts: Product[] = [
     name: 'Premium Box - Emboss + Hotprint',
     description: 'Kemasan premium dengan 2 finishing: emboss untuk efek timbul dan hotprint foil metalik untuk kilau emas/perak.',
     price: 0,
-    image: '/kotak rokok 1.png',
+    image: '/kotak rokok 1.webp',
     category: 'Premium',
     subcategory: 'Cigarette',
     brand: 'Dallas Custom',
@@ -53,7 +53,7 @@ export const customBoxProducts: Product[] = [
     name: 'Premium Box - Hotprint + Spot UV',
     description: 'Kemasan premium dengan 2 finishing: hotprint foil metalik dan spot UV untuk efek glossy kontras pada logo.',
     price: 0,
-    image: '/kotak rokok 1.png',
+    image: '/kotak rokok 1.webp',
     category: 'Premium',
     subcategory: 'Cigarette',
     brand: 'Dallas Custom',
@@ -62,7 +62,7 @@ export const customBoxProducts: Product[] = [
     packSize: '10000 pcs'
   },
 
-  // === STANDARD (1 finishing) ===
+  //STANDARD (1 finishing)
   {
     id: '4',
     slug: 'standard-finishing-emboss',
@@ -70,7 +70,7 @@ export const customBoxProducts: Product[] = [
     name: 'Standard Box - Finishing Emboss',
     description: 'Kemasan standar dengan finishing emboss, membuat logo dan desain tampil timbul (arise) untuk kesan elegan.',
     price: 0,
-    image: '/kotak rokok 1.png',
+    image: '/kotak rokok 1.webp',
     category: 'Standard',
     subcategory: 'Cigarette',
     brand: 'Dallas Custom',
@@ -85,7 +85,7 @@ export const customBoxProducts: Product[] = [
     name: 'Standard Box - Finishing Hotprint',
     description: 'Kemasan standar dengan finishing hotprint, menghasilkan efek foil metalik kilau pada logo dan teks.',
     price: 0,
-    image: '/kotak rokok 1.png',
+    image: '/kotak rokok 1.webp',
     category: 'Standard',
     subcategory: 'Cigarette',
     brand: 'Dallas Custom',
@@ -100,7 +100,7 @@ export const customBoxProducts: Product[] = [
     name: 'Standard Box - Finishing Spot UV',
     description: 'Kemasan standar dengan finishing spot UV, memberikan lapisan glossy mengkilap pada area tertentu seperti logo.',
     price: 0,
-    image: '/kotak rokok 1.png',
+    image: '/kotak rokok 1.webp',
     category: 'Standard',
     subcategory: 'Cigarette',
     brand: 'Dallas Custom',
@@ -115,7 +115,7 @@ export const customBoxProducts: Product[] = [
     name: 'Standard Box - Finishing UV',
     description: 'Kemasan standar dengan UV coating merata di seluruh permukaan, warna lebih cerah dan tahan gores.',
     price: 0,
-    image: '/kotak rokok 1.png',
+    image: '/kotak rokok 1.webp',
     category: 'Standard',
     subcategory: 'Cigarette',
     brand: 'Dallas Custom',
@@ -124,7 +124,7 @@ export const customBoxProducts: Product[] = [
     packSize: '10000 pcs'
   },
 
-  // === GENERAL (no finishing) ===
+  //GENERAL (no finishing)
   {
     id: '8',
     slug: 'general-box',
@@ -132,7 +132,7 @@ export const customBoxProducts: Product[] = [
     name: 'General Box - Tanpa Finishing',
     description: 'Kemasan kotak rokok standar tanpa finishing tambahan. Cocok untuk kebutuhan kemasan dasar dengan harga terjangkau.',
     price: 0,
-    image: '/kotak rokok 1.png',
+    image: '/kotak rokok 1.webp',
     category: 'General',
     subcategory: 'Cigarette',
     brand: 'Dallas Custom',

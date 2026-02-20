@@ -226,7 +226,7 @@ export default function EcoFriendlyPackagingArticle() {
             </p>
           </header>
 
-          <img src="/artikel (1).png" alt="Kemasan Kertas Ramah Lingkungan" style={{ width: '100%', borderRadius: '24px', marginBottom: isLargeMobile ? '32px' : '48px', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)' }} />
+          <img src="/artikel (1) (2).webp" alt="Kemasan Kertas Ramah Lingkungan" style={{ width: '100%', borderRadius: '24px', marginBottom: isLargeMobile ? '32px' : '48px', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)' }} />
 
           <section style={{ fontSize: isLargeMobile ? '1rem' : '1.125rem', lineHeight: '1.8', color: '#334155' }}>
             <h2 style={{ fontSize: isLargeMobile ? '1.5rem' : '2rem', fontWeight: '700', color: '#001D39', marginTop: '32px', marginBottom: '16px' }}>Penjelasan: Apa Itu Kemasan Ramah Lingkungan?</h2>

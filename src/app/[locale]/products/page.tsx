@@ -59,7 +59,7 @@ const FloatingCigaretteBox = ({ product, delay = 0 }: { product: Product, delay?
           }}
         >
           <Image
-            src="/kotak rokok 1.png"
+            src={product.image}
             alt={product.name}
             width={420}
             height={540}
@@ -112,7 +112,7 @@ const FloatingCigaretteBox = ({ product, delay = 0 }: { product: Product, delay?
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/kotak rokok 1.png"
+            src={product.image}
             alt=""
             style={{
               width: '100%',
@@ -140,7 +140,7 @@ const FloatingCigaretteBox = ({ product, delay = 0 }: { product: Product, delay?
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/kotak rokok 1.png"
+            src={product.image}
             alt=""
             style={{
               width: '100%',

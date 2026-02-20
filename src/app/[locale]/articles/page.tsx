@@ -115,7 +115,7 @@ export default function ArticlesListPage() {
       slug: 'kemasan-ramah-lingkungan',
       excerpt: 'Memahami urgensi penggunaan kemasan ramah lingkungan untuk meningkatkan reputasi brand dan menjaga ekosistem bumi.',
       date: '6 Februari 2026',
-      image: '/artikel (1).png',
+      image: '/artikel (1) (2).webp',
       category: 'Keberlanjutan'
     },
     {
@@ -123,7 +123,7 @@ export default function ArticlesListPage() {
       slug: 'ide-bisnis-tren-2026',
       excerpt: 'Simak peluang usaha paling menjanjikan di tahun ini dan bagaimana Percetakan Dallas Kediri membantu Anda menguasai pasar melalui kemasan premium.',
       date: '6 Februari 2026',
-      image: '/artikel (2).png',
+      image: '/artikel (2).webp',
       category: 'Ide Bisnis'
     },
     {
@@ -131,7 +131,7 @@ export default function ArticlesListPage() {
       slug: 'offset-vs-digital',
       excerpt: 'Mengungkap keunggulan mutlak teknologi cetak offset dalam menghasilkan kualitas premium dengan efisiensi biaya produksi maksimal.',
       date: '6 Februari 2026',
-      image: '/artikel (3).png',
+      image: '/artikel (3).webp',
       category: 'Edukasi'
     },
     {
@@ -139,7 +139,7 @@ export default function ArticlesListPage() {
       slug: 'kertas-ivory',
       excerpt: 'Analisis komprehensif mengenai penggunaan kertas ivory untuk cetak kemasan premium, mulai dari gramasi hingga teknik finishing.',
       date: '5 Februari 2026',
-      image: '/artikel (1).jpg',
+      image: '/artikel (1).webp',
       category: 'Material'
     }
   ];

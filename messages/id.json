@@ -15,7 +15,7 @@
     "about": "Tentang Kami"
   },
   "TopBar": {
-    "address": "Jl. Kilisuci no 71, Singonegaran, Kec. Kota, Kota Kediri."
+    "address": "Jl. Kilisuci No.71, Setono Pande, Kec. Kota, Kota Kediri."
   },
   "CompanyProfile": {
     "title": "Berpengalaman Sejak 1983: Menjaga Kualitas dan Kepercayaan",
@@ -302,6 +302,32 @@
       "generalBox": {
         "name": "General Box - Tanpa Finishing",
         "description": "Kemasan kotak rokok standar tanpa finishing tambahan. Cocok untuk kebutuhan kemasan dasar dengan harga terjangkau."
+      }
+    }
+  },
+  "Pricing": {
+    "title": "Harga Minimal,",
+    "titleSpan": "Kualitas Maksimal",
+    "subtitle": "Solusi cetak profesional dengan efisiensi biaya yang mendukung akselerasi bisnis Anda.",
+    "startFrom": "Mulai",
+    "perPcs": "/pcs",
+    "consultation": "Konsultasi & Pesan Sekarang",
+    "whatsappMessage": "Halo kak, saya tertarik ingin konsultasi dan pesan {productName}",
+    "cards": {
+      "packaging": {
+        "title": "Custom Box & Packaging",
+        "price": "Rp 200",
+        "desc": "Box rokok, hampers, dan packaging produk dengan bahan berkualitas tinggi."
+      },
+      "culinary": {
+        "title": "Packaging Kuliner",
+        "price": "Rp 300",
+        "desc": "Paper tray, box donat, dan takeaway box food-grade yang higienis."
+      },
+      "publications": {
+        "title": "Buku & Publikasi",
+        "price": "Harga Grosir",
+        "desc": "Cetak buku, katalog, dan kalender dengan binding kuat & hasil presisi."
       }
     }
   },

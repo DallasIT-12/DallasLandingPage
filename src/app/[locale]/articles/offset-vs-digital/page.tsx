@@ -230,7 +230,7 @@ export default function OffsetVsDigitalArticle() {
           </header>
 
           <img
-            src="/artikel (3).png"
+            src="/artikel (3).webp"
             alt="Kenapa Bisnis Besar Selalu Memilih Offset Printing"
             style={{ width: '100%', borderRadius: '24px', marginBottom: isLargeMobile ? '32px' : '48px', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)' }}
           />

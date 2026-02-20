@@ -14,7 +14,7 @@
     "about": "关于我们"
   },
   "TopBar": {
-    "address": "Jl. Kilisuci no 71, Singonegaran, Kediri City."
+    "address": "Jl. Kilisuci No.71, Setono Pande, Kec. Kota, Kota Kediri."
   },
   "CompanyProfile": {
     "title": "始于1983年的丰富经验：保持品质与信赖",
@@ -294,6 +294,32 @@
       "generalBox": {
         "name": "普通盒 - 无表面处理",
         "description": "标准烟盒包装，无额外表面处理。适合基本包装需求，价格实惠。"
+      }
+    }
+  },
+  "Pricing": {
+    "title": "最低价格，",
+    "titleSpan": "最高质量",
+    "subtitle": "具有成本效益的专业印刷解决方案，支持您的业务加速。",
+    "startFrom": "起价",
+    "perPcs": "/件",
+    "consultation": "立即咨询并订购",
+    "whatsappMessage": "你好，我有兴趣咨询并订购 {productName}",
+    "cards": {
+      "packaging": {
+        "title": "定制盒子和包装",
+        "price": "印尼盾 200",
+        "desc": "采用优质材料制成的烟盒、礼篮和产品包装。"
+      },
+      "culinary": {
+        "title": "烹饪包装",
+        "price": "印尼盾 300",
+        "desc": "卫生食品级纸托盘、甜甜圈盒和外卖盒。"
+      },
+      "publications": {
+        "title": "书籍和出版物",
+        "price": "批发价",
+        "desc": "书籍印刷、目录和日历，装订牢固，结果精确。"
       }
     }
   },
