@@ -1483,7 +1483,7 @@ export default function Home() {
         <div style={{ display: 'flex', overflow: 'hidden', width: '100%', position: 'relative' }}>
           {/* Marquee Group 1 */}
           <div className="animate-marquee" style={{ display: 'flex', gap: '80px', paddingRight: '80px', minWidth: '100%', flexShrink: 0, alignItems: 'center' }}>
-            {Array.from({ length: 25 }, (_, i) => `/logo brand (${i + 1}).jpg`).map((src, idx) => (
+            {Array.from({ length: 25 }, (_, i) => `/logo brand (${i + 1}).webp`).map((src, idx) => (
               <div key={`logo-1-${idx}`} style={{ position: 'relative', width: '220px', height: '140px', flexShrink: 0 }}>
                 <Image
                   src={src}
@@ -1499,7 +1499,7 @@ export default function Home() {
 
           {/* Marquee Group 2 (Duplicate) */}
           <div className="animate-marquee" style={{ display: 'flex', gap: '80px', paddingRight: '80px', minWidth: '100%', flexShrink: 0, alignItems: 'center' }}>
-            {Array.from({ length: 25 }, (_, i) => `/logo brand (${i + 1}).jpg`).map((src, idx) => (
+            {Array.from({ length: 25 }, (_, i) => `/logo brand (${i + 1}).webp`).map((src, idx) => (
               <div key={`logo-2-${idx}`} style={{ position: 'relative', width: '220px', height: '140px', flexShrink: 0 }}>
                 <Image
                   src={src}

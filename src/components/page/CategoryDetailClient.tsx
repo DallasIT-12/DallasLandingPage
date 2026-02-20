@@ -140,149 +140,149 @@ export default function ProductCategoryPage() {
   // Construct categories dynamically from translations
   const dallasCategories = useMemo(() => [
     {
-      title: tCat('hampers.title'), slug: "kotak-hampers", img: "/kotak hampers.jpg", desc: tCat('hampers.desc'),
+      title: tCat('hampers.title'), slug: "kotak-hampers", img: "/kotak hampers.webp", desc: tCat('hampers.desc'),
       tags: [tCat('hampers.tags.tag1'), tCat('hampers.tags.tag2')],
       gallery: [
-        "/box hampers kraft (1).jpg", "/box hampers kraft (2).jpg", "/box hampers kraft (3).jpg",
-        "/box hampers natal (1).jpg", "/box hampers natal (2).jpg", "/box hampers natal (3).jpg",
-        "/gable box (1).jpg", "/gable box (10).jpg", "/gable box (11).jpg", "/gable box (12).jpg",
-        "/gable box (13).jpg", "/gable box (14).jpg", "/gable box (15).jpg", "/gable box (16).jpg",
-        "/gable box (17).jpg", "/gable box (18).jpg", "/gable box (19).jpg", "/gable box (2).jpg",
-        "/gable box (20).jpg", "/gable box (3).jpg", "/gable box (4).jpg", "/gable box (5).jpg",
-        "/gable box (6).jpg", "/gable box (7).jpg", "/gable box (8).jpg", "/gable box (9).jpg",
-        "/gable box idul fitri (1).jpg", "/gable box idul fitri (2).jpg", "/gable box idul fitri (3).jpg",
-        "/gable box idul fitri (4).jpg", "/gable box idul fitri (5).jpg", "/gable box idul fitri (6).jpg",
-        "/gable box idul fitri (7).jpg", "/gable box idul fitri (8).jpg", "/hardbox (1).jpg",
-        "/hardbox (2).jpg", "/hardbox (3).jpg", "/kotak hampers.jpg"
+        "/box hampers kraft (1).webp", "/box hampers kraft (2).webp", "/box hampers kraft (3).webp",
+        "/box hampers natal (1).webp", "/box hampers natal (2).webp", "/box hampers natal (3).webp",
+        "/gable box (1).webp", "/gable box (10).webp", "/gable box (11).webp", "/gable box (12).webp",
+        "/gable box (13).webp", "/gable box (14).webp", "/gable box (15).webp", "/gable box (16).webp",
+        "/gable box (17).webp", "/gable box (18).webp", "/gable box (19).webp", "/gable box (2).webp",
+        "/gable box (20).webp", "/gable box (3).webp", "/gable box (4).webp", "/gable box (5).webp",
+        "/gable box (6).webp", "/gable box (7).webp", "/gable box (8).webp", "/gable box (9).webp",
+        "/gable box idul fitri (1).webp", "/gable box idul fitri (2).webp", "/gable box idul fitri (3).webp",
+        "/gable box idul fitri (4).webp", "/gable box idul fitri (5).webp", "/gable box idul fitri (6).webp",
+        "/gable box idul fitri (7).webp", "/gable box idul fitri (8).webp", "/hardbox (1).webp",
+        "/hardbox (2).webp", "/hardbox (3).webp", "/kotak hampers.webp"
       ],
       explanation: "Kotak Hampers adalah kemasan hadiah premium yang dirancang khusus untuk mempercantik tampilan parsel dan bingkisan di momen-momen spesial. Lebih dari sekadar pembungkus, kotak hampers menjadi 'wajah pertama' yang memberikan kesan mewah dan berkesan bagi penerima. Dengan desain cetak custom, kotak hampers bisa menjadi media branding yang kuat untuk bisnis gift, toko kue, maupun perusahaan.",
       applications: ["Parsel Lebaran / Idul Fitri", "Hampers pernikahan & souvenir", "Hampers Natal & Tahun Baru", "Gift box corporate / perusahaan", "Bingkisan ulang tahun premium"],
       commonMaterials: ["Art Carton 260–310 gsm", "Ivory 310 gsm", "Art Paper (untuk laminasi luar)", "Corrugated Board (untuk struktur kokoh)"]
     },
     {
-      title: tCat('bakery.title'), slug: "kotak-bakery", img: "/kotak cake.jpg", desc: tCat('bakery.desc'),
+      title: tCat('bakery.title'), slug: "kotak-bakery", img: "/kotak cake.webp", desc: tCat('bakery.desc'),
       tags: [tCat('bakery.tags.tag1'), tCat('bakery.tags.tag2')],
       gallery: [
-        "/box donat motif (1).jpg", "/box donat motif (1).png", "/box donat motif (2).jpg",
-        "/box donat motif (2).png", "/box donat motif (3).jpg", "/box donat motif (3).png",
-        "/box donat motif (4).jpg", "/box donat motif (4).png", "/box donat motif (5).jpg",
-        "/box donat motif (6).jpg", "/box donat motif.jpg", "/box roti bakar (1).jpg",
-        "/box roti bakar (2).jpg", "/box roti bakar (3).jpg", "/box slice cake-1.jpeg",
-        "/box slice cake-2.jpeg", "/box slice cake.jpeg", "/box tart handle (1).jpg",
-        "/box tart handle (2).jpg", "/box tart handle (3).jpg", "/box tart handle (4).jpg",
-        "/box tart handle (5).jpg", "/box tart handle (6).jpg", "/cheese cake (1).jpg",
-        "/cheese cake (2).jpg", "/cheese cake (3).jpg", "/cheese cake (4).jpg",
-        "/cupcake isi 12 (1).jpg", "/cupcake isi 12 (2).jpg", "/cupcake isi 12 (3).jpg",
-        "/cupcake isi 12 (4).jpg", "/cupcake isi 12 (5).jpg", "/cupcake isi 12 (6).jpg",
-        "/cupcake isi 16 (1).jpg", "/cupcake isi 16 (2).jpg", "/cupcake isi 16 (3).jpg",
-        "/cupcake isi 16 (4).jpg", "/cupcake isi 16 (5).jpg", "/cupcake isi 4 (1).jpg",
-        "/cupcake isi 4 (2).jpg", "/cupcake isi 4 (3).jpg", "/cupcake isi 4 (4).jpg",
-        "/cupcake isi 4 motif (1).jpg", "/cupcake isi 4 motif (2).jpg", "/cupcake isi 4 motif (3).jpg",
-        "/cupcake isi 4 motif (4).jpg", "/cupcake isi 4 motif (5).jpg", "/cupcake isi 6 (1).jpg",
-        "/cupcake isi 6 (2).jpg", "/cupcake isi 6 (3).jpg", "/cupcake isi 9 (1).jpg",
-        "/cupcake isi 9 (2).jpg", "/cupcake isi 9 (3).jpg", "/cupcake isi 9 (4).jpg",
-        "/cupcake isi 9 (5).jpg", "/cupcake isi 9 (6).jpg", "/cupcake isi 9 (7).jpg",
-        "/cupcake isi 9 (8).jpg", "/cupcake isi 9 (9).jpg", "/dallas donat isi 3.png",
-        "/dallas donat isi 6.png", "/donat isi 1(1).jpg", "/donat isi 1(2).jpg", "/donat isi 1.jpg",
-        "/kotak cake.jpg", "/kotak cupcake isi 4 (1).jpg", "/kotak cupcake isi 4 (2).jpg",
-        "/kotak cupcake isi 4 (3).jpg", "/kotak cupcake isi 4 (4).jpg", "/kotak cupcake isi 4 (5).jpg",
-        "/kotak cupcake isi 4 (6).jpg", "/kotak cupcake isi 4 (7).jpg", "/kotak cupcake isi 6 (1).jpg",
-        "/kotak cupcake isi 6 (2).jpg", "/kotak cupcake isi 6 (3).jpg", "/kotak cupcake isi 6 (4).jpg",
-        "/kotak cupcake motif isi 1 (1).jpg", "/kotak cupcake motif isi 1 (2).jpg",
-        "/kotak rollcake (1).jpg", "/kotak rollcake (2).jpg", "/kotak rollcake (3).jpg",
-        "/kotak rollcake (4).jpg", "/kotak rollcake (5).jpg", "/kotak rollcake (6).jpg",
-        "/kotak rollcake (7).jpg", "/kotak rollcake (8).jpg", "/kotak rollcake (9).jpg",
-        "/kotak rollcake mika (1).jpg", "/kotak rollcake mika (2).jpg", "/kotak rollcake mika (3).jpg",
-        "/kotak rollcake mika (4).jpg", "/paperlisens cupcake.png", "/tenteng cupcake isi 6 (1).jpg",
-        "/tenteng cupcake isi 6 (2).jpg", "/tenteng cupcake isi 6 (3).jpg", "/tenteng cupcake isi 6 (4).jpg",
-        "/tusuk roti (1).jpg", "/tusuk roti (2).jpg"
+        "/box donat motif (1).webp", "/box donat motif (1).webp", "/box donat motif (2).webp",
+        "/box donat motif (2).webp", "/box donat motif (3).webp", "/box donat motif (3).webp",
+        "/box donat motif (4).webp", "/box donat motif (4).webp", "/box donat motif (5).webp",
+        "/box donat motif (6).webp", "/box donat motif.webp", "/box roti bakar (1).webp",
+        "/box roti bakar (2).webp", "/box roti bakar (3).webp", "/box slice cake-1.webp",
+        "/box slice cake-2.webp", "/box slice cake.webp", "/box tart handle (1).webp",
+        "/box tart handle (2).webp", "/box tart handle (3).webp", "/box tart handle (4).webp",
+        "/box tart handle (5).webp", "/box tart handle (6).webp", "/cheese cake (1).webp",
+        "/cheese cake (2).webp", "/cheese cake (3).webp", "/cheese cake (4).webp",
+        "/cupcake isi 12 (1).webp", "/cupcake isi 12 (2).webp", "/cupcake isi 12 (3).webp",
+        "/cupcake isi 12 (4).webp", "/cupcake isi 12 (5).webp", "/cupcake isi 12 (6).webp",
+        "/cupcake isi 16 (1).webp", "/cupcake isi 16 (2).webp", "/cupcake isi 16 (3).webp",
+        "/cupcake isi 16 (4).webp", "/cupcake isi 16 (5).webp", "/cupcake isi 4 (1).webp",
+        "/cupcake isi 4 (2).webp", "/cupcake isi 4 (3).webp", "/cupcake isi 4 (4).webp",
+        "/cupcake isi 4 motif (1).webp", "/cupcake isi 4 motif (2).webp", "/cupcake isi 4 motif (3).webp",
+        "/cupcake isi 4 motif (4).webp", "/cupcake isi 4 motif (5).webp", "/cupcake isi 6 (1).webp",
+        "/cupcake isi 6 (2).webp", "/cupcake isi 6 (3).webp", "/cupcake isi 9 (1).webp",
+        "/cupcake isi 9 (2).webp", "/cupcake isi 9 (3).webp", "/cupcake isi 9 (4).webp",
+        "/cupcake isi 9 (5).webp", "/cupcake isi 9 (6).webp", "/cupcake isi 9 (7).webp",
+        "/cupcake isi 9 (8).webp", "/cupcake isi 9 (9).webp", "/dallas donat isi 3.webp",
+        "/dallas donat isi 6.webp", "/donat isi 1(1).webp", "/donat isi 1(2).webp", "/donat isi 1.webp",
+        "/kotak cake.webp", "/kotak cupcake isi 4 (1).webp", "/kotak cupcake isi 4 (2).webp",
+        "/kotak cupcake isi 4 (3).webp", "/kotak cupcake isi 4 (4).webp", "/kotak cupcake isi 4 (5).webp",
+        "/kotak cupcake isi 4 (6).webp", "/kotak cupcake isi 4 (7).webp", "/kotak cupcake isi 6 (1).webp",
+        "/kotak cupcake isi 6 (2).webp", "/kotak cupcake isi 6 (3).webp", "/kotak cupcake isi 6 (4).webp",
+        "/kotak cupcake motif isi 1 (1).webp", "/kotak cupcake motif isi 1 (2).webp",
+        "/kotak rollcake (1).webp", "/kotak rollcake (2).webp", "/kotak rollcake (3).webp",
+        "/kotak rollcake (4).webp", "/kotak rollcake (5).webp", "/kotak rollcake (6).webp",
+        "/kotak rollcake (7).webp", "/kotak rollcake (8).webp", "/kotak rollcake (9).webp",
+        "/kotak rollcake mika (1).webp", "/kotak rollcake mika (2).webp", "/kotak rollcake mika (3).webp",
+        "/kotak rollcake mika (4).webp", "/paperlisens cupcake.webp", "/tenteng cupcake isi 6 (1).webp",
+        "/tenteng cupcake isi 6 (2).webp", "/tenteng cupcake isi 6 (3).webp", "/tenteng cupcake isi 6 (4).webp",
+        "/tusuk roti (1).webp", "/tusuk roti (2).webp"
       ],
       explanation: "Kotak Bakery adalah kemasan fungsional sekaligus estetis yang dirancang untuk melindungi produk roti, kue, dan pastry agar tetap segar, rapi, dan menarik. Kemasan ini harus tahan terhadap minyak dan kelembapan sambil tetap menampilkan desain yang menggugah selera. Bagi pelaku usaha bakery, kotak custom adalah investasi branding yang membuat produk tampil lebih profesional dan meningkatkan nilai jual.",
       applications: ["Box kue ulang tahun", "Kotak donat & cupcake", "Box roti tawar & pastry", "Kemasan brownies & cookies", "Box tart & pie premium"],
       commonMaterials: ["Ivory 310 gsm (Food Grade)", "Duplex 310 gsm", "Food Grade Paper", "Art Carton (untuk box premium)"]
     },
     {
-      title: tCat('rokok.title'), slug: "rokok", img: "/custom%20rokok%203.jpg", desc: tCat('rokok.desc'),
+      title: tCat('rokok.title'), slug: "rokok", img: "/custom%20rokok%203.webp", desc: tCat('rokok.desc'),
       tags: [tCat('rokok.tags.tag1'), tCat('rokok.tags.tag2')],
       gallery: [
-        "/custom rokok (1).jpg", "/custom rokok (10).jpg", "/custom rokok (11).jpg",
-        "/custom rokok (12).jpg", "/custom rokok (13).jpg", "/custom rokok (14).jpg",
-        "/custom rokok (15).jpg", "/custom rokok (16).jpg", "/custom rokok (17).jpg",
-        "/custom rokok (18).jpg", "/custom rokok (19).jpg", "/custom rokok (2).jpg",
-        "/custom rokok (20).jpg", "/custom rokok (21).jpg", "/custom rokok (22).jpg",
-        "/custom rokok (23).jpg", "/custom rokok (24).jpg", "/custom rokok (3).jpg",
-        "/custom rokok (4).jpg", "/custom rokok (5).jpg", "/custom rokok (6).jpg",
-        "/custom rokok (7).jpg", "/custom rokok (8).jpg", "/custom rokok (9).jpg",
-        "/custom rokok 1.jpg", "/custom rokok 2.jpg", "/custom rokok 3.jpg",
-        "/custom rokok 4.jpg", "/custom rokok.jpg", "/foto rokok 1.png",
-        "/foto rokok.png", "/kotak rokok 1.png"
+        "/custom rokok (1).webp", "/custom rokok (10).webp", "/custom rokok (11).webp",
+        "/custom rokok (12).webp", "/custom rokok (13).webp", "/custom rokok (14).webp",
+        "/custom rokok (15).webp", "/custom rokok (16).webp", "/custom rokok (17).webp",
+        "/custom rokok (18).webp", "/custom rokok (19).webp", "/custom rokok (2).webp",
+        "/custom rokok (20).webp", "/custom rokok (21).webp", "/custom rokok (22).webp",
+        "/custom rokok (23).webp", "/custom rokok (24).webp", "/custom rokok (3).webp",
+        "/custom rokok (4).webp", "/custom rokok (5).webp", "/custom rokok (6).webp",
+        "/custom rokok (7).webp", "/custom rokok (8).webp", "/custom rokok (9).webp",
+        "/custom rokok 1.webp", "/custom rokok 2.webp", "/custom rokok 3.webp",
+        "/custom rokok 4.webp", "/custom rokok.webp", "/foto rokok 1.webp",
+        "/foto rokok.webp", "/kotak rokok 1.webp"
       ],
       explanation: "Kotak Rokok Custom adalah kemasan presisi tinggi yang menjadi identitas visual sebuah merek rokok. Setiap detail — mulai dari ketajaman grafis, ketepatan warna, hingga finishing metalik — sangat krusial karena kotak rokok adalah media branding utama yang dilihat konsumen setiap hari. Dallas telah berpengalaman puluhan tahun mencetak kotak rokok dengan standar kualitas industri yang ketat.",
       applications: ["Kemasan rokok kretek", "Kemasan rokok filter", "Kemasan cigarillo & cerutu", "Box rokok edisi terbatas / limited edition", "Packaging rokok elektrik (pod)"],
       commonMaterials: ["Ivory 230–310 gsm", "Tipping Paper (untuk filter)", "SBS (Solid Bleached Sulfate) Board", "Inner Frame Board"]
     },
     {
-      title: tCat('nasi.title'), slug: "kotak-nasi", img: "/mobile_banner_2.jpg", desc: tCat('nasi.desc'),
+      title: tCat('nasi.title'), slug: "kotak-nasi", img: "/mobile_banner_2.webp", desc: tCat('nasi.desc'),
       tags: [tCat('nasi.tags.tag1'), tCat('nasi.tags.tag2')],
       gallery: [
-        "/kotak nasi (1).jpg", "/kotak nasi (2).jpg", "/kotak nasi (3).jpg",
-        "/kotak nasi (4).jpg", "/kotak nasi (5).jpg", "/kotak nasi (6).jpg",
-        "/kotak nasi (7).jpg", "/kotak nasi (8).jpg", "/kotak nasi (9).jpg"
+        "/kotak nasi (1).webp", "/kotak nasi (2).webp", "/kotak nasi (3).webp",
+        "/kotak nasi (4).webp", "/kotak nasi (5).webp", "/kotak nasi (6).webp",
+        "/kotak nasi (7).webp", "/kotak nasi (8).webp", "/kotak nasi (9).webp"
       ],
       explanation: "Kotak Nasi adalah kemasan praktis yang dirancang untuk mengemas nasi beserta lauk pauk secara higienis dan rapi. Digunakan secara luas dalam kegiatan katering, acara keagamaan, kantor, dan komunitas. Kotak nasi yang di-custom dengan logo atau desain khusus memberikan sentuhan profesional dan meningkatkan citra penyelenggara acara maupun usaha katering.",
       applications: ["Nasi kotak acara kantor & meeting", "Katering hajatan & pernikahan", "Kotak nasi acara keagamaan", "Prasmanan & buffet box", "Nasi tumpeng mini"],
       commonMaterials: ["Duplex 310 gsm", "Food Grade Paper", "Ivory 250 gsm (untuk versi premium)", "Kraft Paper (untuk kesan natural)"]
     },
     {
-      title: tCat('buku.title'), slug: "buku", img: "/buku (6).jpg", desc: tCat('buku.desc'),
+      title: tCat('buku.title'), slug: "buku", img: "/buku (6).webp", desc: tCat('buku.desc'),
       tags: [tCat('buku.tags.tag1')],
       gallery: [
-        "/buku (1).jpg", "/buku (2).jpg", "/buku (3).jpg",
-        "/buku (4).jpg", "/buku (5).jpg", "/buku (6).jpg",
-        "/buku (7).jpg", "/buku (8).jpg", "/buku (9).jpg", "/foto buku.png"
+        "/buku (1).webp", "/buku (2).webp", "/buku (3).webp",
+        "/buku (4).webp", "/buku (5).webp", "/buku (6).webp",
+        "/buku (7).webp", "/buku (8).webp", "/buku (9).webp", "/foto buku.webp"
       ],
       explanation: "Cetak Buku mencakup proses produksi berbagai jenis buku, mulai dari buku ajar, novel, company profile, hingga jurnal ilmiah. Kualitas cetak buku diukur dari kejelasan teks, ketajaman gambar, serta kekuatan jilid (binding) yang menentukan daya tahan buku. Di Dallas, kami menangani cetak buku dari skala kecil (print on demand) hingga produksi massal ribuan eksemplar dengan kualitas konsisten.",
       applications: ["Buku ajar & modul pembelajaran", "Novel & buku cerita", "Company profile & annual report", "Yearbook & buku wisuda", "Jurnal ilmiah & skripsi"],
       commonMaterials: ["HVS 70–80 gsm (isi buku)", "Art Paper 120–150 gsm (isi full color)", "Art Carton 260 gsm (cover)", "Ivory 310 gsm (hard cover)", "Book Paper 57,5 gsm (novel)"]
     },
     {
-      title: tCat('kalender.title'), slug: "kalender", img: "/foto kalender.png", desc: tCat('kalender.desc'),
+      title: tCat('kalender.title'), slug: "kalender", img: "/foto kalender.webp", desc: tCat('kalender.desc'),
       tags: [tCat('kalender.tags.tag1')],
       gallery: [
-        "/foto kalender.png", "/kalender (1).jpg", "/kalender (2).jpg",
-        "/kalender (3).jpg", "/kalender (4).jpg", "/kalender.jpg"
+        "/foto kalender.webp", "/kalender (1).webp", "/kalender (2).webp",
+        "/kalender (3).webp", "/kalender (4).webp", "/kalender.webp"
       ],
       explanation: "Kalender adalah media promosi fungsional yang hadir di meja atau dinding pelanggan selama satu tahun penuh. Artinya, brand Anda terlihat setiap hari — menjadikannya salah satu alat pemasaran paling efektif dari segi jangka waktu dan biaya. Desain yang menarik dan material premium membuat kalender custom menjadi hadiah korporat yang bernilai dan disukai penerima.",
       applications: ["Kalender dinding perusahaan", "Kalender meja / duduk", "Kalender spiralwire premium", "Kalender poster", "Kalender custom foto / keluarga"],
       commonMaterials: ["Art Paper 150–260 gsm (lembar isi)", "Art Carton 310 gsm (stand/dudukan)", "Ivory 310 gsm (untuk kalender premium)", "Spiralwire / Ring jilid"]
     },
     {
-      title: tCat('paperbag.title'), slug: "paperbag", img: "/paperbag.jpg", desc: tCat('paperbag.desc'),
+      title: tCat('paperbag.title'), slug: "paperbag", img: "/paperbag.webp", desc: tCat('paperbag.desc'),
       tags: [tCat('paperbag.tags.tag1'), tCat('paperbag.tags.tag2')],
       gallery: [
-        "/foto paperbag.png", "/paperbag (1).jpg", "/paperbag (2).jpg",
-        "/paperbag (3).jpg", "/paperbag (4).jpg", "/paperbag (5).jpg",
-        "/paperbag (6).jpg", "/paperbag (7).jpg", "/paperbag (8).jpg", "/paperbag.jpg"
+        "/foto paperbag.webp", "/paperbag (1).webp", "/paperbag (2).webp",
+        "/paperbag (3).webp", "/paperbag (4).webp", "/paperbag (5).webp",
+        "/paperbag (6).webp", "/paperbag (7).webp", "/paperbag (8).webp", "/paperbag.webp"
       ],
       explanation: "Paperbag (tas kertas) adalah kemasan jinjing yang stylish dan ramah lingkungan, menjadi pilihan utama brand-brand modern sebagai pengganti kantong plastik. Paperbag custom dengan logo dan desain eksklusif berfungsi sebagai 'iklan berjalan' — setiap orang yang membawa paperbag Anda secara tidak langsung mempromosikan brand. Material yang kuat memastikan paperbag tahan beban dan tidak mudah sobek.",
       applications: ["Shopping bag toko fashion & retail", "Paperbag event & launching produk", "Paperbag seminar & konferensi", "Goodie bag hadiah", "Paperbag restoran & coffee shop"],
       commonMaterials: ["Ivory 230–310 gsm", "Art Paper 260 gsm", "Kraft Paper (untuk kesan eco-friendly)", "Art Carton (untuk paperbag tebal)"]
     },
     {
-      title: tCat('map.title'), slug: "map", img: "/map.jpg", desc: tCat('map.desc'),
+      title: tCat('map.title'), slug: "map", img: "/map.webp", desc: tCat('map.desc'),
       tags: [tCat('map.tags.tag1'), tCat('map.tags.tag2')],
       gallery: [
-        "/map (1).jpg", "/map (10).jpg", "/map (11).jpg", "/map (2).jpg",
-        "/map (3).jpg", "/map (4).jpg", "/map (5).jpg", "/map (6).jpg",
-        "/map (7).jpg", "/map (8).jpg", "/map (9).jpg", "/map.jpg"
+        "/map (1).webp", "/map (10).webp", "/map (11).webp", "/map (2).webp",
+        "/map (3).webp", "/map (4).webp", "/map (5).webp", "/map (6).webp",
+        "/map (7).webp", "/map (8).webp", "/map (9).webp", "/map.webp"
       ],
       explanation: "Map (folder) adalah wadah dokumen cetak yang memberikan kesan profesional dan terorganisir. Digunakan secara luas di dunia korporat, pendidikan, dan acara formal. Map custom dengan logo instansi atau perusahaan menunjukkan perhatian terhadap detail dan kredibilitas. Juga berfungsi sebagai media branding yang elegan saat digunakan di seminar, rapat, atau presentasi bisnis.",
       applications: ["Map seminar & workshop", "Map raport / rapor sekolah", "Map ijazah & sertifikat", "Document folder perusahaan", "Map presentasi & proposal bisnis"],
       commonMaterials: ["Art Carton 260–310 gsm", "Ivory 310 gsm", "BC (Board Coated)", "Linen Paper (untuk kesan premium)"]
     },
     {
-      title: tCat('brosur.title'), slug: "brosur", img: "/foto brosur.png", desc: tCat('brosur.desc'),
-      tags: [tCat('brosur.tags.tag1')], gallery: ["/foto brosur.png"],
+      title: tCat('brosur.title'), slug: "brosur", img: "/foto brosur.webp", desc: tCat('brosur.desc'),
+      tags: [tCat('brosur.tags.tag1')], gallery: ["/foto brosur.webp"],
       explanation: "Brosur adalah media cetak promosi yang efektif untuk menyampaikan informasi produk, layanan, atau acara secara ringkas dan visual. Dengan lipatan yang presisi dan desain yang menarik, brosur mampu menyampaikan pesan bisnis Anda secara langsung ke tangan calon pelanggan. Kualitas kertas dan cetakan yang tajam membuat brosur terlihat profesional dan meningkatkan kepercayaan konsumen terhadap brand Anda.",
       applications: ["Brosur promosi produk & layanan", "Leaflet acara & event", "Flyer promo restoran & kafe", "Pamflet pendidikan & kesehatan", "Menu lipat restoran"],
       commonMaterials: ["Art Paper 120 gsm (standar)", "Art Paper 150 gsm (premium)", "Ivory 230 gsm (untuk brosur tebal)", "HVS 100 gsm (untuk leaflet ekonomis)"]
@@ -292,46 +292,46 @@ export default function ProductCategoryPage() {
     {
       title: tMaterials('artPaper.name'),
       slug: "art-paper",
-      img: "/BAHAN-AP.jpg",
+      img: "/BAHAN-AP.webp",
       desc: tMaterials('artPaper.desc'),
       isMaterial: true,
       explanation: "Art Paper adalah jenis kertas dengan permukaan yang halus, licin, dan mengkilap (glossy) di kedua sisinya. Kertas ini memiliki daya serap tinta yang rendah sehingga hasil cetakan terlihat sangat tajam dan vibrant.",
       applications: ["Brosur eksklusif", "Flyer promosi", "Katalog produk", "Isi buku atau majalah premium", "Kalender dinding"],
       varieties: ["100 gsm", "120 gsm", "150 gsm (Standar brosur premium)"],
-      gallery: ["/BAHAN-AP.jpg", "/foto brosur.png"]
+      gallery: ["/BAHAN-AP.webp", "/foto brosur.webp"]
     },
     {
       title: tMaterials('ivoryPaper.name'),
       slug: "ivory-paper",
-      img: "/BAHAN-IVORY.jpg",
+      img: "/BAHAN-IVORY.webp",
       desc: tMaterials('ivoryPaper.desc'),
       isMaterial: true,
       explanation: "Kertas Ivory adalah material 'all-in-one' yang menggabungkan karakteristik Art Carton dan BW. Satu sisinya memiliki coating glossy yang halus, sementara sisi lainnya doff (tanpa coating) namun tetap putih bersih.",
       applications: ["Box packaging skincare/kosmetik", "Paper bag premium", "Packaging makanan (Food Grade)", "Kotak obat-obatan", "Hangtag fashion"],
       varieties: ["210 gsm", "230 gsm", "250 gsm", "310 gsm (Paling populer untuk box)", "350 gsm"],
-      gallery: ["/BAHAN-IVORY.jpg", "/paperlisens produk unggulan (1).png"]
+      gallery: ["/BAHAN-IVORY.webp", "/paperlisens produk unggulan (1).webp"]
     },
     {
       title: tMaterials('tipping.name'),
       slug: "bahan-tipping",
-      img: "/BAHAN-TIPPING.jpg",
+      img: "/BAHAN-TIPPING.webp",
       desc: tMaterials('tipping.desc'),
       isMaterial: true,
       explanation: "Tipping Paper adalah kertas khusus industri yang didesain dengan ketahanan tinggi dan tekstur spesifik. Di Dallas, kami menguasai kategori ini dengan spesifikasi teknis yang sangat presisi.",
       applications: ["Pembungkus filter rokok (filter wrapping)", "Segel kemasan khusus", "Komponen teknis produk tembakau"],
       varieties: ["Standard White", "Cork Pattern (Motif kayu)", "Custom Printing dengan logo/poly"],
-      gallery: ["/BAHAN-TIPPING.jpg"]
+      gallery: ["/BAHAN-TIPPING.webp"]
     },
     {
       title: tMaterials('duplex.name'),
       slug: "duplex",
-      img: "/BAHAN-DC.jpg",
+      img: "/BAHAN-DC.webp",
       desc: tMaterials('duplex.desc'),
       isMaterial: true,
       explanation: "Kertas Duplex (Duplex Board) memiliki ciri khas perbedaan warna di kedua sisinya: satu sisi putih (coated) untuk area cetak, dan sisi lainnya abu-abu (uncoated). Sangat ekonomis dan kokoh.",
       applications: ["Box martabak & nasi", "Packaging produk massal", "Alas kue", "Box kemasan sparepart", "Packaging mainan"],
       varieties: ["250 gsm", "310 gsm", "400 gsm (Sangat tebal dan kaku)"],
-      gallery: ["/BAHAN-DC.jpg", "/mobile_banner_2.jpg"]
+      gallery: ["/BAHAN-DC.webp", "/mobile_banner_2.webp"]
     }
   ], [tCat, tMaterials]);
 
