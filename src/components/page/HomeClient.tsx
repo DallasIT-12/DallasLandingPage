@@ -636,7 +636,7 @@ export default function Home() {
   const router = useRouter();
   const [showPromo, setShowPromo] = useState(false);
 
-  // Smart promo: scroll-triggered + localStorage 24h cooldown
+  // Smart promo: IntersectionObserver to trigger when scrolled down 20-30%
   useEffect(() => {
     const COOLDOWN_MS = 24 * 60 * 60 * 1000; // 24 hours
     const lastDismissed = localStorage.getItem('promo_dismissed_at');
@@ -646,23 +646,33 @@ export default function Home() {
       return;
     }
 
-    const handleScroll = () => {
-      const scrollPercent = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
-      if (scrollPercent > 0.3) {
-        setShowPromo(true);
-        window.removeEventListener('scroll', handleScroll);
-      }
-    };
-
-    // Small delay before attaching listener to avoid showing on initial scroll restoration
     const timer = setTimeout(() => {
-      window.addEventListener('scroll', handleScroll, { passive: true });
+      // Create a dummy element or observe an existing lower section
+      // In this case, observing the "Premium Quality" section or something similar
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting) {
+            setShowPromo(true);
+            observer.disconnect();
+          }
+        },
+        { rootMargin: '0px', threshold: 0.1 }
+      );
+
+      // Find an element that is roughly 30% down the page. 
+      // The Trusted By (Marquee) or Price Promotion Section works well.
+      const target = document.querySelector('#pricing-section') || document.querySelector('section:nth-of-type(3)');
+      if (target) {
+        observer.observe(target);
+      } else {
+        // Fallback if elements not found: simple timeout
+        setTimeout(() => setShowPromo(true), 5000);
+      }
+
+      return () => observer.disconnect();
     }, 1000);
 
-    return () => {
-      clearTimeout(timer);
-      window.removeEventListener('scroll', handleScroll);
-    };
+    return () => clearTimeout(timer);
   }, []);
 
   const handleClosePromo = () => {
@@ -919,22 +929,6 @@ export default function Home() {
   ];
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isSmallMobile, setIsSmallMobile] = useState(false); // < 480px
-  const [isMediumMobile, setIsMediumMobile] = useState(false); // < 640px
-  const [isLargeMobile, setIsLargeMobile] = useState(false); // < 768px
-  const [screenReady, setScreenReady] = useState(false);
-
-  useEffect(() => {
-    const checkScreenSize = () => {
-      setIsSmallMobile(window.innerWidth < 480);
-      setIsMediumMobile(window.innerWidth < 640);
-      setIsLargeMobile(window.innerWidth < 768);
-    };
-    checkScreenSize();
-    setScreenReady(true);
-    window.addEventListener('resize', checkScreenSize);
-    return () => window.removeEventListener('resize', checkScreenSize);
-  }, []);
 
   const navLinks = [
     { href: '/', label: t('Navbar.home') },
@@ -947,6 +941,10 @@ export default function Home() {
   ];
 
   const renderNavLinks = () => navLinks.map(link => {
+    const isHome = link.href === '/';
+    const baseClasses = "py-4 md:py-0 text-center md:text-left border-b border-gray-200/50 md:border-none w-full md:w-auto font-medium transition-all duration-300 hover:text-black md:hover:-translate-y-[2px] cursor-pointer no-underline";
+    const textColor = isHome ? "text-black" : "text-gray-600";
+
     if (link.isScroll) {
       return (
         <a
@@ -956,29 +954,7 @@ export default function Home() {
             smoothScroll(e, link.href);
             setIsMenuOpen(false);
           }}
-          style={{
-            color: '#4b5563',
-            textDecoration: 'none',
-            transition: 'all 0.3s ease',
-            cursor: 'pointer',
-            padding: isLargeMobile ? '16px 0' : '0',
-            textAlign: isLargeMobile ? 'center' : 'left',
-            borderBottom: isLargeMobile ? '1px solid rgba(229,231,235,0.5)' : 'none',
-            width: isLargeMobile ? '100%' : 'auto',
-            fontWeight: '500'
-          }}
-          onMouseOver={(e) => {
-            if (!isLargeMobile) {
-              (e.target as HTMLElement).style.color = '#000000';
-              (e.target as HTMLElement).style.transform = 'translateY(-2px)';
-            }
-          }}
-          onMouseOut={(e) => {
-            if (!isLargeMobile) {
-              (e.target as HTMLElement).style.color = '#4b5563';
-              (e.target as HTMLElement).style.transform = 'translateY(0)';
-            }
-          }}
+          className={`${baseClasses} text-gray-600`}
         >
           {link.label}
         </a>
@@ -990,59 +966,13 @@ export default function Home() {
         key={link.label}
         href={link.href}
         download={link.download ? 'KATALOG DALLAS.pdf' : undefined}
-        onClick={() => {
-          setIsMenuOpen(false);
-        }}
-        style={{
-          color: link.href === '/' ? '#000000' : '#4b5563',
-          textDecoration: 'none',
-          transition: 'all 0.3s ease',
-          cursor: 'pointer',
-          padding: isLargeMobile ? '16px 0' : '0',
-          textAlign: isLargeMobile ? 'center' : 'left',
-          borderBottom: isLargeMobile ? '1px solid rgba(229,231,235,0.5)' : 'none',
-          width: isLargeMobile ? '100%' : 'auto',
-          fontWeight: '500'
-        }}
-        onMouseOver={(e) => {
-          if (!isLargeMobile) {
-            (e.target as HTMLElement).style.color = '#000000';
-            (e.target as HTMLElement).style.transform = 'translateY(-2px)';
-          }
-        }}
-        onMouseOut={(e) => {
-          if (!isLargeMobile) {
-            (e.target as HTMLElement).style.color = link.href === '/' ? '#000000' : '#4b5563';
-            (e.target as HTMLElement).style.transform = 'translateY(0)';
-          }
-        }}
+        onClick={() => setIsMenuOpen(false)}
+        className={`${baseClasses} ${textColor}`}
       >
         {link.label}
       </Link>
     )
   });
-
-  if (!screenReady) {
-    return (
-      <div style={{
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#001D39'
-      }}>
-        <div style={{
-          width: '40px',
-          height: '40px',
-          border: '3px solid rgba(255,255,255,0.1)',
-          borderTopColor: '#ffffff',
-          borderRadius: '50%',
-          animation: 'spin 0.8s linear infinite'
-        }} />
-        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-      </div>
-    );
-  }
 
   return (
     <div style={{
@@ -1069,104 +999,60 @@ export default function Home() {
       </h1>
 
       {/* Top Bar Contact Info & Social Media */}
-      <div style={{
-        backgroundColor: '#ffffff',
-        color: '#000000',
-        fontSize: '12px',
-        padding: isLargeMobile ? '4px 0' : '8px 0', // Reduced vertical padding for mobile
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        zIndex: 100,
-        borderBottom: '1px solid #e5e7eb'
-      }}>
-        <div style={{
-          maxWidth: '1280px',
-          margin: '0 auto',
-          padding: '0 24px',
-          display: 'flex',
-          justifyContent: isLargeMobile ? 'center' : 'space-between',
-          alignItems: 'center',
-          flexWrap: isLargeMobile ? 'wrap' : 'nowrap',
-          gap: isLargeMobile ? '8px' : '0'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap', justifyContent: 'center' }}>
-            {!isLargeMobile && (
-              <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <Icon icon="mdi:map-marker" style={{ fontSize: '14px' }} />
-                {t('TopBar.address')}
-              </span>
-            )}
-            <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <Icon icon="mdi:phone" style={{ fontSize: '14px' }} />
-              {isLargeMobile ? '081260001487' : '081260001487 | 085946896488 | 085235531946'} {/* Display only one number on mobile */}
+      <div className="bg-white text-black text-xs py-2 md:py-1 fixed top-0 left-0 w-full z-[100] border-b border-gray-200">
+        <div className="max-w-[1280px] mx-auto px-6 flex justify-center md:justify-between items-center flex-wrap md:flex-nowrap gap-2 md:gap-0">
+          <div className="flex items-center gap-4 flex-wrap justify-center">
+            <span className="hidden md:flex items-center gap-1">
+              <Icon icon="mdi:map-marker" className="text-[14px]" />
+              {t('TopBar.address')}
+            </span>
+            <span className="flex items-center gap-1">
+              <Icon icon="mdi:phone" className="text-[14px]" />
+              <span className="inline md:hidden">081260001487</span>
+              <span className="hidden md:inline">081260001487 | 085946896488 | 085235531946</span>
             </span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <a href="https://www.instagram.com/paperlisens22?igsh=bDl4OHI3d2d0eHV0" target="_blank" rel="noopener noreferrer" style={{ color: '#000000' }} title="Instagram">
-              <Icon icon="mdi:instagram" style={{ fontSize: '18px' }} />
+          <div className="flex items-center gap-3">
+            <a href="https://www.instagram.com/paperlisens22?igsh=bDl4OHI3d2d0eHV0" target="_blank" rel="noopener noreferrer" className="text-black" title="Instagram">
+              <Icon icon="mdi:instagram" className="text-[18px]" />
             </a>
-            <a href="https://www.tiktok.com/@paperlisenss22" target="_blank" rel="noopener noreferrer" style={{ color: '#000000' }} title="TikTok">
-              <Icon icon="ic:baseline-tiktok" style={{ fontSize: '18px' }} />
+            <a href="https://www.tiktok.com/@paperlisenss22" target="_blank" rel="noopener noreferrer" className="text-black" title="TikTok">
+              <Icon icon="ic:baseline-tiktok" className="text-[18px]" />
             </a>
-            <a href="https://id.shp.ee/tpQ9dbH" target="_blank" rel="noopener noreferrer" style={{ color: '#000000' }} title="Shopee Paperlisens">
-              <Icon icon="ic:baseline-shopping-bag" style={{ fontSize: '18px' }} />
+            <a href="https://id.shp.ee/tpQ9dbH" target="_blank" rel="noopener noreferrer" className="text-black" title="Shopee Paperlisens">
+              <Icon icon="ic:baseline-shopping-bag" className="text-[18px]" />
             </a>
-            <a href="https://id.shp.ee/ZqzSum7" target="_blank" rel="noopener noreferrer" style={{ color: '#000000' }} title="Shopee Tray&me">
-              <Icon icon="ic:baseline-shopping-bag" style={{ fontSize: '18px' }} />
+            <a href="https://id.shp.ee/ZqzSum7" target="_blank" rel="noopener noreferrer" className="text-black" title="Shopee Tray&me">
+              <Icon icon="ic:baseline-shopping-bag" className="text-[18px]" />
             </a>
-            <a href="https://www.facebook.com/share/1G3GADNMZi/" target="_blank" rel="noopener noreferrer" style={{ color: '#000000' }} title="Facebook">
-              <Icon icon="mdi:facebook" style={{ fontSize: '18px' }} />
+            <a href="https://www.facebook.com/share/1G3GADNMZi/" target="_blank" rel="noopener noreferrer" className="text-black" title="Facebook">
+              <Icon icon="mdi:facebook" className="text-[18px]" />
             </a>
           </div>
         </div>
       </div>
 
       {/* Navigation */}
-      <nav style={{
-        position: 'fixed',
-        top: '36px',
-        width: '100%',
-        zIndex: 50,
-        backgroundColor: 'rgba(255,255,255,0.95)',
-        backdropFilter: 'saturate(180%) blur(20px)',
-        borderBottom: '1px solid rgba(229,231,235,0.5)',
-      }}>
-        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px', position: 'relative' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0' }}>
+      <nav className="fixed top-[36px] w-full z-50 bg-white/95 backdrop-blur-[20px] saturate-[180%] border-b border-gray-200/50">
+        <div className="max-w-[1280px] mx-auto px-6 relative">
+          <div className="flex justify-between items-center py-4">
             <Link href="/" style={{ textDecoration: 'none' }}>
               <Image src="/logo1.webp" alt="Percetakan Dallas" width={360} height={108} style={{ height: '36px', width: 'auto', filter: 'invert(1)' }} priority />
             </Link>
 
-            {isLargeMobile ? (
-              <button onClick={() => setIsMenuOpen(!isMenuOpen)} style={{ background: 'none', border: 'none', color: '#000000', fontSize: '24px' }}>
-                <Icon icon={isMenuOpen ? "mdi:close" : "mdi:menu"} />
-              </button>
-            ) : (
-              <div style={{ display: 'flex', gap: '32px', alignItems: 'center' }}>
-                {renderNavLinks()}
-                <LanguageSwitcher />
-              </div>
-            )}
+            <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden bg-transparent border-none text-black text-2xl">
+              <Icon icon={isMenuOpen ? "mdi:close" : "mdi:menu"} />
+            </button>
+            <div className="hidden md:flex gap-8 items-center">
+              {renderNavLinks()}
+              <LanguageSwitcher />
+            </div>
           </div>
 
-          {isLargeMobile && isMenuOpen && (
-            <div style={{
-              position: 'absolute',
-              top: '100%',
-              left: 0,
-              right: 0,
-              backgroundColor: 'rgba(255,255,255,0.98)',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              padding: '0 24px 16px',
-              borderBottom: '1px solid rgba(229,231,235,0.5)',
-              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
-            }}>
+          {isMenuOpen && (
+            <div className="md:hidden absolute top-[100%] left-0 right-0 bg-white/98 flex flex-col items-center px-6 pb-4 border-b border-gray-200/50 shadow-md">
               {renderNavLinks()}
-              <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid rgba(229,231,235,0.5)', width: '100%', display: 'flex', justifyContent: 'center' }}>
+              <div className="mt-4 pt-4 border-t border-gray-200/50 w-full flex justify-center">
                 <LanguageSwitcher />
               </div>
             </div>
@@ -1175,119 +1061,44 @@ export default function Home() {
       </nav>
 
       {/* Premium Quality Section with Video Background */}
-      <section style={{
-        height: isLargeMobile ? '100vw' : 'calc(100vh - 88px)',
-        position: 'relative',
-        marginTop: '88px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        textAlign: 'center',
-        overflow: 'hidden',
-        color: '#ffffff'
-      }}>
+      <section className="relative flex items-center justify-center text-center overflow-hidden text-white mt-[88px] h-[100vw] md:h-[calc(100vh-88px)]">
         <video
           autoPlay
           loop
           muted
           playsInline
           preload="metadata"
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            zIndex: 1
-          }}
+          className="absolute top-0 left-0 w-full h-full object-cover z-[1]"
         >
           <source src="/vidio.webm" type="video/webm" />
         </video>
 
         {/* Overlay to ensure text readability */}
-        <div style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          backgroundColor: 'rgba(0, 0, 0, 0.6)',
-          zIndex: 2
-        }}></div>
+        <div className="absolute top-0 left-0 w-full h-full bg-black/60 z-[2]"></div>
 
-        <div style={{ position: 'relative', zIndex: 3, padding: '0 24px' }}>
-          <h2 style={{
-            fontSize: isMediumMobile ? '2.5rem' : (isLargeMobile ? '3rem' : '4rem'),
-            fontWeight: '300',
-            marginBottom: isMediumMobile ? '16px' : '24px',
-            lineHeight: '1.1',
-            color: '#ffffff'
-          }}>
+        <div className="relative z-[3] px-6">
+          <h2 className="text-[2rem] sm:text-[2.5rem] md:text-[3rem] lg:text-[4rem] font-light mb-4 md:mb-6 leading-tight text-white">
             {t('PremiumQuality.title')}<br />
-            <span style={{
-              fontWeight: '600',
-              color: '#ffffff'
-            }}>
+            <span className="font-semibold text-white">
               {t('PremiumQuality.titleSpan')}
             </span>
           </h2>
-          <p style={{
-            fontSize: isMediumMobile ? '1rem' : (isLargeMobile ? '1.25rem' : '1.5rem'),
-            color: '#e5e7eb',
-            fontWeight: '300',
-            maxWidth: '600px',
-            margin: '0 auto',
-            marginBottom: isMediumMobile ? '32px' : '48px'
-          }}>
+          <p className="text-[1rem] md:text-[1.25rem] lg:text-[1.5rem] text-gray-200 font-light max-w-[600px] mx-auto mb-8 md:mb-12">
             {t('PremiumQuality.description')}
           </p>
-          <div style={{
-            display: 'flex',
-            gap: '12px',
-            justifyContent: 'center',
-            flexWrap: 'wrap',
-            flexDirection: isSmallMobile ? 'column' : 'row',
-            alignItems: 'center'
-          }}>
+          <div className="flex gap-3 justify-center flex-wrap flex-col sm:flex-row items-center">
             <a href="/KATALOG DALLAS.pdf"
               download="KATALOG DALLAS.pdf"
-              style={{
-                ...primaryButton,
-                backgroundColor: '#ffffff',
-                color: '#000000',
-                padding: isMediumMobile ? '10px 24px' : '12px 32px',
-                fontSize: isMediumMobile ? '14px' : '16px',
-                width: isSmallMobile ? '100%' : 'auto',
-                maxWidth: isSmallMobile ? '280px' : 'none'
-              }}
-              onMouseOver={(e) => { (e.target as HTMLElement).style.transform = 'scale(1.05)'; (e.target as HTMLElement).style.backgroundColor = '#f3f4f6' }}
-              onMouseOut={(e) => { (e.target as HTMLElement).style.transform = 'scale(1)'; (e.target as HTMLElement).style.backgroundColor = '#ffffff' }}
-              onMouseDown={(e) => (e.target as HTMLElement).style.transform = 'scale(0.95)'}
-              onMouseUp={(e) => (e.target as HTMLElement).style.transform = 'scale(1.05)'}>
+              className="bg-white text-black py-2.5 px-6 md:py-3 md:px-8 text-[14px] md:text-[16px] w-full sm:w-auto max-w-[280px] sm:max-w-none rounded-[30px] font-medium transition-transform hover:scale-105 hover:bg-gray-100 active:scale-95 inline-block"
+            >
               {t('PremiumQuality.btnDownload')}
             </a>
             <a href="https://wa.me/6281260001487?text=Halo%20kak%2C%20saya%20ingin%20tanya%20produk%20percetakan"
               target="_blank"
               rel="noopener noreferrer"
-              style={{
-                ...secondaryButton,
-                color: '#ffffff',
-                border: '1px solid #ffffff',
-                padding: isMediumMobile ? '10px 24px' : '12px 32px',
-                fontSize: isMediumMobile ? '14px' : '16px',
-                width: isSmallMobile ? '100%' : 'auto',
-                maxWidth: isSmallMobile ? '280px' : 'none',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px'
-              }}
-              onMouseOver={(e) => { (e.target as HTMLElement).style.transform = 'scale(1.05)'; (e.target as HTMLElement).style.backgroundColor = '#ffffff'; (e.target as HTMLElement).style.color = '#000000' }}
-              onMouseOut={(e) => { (e.target as HTMLElement).style.transform = 'scale(1)'; (e.target as HTMLElement).style.backgroundColor = 'transparent'; (e.target as HTMLElement).style.color = '#ffffff' }}
-              onMouseDown={(e) => (e.target as HTMLElement).style.transform = 'scale(0.95)'}
-              onMouseUp={(e) => (e.target as HTMLElement).style.transform = 'scale(1.05)'}>
-              <Icon icon="mdi:whatsapp" style={{ fontSize: '20px' }} />
+              className="text-white border border-white py-2.5 px-6 md:py-3 md:px-8 text-[14px] md:text-[16px] w-full sm:w-auto max-w-[280px] sm:max-w-none rounded-[30px] font-medium flex items-center justify-center gap-2 transition-transform hover:scale-105 hover:bg-white hover:text-black active:scale-95"
+            >
+              <Icon icon="mdi:whatsapp" className="text-[20px]" />
               {t('Paperlisens.orderWa')}
             </a>
           </div>
@@ -1295,12 +1106,7 @@ export default function Home() {
       </section>
 
       {/* Price Promotion Section */}
-      <section style={{
-        padding: isMediumMobile ? '80px 24px' : '120px 24px',
-        backgroundColor: '#f8fafc',
-        position: 'relative',
-        overflow: 'hidden'
-      }}>
+      <section className="py-20 md:py-[120px] px-6 bg-slate-50 relative overflow-hidden">
         {/* Decorative background elements */}
         <div style={{
           position: 'absolute',
@@ -1318,39 +1124,18 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            style={{ textAlign: 'center', marginBottom: '64px' }}
+            className="text-center mb-16"
           >
-            <h2 style={{
-              fontSize: isMediumMobile ? '2.25rem' : '3rem',
-              fontWeight: '800',
-              color: '#001D39',
-              marginBottom: '20px',
-              letterSpacing: '-0.02em'
-            }}>
-              {tPricing('title')} <span style={{ color: '#0A4174' }}>{tPricing('titleSpan')}</span>
+            <h2 className="text-[2.25rem] md:text-[3rem] font-extrabold text-[#001D39] mb-5 tracking-tight">
+              {tPricing('title')} <span className="text-[#0A4174]">{tPricing('titleSpan')}</span>
             </h2>
-            <div style={{
-              width: '80px',
-              height: '4px',
-              backgroundColor: '#0A4174',
-              margin: '0 auto 24px',
-              borderRadius: '2px'
-            }}></div>
-            <p style={{
-              color: '#4b5563',
-              fontSize: isMediumMobile ? '1.1rem' : '1.25rem',
-              maxWidth: '700px',
-              margin: '0 auto'
-            }}>
+            <div className="w-20 h-1 bg-[#0A4174] mx-auto mb-6 rounded-sm"></div>
+            <p className="text-gray-600 text-[1.1rem] md:text-[1.25rem] max-w-[700px] mx-auto">
               {tPricing('subtitle')}
             </p>
           </motion.div>
 
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: isSmallMobile ? '1fr' : (isMediumMobile ? '1fr 1fr' : 'repeat(3, 1fr)'),
-            gap: '32px'
-          }}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
               {
                 title: tPricing('cards.packaging.title'),
@@ -1516,38 +1301,18 @@ export default function Home() {
       </section>
 
       {/* Why Choose Dallas Section */}
-      <section style={{
-        padding: isMediumMobile ? '64px 24px' : '100px 24px',
-        textAlign: 'center',
-        backgroundColor: '#0A4174',
-        color: '#ffffff',
-        borderTop: '1px solid rgba(255,255,255,0.1)'
-      }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <div style={{ marginBottom: '64px' }}>
-            <h2 style={{
-              fontSize: isMediumMobile ? '1.75rem' : '2.25rem',
-              fontWeight: '700',
-              marginBottom: '16px',
-              color: 'white'
-            }}>
+      <section className="py-16 md:py-[100px] px-6 text-center bg-[#0A4174] text-white border-t border-white/10">
+        <div className="max-w-[1200px] mx-auto">
+          <div className="mb-16">
+            <h2 className="text-[1.75rem] md:text-[2.25rem] font-bold mb-4 text-white">
               {t('WhyChoose.title')}
             </h2>
-            <p style={{
-              fontSize: isMediumMobile ? '1rem' : '1.125rem',
-              color: '#9ca3af',
-              fontWeight: '400'
-            }}>
+            <p className="text-[1rem] md:text-[1.125rem] text-gray-400 font-normal">
               {t('WhyChoose.subtitle')}
             </p>
           </div>
 
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: isSmallMobile ? '1fr' : (isMediumMobile ? '1fr 1fr' : 'repeat(4, 1fr)'),
-            gap: '32px',
-            marginBottom: '64px'
-          }}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
             {/* POIN 1: PENGALAMAN (LEGACY) */}
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
               <div style={{
@@ -1654,11 +1419,7 @@ export default function Home() {
         <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px' }}>
           <div style={{ marginTop: '0' }}>
             <h3 style={{ fontSize: '2rem', fontWeight: '300', textAlign: 'center', marginBottom: '48px', color: '#111827' }}>{t('Materials.title')}</h3>
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: isLargeMobile ? '1fr' : 'repeat(auto-fit, minmax(250px, 1fr))',
-              gap: isLargeMobile ? '16px' : '24px'
-            }}>
+            <div className="grid grid-cols-1 md:grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-4 md:gap-6">
               {[
                 { name: t('Materials.artPaper.name'), slug: 'art-paper', description: t('Materials.artPaper.desc'), image: '/BAHAN-AP.webp' },
                 { name: t('Materials.ivoryPaper.name'), slug: 'ivory-paper', description: t('Materials.ivoryPaper.desc'), image: '/BAHAN-IVORY.webp' },
@@ -1765,17 +1526,12 @@ export default function Home() {
               <span style={{ fontSize: '12px', fontWeight: '700', letterSpacing: '3px', textTransform: 'uppercase', color: '#D4A017' }}>EXCLUSIVE</span>
               <span style={{ width: '40px', height: '1px', background: 'linear-gradient(90deg, #D4A017, transparent)' }} />
             </div>
-            <h3 style={{ fontSize: isLargeMobile ? '1.75rem' : '2.25rem', fontWeight: '300', letterSpacing: '2px' }}>{t('NonCigarette.productsTitle')}</h3>
+            <h3 className="text-[1.75rem] md:text-[2.25rem] font-light tracking-[2px]">{t('NonCigarette.productsTitle')}</h3>
             <div style={{ width: '60px', height: '2px', background: 'linear-gradient(90deg, #D4A017, #B8860B)', margin: '16px auto 0', borderRadius: '2px' }} />
           </div>
 
           {/* Portfolio Cards */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: isLargeMobile ? '1fr' : 'repeat(2, 1fr)',
-            gap: '32px',
-            alignItems: 'stretch'
-          }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
             {[
               { image: '/paperlisens%20produk%20unggulan%20(1).webp', alt: 'Solusi Cup Serbaguna & Trendi', titleKey: 'card1.title', descKey: 'card1.desc' },
               { image: '/paperlisens%20produk%20unggulan%20(2).webp', alt: 'Kotak Donat Berbagai Ukuran', titleKey: 'card2.title', descKey: 'card2.desc' }
@@ -1805,7 +1561,7 @@ export default function Home() {
                   if (img) img.style.transform = 'scale(1)';
                 }}
               >
-                <div style={{ position: 'relative', width: '100%', height: isLargeMobile ? '280px' : '360px', overflow: 'hidden' }}>
+                <div className="relative w-full overflow-hidden h-[280px] md:h-[360px]">
                   <Image
                     src={card.image}
                     alt={card.alt}
@@ -1866,12 +1622,7 @@ export default function Home() {
               <h3 style={{ fontSize: '2.25rem', fontWeight: '300', color: '#ffffff', lineHeight: '1.3' }}>{t('NonCigarette.galleryTitle')}</h3>
               <div style={{ width: '60px', height: '2px', backgroundColor: '#D4A017', margin: '16px auto 0' }} />
             </div>
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: isLargeMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
-              gap: isLargeMobile ? '8px' : '12px',
-              gridAutoRows: isLargeMobile ? '140px' : '180px'
-            }}>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3 auto-rows-[140px] md:auto-rows-[180px]">
               {[
                 '/foto (412).webp', '/foto (264).webp', '/foto (120).webp', '/foto (176).webp',
                 '/foto (310).webp', '/foto (154).webp', '/foto (431).webp', '/foto (436).webp',

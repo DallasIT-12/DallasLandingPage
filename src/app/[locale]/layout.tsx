@@ -1,11 +1,19 @@
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
+import { Plus_Jakarta_Sans } from 'next/font/google';
 import '@/app/globals.css';
 import { CartProvider } from '@/context/CartContext';
 import CartModal from '@/components/cart/CartModal';
 import FloatingWhatsApp from '@/components/common/FloatingWhatsApp';
 import type { Metadata } from 'next';
+
+const plusJakartaSans = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700', '800'],
+  display: 'swap',
+  variable: '--font-plus-jakarta',
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://dallas-printingid.com'),
@@ -72,8 +80,14 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale}>
-      <body className="antialiased">
+    <html lang={locale} className={`${plusJakartaSans.variable}`}>
+      <head>
+        {/* Preconnect to Iconify API to fix Critical Request Chains */}
+        <link rel="preconnect" href="https://api.iconify.design" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://api.simplesvg.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://api.unisvg.com" crossOrigin="anonymous" />
+      </head>
+      <body className="antialiased font-sans">
         <NextIntlClientProvider locale={locale} messages={messages}>
           <CartProvider>
             {children}
