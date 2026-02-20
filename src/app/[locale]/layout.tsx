@@ -8,10 +8,49 @@ import FloatingWhatsApp from '@/components/common/FloatingWhatsApp';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'PERCETAKAN OFFSET DALLAS KEDIRI - DALLAS PRINTING',
-  description: 'Jl. Kilisuci No.71, Setono Pande, Kec. Kota, Kota Kediri, Jawa Timur 64132. Email: mail.dallas-printingid.com, Telp: (+62) 812-6000-1487.',
+  metadataBase: new URL('https://dallas-printingid.com'),
+  title: {
+    default: 'Percetakan Offset Dallas Kediri - Cetak Kemasan & Box Custom',
+    template: '%s | Percetakan Dallas'
+  },
+  description: 'Solusi cetak kemasan dan box custom berkualitas di Kediri, Nganjuk, & Surabaya. Percetakan Offset Dallas melayani segala kebutuhan packaging makanan, produk, dan promosi dengan harga terbaik dan hasil premium.',
+  keywords: ['percetakan offset', 'cetak kemasan', 'custom box', 'packaging makanan', 'kardus hampers', 'cetak dus', 'percetakan kediri', 'percetakan surabaya', 'dallas printing'],
+  authors: [{ name: 'Dallas Printing' }],
+  creator: 'Dallas Printing',
+  publisher: 'Dallas Printing',
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'id_ID',
+    url: 'https://dallas-printingid.com',
+    siteName: 'Percetakan Dallas',
+    title: 'Percetakan Offset Dallas Kediri - Cetak Kemasan & Box Custom',
+    description: 'Solusi cetak kemasan dan box custom berkualitas di Kediri & Surabaya.',
+    images: [
+      {
+        url: '/opengraph-image.png', // We should ensure this exists, or use a default one
+        width: 1200,
+        height: 630,
+        alt: 'Percetakan Dallas - Custom Packaging Solutions',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Percetakan Dallas - Solusi Kemasan Premium',
+    description: 'Cetak kemasan dan box custom berkualitas tinggi. Hubungi kami untuk penawaran terbaik.',
+    images: ['/opengraph-image.png'],
+  },
   icons: {
     icon: '/logo tab.png',
+    apple: '/logo tab.png',
   },
 }
 

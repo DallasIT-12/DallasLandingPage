@@ -26,7 +26,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         '/products',
         '/paperlisens',
         '/tools',
-        '/produk', // Seen in file list
+        // '/produk' removed as it is not a valid page, only /produk/[slug] exists
     ];
 
     const staticEntries = refinedStaticRoutes.flatMap((route) =>
@@ -38,7 +38,34 @@ export default function sitemap(): MetadataRoute.Sitemap {
         }))
     );
 
-    // 2. Product Routes
+    // 2. Product Category Routes (from /produk/[slug])
+    const categorySlugs = [
+        'kotak-hampers',
+        'kotak-bakery',
+        'rokok',
+        'kotak-nasi',
+        'buku',
+        'kalender',
+        'paperbag',
+        'map',
+        'brosur',
+        // Materials
+        'art-paper',
+        'ivory-paper',
+        'bahan-tipping',
+        'duplex'
+    ];
+
+    const categoryEntries = categorySlugs.flatMap((slug) =>
+        locales.map((locale) => ({
+            url: `${BASE_URL}/${locale}/produk/${slug}`,
+            lastModified: new Date(),
+            changeFrequency: 'weekly' as const,
+            priority: 0.85,
+        }))
+    );
+
+    // 3. Product Routes
     // product URL pattern: /[locale]/products/[slug]
     const productEntries = customBoxProducts.flatMap((product) =>
         locales.map((locale) => ({
@@ -72,5 +99,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
         }))
     );
 
-    return [...staticEntries, ...productEntries, ...articleEntries];
+    return [...staticEntries, ...categoryEntries, ...productEntries, ...articleEntries];
 }
