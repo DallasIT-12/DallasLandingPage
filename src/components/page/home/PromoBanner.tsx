@@ -83,6 +83,7 @@ export const PromoBanner = ({ isOpen, onClose }: { isOpen: boolean; onClose: () 
                             />
                             <button
                                 onClick={(e) => { e.stopPropagation(); onClose(); }}
+                                aria-label="Tutup"
                                 style={{
                                     background: 'rgba(255,255,255,0.1)',
                                     border: 'none',

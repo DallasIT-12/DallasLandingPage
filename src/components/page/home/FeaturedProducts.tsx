@@ -322,6 +322,7 @@ const ClassicProductCardGrid = () => {
                                         {/* Close button */}
                                         <button
                                             onClick={() => setSelectedId(null)}
+                                            aria-label="Tutup"
                                             style={{
                                                 position: 'absolute',
                                                 top: '16px',
