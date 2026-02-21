@@ -80,7 +80,7 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale} className={`${plusJakartaSans.variable}`}>
+    <html lang={locale} className={`${plusJakartaSans.variable}`} suppressHydrationWarning>
       <head>
         {/* Preconnect to Iconify API to fix Critical Request Chains */}
         <link rel="preconnect" href="https://api.iconify.design" crossOrigin="anonymous" />

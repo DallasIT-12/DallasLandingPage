@@ -48,6 +48,7 @@
     "consola": "^3.4.2",
     "copy-to-clipboard": "^3.3.3",
     "core-js-pure": "^3.45.1",
+    "critters": "^0.0.23",
     "css.escape": "^1.5.1",
     "deep-extend": "^0.6.0",
     "deepmerge": "^4.3.1",

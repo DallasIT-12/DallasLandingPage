@@ -6,7 +6,7 @@ import dynamic from 'next/dynamic';
 import { Link, useRouter } from '@/i18n/routing';
 import { Icon } from '@iconify/react';
 import { motion, AnimatePresence } from 'framer-motion';
-import LanguageSwitcher from '@/components/common/LanguageSwitcher';
+import Navbar from '@/components/layout/Navbar';
 import { useTranslations } from 'next-intl';
 
 const Footer = dynamic(() => import('@/components/layout/Footer'), { ssr: false });
@@ -74,9 +74,9 @@ const PromoBanner = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
             </div>
 
             <div style={{ flex: 1, minWidth: 0 }}>
-              <h4 style={{ color: '#ffffff', fontSize: '0.95rem', fontWeight: '700', margin: 0, lineHeight: 1.3 }}>
+              <h2 style={{ color: '#ffffff', fontSize: '0.95rem', fontWeight: '700', margin: 0, lineHeight: 1.3 }}>
                 {t('title')}
-              </h4>
+              </h2>
               <p style={{ color: '#BDD8E9', fontSize: '0.8rem', margin: '2px 0 0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 {t('subtitle')}
               </p>
@@ -397,8 +397,8 @@ const ClassicProductCardGrid = () => {
               }} />
             </div>
             <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
-              <motion.h4 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '10px', color: '#ffffff' }}>{category.title}</motion.h4>
-              <motion.p style={{ color: '#9ca3af', fontSize: '0.875rem', lineHeight: '1.6', marginBottom: '16px', flexGrow: 1 }}>{category.desc}</motion.p>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '10px', color: '#ffffff', margin: 0 }}>{category.title}</h3>
+              <motion.p style={{ color: '#e5e7eb', fontSize: '0.875rem', lineHeight: '1.6', marginBottom: '16px', flexGrow: 1 }}>{category.desc}</motion.p>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '16px' }}>
                 {category.tags.map(tag => (
                   <span key={tag} style={{
@@ -540,7 +540,7 @@ const ClassicProductCardGrid = () => {
                       ))}
                     </motion.div>
 
-                    <motion.p style={{ fontSize: '1.05rem', lineHeight: '1.8', color: '#9ca3af', marginBottom: '32px' }}>
+                    <motion.p style={{ fontSize: '1.05rem', lineHeight: '1.8', color: '#e5e7eb', marginBottom: '32px' }}>
                       {category.desc}
                     </motion.p>
 
@@ -593,7 +593,7 @@ const ClassicProductCardGrid = () => {
                         {/* @ts-ignore */}
                         {category.images.length > 12 && (
                           <div style={{ marginTop: '12px', textAlign: 'center' }}>
-                            <span style={{ color: '#9ca3af', fontSize: '0.875rem' }}>+ {category.images.length - 12} more images available locally</span>
+                            <span style={{ color: '#e5e7eb', fontSize: '0.875rem' }}>+ {category.images.length - 12} more images available locally</span>
                           </div>
                         )}
                       </div>
@@ -680,13 +680,7 @@ export default function Home() {
     localStorage.setItem('promo_dismissed_at', String(Date.now()));
   };
 
-  const smoothScroll = (e: React.MouseEvent, targetId: string) => {
-    e.preventDefault();
-    const target = document.querySelector(targetId);
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  };
+
 
   const buttonStyle = {
     padding: '12px 32px',
@@ -722,257 +716,9 @@ export default function Home() {
     transform: 'scale(1)'
   };
 
-  // --- Banner Slider Component ---
-  const BannerSlider = ({ images, interval = 10000, transitionType = 'fade' }: { images: string[], interval?: number, transitionType?: 'fade' | 'slide' }) => {
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const [touchStart, setTouchStart] = useState<number | null>(null);
-    const [touchEnd, setTouchEnd] = useState<number | null>(null);
-    const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-    const minSwipeDistance = 50;
 
-    const resetTimer = () => {
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
-      }
-    };
 
-    useEffect(() => {
-      resetTimer();
-      timerRef.current = setTimeout(() => {
-        goToNextSlide();
-      }, interval);
-
-      return () => {
-        resetTimer();
-      };
-    }, [currentIndex, images.length, interval]);
-
-    const goToSlide = (slideIndex: number) => {
-      setCurrentIndex(slideIndex);
-    };
-
-    const goToPrevSlide = () => {
-      setCurrentIndex((prevIndex) =>
-        prevIndex === 0 ? images.length - 1 : prevIndex - 1
-      );
-    };
-
-    const goToNextSlide = () => {
-      setCurrentIndex((prevIndex) =>
-        (prevIndex + 1) % images.length
-      );
-    };
-
-    const onTouchStart = (e: React.TouchEvent) => {
-      setTouchEnd(null); // Reset touch end on new touch
-      setTouchStart(e.targetTouches[0].clientX);
-      resetTimer(); // Pause timer on user interaction
-    };
-
-    const onTouchMove = (e: React.TouchEvent) => {
-      setTouchEnd(e.targetTouches[0].clientX);
-    };
-
-    const onTouchEnd = () => {
-      if (!touchStart || !touchEnd) return;
-      const distance = touchStart - touchEnd;
-
-      if (distance > minSwipeDistance) {
-        goToNextSlide();
-      } else if (distance < -minSwipeDistance) {
-        goToPrevSlide();
-      }
-      // The useEffect will restart the timer automatically when currentIndex changes
-    };
-
-    return (
-      <div
-        style={{ position: 'relative', height: '100%', width: '100%', overflow: 'hidden', backgroundColor: '#FFFFFF' }}
-        onTouchStart={onTouchStart}
-        onTouchMove={onTouchMove}
-        onTouchEnd={onTouchEnd}
-      >
-        {transitionType === 'slide' ? (
-          <div style={{
-            display: 'flex',
-            height: '100%',
-            transition: 'transform 0.7s ease-in-out',
-            transform: `translateX(-${currentIndex * 100}%)`,
-          }}>
-            {images.map((src) => (
-              <div key={src} style={{ position: 'relative', width: '100%', height: '100%', flexShrink: 0 }}>
-                <Image
-                  src={src}
-                  alt={`Banner`}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 80vw"
-                  style={{ objectFit: 'cover', objectPosition: 'center center' }}
-                  priority={images.indexOf(src) === 0}
-                />
-              </div>
-            ))}
-          </div>
-        ) : (
-          // Default fade transition
-          images.map((src, index) => (
-            <Image
-              key={src}
-              src={src}
-              alt={`Banner ${index + 1}`}
-              fill
-              priority={index === 0}
-              sizes="(max-width: 768px) 100vw, 80vw"
-              style={{
-                objectFit: 'cover',
-                objectPosition: 'center center',
-                opacity: currentIndex === index ? 1 : 0,
-                transition: 'opacity 1.5s ease-in-out',
-              }}
-            />
-          ))
-        )}
-
-        {/* Previous Button */}
-        <button
-          onClick={goToPrevSlide}
-          style={{
-            position: 'absolute',
-            top: '50%',
-            left: '10px',
-            transform: 'translateY(-50%)',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            color: 'white',
-            border: 'none',
-            borderRadius: '50%',
-            width: '30px',
-            height: '30px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-            fontSize: '18px',
-            zIndex: 10,
-          }}
-        >
-          &#10094;
-        </button>
-
-        {/* Next Button */}
-        <button
-          onClick={goToNextSlide}
-          style={{
-            position: 'absolute',
-            top: '50%',
-            right: '10px',
-            transform: 'translateY(-50%)',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            color: 'white',
-            border: 'none',
-            borderRadius: '50%',
-            width: '30px',
-            height: '30px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-            fontSize: '18px',
-            zIndex: 10,
-          }}
-        >
-          &#10095;
-        </button>
-
-        {/* Navigation Dots */}
-        <div style={{ position: 'absolute', bottom: '10px', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '8px', zIndex: 10 }}>
-          {images.map((_, slideIndex) => (
-            <div
-              key={slideIndex}
-              onClick={() => goToSlide(slideIndex)}
-              style={{
-                height: '8px',
-                width: '8px',
-                borderRadius: '50%',
-                backgroundColor: currentIndex === slideIndex ? 'white' : 'rgba(255, 255, 255, 0.5)',
-                cursor: 'pointer',
-                transition: 'background-color 0.3s',
-              }}
-            />
-          ))}
-        </div>
-      </div>
-    );
-  };
-
-  const desktopBanners = ['/main banner dallas.webp', '/main banner dallas 2.webp', '/main banner dallas 3.webp', '/main banner dallas 4.webp'];
-  const mobileBanners = [
-    '/mobile_banner_1.webp',
-    '/mobile_banner_2.webp',
-    '/mobile_banner_3.webp',
-    '/mobile_banner_4.webp',
-    '/mobile_banner_5.webp',
-    '/mobile_banner_6.webp',
-    '/mobile_banner_7.webp',
-    '/mobile_banner_8.webp',
-    '/mobile_banner_9.webp'
-  ];
-
-  const machineImages = [
-    '/foto mesin.webp',
-    '/foto mesin (1).webp',
-    '/foto mesin (2).webp',
-    '/foto mesin (3).webp',
-    '/foto mesin (4).webp',
-    '/foto mesin (5).webp',
-    '/foto mesin (6).webp',
-    '/foto mesin (7).webp'
-  ];
-
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const navLinks = [
-    { href: '/', label: t('Navbar.home') },
-    { href: '/about', label: t('Navbar.about') },
-    { href: '/products', label: t('Navbar.products') },
-    { href: '/KATALOG DALLAS.pdf', label: t('Navbar.catalog'), download: true },
-    { href: '/paperlisens', label: t('Navbar.paperlisens') },
-    { href: '/articles', label: t('Navbar.articles') },
-    { href: '#contact', label: t('Navbar.contact'), isScroll: true },
-  ];
-
-  const renderNavLinks = () => navLinks.map(link => {
-    const isHome = link.href === '/';
-    const baseClasses = "py-4 md:py-0 text-center md:text-left border-b border-gray-200/50 md:border-none w-full md:w-auto font-medium transition-all duration-300 hover:text-black md:hover:-translate-y-[2px] cursor-pointer no-underline";
-    const textColor = isHome ? "text-black" : "text-gray-600";
-
-    if (link.isScroll) {
-      return (
-        <a
-          key={link.label}
-          href={link.href}
-          onClick={(e) => {
-            smoothScroll(e, link.href);
-            setIsMenuOpen(false);
-          }}
-          className={`${baseClasses} text-gray-600`}
-        >
-          {link.label}
-        </a>
-      );
-    }
-
-    return (
-      <Link
-        key={link.label}
-        href={link.href}
-        download={link.download ? 'KATALOG DALLAS.pdf' : undefined}
-        onClick={() => setIsMenuOpen(false)}
-        className={`${baseClasses} ${textColor}`}
-      >
-        {link.label}
-      </Link>
-    )
-  });
 
   return (
     <div style={{
@@ -998,67 +744,7 @@ export default function Home() {
         {t('Home.mainH1')}
       </h1>
 
-      {/* Top Bar Contact Info & Social Media */}
-      <div className="bg-white text-black text-xs py-2 md:py-1 fixed top-0 left-0 w-full z-[100] border-b border-gray-200">
-        <div className="max-w-[1280px] mx-auto px-6 flex justify-center md:justify-between items-center flex-wrap md:flex-nowrap gap-2 md:gap-0">
-          <div className="flex items-center gap-4 flex-wrap justify-center">
-            <span className="hidden md:flex items-center gap-1">
-              <Icon icon="mdi:map-marker" className="text-[14px]" />
-              {t('TopBar.address')}
-            </span>
-            <span className="flex items-center gap-1">
-              <Icon icon="mdi:phone" className="text-[14px]" />
-              <span className="inline md:hidden">081260001487</span>
-              <span className="hidden md:inline">081260001487 | 085946896488 | 085235531946</span>
-            </span>
-          </div>
-          <div className="flex items-center gap-3">
-            <a href="https://www.instagram.com/paperlisens22?igsh=bDl4OHI3d2d0eHV0" target="_blank" rel="noopener noreferrer" className="text-black" title="Instagram">
-              <Icon icon="mdi:instagram" className="text-[18px]" />
-            </a>
-            <a href="https://www.tiktok.com/@paperlisenss22" target="_blank" rel="noopener noreferrer" className="text-black" title="TikTok">
-              <Icon icon="ic:baseline-tiktok" className="text-[18px]" />
-            </a>
-            <a href="https://id.shp.ee/tpQ9dbH" target="_blank" rel="noopener noreferrer" className="text-black" title="Shopee Paperlisens">
-              <Icon icon="ic:baseline-shopping-bag" className="text-[18px]" />
-            </a>
-            <a href="https://id.shp.ee/ZqzSum7" target="_blank" rel="noopener noreferrer" className="text-black" title="Shopee Tray&me">
-              <Icon icon="ic:baseline-shopping-bag" className="text-[18px]" />
-            </a>
-            <a href="https://www.facebook.com/share/1G3GADNMZi/" target="_blank" rel="noopener noreferrer" className="text-black" title="Facebook">
-              <Icon icon="mdi:facebook" className="text-[18px]" />
-            </a>
-          </div>
-        </div>
-      </div>
-
-      {/* Navigation */}
-      <nav className="fixed top-[36px] w-full z-50 bg-white/95 backdrop-blur-[20px] saturate-[180%] border-b border-gray-200/50">
-        <div className="max-w-[1280px] mx-auto px-6 relative">
-          <div className="flex justify-between items-center py-4">
-            <Link href="/" style={{ textDecoration: 'none' }}>
-              <Image src="/logo1.webp" alt="Percetakan Dallas" width={360} height={108} style={{ height: '36px', width: 'auto', filter: 'invert(1)' }} priority />
-            </Link>
-
-            <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden bg-transparent border-none text-black text-2xl">
-              <Icon icon={isMenuOpen ? "mdi:close" : "mdi:menu"} />
-            </button>
-            <div className="hidden md:flex gap-8 items-center">
-              {renderNavLinks()}
-              <LanguageSwitcher />
-            </div>
-          </div>
-
-          {isMenuOpen && (
-            <div className="md:hidden absolute top-[100%] left-0 right-0 bg-white/98 flex flex-col items-center px-6 pb-4 border-b border-gray-200/50 shadow-md">
-              {renderNavLinks()}
-              <div className="mt-4 pt-4 border-t border-gray-200/50 w-full flex justify-center">
-                <LanguageSwitcher />
-              </div>
-            </div>
-          )}
-        </div>
-      </nav>
+      <Navbar />
 
       {/* Premium Quality Section with Video Background */}
       <section className="relative flex items-center justify-center text-center overflow-hidden text-white mt-[88px] h-[100vw] md:h-[calc(100vh-88px)]">
@@ -1068,6 +754,7 @@ export default function Home() {
           muted
           playsInline
           preload="metadata"
+          poster="/main banner dallas.webp"
           className="absolute top-0 left-0 w-full h-full object-cover z-[1]"
         >
           <source src="/vidio.webm" type="video/webm" />
@@ -1307,7 +994,7 @@ export default function Home() {
             <h2 className="text-[1.75rem] md:text-[2.25rem] font-bold mb-4 text-white">
               {t('WhyChoose.title')}
             </h2>
-            <p className="text-[1rem] md:text-[1.125rem] text-gray-400 font-normal">
+            <p className="text-[1rem] md:text-[1.125rem] text-gray-200 font-normal">
               {t('WhyChoose.subtitle')}
             </p>
           </div>
@@ -1325,7 +1012,7 @@ export default function Home() {
                 <Icon icon="mdi:shield-check" width="40" height="40" color="#f97316" />
               </div>
               <h3 style={{ fontSize: '1.25rem', fontWeight: '600' }}>{t('WhyChoose.points.experience.title')}</h3>
-              <p style={{ color: '#9ca3af', fontSize: '0.95rem', lineHeight: '1.6' }}>
+              <p style={{ color: '#e5e7eb', fontSize: '0.95rem', lineHeight: '1.6' }}>
                 {t('WhyChoose.points.experience.desc')}
               </p>
             </div>
@@ -1342,7 +1029,7 @@ export default function Home() {
                 <Icon icon="mdi:crosshairs-gps" width="40" height="40" color="#f97316" />
               </div>
               <h3 style={{ fontSize: '1.25rem', fontWeight: '600' }}>{t('WhyChoose.points.quality.title')}</h3>
-              <p style={{ color: '#9ca3af', fontSize: '0.95rem', lineHeight: '1.6' }}>
+              <p style={{ color: '#e5e7eb', fontSize: '0.95rem', lineHeight: '1.6' }}>
                 {t('WhyChoose.points.quality.desc')}
               </p>
             </div>
@@ -1359,7 +1046,7 @@ export default function Home() {
                 <Icon icon="mdi:lightbulb-on-outline" width="40" height="40" color="#f97316" />
               </div>
               <h3 style={{ fontSize: '1.25rem', fontWeight: '600' }}>{t('WhyChoose.points.consultation.title')}</h3>
-              <p style={{ color: '#9ca3af', fontSize: '0.95rem', lineHeight: '1.6' }}>
+              <p style={{ color: '#e5e7eb', fontSize: '0.95rem', lineHeight: '1.6' }}>
                 {t('WhyChoose.points.consultation.desc')}
               </p>
             </div>
@@ -1388,9 +1075,9 @@ export default function Home() {
             paddingTop: '40px',
             marginTop: '20px'
           }}>
-            <h4 style={{ fontSize: '1.25rem', fontWeight: '500', marginBottom: '24px', color: 'white', maxWidth: '800px', margin: '0 auto' }}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: '500', marginBottom: '24px', color: 'white', maxWidth: '800px', margin: '0 auto' }}>
               {t('WhyChoose.cta')}
-            </h4>
+            </h3>
           </div>
         </div>
       </section>
@@ -1463,7 +1150,7 @@ export default function Home() {
                         loading="lazy"
                       />
                     </div>
-                    <h4 style={{ fontSize: '1.25rem', fontWeight: '500', marginBottom: '4px', color: '#111827' }}>{product.name}</h4>
+                    <h3 style={{ fontSize: '1.25rem', fontWeight: '500', marginBottom: '4px', color: '#111827' }}>{product.name}</h3>
                     <p style={{ color: '#4b5563', fontSize: '0.875rem', lineHeight: '1.5', flexGrow: 1 }}>{product.description}</p>
                   </motion.div>
                 </Link>

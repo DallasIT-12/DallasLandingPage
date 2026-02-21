@@ -5,12 +5,11 @@ import { Icon } from '@iconify/react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import Footer from '@/components/layout/Footer';
-import LanguageSwitcher from '@/components/common/LanguageSwitcher';
+import Navbar from '@/components/layout/Navbar';
 import { useState, useEffect } from 'react';
 
 export default function EcoFriendlyPackagingArticle() {
   const t = useTranslations();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSmallMobile, setIsSmallMobile] = useState(false);
   const [isMediumMobile, setIsMediumMobile] = useState(false);
   const [isLargeMobile, setIsLargeMobile] = useState(false);
@@ -28,86 +27,7 @@ export default function EcoFriendlyPackagingArticle() {
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
-  const navLinks = [
-    { href: '/', label: t('Navbar.home') },
-    { href: '/about', label: t('Navbar.about') },
-    { href: '/products', label: t('Navbar.products') },
-    { href: '/KATALOG DALLAS.pdf', label: t('Navbar.catalog'), download: true },
-    { href: '/paperlisens', label: t('Navbar.paperlisens') },
-    { href: '/articles', label: t('Navbar.articles') },
-    { href: '#contact', label: t('Navbar.contact'), isScroll: true },
-  ];
 
-  const renderNavLinks = () => navLinks.map(link => {
-    if (link.isScroll) {
-      return (
-        <Link
-          key={link.label}
-          href="/#contact"
-          onClick={() => setIsMenuOpen(false)}
-          style={{
-            color: '#4b5563',
-            textDecoration: 'none',
-            transition: 'all 0.3s ease',
-            cursor: 'pointer',
-            padding: isLargeMobile ? '16px 0' : '0',
-            textAlign: isLargeMobile ? 'center' : 'left',
-            borderBottom: isLargeMobile ? '1px solid rgba(229,231,235,0.5)' : 'none',
-            width: isLargeMobile ? '100%' : 'auto',
-            fontWeight: '500'
-          }}
-          onMouseOver={(e) => {
-            if (!isLargeMobile) {
-              (e.target as HTMLElement).style.color = '#000000';
-              (e.target as HTMLElement).style.transform = 'translateY(-2px)';
-            }
-          }}
-          onMouseOut={(e) => {
-            if (!isLargeMobile) {
-              (e.target as HTMLElement).style.color = '#4b5563';
-              (e.target as HTMLElement).style.transform = 'translateY(0)';
-            }
-          }}
-        >
-          {link.label}
-        </Link>
-      );
-    }
-
-    return (
-      <Link
-        key={link.label}
-        href={link.href}
-        download={link.download ? 'KATALOG DALLAS.pdf' : undefined}
-        onClick={() => setIsMenuOpen(false)}
-        style={{
-          color: link.href === '/articles' ? '#000000' : '#4b5563',
-          textDecoration: 'none',
-          transition: 'all 0.3s ease',
-          cursor: 'pointer',
-          padding: isLargeMobile ? '16px 0' : '0',
-          textAlign: isLargeMobile ? 'center' : 'left',
-          borderBottom: isLargeMobile ? '1px solid rgba(229,231,235,0.5)' : 'none',
-          width: isLargeMobile ? '100%' : 'auto',
-          fontWeight: '500'
-        }}
-        onMouseOver={(e) => {
-          if (!isLargeMobile) {
-            (e.target as HTMLElement).style.color = '#000000';
-            (e.target as HTMLElement).style.transform = 'translateY(-2px)';
-          }
-        }}
-        onMouseOut={(e) => {
-          if (!isLargeMobile) {
-            (e.target as HTMLElement).style.color = link.href === '/articles' ? '#000000' : '#4b5563';
-            (e.target as HTMLElement).style.transform = 'translateY(0)';
-          }
-        }}
-      >
-        {link.label}
-      </Link>
-    )
-  });
 
   if (!screenReady) {
     return (
@@ -120,96 +40,7 @@ export default function EcoFriendlyPackagingArticle() {
 
   return (
     <div style={{ backgroundColor: '#ffffff', minHeight: '100vh', color: '#1e293b', overflowX: 'hidden' }}>
-      {/* Top Bar Contact Info & Social Media */}
-      <div style={{
-        backgroundColor: '#ffffff',
-        color: '#000000',
-        fontSize: '12px',
-        padding: isLargeMobile ? '4px 0' : '8px 0',
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        zIndex: 100,
-        borderBottom: '1px solid #e5e7eb'
-      }}>
-        <div style={{
-          maxWidth: '1280px',
-          margin: '0 auto',
-          padding: '0 24px',
-          display: 'flex',
-          justifyContent: isLargeMobile ? 'center' : 'space-between',
-          alignItems: 'center',
-          flexWrap: 'nowrap',
-          gap: '8px'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap', justifyContent: 'center' }}>
-            {!isLargeMobile && (
-              <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <Icon icon="mdi:map-marker" style={{ fontSize: '14px' }} />
-                {t('TopBar.address')}
-              </span>
-            )}
-            <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <Icon icon="mdi:phone" style={{ fontSize: '14px' }} />
-              {isLargeMobile ? '081260001487' : '081260001487 | 085946896488 | 085235531946'}
-            </span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <a href="https://www.instagram.com/paperlisens22?igsh=bDl4OHI3d2d0eHV0" target="_blank" rel="noopener noreferrer" style={{ color: '#000000' }} title="Instagram">
-              <Icon icon="mdi:instagram" style={{ fontSize: '18px' }} />
-            </a>
-            <a href="https://www.tiktok.com/@paperlisenss22" target="_blank" rel="noopener noreferrer" style={{ color: '#000000' }} title="TikTok">
-              <Icon icon="ic:baseline-tiktok" style={{ fontSize: '18px' }} />
-            </a>
-            <a href="https://id.shp.ee/tpQ9dbH" target="_blank" rel="noopener noreferrer" style={{ color: '#000000' }} title="Shopee Paperlisens">
-              <Icon icon="ic:baseline-shopping-bag" style={{ fontSize: '18px' }} />
-            </a>
-            <a href="https://id.shp.ee/ZqzSum7" target="_blank" rel="noopener noreferrer" style={{ color: '#000000' }} title="Shopee Tray&me">
-              <Icon icon="ic:baseline-shopping-bag" style={{ fontSize: '18px' }} />
-            </a>
-            <a href="https://www.facebook.com/share/1G3GADNMZi/" target="_blank" rel="noopener noreferrer" style={{ color: '#000000' }} title="Facebook">
-              <Icon icon="mdi:facebook" style={{ fontSize: '18px' }} />
-            </a>
-          </div>
-        </div>
-      </div>
-
-      {/* Navigation */}
-      <nav style={{
-        position: 'fixed',
-        top: '36px',
-        width: '100%',
-        zIndex: 50,
-        backgroundColor: 'rgba(255,255,255,0.95)',
-        backdropFilter: 'saturate(180%) blur(20px)',
-        borderBottom: '1px solid rgba(229,231,235,0.5)',
-      }}>
-        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px', position: 'relative' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0' }}>
-            <Link href="/" style={{ textDecoration: 'none' }}>
-              <img src="/logo1.png" alt="Percetakan Dallas" style={{ height: '36px', width: 'auto', filter: 'invert(1)' }} />
-            </Link>
-
-            {isLargeMobile ? (
-              <button onClick={() => setIsMenuOpen(!isMenuOpen)} style={{ background: 'none', border: 'none', color: '#000000', fontSize: '24px' }}>
-                <Icon icon={isMenuOpen ? "mdi:close" : "mdi:menu"} />
-              </button>
-            ) : (
-              <div style={{ display: 'flex', gap: '32px', alignItems: 'center' }}>
-                {renderNavLinks()}
-                <LanguageSwitcher />
-              </div>
-            )}
-          </div>
-          {isLargeMobile && isMenuOpen && (
-            <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, backgroundColor: 'rgba(255,255,255,0.98)', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '0 24px 16px', borderBottom: '1px solid rgba(229,231,235,0.5)', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}>
-              {renderNavLinks()}
-              <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid rgba(229,231,235,0.5)', width: '100%', display: 'flex', justifyContent: 'center' }}><LanguageSwitcher /></div>
-            </div>
-          )}
-        </div>
-      </nav>
+      <Navbar />
 
       <main style={{ maxWidth: '900px', margin: '88px auto 0', padding: isLargeMobile ? '32px 16px' : '60px 24px' }}>
         <motion.article initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }}>
@@ -226,7 +57,7 @@ export default function EcoFriendlyPackagingArticle() {
             </p>
           </header>
 
-          <img src="/artikel (1) (2).webp" alt="Kemasan Kertas Ramah Lingkungan" style={{ width: '100%', borderRadius: '24px', marginBottom: isLargeMobile ? '32px' : '48px', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)' }} />
+          <img src="/artikel (1) (2).webp" alt="Kemasan Kertas Ramah Lingkungan" style={{ width: '100%', aspectRatio: '16/9', objectFit: 'cover', borderRadius: '24px', marginBottom: isLargeMobile ? '32px' : '48px', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)' }} />
 
           <section style={{ fontSize: isLargeMobile ? '1rem' : '1.125rem', lineHeight: '1.8', color: '#334155' }}>
             <h2 style={{ fontSize: isLargeMobile ? '1.5rem' : '2rem', fontWeight: '700', color: '#001D39', marginTop: '32px', marginBottom: '16px' }}>Penjelasan: Apa Itu Kemasan Ramah Lingkungan?</h2>
@@ -272,11 +103,11 @@ export default function EcoFriendlyPackagingArticle() {
 
               <div style={{ display: 'grid', gridTemplateColumns: isLargeMobile ? '1fr' : '1fr 1fr', gap: '20px' }}>
                 <div style={{ backgroundColor: '#ffffff', padding: '20px', borderRadius: '20px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
-                  <h4 style={{ fontWeight: '700', marginBottom: '8px', color: '#0A4174' }}>🌱 Paper Tray & Lunch Box</h4>
+                  <h3 style={{ fontWeight: '700', marginBottom: '8px', color: '#0A4174' }}>🌱 Paper Tray & Lunch Box</h3>
                   <p style={{ fontSize: '0.9rem' }}>Solusi pengganti plastik dan stereofoam untuk bisnis kuliner Anda. Higienis dan ramah lingkungan.</p>
                 </div>
                 <div style={{ backgroundColor: '#ffffff', padding: '20px', borderRadius: '20px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
-                  <h4 style={{ fontWeight: '700', marginBottom: '8px', color: '#0A4174' }}>🛍️ Paper Bag Berbagai Ukuran</h4>
+                  <h3 style={{ fontWeight: '700', marginBottom: '8px', color: '#0A4174' }}>🛍️ Paper Bag Berbagai Ukuran</h3>
                   <p style={{ fontSize: '0.9rem' }}>Pengganti kantong plastik yang kuat dan meningkatkan estetika brand fashion atau gift shop Anda.</p>
                 </div>
               </div>
