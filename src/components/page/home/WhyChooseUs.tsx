@@ -82,7 +82,7 @@ export const WhyChooseUs = () => {
                             <Icon icon="mdi:clock-check-outline" width="40" height="40" color="#f97316" />
                         </div>
                         <h3 style={{ fontSize: '1.25rem', fontWeight: '600' }}>{t('WhyChoose.points.punctuality.title')}</h3>
-                        <p style={{ color: '#9ca3af', fontSize: '0.95rem', lineHeight: '1.6' }}>
+                        <p style={{ color: '#e5e7eb', fontSize: '0.95rem', lineHeight: '1.6' }}>
                             {t('WhyChoose.points.punctuality.desc')}
                         </p>
                     </div>

@@ -464,7 +464,7 @@ export const FeaturedProducts = () => {
             <div className="max-w-7xl mx-auto text-center">
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px', marginBottom: '20px' }}>
                     <span style={{ width: '40px', height: '1px', background: 'linear-gradient(90deg, transparent, #D4A017)' }} />
-                    <span style={{ fontSize: '12px', fontWeight: '700', letterSpacing: '3px', textTransform: 'uppercase', color: '#D4A017' }}>EXCLUSIVE</span>
+                    <span style={{ fontSize: '12px', fontWeight: '800', letterSpacing: '3px', textTransform: 'uppercase', color: '#85630E' }}>EXCLUSIVE</span>
                     <span style={{ width: '40px', height: '1px', background: 'linear-gradient(90deg, #D4A017, transparent)' }} />
                 </div>
                 <h2 className="text-4xl md:text-5xl lg:text-7xl font-light leading-tight" style={{ color: '#001D39' }}>
