@@ -24,9 +24,8 @@ export default function KarirClient() {
     }
 
     const jobs = [
-        { id: 'designer', icon: 'mdi:palette' },
-        { id: 'operator', icon: 'mdi:printer' },
-        { id: 'sales', icon: 'mdi:handshake' }
+        { id: 'hostLive', icon: 'mdi:cast-variant' },
+        { id: 'bongkarMuat', icon: 'mdi:truck-fast' }
     ];
 
     const handleApplyWhatsApp = (jobTitle: string) => {

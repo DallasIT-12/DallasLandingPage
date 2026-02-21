@@ -359,22 +359,17 @@
       }
     },
     "openPositions": "Open Positions",
-    "noPositions": "There are no open vacancies currently. However, we are always looking for top talent! Feel free to send your CV.",
+    "noPositions": "We are always looking for top talent! Feel free to send your CV even if your desired position is not listed above.",
     "jobs": {
-      "designer": {
-        "title": "Graphic Designer",
+      "hostLive": {
+        "title": "Live Stream Host",
         "type": "Full-Time",
-        "desc": "Designing various printing needs such as retail packaging, paper bags, and promotional materials."
+        "desc": "Become the face of the company brand in live streaming sessions, promote products, and actively interact with the audience to increase sales."
       },
-      "operator": {
-        "title": "Printing Machine Operator",
+      "bongkarMuat": {
+        "title": "Loading & Unloading Staff",
         "type": "Full-Time",
-        "desc": "Operating and maintaining offset printing machines to ensure the best production quality."
-      },
-      "sales": {
-        "title": "Sales Executive",
-        "type": "Full-Time",
-        "desc": "Finding new clients and maintaining good relationships with existing clients to achieve sales targets."
+        "desc": "Responsible for the loading and unloading process of production goods, ensuring goods safety, neat arrangement in the warehouse, and logistics efficiency."
       }
     },
     "applyNow": "Submit Your CV",

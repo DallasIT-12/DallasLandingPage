@@ -358,22 +358,17 @@
       }
     },
     "openPositions": "Posisi yang Tersedia",
-    "noPositions": "Saat ini belum ada lowongan terbuka. Namun, kami selalu mencari talenta terbaik! Silakan kirimkan CV Anda.",
+    "noPositions": "Kami selalu mencari talenta terbaik! Silakan kirimkan CV Anda meskipun posisi yang relevan dengan Anda tidak tercantum di atas.",
     "jobs": {
-      "designer": {
-        "title": "Desainer Grafis",
+      "hostLive": {
+        "title": "Host Live",
         "type": "Penuh Waktu",
-        "desc": "Mendesain berbagai kebutuhan cetak seperti kemasan ritel, paper bag, dan materi promosi."
+        "desc": "Menjadi wajah brand perusahaan dalam sesi live streaming, mempromosikan produk, dan berinteraksi aktif dengan audiens untuk meningkatkan penjualan."
       },
-      "operator": {
-        "title": "Operator Mesin Cetak",
+      "bongkarMuat": {
+        "title": "Bongkar Muat",
         "type": "Penuh Waktu",
-        "desc": "Mengoperasikan dan memelihara mesin cetak offset untuk memastikan kualitas produksi terbaik."
-      },
-      "sales": {
-        "title": "Sales Executive",
-        "type": "Penuh Waktu",
-        "desc": "Mencari klien baru dan memelihara hubungan baik dengan klien eksisting untuk mencapai target penjualan."
+        "desc": "Bertanggung jawab atas proses bongkar muat barang produksi, memastikan keamanan barang, penyusunan yang rapi di gudang, dan efisiensi logistik."
       }
     },
     "applyNow": "Kirim CV Anda",
