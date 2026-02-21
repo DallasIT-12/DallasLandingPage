@@ -15,7 +15,8 @@
     "paperlisens": "Paperlisens",
     "articles": "Artikel Kami",
     "contact": "Kontak",
-    "about": "Tentang Kami"
+    "about": "Tentang Kami",
+    "karir": "Karir"
   },
   "TopBar": {
     "address": "Jl. Kilisuci No.71, Setono Pande, Kec. Kota, Kota Kediri."
@@ -177,6 +178,7 @@
     "contact": "Kontak",
     "email": "Email",
     "phone": "Telepon",
+    "karir": "Karir",
     "copyright": "© 2024 Percetakan Dallas. Hak cipta dilindungi undang-undang."
   },
   "Paperlisens": {
@@ -336,5 +338,47 @@
   },
   "TrustedBy": {
     "title": "Dipercaya Oleh Brand Ternama"
+  },
+  "Career": {
+    "title": "Bergabung Bersama Kami",
+    "subtitle": "Bangun karir Anda bersama Percetakan Offset Dallas dan jadilah bagian dari perjalanan kami.",
+    "whyJoin": "Mengapa Bergabung dengan Dallas?",
+    "benefits": {
+      "growth": {
+        "title": "Pengembangan Karir",
+        "desc": "Kami mendukung pertumbuhan profesional Anda dengan memberikan kesempatan belajar dan berkembang setiap harinya."
+      },
+      "culture": {
+        "title": "Budaya Kerja Positif",
+        "desc": "Lingkungan kerja kami didesain untuk kolaboratif, suportif, dan menghargai ide-ide kreatif karyawan."
+      },
+      "stability": {
+        "title": "Stabilitas & Reputasi",
+        "desc": "Bergabung dengan perusahaan yang telah kokoh berdiri sejak 1983 dengan reputasi unggul di Kediri."
+      }
+    },
+    "openPositions": "Posisi yang Tersedia",
+    "noPositions": "Saat ini belum ada lowongan terbuka. Namun, kami selalu mencari talenta terbaik! Silakan kirimkan CV Anda.",
+    "jobs": {
+      "designer": {
+        "title": "Desainer Grafis",
+        "type": "Penuh Waktu",
+        "desc": "Mendesain berbagai kebutuhan cetak seperti kemasan ritel, paper bag, dan materi promosi."
+      },
+      "operator": {
+        "title": "Operator Mesin Cetak",
+        "type": "Penuh Waktu",
+        "desc": "Mengoperasikan dan memelihara mesin cetak offset untuk memastikan kualitas produksi terbaik."
+      },
+      "sales": {
+        "title": "Sales Executive",
+        "type": "Penuh Waktu",
+        "desc": "Mencari klien baru dan memelihara hubungan baik dengan klien eksisting untuk mencapai target penjualan."
+      }
+    },
+    "applyNow": "Kirim CV Anda",
+    "sendEmail": "Kirim via Email",
+    "sendWa": "Kirim via WhatsApp",
+    "whatsappMessage": "Halo Tim HRD Percetakan Dallas, saya ingin mengirimkan CV untuk melamar posisi "
   }
 }

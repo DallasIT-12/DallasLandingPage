@@ -11,7 +11,8 @@
     "catalog": "目录",
     "paperlisens": "Paperlisens",
     "contact": "联系我们",
-    "about": "关于我们"
+    "about": "关于我们",
+    "karir": "职业"
   },
   "TopBar": {
     "address": "Jl. Kilisuci No.71, Setono Pande, Kec. Kota, Kota Kediri."
@@ -173,6 +174,7 @@
     "contact": "联系我们",
     "email": "电子邮件",
     "phone": "电话",
+    "karir": "职业",
     "copyright": "© 2024 Percetakan Dallas. 保留所有权利。"
   },
   "Paperlisens": {
@@ -325,5 +327,47 @@
   },
   "TrustedBy": {
     "title": "深受知名品牌信赖"
+  },
+  "Career": {
+    "title": "加入我们的团队",
+    "subtitle": "与 Dallas Offset Printing 共筑您的职业生涯，成为我们旅程的一部分。",
+    "whyJoin": "为什么加入 Dallas？",
+    "benefits": {
+      "growth": {
+        "title": "职业发展",
+        "desc": "我们通过提供每天学习和发展的机会来支持您的专业成长。"
+      },
+      "culture": {
+        "title": "积极的工作文化",
+        "desc": "我们的工作环境旨在协作、支持并赞赏创意想法。"
+      },
+      "stability": {
+        "title": "稳定性与声誉",
+        "desc": "加入一家自1983年稳固成立、在 Kediri 享有盛誉的公司。"
+      }
+    },
+    "openPositions": "空缺职位",
+    "noPositions": "目前没有空缺职位。但是，我们一直在寻找顶尖人才！随时欢迎发送您的简历。",
+    "jobs": {
+      "designer": {
+        "title": "平面设计师",
+        "type": "全职",
+        "desc": "设计各种印刷需求，如零售包装、纸袋和宣传材料。"
+      },
+      "operator": {
+        "title": "印刷机操作员",
+        "type": "全职",
+        "desc": "操作和维护胶印机，以确保最佳生产质量。"
+      },
+      "sales": {
+        "title": "销售主管",
+        "type": "全职",
+        "desc": "寻找新客户并维持与现有客户的良好关系，以实现销售目标。"
+      }
+    },
+    "applyNow": "提交您的简历",
+    "sendEmail": "通过电子邮件发送",
+    "sendWa": "通过 WhatsApp 发送",
+    "whatsappMessage": "您好 Dallas Printing 人事团队，我想提交我的简历以申请该职位："
   }
 }

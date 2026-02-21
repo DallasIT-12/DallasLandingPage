@@ -6,6 +6,7 @@ import '@/app/globals.css';
 import { CartProvider } from '@/context/CartContext';
 import CartModal from '@/components/cart/CartModal';
 import FloatingWhatsApp from '@/components/common/FloatingWhatsApp';
+import Script from 'next/script';
 import type { Metadata } from 'next';
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -95,6 +96,21 @@ export default async function LocaleLayout({
             <FloatingWhatsApp />
           </CartProvider>
         </NextIntlClientProvider>
+
+        {/* Google tag (gtag.js) */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=AW-17966776661"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'AW-17966776661');
+          `}
+        </Script>
       </body>
     </html>
   );

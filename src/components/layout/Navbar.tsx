@@ -26,6 +26,7 @@ export default function Navbar() {
         { href: '/KATALOG DALLAS.pdf', label: t('Navbar.catalog'), download: true },
         { href: '/paperlisens', label: t('Navbar.paperlisens') },
         { href: '/articles', label: t('Navbar.articles') },
+        { href: '/karir', label: t('Navbar.karir') },
         { href: '#contact', label: t('Navbar.contact'), isScroll: true },
     ];
 
