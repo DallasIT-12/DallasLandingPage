@@ -64,6 +64,7 @@ export default function Navbar() {
             <Link
                 key={link.label}
                 href={link.href}
+                prefetch={false}
                 download={link.download ? 'KATALOG DALLAS.pdf' : undefined}
                 onClick={() => setIsMenuOpen(false)}
                 className={`${baseClasses} ${textColor}`}
