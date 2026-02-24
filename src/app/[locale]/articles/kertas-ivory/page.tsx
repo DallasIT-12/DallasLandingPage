@@ -2,8 +2,9 @@ import { Metadata } from 'next';
 import KertasIvoryClient from '@/components/page/articles/KertasIvoryClient';
 
 export const metadata: Metadata = {
-  title: 'Mengenal Kertas Ivory: Standar Food Grade untuk Kemasan Makanan',
-  description: 'Panduan lengkap kertas Ivory untuk packaging. Karakteristik food grade, higienis, dan hasil cetak mewah. Pilihan terbaik untuk dus makanan.',
+  title: 'Perbedaan Bahan Kertas Ivory dan Art Paper - Standar Food Grade',
+  description: 'Ketahui Perbedaan bahan kertas Ivory dan Art Paper untuk packaging. Pelajari spesifikasi, karakteristik food grade, dan hasil cetak mewah untuk dus makanan Anda.',
+  keywords: ['Perbedaan bahan kertas Ivory dan Art Paper', 'kertas ivory', 'art paper', 'kertas food grade', 'bahan dus makanan', 'jenis kertas kemasan'],
 };
 
 export default function IvoryPaperPage() {

@@ -31,6 +31,38 @@ export default function ArticlesListPage() {
 
   const articles = [
     {
+      title: 'Jasa Cetak Kotak Rokok, Map Perusahaan, dan Buku: Solusi Cetak Offset Presisi',
+      slug: 'jasa-cetak-kotak-rokok-map-buku-instansi',
+      excerpt: 'Panduan B2B untuk industri dan instansi: Vendor kemasan rokok custom, map rekam medis anti air, hingga buku tahunan sekolah dengan kapasitas produksi skala besar.',
+      date: '25 Februari 2026',
+      image: '/foto mesin.webp',
+      category: 'Solusi B2B & Instansi'
+    },
+    {
+      title: 'Panduan Memilih Paper Tray dan Box Nasi: Praktis, Anti Bocor & Food Grade',
+      slug: 'panduan-memilih-paper-tray-box-nasi',
+      excerpt: 'Apa perbedaan utama Paper Tray dan Box Nasi? Temukan panduan spesifikasi cetak kemasan fungsional tahan minyak untuk bisnis kuliner Anda.',
+      date: '25 Februari 2026',
+      image: '/paperlisens papertray.webp',
+      category: 'Panduan Bisnis Kuliner'
+    },
+    {
+      title: 'Cara Memilih Box Hampers dan Box Bakery yang Menarik | Panduan Tren 2026',
+      slug: 'cara-memilih-box-hampers-bakery',
+      excerpt: 'Ketahui biaya cetak box hampers custom, material terbaik, dan tren desain jendela mika untuk meningkatkan nilai jual produk Anda hingga 3x lipat.',
+      date: '24 Februari 2026',
+      image: '/cetak-box-hampers-lebaran-kediri.webp',
+      category: 'SEO Tips Kemasan'
+    },
+    {
+      title: 'Panduan Lengkap Cetak Kemasan & Atribut Bisnis: Dari Box Makanan hingga Kotak Rokok',
+      slug: 'panduan-lengkap-cetak-kemasan',
+      excerpt: 'Membangun brand yang kuat dengan packaging strategis. Panduan produk cetak untuk memajukan bisnis Anda dari ritel hingga kebutuhan korporat.',
+      date: '24 Februari 2026',
+      image: '/artikel (1).webp',
+      category: 'Panduan Lengkap'
+    },
+    {
       title: 'Kemasan Kertas vs Plastik: Kenapa Brand Besar Mulai Beralih ke Paper-Based Packaging?',
       slug: 'kemasan-ramah-lingkungan',
       excerpt: 'Memahami urgensi penggunaan kemasan ramah lingkungan untuk meningkatkan reputasi brand dan menjaga ekosistem bumi.',

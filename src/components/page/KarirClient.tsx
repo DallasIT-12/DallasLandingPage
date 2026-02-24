@@ -11,6 +11,17 @@ export default function KarirClient() {
     const t = useTranslations('Career');
     const [mounted, setMounted] = useState(false);
 
+    //Form Modal State
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedJob, setSelectedJob] = useState('');
+    const [formData, setFormData] = useState({
+        name: '',
+        phone: '',
+        address: '',
+        age: '',
+        education: ''
+    });
+
     useEffect(() => {
         setMounted(true);
     }, []);
@@ -32,6 +43,30 @@ export default function KarirClient() {
         const phoneNumber = '6281260001487';
         const message = encodeURIComponent(t('whatsappMessage') + jobTitle);
         window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
+    };
+
+    const handleOpenModal = (jobTitle: string) => {
+        setSelectedJob(jobTitle);
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+        setFormData({ name: '', phone: '', address: '', age: '', education: '' });
+    };
+
+    const handleFormSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        const emailBody = `Nama Lengkap: ${formData.name}\nUsia: ${formData.age} Tahun\nNomor WhatsApp: ${formData.phone}\nAlamat Lengkap: ${formData.address}\nPendidikan Terakhir: ${formData.education}\n\n*Mohon lampirkan file CV Anda pada email ini*.`.trim();
+
+        const targetEmail = 'lokerdallaskediri@gmail.com';
+        const subject = encodeURIComponent(`Lamaran Kerja: ${selectedJob} - ${formData.name}`);
+        const body = encodeURIComponent(emailBody);
+
+        window.location.href = `mailto:${targetEmail}?subject=${subject}&body=${body}`;
+
+        handleCloseModal();
     };
 
     const fadeInUp: Variants = {
@@ -158,13 +193,13 @@ export default function KarirClient() {
                                             <Icon icon="mdi:whatsapp" className="text-lg" />
                                             {t('sendWa')}
                                         </button>
-                                        <a
-                                            href={`mailto:dallasoffset@gmail.com?subject=Lamaran Kerja: ${t(`jobs.${job.id}.title`)}`}
+                                        <button
+                                            onClick={() => handleOpenModal(t(`jobs.${job.id}.title`))}
                                             className="flex-1 bg-white border border-gray-300 text-gray-700 py-3 rounded-xl font-medium text-sm flex items-center justify-center gap-2 hover:bg-gray-50 transition-colors"
                                         >
                                             <Icon icon="mdi:email" className="text-lg" />
                                             {t('sendEmail')}
-                                        </a>
+                                        </button>
                                     </div>
                                 </div>
                             </motion.div>
@@ -184,15 +219,128 @@ export default function KarirClient() {
                     <p className="text-blue-100 text-lg mb-10 max-w-xl mx-auto">
                         {t('noPositions')}
                     </p>
-                    <a
-                        href={`mailto:dallasoffset@gmail.com?subject=Lamaran Kerja Umum`}
+                    <button
+                        onClick={() => handleOpenModal('Umum')}
                         className="shrink-0 inline-flex items-center gap-2 bg-[#D4A017] text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-[#b58813] transition-colors shadow-lg shadow-[#D4A017]/20"
                     >
                         <Icon icon="mdi:email-fast" className="text-2xl" />
-                        dallasoffset@gmail.com
-                    </a>
+                        {t('sendEmail')}
+                    </button>
                 </motion.div>
             </section>
+
+            {/* Application Modal */}
+            {isModalOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/60 backdrop-blur-sm">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden relative"
+                    >
+                        <button
+                            onClick={handleCloseModal}
+                            className="absolute top-5 right-5 text-gray-400 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 p-2 rounded-full transition-colors z-10"
+                        >
+                            <Icon icon="mdi:close" className="text-xl" />
+                        </button>
+
+                        <div className="p-8">
+                            <h3 className="text-2xl font-bold text-[#001D39] mb-1">{t('formModal.title')}</h3>
+                            <p className="text-gray-600 mb-6 text-sm">Posisi: <span className="font-semibold text-[#0A4174] bg-blue-50 px-2 py-1 rounded-md ml-1">{selectedJob}</span></p>
+
+                            <form onSubmit={handleFormSubmit} className="space-y-4">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-semibold text-gray-700 mb-1">{t('formModal.name')} *</label>
+                                        <input
+                                            type="text"
+                                            required
+                                            value={formData.name}
+                                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                            placeholder={t('formModal.namePlaceholder')}
+                                            className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#001D39]/20 focus:border-[#001D39] outline-none transition-all bg-gray-50 focus:bg-white"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-semibold text-gray-700 mb-1">{t('formModal.age')} *</label>
+                                        <input
+                                            type="text"
+                                            required
+                                            value={formData.age}
+                                            onChange={(e) => setFormData({ ...formData, age: e.target.value })}
+                                            placeholder={t('formModal.agePlaceholder')}
+                                            className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#001D39]/20 focus:border-[#001D39] outline-none transition-all bg-gray-50 focus:bg-white"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-semibold text-gray-700 mb-1">{t('formModal.phone')} *</label>
+                                        <input
+                                            type="tel"
+                                            required
+                                            value={formData.phone}
+                                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                                            placeholder={t('formModal.phonePlaceholder')}
+                                            className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#001D39]/20 focus:border-[#001D39] outline-none transition-all bg-gray-50 focus:bg-white"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-semibold text-gray-700 mb-1">{t('formModal.education')} *</label>
+                                        <input
+                                            type="text"
+                                            required
+                                            value={formData.education}
+                                            onChange={(e) => setFormData({ ...formData, education: e.target.value })}
+                                            placeholder={t('formModal.educationPlaceholder')}
+                                            className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#001D39]/20 focus:border-[#001D39] outline-none transition-all bg-gray-50 focus:bg-white"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-semibold text-gray-700 mb-1">{t('formModal.address')} *</label>
+                                    <textarea
+                                        required
+                                        rows={2}
+                                        value={formData.address}
+                                        onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                                        placeholder={t('formModal.addressPlaceholder')}
+                                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#001D39]/20 focus:border-[#001D39] outline-none transition-all bg-gray-50 focus:bg-white resize-none"
+                                    />
+                                </div>
+
+                                <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-xl flex items-start gap-3">
+                                    <Icon icon="mdi:alert-circle" className="text-yellow-600 text-xl shrink-0 mt-0.5" />
+                                    <p className="text-sm text-yellow-800 leading-relaxed font-medium">
+                                        {t('formModal.waNotice')}
+                                    </p>
+                                </div>
+
+                                <div className="pt-4 flex gap-3">
+                                    <button
+                                        type="button"
+                                        onClick={handleCloseModal}
+                                        className="flex-1 py-3 px-4 border border-gray-200 text-gray-600 rounded-xl font-bold hover:bg-gray-50 hover:text-gray-900 transition-all"
+                                    >
+                                        {t('formModal.cancel')}
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="flex-1 py-3 px-4 bg-[#001D39] text-white rounded-xl font-bold hover:bg-[#0A4174] hover:shadow-lg hover:shadow-[#001D39]/20 transition-all flex items-center justify-center gap-2"
+                                    >
+                                        <Icon icon="mdi:send" className="text-lg" />
+                                        {t('formModal.submit')}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </motion.div>
+                </div>
+            )}
 
             <Footer />
         </div>

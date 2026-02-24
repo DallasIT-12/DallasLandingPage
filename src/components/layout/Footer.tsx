@@ -45,7 +45,13 @@ const Footer = () => {
                 style={{ color: '#4b5563', textDecoration: 'none', transition: 'all 0.3s ease', cursor: 'pointer' }}
                 onMouseOver={(e) => { (e.target as HTMLElement).style.color = '#000000'; (e.target as HTMLElement).style.paddingLeft = '8px' }}
                 onMouseOut={(e) => { (e.target as HTMLElement).style.color = '#4b5563'; (e.target as HTMLElement).style.paddingLeft = '0px' }}>
-                {t('karir')}
+                Karir
+              </Link>
+              <Link href="/faq"
+                style={{ color: '#4b5563', textDecoration: 'none', transition: 'all 0.3s ease', cursor: 'pointer' }}
+                onMouseOver={(e) => { (e.target as HTMLElement).style.color = '#000000'; (e.target as HTMLElement).style.paddingLeft = '8px' }}
+                onMouseOut={(e) => { (e.target as HTMLElement).style.color = '#4b5563'; (e.target as HTMLElement).style.paddingLeft = '0px' }}>
+                FAQ
               </Link>
             </div>
           </div>

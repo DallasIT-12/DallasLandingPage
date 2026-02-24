@@ -9,14 +9,17 @@
     "mainH1": "Percetakan Offset Dallas Kediri - Spesialis Cetak Kemasan & Box Custom"
   },
   "Navbar": {
-    "home": "Home",
+    "home": "Beranda",
     "products": "Custom Box Rokok",
+    "produk_menu": "Produk",
     "catalog": "Katalog",
     "paperlisens": "Paperlisens",
     "articles": "Artikel Kami",
     "contact": "Kontak",
     "about": "Tentang Kami",
-    "karir": "Karir"
+    "karir": "Karir",
+    "perusahaan": "Perusahaan",
+    "faq": "FAQ"
   },
   "TopBar": {
     "address": "Jl. Kilisuci No.71, Setono Pande, Kec. Kota, Kota Kediri."
@@ -372,8 +375,24 @@
       }
     },
     "applyNow": "Kirim CV Anda",
-    "sendEmail": "Kirim via Email",
+    "sendEmail": "Daftar Sekarang",
     "sendWa": "Kirim via WhatsApp",
-    "whatsappMessage": "Halo Tim HRD Percetakan Dallas, saya ingin mengirimkan CV untuk melamar posisi "
+    "whatsappMessage": "Halo Tim HRD Percetakan Dallas, saya ingin mengirimkan CV untuk melamar posisi ",
+    "formModal": {
+      "title": "Formulir Lamaran Kerja",
+      "name": "Nama Lengkap",
+      "namePlaceholder": "Contoh: Budi Santoso",
+      "phone": "Nomor WhatsApp",
+      "phonePlaceholder": "Contoh: 08123456789",
+      "address": "Alamat Lengkap",
+      "addressPlaceholder": "Masukkan alamat lengkap Anda...",
+      "age": "Usia",
+      "agePlaceholder": "Contoh: 25",
+      "education": "Pendidikan Terakhir",
+      "educationPlaceholder": "Contoh: SMA / S1 Ilmu Komunikasi",
+      "waNotice": "Pastikan Nomor WhatsApp yang Anda masukkan AKTIF. Panggilan interview bagi kandidat yang lolos seleksi akan dihubungi melalui WhatsApp.",
+      "submit": "Daftar Sekarang",
+      "cancel": "Batal"
+    }
   }
 }

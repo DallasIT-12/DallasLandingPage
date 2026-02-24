@@ -11,12 +11,15 @@
   "Navbar": {
     "home": "Home",
     "products": "Custom Cigarette Box",
+    "produk_menu": "Products",
     "catalog": "Catalog",
     "paperlisens": "Paperlisens",
     "articles": "Our Articles",
     "contact": "Contact",
     "about": "About Us",
-    "karir": "Career"
+    "karir": "Career",
+    "perusahaan": "Company",
+    "faq": "FAQ"
   },
   "TopBar": {
     "address": "Jl. Kilisuci No.71, Setono Pande, Kec. Kota, Kota Kediri."
@@ -373,8 +376,24 @@
       }
     },
     "applyNow": "Submit Your CV",
-    "sendEmail": "Send via Email",
+    "sendEmail": "Apply Now",
     "sendWa": "Send via WhatsApp",
-    "whatsappMessage": "Hello Dallas Printing HR Team, I would like to submit my CV to apply for the position of "
+    "whatsappMessage": "Hello Dallas Printing HR Team, I would like to submit my CV to apply for the position of ",
+    "formModal": {
+      "title": "Application Form",
+      "name": "Full Name",
+      "namePlaceholder": "e.g., John Doe",
+      "phone": "WhatsApp Number",
+      "phonePlaceholder": "e.g., +628123456789",
+      "address": "Full Address",
+      "addressPlaceholder": "Enter your full address...",
+      "age": "Age",
+      "agePlaceholder": "e.g., 25",
+      "education": "Last Education",
+      "educationPlaceholder": "e.g., High School / Bachelor's Degree",
+      "waNotice": "Please ensure the WhatsApp number you provide is ACTIVE. Interview invitations for selected candidates will be sent via WhatsApp.",
+      "submit": "Apply Now",
+      "cancel": "Cancel"
+    }
   }
 }

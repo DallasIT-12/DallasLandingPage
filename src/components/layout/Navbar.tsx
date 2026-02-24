@@ -10,6 +10,8 @@ import { useTranslations } from 'next-intl';
 export default function Navbar() {
     const t = useTranslations();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isProductsOpen, setIsProductsOpen] = useState(false);
+    const [isCompanyOpen, setIsCompanyOpen] = useState(false);
 
     // Consider window width for desktop vs mobile sizing
     const [isLargeMobile, setIsLargeMobile] = useState(false);
@@ -19,17 +21,6 @@ export default function Navbar() {
     // where possible instead of tracking window.innerWidth.
     // We'll update inline styles to Tailwind classes where we can.
 
-    const navLinks = [
-        { href: '/', label: t('Navbar.home') },
-        { href: '/about', label: t('Navbar.about') },
-        { href: '/products', label: t('Navbar.products') },
-        { href: '/KATALOG DALLAS.pdf', label: t('Navbar.catalog'), download: true },
-        { href: '/paperlisens', label: t('Navbar.paperlisens') },
-        { href: '/articles', label: t('Navbar.articles') },
-        { href: '/karir', label: t('Navbar.karir') },
-        { href: '#contact', label: t('Navbar.contact'), isScroll: true },
-    ];
-
     const smoothScroll = (e: React.MouseEvent, targetId: string) => {
         e.preventDefault();
         const target = document.querySelector(targetId);
@@ -38,42 +29,114 @@ export default function Navbar() {
         }
     };
 
-    const renderNavLinks = () => navLinks.map(link => {
-        const isHome = false; // We can't rely on isHome for color because it depends on the active page, but let's make it universal
-        const baseClasses = "py-4 md:py-0 text-center md:text-left border-b border-gray-200/50 md:border-none w-full md:w-auto font-medium transition-all duration-300 hover:text-black md:hover:-translate-y-[2px] cursor-pointer no-underline";
-        const textColor = "text-gray-600";
+    const renderNavLinks = () => {
+        const baseClasses = "py-4 md:py-0 text-center md:text-left border-b border-gray-200/50 md:border-none w-full md:w-auto font-medium transition-all duration-300 hover:text-black md:hover:-translate-y-[2px] cursor-pointer no-underline text-gray-600 relative group";
 
-        if (link.isScroll) {
-            return (
-                <a
-                    key={link.label}
-                    href={`/${link.href}`}
-                    onClick={(e) => {
-                        if (window.location.pathname === '/' || window.location.pathname === '/id' || window.location.pathname === '/en' || window.location.pathname === '/zh') {
-                            smoothScroll(e, link.href);
-                        }
-                        setIsMenuOpen(false);
-                    }}
-                    className={`${baseClasses} text-gray-600`}
-                >
-                    {link.label}
-                </a>
-            );
-        }
+        // Use a wrapper with top padding (md:pt-4) to create an invisible hover "bridge" so the mouse doesn't fall off
+        const dropdownWrapperClasses = "md:absolute md:top-full md:left-0 md:w-56 md:pt-4 flex flex-col md:hidden md:group-hover:flex z-50";
+        const dropdownMenuClasses = "bg-gray-50/50 md:bg-white md:shadow-xl md:rounded-xl md:border md:border-gray-100 overflow-hidden flex flex-col transition-all duration-300";
+
+        const dropdownItemClasses = "py-3 px-6 md:px-5 text-center md:text-left text-[0.95rem] text-gray-600 hover:bg-gray-50 hover:text-[#0A4174] border-b border-gray-100 last:border-none no-underline block";
 
         return (
-            <Link
-                key={link.label}
-                href={link.href}
-                prefetch={false}
-                download={link.download ? 'KATALOG DALLAS.pdf' : undefined}
-                onClick={() => setIsMenuOpen(false)}
-                className={`${baseClasses} ${textColor}`}
-            >
-                {link.label}
-            </Link>
-        )
-    });
+            <>
+                <Link prefetch={false} href="/" onClick={() => setIsMenuOpen(false)} className={baseClasses}>
+                    {t('Navbar.home')}
+                </Link>
+
+                {/* Produk Dropdown */}
+                <div className={baseClasses} onMouseEnter={() => setIsProductsOpen(true)} onMouseLeave={() => setIsProductsOpen(false)}>
+                    <div
+                        className="flex items-center justify-center md:justify-start gap-1 w-full"
+                        onClick={() => setIsProductsOpen(!isProductsOpen)}
+                    >
+                        {t('Navbar.produk_menu') || 'Produk'}
+                        <Icon icon="mdi:chevron-down" className={`transition-transform duration-300 ${isProductsOpen ? 'rotate-180 md:rotate-0' : ''}`} />
+                    </div>
+                    <div className={`${dropdownWrapperClasses} ${isProductsOpen ? 'flex' : 'hidden'}`}>
+                        <div className={dropdownMenuClasses}>
+                            <Link prefetch={false} href="/products" onClick={() => setIsMenuOpen(false)} className={dropdownItemClasses}>
+                                {t('Navbar.products')}
+                            </Link>
+                            <Link prefetch={false} href="/produk/kotak-hampers" onClick={() => setIsMenuOpen(false)} className={dropdownItemClasses}>
+                                {t('Categories.hampers.title') || 'Kotak Hampers'}
+                            </Link>
+                            <Link prefetch={false} href="/produk/kotak-bakery" onClick={() => setIsMenuOpen(false)} className={dropdownItemClasses}>
+                                {t('Categories.bakery.title') || 'Kotak Bakery'}
+                            </Link>
+                            <Link prefetch={false} href="/produk/kotak-nasi" onClick={() => setIsMenuOpen(false)} className={dropdownItemClasses}>
+                                {t('Categories.nasi.title') || 'Kotak Nasi'}
+                            </Link>
+                            <Link prefetch={false} href="/produk/buku" onClick={() => setIsMenuOpen(false)} className={dropdownItemClasses}>
+                                {t('Categories.buku.title') || 'Buku & Majalah'}
+                            </Link>
+                            <Link prefetch={false} href="/produk/kalender" onClick={() => setIsMenuOpen(false)} className={dropdownItemClasses}>
+                                {t('Categories.kalender.title') || 'Kalender'}
+                            </Link>
+                            <Link prefetch={false} href="/produk/map" onClick={() => setIsMenuOpen(false)} className={dropdownItemClasses}>
+                                {t('Categories.map.title') || 'Map Folder'}
+                            </Link>
+                            <Link prefetch={false} href="/produk/paperbag" onClick={() => setIsMenuOpen(false)} className={dropdownItemClasses}>
+                                {t('Categories.paperbag.title') || 'Paperbag'}
+                            </Link>
+                            <Link prefetch={false} href="/produk/brosur" onClick={() => setIsMenuOpen(false)} className={dropdownItemClasses}>
+                                {t('Categories.brosur.title') || 'Brosur'}
+                            </Link>
+                            <a href="/KATALOG DALLAS.pdf" download="KATALOG DALLAS.pdf" onClick={() => setIsMenuOpen(false)} className={dropdownItemClasses}>
+                                {t('Navbar.catalog')}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <Link prefetch={false} href="/paperlisens" onClick={() => setIsMenuOpen(false)} className={baseClasses}>
+                    {t('Navbar.paperlisens')}
+                </Link>
+
+                {/* The translation key for articles is Navbar.articles, wait let me check if zh.json has articles key */}
+                {/* zh.json is missing 'articles' in Navbar block, let's just use string placeholder if null */}
+                <Link prefetch={false} href="/articles" onClick={() => setIsMenuOpen(false)} className={baseClasses}>
+                    {t('Navbar.articles') || 'Artikel'}
+                </Link>
+
+                {/* Perusahaan Dropdown */}
+                <div className={baseClasses} onMouseEnter={() => setIsCompanyOpen(true)} onMouseLeave={() => setIsCompanyOpen(false)}>
+                    <div
+                        className="flex items-center justify-center md:justify-start gap-1 w-full"
+                        onClick={() => setIsCompanyOpen(!isCompanyOpen)}
+                    >
+                        {t('Navbar.perusahaan') || 'Perusahaan'}
+                        <Icon icon="mdi:chevron-down" className={`transition-transform duration-300 ${isCompanyOpen ? 'rotate-180 md:rotate-0' : ''}`} />
+                    </div>
+                    <div className={`${dropdownWrapperClasses} ${isCompanyOpen ? 'flex' : 'hidden'}`}>
+                        <div className={dropdownMenuClasses}>
+                            <Link prefetch={false} href="/about" onClick={() => setIsMenuOpen(false)} className={dropdownItemClasses}>
+                                {t('Navbar.about')}
+                            </Link>
+                            <Link prefetch={false} href="/karir" onClick={() => setIsMenuOpen(false)} className={dropdownItemClasses}>
+                                {t('Navbar.karir')}
+                            </Link>
+                            <Link prefetch={false} href="/faq" onClick={() => setIsMenuOpen(false)} className={dropdownItemClasses}>
+                                {t('Navbar.faq') || 'FAQ'}
+                            </Link>
+                            <a
+                                href="#contact"
+                                onClick={(e) => {
+                                    if (window.location.pathname === '/' || window.location.pathname === '/id' || window.location.pathname === '/en' || window.location.pathname === '/zh') {
+                                        smoothScroll(e, '#contact');
+                                    }
+                                    setIsMenuOpen(false);
+                                }}
+                                className={dropdownItemClasses}
+                            >
+                                {t('Navbar.contact')}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </>
+        );
+    };
 
     return (
         <>

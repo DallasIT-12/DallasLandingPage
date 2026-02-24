@@ -26,6 +26,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         '/products',
         '/paperlisens',
         '/tools',
+        '/faq',
         // '/produk' removed as it is not a valid page, only /produk/[slug] exists
     ];
 
@@ -61,7 +62,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
             url: `${BASE_URL}/${locale}/produk/${slug}`,
             lastModified: new Date(),
             changeFrequency: 'weekly' as const,
-            priority: 0.85,
+            priority: 0.9, // Increased priority for individual product categories for local SEO
         }))
     );
 
@@ -84,6 +85,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // - offset-vs-digital
 
     const articleSlugs = [
+        'jasa-cetak-kotak-rokok-map-buku-instansi',
+        'panduan-memilih-paper-tray-box-nasi',
+        'cara-memilih-box-hampers-bakery',
+        'panduan-lengkap-cetak-kemasan',
+        'ide-box-hampers-lebaran-natal',
+        'ukuran-box-nasi-katering',
+        'cetak-kotak-rokok-duplex',
         'ide-bisnis-tren-2026',
         'kemasan-ramah-lingkungan',
         'kertas-ivory',
@@ -95,7 +103,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
             url: `${BASE_URL}/${locale}/articles/${slug}`,
             lastModified: new Date(),
             changeFrequency: 'monthly' as const,
-            priority: 0.7,
+            priority: slug === 'panduan-lengkap-cetak-kemasan' ? 0.95 : 0.7, // Highest priority for the main pillar article
         }))
     );
 

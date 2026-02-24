@@ -8,11 +8,14 @@
   "Navbar": {
     "home": "首页",
     "products": "定制烟盒",
+    "produk_menu": "产品",
     "catalog": "目录",
     "paperlisens": "Paperlisens",
     "contact": "联系我们",
     "about": "关于我们",
-    "karir": "职业"
+    "karir": "职业",
+    "perusahaan": "公司",
+    "faq": "常见问题"
   },
   "TopBar": {
     "address": "Jl. Kilisuci No.71, Setono Pande, Kec. Kota, Kota Kediri."

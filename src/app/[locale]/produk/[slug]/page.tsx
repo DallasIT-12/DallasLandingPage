@@ -12,8 +12,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const title = slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 
   return {
-    title: `Jual ${title} Custom - Percetakan Dallas Kediri`,
-    description: `Layanan cetak ${title} custom dengan desain menarik dan bahan berkualitas. Percetakan Offset Dallas siap memenuhi kebutuhan packaging bisnis Anda.`,
+    title: `Jasa Cetak ${title} Custom Murah & Premium - Percetakan Terdekat`,
+    description: `Jasa cetak ${title} custom murah terdekat di Kediri. Percetakan Offset Dallas melayani offset printing dengan kualitas premium dan harga terjangkau untuk kebutuhan bisnis Anda.`,
+    keywords: [`cetak ${title} murah`, `cetak ${title} terdekat`, 'percetakan terdekat', 'percetakan murah terdekat', 'Percetakan offset dallas kediri', 'offset printing', 'Jasa cetak murah di kediri', 'kemasan premium'],
   };
 }
 
