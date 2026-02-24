@@ -94,7 +94,7 @@ export default function Home() {
           muted
           playsInline
           preload="metadata"
-          poster="/main banner dallas.webp"
+          poster="/about_us.webp"
           className="absolute top-0 left-0 w-full h-full object-cover z-[1]"
         >
           <source src="/vidio.webm" type="video/webm" />
