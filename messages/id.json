@@ -25,12 +25,38 @@
     "address": "Jl. Kilisuci No.71, Setono Pande, Kec. Kota, Kota Kediri."
   },
   "CompanyProfile": {
-    "title": "Berpengalaman Sejak 1983: Menjaga Kualitas dan Kepercayaan",
-    "description": "Percetakan Offset Dallas telah hadir sebagai mitra industri percetakan di Kediri selama lebih dari empat dekade. Sejak berdiri pada tahun 1983, kami terus berinovasi dalam mengintegrasikan teknologi cetak dengan standar kualitas yang konsisten. Dengan portofolio melayani puluhan ribu klien dari berbagai sektor, kami berkomitmen untuk memberikan solusi cetak yang handal dan presisi bagi setiap kebutuhan bisnis Anda."
+    "title": "Mengenali kami",
+    "description": "\"Dallas\" atau yang sering dikenal Percetakan Offset Dallas telah menjadi salah satu percetakan terbesar yang ada di Kediri Jawa Timur selama lebih dari 40 tahun sejak berdiri tahun 1983. Selama lebih dari 40 tahun Dallas menjadi yang \"terbesar\" dan telah menjadi pionir industri percetakan yang ada di Kediri. Menjadi yang \"terbesar\" bukan hanya soal kata-kata saja namun dibuktikan secara nyata dengan memiliki ribuan pelanggan dari berbagai sektor mulai dari Produk UMKM, CV, PT, dan Sektor Pemerintahan ini juga menjadi salah satu tantangan perusahaan kami dalam menjaga kualitas hasil cetak agar sesuai dengan keinginan pelanggan."
   },
   "AboutUs": {
     "title": "Teknologi Modern untuk Hasil Presisi",
-    "description": "Kami menggunakan mesin terkini untuk menjamin ketajaman detail dan konsistensi warna di setiap lembar. Didukung tim operator yang ahli, Percetakan Dallas siap menangani berbagai kebutuhan cetak Anda dengan cepat, rapi, dan efisien."
+    "description": "Kami menggunakan mesin terkini untuk menjamin ketajaman detail dan konsistensi warna di setiap lembar. Didukung tim operator yang ahli, Percetakan Dallas siap menangani berbagai kebutuhan cetak Anda dengan cepat, rapi, dan efisien.",
+    "visi": {
+      "title": "Visi Kami",
+      "desc": "Menjadi perusahaan percetakan terbesar di Indonesia"
+    },
+    "misi": {
+      "title": "Misi Kami",
+      "points": [
+        "Memperluas jangkauan distribusi ke seluruh wilayah Indonesia",
+        "Melakukan inovasi berkelanjutan",
+        "Memberikan kualitas cetak sesuai harapan",
+        "Membangun hubungan jangka panjang",
+        "Menciptakan lingkungan kerja yang aman, kreatif dan produktif"
+      ]
+    },
+    "produk": {
+      "title": "Portofolio Kami",
+      "desc": "Dallas terus berkomitmen untuk menghasilkan kemasan berkualitas untuk memenuhi kebutuhan kemasan konsumen. Portofolio kemasan produk kami saat ini mencakup kategori rokok dan non rokok.",
+      "rokok": {
+        "title": "Kategori Rokok",
+        "desc": "Kami menawarkan berbagai macam custom seperti kotak rokok, ambri, tipping, dan lidah."
+      },
+      "nonRokok": {
+        "title": "Kategori Non-Rokok",
+        "desc": "Kami menawarkan berbagai macam produk custom seperti segala jenis kotak, map, buku, kalender, brosur, paperbag, dan berbagai jenis kemasan makanan lain."
+      }
+    }
   },
   "WhyChoose": {
     "title": "Mengapa Memilih Percetakan Offset Dallas?",

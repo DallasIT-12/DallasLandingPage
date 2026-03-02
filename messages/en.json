@@ -25,12 +25,38 @@
     "address": "Jl. Kilisuci No.71, Setono Pande, Kec. Kota, Kota Kediri."
   },
   "CompanyProfile": {
-    "title": "Experienced Since 1983: Maintaining Quality and Trust",
-    "description": "Dallas Offset Printing has been present as a partner in the printing industry in Kediri for more than four decades. Since its establishment in 1983, we have continued to innovate in integrating printing technology with consistent quality standards. With a portfolio serving tens of thousands of clients from various sectors, we are committed to providing reliable and precise printing solutions for every business need."
+    "title": "Getting to know us",
+    "description": "\"Dallas\" or often known as Dallas Offset Printing has become one of the largest printing companies in Kediri, East Java for more than 40 years since its establishment in 1983. For more than 40 years, Dallas has become the \"largest\" and a pioneer in the printing industry in Kediri. Being the \"largest\" is not just a claim but is proven by serving thousands of customers from various sectors, including MSMEs, CVs, PTs, and the Government. This also serves as a challenge for us to consistently maintain print quality that meets our customers' expectations."
   },
   "AboutUs": {
     "title": "Modern Technology for Precise Results",
-    "description": "We use the latest machines to ensure detail sharpness and color consistency on every sheet. Supported by a team of expert operators, Dallas Printing is ready to handle your various printing needs quickly, neatly, and efficiently."
+    "description": "We use the latest machinery to ensure sharpness and color consistency on every sheet. Supported by expert operators, Dallas Printing is ready to handle your printing needs quickly, neatly, and efficiently.",
+    "visi": {
+      "title": "Our Vision",
+      "desc": "To become the largest printing company in Indonesia"
+    },
+    "misi": {
+      "title": "Our Mission",
+      "points": [
+        "Expanding distribution reach across Indonesia",
+        "Continuous innovation",
+        "Providing print quality that meets expectations",
+        "Building long-term relationships",
+        "Creating a safe, creative, and productive work environment"
+      ]
+    },
+    "produk": {
+      "title": "Our Portfolio",
+      "desc": "Dallas is committed to producing quality packaging to meet consumer needs. Our portfolio currently includes cigarette and non-cigarette categories.",
+      "rokok": {
+        "title": "Cigarette Category",
+        "desc": "We offer various custom products such as cigarette boxes, ambri, tipping, and tongues."
+      },
+      "nonRokok": {
+        "title": "Non-Cigarette Category",
+        "desc": "We offer a wide range of custom products including all types of boxes, folders, books, calendars, brochures, paper bags, and various food packaging."
+      }
+    }
   },
   "WhyChoose": {
     "title": "Why Choose Dallas Offset Printing?",

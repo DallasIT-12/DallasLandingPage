@@ -62,7 +62,7 @@ export default function PaperTrayBoxNasiClient() {
                                 <strong>Efisiensi Ruang:</strong> Desain yang bisa ditumpuk (stackable) sangat menghemat ruang penyimpanan di outlet Anda.
                             </li>
                             <li style={{ marginBottom: '12px' }}>
-                                <strong>Fitur Greaseproof (Tahan Minyak):</strong> Kami menggunakan bahan khusus yang mencegah minyak tembus ke tangan pelanggan. Ini adalah standar kualitas kami untuk kata kunci "<em>Paper tray tahan minyak</em>".
+                                <strong>Fitur Greaseproof (Tahan Minyak):</strong> Kami menggunakan bahan khusus yang mencegah minyak tembus ke tangan pelanggan, sehingga kemasan tetap bersih dan rapi saat disajikan.
                             </li>
                             <li style={{ marginBottom: '12px' }}>
                                 <strong>Ramah Lingkungan:</strong> Sebagai alternatif plastik, paper tray berbahan Kraft Cokelat memberikan citra bisnis yang peduli lingkungan.
@@ -194,7 +194,7 @@ export default function PaperTrayBoxNasiClient() {
                         <div style={{ marginTop: '60px', padding: '40px', backgroundColor: '#001D39', borderRadius: '24px', color: '#ffffff', textAlign: 'center' }}>
                             <h3 style={{ fontSize: '1.8rem', fontWeight: '700', marginBottom: '16px' }}>Cara Pemesanan:</h3>
                             <p style={{ fontSize: '1.1rem', color: '#94a3b8', marginBottom: '32px', maxWidth: '600px', margin: '0 auto 32px' }}>
-                                Gunakan kata kunci "<strong>cetak paper tray makanan custom</strong>" saat menghubungi admin kami via WhatsApp untuk mendapatkan harga khusus bulan ini!
+                                Hubungi admin kami via WhatsApp untuk konsultasi spesifikasi dan mendapatkan <strong>harga khusus cetak paper tray makanan custom</strong> bulan ini!
                             </p>
                             <a href="https://wa.me/6281357888855" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', backgroundColor: '#ffffff', color: '#001D39', padding: '16px 32px', borderRadius: '9999px', fontWeight: '700', textDecoration: 'none', transition: 'transform 0.3s' }}>
                                 Hubungi Kami Sekarang

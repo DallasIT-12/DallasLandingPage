@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useRef, useEffect, useMemo, memo, useCallback } from 'react';
 import { Icon } from '@iconify/react';
 import { Link, useRouter } from '@/i18n/routing';
 import { useCart } from '@/context/CartContext';
@@ -9,6 +9,15 @@ import { useTranslations, useLocale } from 'next-intl';
 import Footer from '@/components/layout/Footer';
 import LanguageSwitcher from '@/components/common/LanguageSwitcher';
 import { getSmartTranslation } from '@/utils/productTranslations';
+
+// --- Constants & Helpers ---
+const generateDiscount = (idStr: string) => {
+  if (!idStr) return 10;
+  let hash = 0;
+  for (let i = 0; i < idStr.length; i++) { hash = idStr.charCodeAt(i) + ((hash << 5) - hash); }
+  const discounts = [10, 15, 20, 25, 30, 35, 40, 50];
+  return discounts[Math.abs(hash) % discounts.length];
+};
 
 // --- Responsive Styles ---
 const Styles = () => (
@@ -67,7 +76,7 @@ const Styles = () => (
 );
 
 // --- Product Card Component ---
-const ProductCard = ({ product }: { product: any }) => {
+const ProductCard = memo(({ product }: { product: any }) => {
   const pt = useTranslations('Paperlisens');
   const locale = useLocale();
 
@@ -128,14 +137,6 @@ const ProductCard = ({ product }: { product: any }) => {
   };
 
   const productName = getLocalized(product, 'name');
-
-  const generateDiscount = (id: string) => {
-    let hash = 0;
-    const idStr = id || '';
-    for (let i = 0; i < idStr.length; i++) { hash = idStr.charCodeAt(i) + ((hash << 5) - hash); }
-    const discounts = [10, 15, 20, 25, 30];
-    return discounts[Math.abs(hash) % discounts.length];
-  };
   const discountPercent = generateDiscount(product.id || product.name);
   const markupPrice = Math.ceil(product.price / (1 - (discountPercent / 100)));
 
@@ -173,9 +174,9 @@ const ProductCard = ({ product }: { product: any }) => {
       </div>
     </Link>
   );
-};
+});
 
-const ProductSlider = ({ title, products }: { title: string, products: any[] }) => {
+const ProductSlider = memo(({ title, products }: { title: string, products: any[] }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isScrollable, setIsScrollable] = useState(false);
   useEffect(() => {
@@ -207,7 +208,7 @@ const ProductSlider = ({ title, products }: { title: string, products: any[] }) 
       </div>
     </div>
   );
-};
+});
 
 const DescriptionFormatter = ({ text }: { text: string }) => {
   if (!text) return null;
@@ -286,12 +287,12 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
   const [selectedAttr2, setSelectedAttr2] = useState<string | null>(null);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
-  const getLocalized = (item: any, field: string) => {
+  const getLocalized = useCallback((item: any, field: string) => {
     // @ts-ignore
     const specificTranslation = item[`${field}_${locale}`];
     if (specificTranslation) return specificTranslation;
     return getSmartTranslation(item[field], locale);
-  };
+  }, [locale]);
 
   const variations = useMemo(() => {
     if (initialProduct.variants && initialProduct.variants.length > 0) {
@@ -316,67 +317,58 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
       attr1: Array.from(list1),
       attr2: Array.from(list2)
     };
-  }, [variations, locale]);
+  }, [variations, getLocalized]);
 
-  // Efek Otomatis: Sinkronkan selectedVariant berdasarkan kombinasi tombol yang dipilih
-  useEffect(() => {
-    if (attributes.attr2.length > 0) {
-      // Jika ada dua lapis variasi
-      const match = variations.find((v: any) => {
-        const n1 = v.variant_name || getLocalized(v, 'variant') || 'Standard';
+  const handleAttr1Click = useCallback((val: string) => {
+    setSelectedAttr1(val);
+    setSelectedImage(0);
+    const match = variations.find((v: any) => {
+      const n1 = v.variant_name || getLocalized(v, 'variant') || 'Standard';
+      if (attributes.attr2.length > 0) {
         const n2 = v.variant_name_2 || null;
-        return n1 === selectedAttr1 && n2 === selectedAttr2;
-      });
-      if (match) setSelectedVariant(match);
-    } else {
-      // Jika hanya satu lapis (logika lama)
-      // selectedVariant sudah dihandle oleh klik tombol langsung
-    }
-  }, [selectedAttr1, selectedAttr2, variations, attributes.attr2.length]);
+        return n1 === val && n2 === selectedAttr2;
+      }
+      return n1 === val;
+    });
+    if (match) setSelectedVariant(match);
+  }, [variations, selectedAttr2, attributes.attr2.length, getLocalized]);
+
+  const handleAttr2Click = useCallback((val: string) => {
+    setSelectedAttr2(val);
+    setSelectedImage(0);
+    const match = variations.find((v: any) => {
+      const n1 = v.variant_name || getLocalized(v, 'variant') || 'Standard';
+      const n2 = v.variant_name_2 || null;
+      return n1 === selectedAttr1 && n2 === val;
+    });
+    if (match) setSelectedVariant(match);
+  }, [variations, selectedAttr1, getLocalized]);
 
   const activeVisualVariant = hoveredVariant || selectedVariant;
   const displayProduct = activeVisualVariant || initialProduct;
 
-  // Nama harus selalu ambil dari initialProduct (Produk Utama) 
-  // agar tidak hilang saat ganti varian
   const productName = getLocalized(initialProduct, 'name');
   const productDescription = getLocalized(initialProduct, 'description');
-
-  const generateDiscount = (id: string) => {
-    let hash = 0;
-    const idStr = id || '';
-    for (let i = 0; i < idStr.length; i++) { hash = idStr.charCodeAt(i) + ((hash << 5) - hash); }
-    const discounts = [10, 15, 20, 25, 30, 35, 40, 50];
-    return discounts[Math.abs(hash) % discounts.length];
-  };
   const discountPercent = generateDiscount(displayProduct.id || displayProduct.name);
   const originalPrice = Math.ceil(displayProduct.price / (1 - (discountPercent / 100)));
 
-  // Combine variant's main image and its gallery
   const productImages = useMemo(() => {
     const list: string[] = [];
     const seen = new Set<string>();
     const skip = (url: string) => !url || url === '/placeholder.png' || url.includes('placeholder');
-
     const add = (url: string) => {
       if (url && !skip(url) && !seen.has(url)) {
         list.push(url);
         seen.add(url);
       }
     };
-
-    // Add current display product main image first
     add(displayProduct.image);
-
-    // Jika sedang melihat varian, tambahkan juga gallery dari produk utama sebagai tambahan
     if (activeVisualVariant) {
       add(initialProduct.image);
       if (Array.isArray(initialProduct.images)) {
         initialProduct.images.forEach((img: string) => add(img));
       }
     }
-
-    // Add current display product gallery
     if (Array.isArray(displayProduct.images)) {
       displayProduct.images.forEach((img: string) => add(img));
     } else if (displayProduct.images && typeof displayProduct.images === 'string') {
@@ -385,8 +377,6 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
         if (Array.isArray(parsed)) parsed.forEach((img: string) => add(img));
       } catch (e) { }
     }
-
-    // If still empty, add placeholder
     if (list.length === 0) list.push('/placeholder.png');
     return list;
   }, [displayProduct, initialProduct, activeVisualVariant]);
@@ -395,8 +385,8 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
     ...displayProduct,
     localizedName: productName,
     localizedDescription: productDescription,
-    category: initialProduct.category, // Kunci kategori dari produk utama
-    slug: initialProduct.slug,         // Kunci slug kategori dari produk utama
+    category: initialProduct.category,
+    slug: initialProduct.slug,
     images: productImages,
     rating: 4.9,
     reviewCount: 128,
@@ -408,30 +398,21 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
   const handleAddToCart = () => { addToCart(product, quantity, selectedVariant); };
 
   const getVariantName = (p: any) => {
-    // 1. Coba ambil dari variant_name (Schema Baru)
     const localizedName = getLocalized(p, 'variant_name');
     if (localizedName && localizedName !== 'Standard') return localizedName;
-
-    // 2. Fallback ke variant (Schema Lama)
     return getLocalized(p, 'variant') || 'Standard';
   };
 
   const handleOrderNow = async () => {
-    // 1. Increment Sold Count di Database
     try {
       await fetch(`/api/paperlisens/products/${initialProduct.productSlug}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ variant_id: selectedVariant?.id })
       });
-    } catch (e) {
-      console.error('Failed to increment sold count');
-    }
-
-    // 2. Siapkan Pesan WhatsApp
+    } catch (e) { }
     const variantName = selectedVariant ? getVariantName(selectedVariant) : (initialProduct.variant || 'Standard');
     const message = `Halo Paperlisens,\n\nSaya ingin memesan produk berikut:\n📦 *${productName}*\n🔹 Varian: ${variantName}\n🔢 Jumlah: ${quantity} pcs\n\nMohon informasi selanjutnya, terima kasih!`;
-
     window.open(`https://wa.me/6281260001487?text=${encodeURIComponent(message)}`, '_blank');
   };
 

@@ -12,25 +12,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
         '/about',
         '/products',
         '/paperlisens',
-        '/tools',
-        '/contact', // Assuming contact page exists based on standard practices, though not explicitly seen in file list. If not, it will just 404 which is fine for now or I can double check. 
-        // Wait, let me check the file list again. 
-        // I saw 'about', 'articles', 'maintenance', 'paperlisens', 'products', 'produk', 'tools'.
-        // 'contact' was not in the list. I will remove it to be safe.
-    ];
-
-    // Refined static routes based on file list
-    const refinedStaticRoutes = [
-        '',
-        '/about',
-        '/products',
-        '/paperlisens',
-        '/tools',
+        '/tools/image-compressor',
         '/faq',
-        // '/produk' removed as it is not a valid page, only /produk/[slug] exists
+        '/articles',
+        '/karir',
     ];
 
-    const staticEntries = refinedStaticRoutes.flatMap((route) =>
+    const staticEntries = staticRoutes.flatMap((route) =>
         locales.map((locale) => ({
             url: `${BASE_URL}/${locale}${route}`,
             lastModified: new Date(),
@@ -77,13 +65,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         }))
     );
 
-    // 3. Article Routes
-    // I detected these folders in [locale]/articles: 
-    // - ide-bisnis-tren-2026
-    // - kemasan-ramah-lingkungan
-    // - kertas-ivory
-    // - offset-vs-digital
-
+    // 4. Article Routes
     const articleSlugs = [
         'jasa-cetak-kotak-rokok-map-buku-instansi',
         'panduan-memilih-paper-tray-box-nasi',

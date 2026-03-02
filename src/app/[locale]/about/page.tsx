@@ -3,7 +3,7 @@ import AboutClient from '@/components/page/AboutClient';
 
 // This is a Server Component
 export const metadata: Metadata = {
-  title: 'Tentang Kami - Percetakan Dallas Terpercaya Sejak 2005',
+  title: 'Tentang Kami - Percetakan Dallas Terpercaya Sejak 1983',
   description: 'Mengenal lebih dekat Percetakan Offset Dallas Kediri. Partner cetak terpercaya dengan pengalaman puluhan tahun dalam industri packaging dan percetakan offset.',
 };
 

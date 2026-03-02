@@ -24,7 +24,7 @@ export default function ProductCategoryPage() {
   const [isLargeMobile, setIsLargeMobile] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [zoomLevel, setZoomLevel] = useState(1);
-  const [screenReady, setScreenReady] = useState(false);
+
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -33,7 +33,6 @@ export default function ProductCategoryPage() {
       setIsLargeMobile(window.innerWidth < 768);
     };
     checkScreenSize();
-    setScreenReady(true);
     window.addEventListener('resize', checkScreenSize);
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
@@ -77,7 +76,7 @@ export default function ProductCategoryPage() {
       ],
       explanation: "Kotak Hampers adalah kemasan hadiah premium yang dirancang khusus untuk mempercantik tampilan parsel dan bingkisan di momen-momen spesial. Lebih dari sekadar pembungkus, kotak hampers menjadi 'wajah pertama' yang memberikan kesan mewah dan berkesan bagi penerima. Dengan desain cetak custom, kotak hampers bisa menjadi media branding yang kuat untuk bisnis gift, toko kue, maupun perusahaan.",
       applications: ["Parsel Lebaran / Idul Fitri", "Hampers pernikahan & souvenir", "Hampers Natal & Tahun Baru", "Gift box corporate / perusahaan", "Bingkisan ulang tahun premium"],
-      commonMaterials: ["Art Carton 260–310 gsm", "Ivory 310 gsm", "Art Paper (untuk laminasi luar)", "Corrugated Board (untuk struktur kokoh)"]
+      commonMaterials: ["Art Carton", "Ivory Paper", "Art Paper", "Corrugated Board"]
     },
     {
       title: tCat('bakery.title'), slug: "kotak-bakery", img: "/kotak%20cake.webp", desc: tCat('bakery.desc'),
@@ -119,7 +118,7 @@ export default function ProductCategoryPage() {
       ],
       explanation: "Kotak Bakery adalah kemasan fungsional sekaligus estetis yang dirancang untuk melindungi produk roti, kue, dan pastry agar tetap segar, rapi, dan menarik. Kemasan ini harus tahan terhadap minyak dan kelembapan sambil tetap menampilkan desain yang menggugah selera. Bagi pelaku usaha bakery, kotak custom adalah investasi branding yang membuat produk tampil lebih profesional dan meningkatkan nilai jual.",
       applications: ["Box kue ulang tahun", "Kotak donat & cupcake", "Box roti tawar & pastry", "Kemasan brownies & cookies", "Box tart & pie premium"],
-      commonMaterials: ["Ivory 310 gsm (Food Grade)", "Duplex 310 gsm", "Food Grade Paper", "Art Carton (untuk box premium)"]
+      commonMaterials: ["Ivory Paper (Food Grade)", "Duplex", "Food Grade Paper", "Art Carton"]
     },
     {
       title: tCat('rokok.title'), slug: "rokok", img: "/custom%20rokok%203.webp", desc: tCat('rokok.desc'),
@@ -139,7 +138,7 @@ export default function ProductCategoryPage() {
       ],
       explanation: "Kotak Rokok Custom adalah kemasan presisi tinggi yang menjadi identitas visual sebuah merek rokok. Setiap detail — mulai dari ketajaman grafis, ketepatan warna, hingga finishing metalik — sangat krusial karena kotak rokok adalah media branding utama yang dilihat konsumen setiap hari. Dallas telah berpengalaman puluhan tahun mencetak kotak rokok dengan standar kualitas industri yang ketat.",
       applications: ["Kemasan rokok kretek", "Kemasan rokok filter", "Kemasan cigarillo & cerutu", "Box rokok edisi terbatas / limited edition", "Packaging rokok elektrik (pod)"],
-      commonMaterials: ["Ivory 230–310 gsm", "Tipping Paper (untuk filter)", "SBS (Solid Bleached Sulfate) Board", "Inner Frame Board"]
+      commonMaterials: ["Ivory Paper", "Tipping Paper", "SBS (Solid Bleached Sulfate) Board", "Inner Frame Board"]
     },
     {
       title: tCat('nasi.title'), slug: "kotak-nasi", img: "/kotak%20nasi%20(1).webp", desc: tCat('nasi.desc'),
@@ -151,7 +150,7 @@ export default function ProductCategoryPage() {
       ],
       explanation: "Kotak Nasi adalah kemasan praktis yang dirancang untuk mengemas nasi beserta lauk pauk secara higienis dan rapi. Digunakan secara luas dalam kegiatan katering, acara keagamaan, kantor, dan komunitas. Kotak nasi yang di-custom dengan logo atau desain khusus memberikan sentuhan profesional dan meningkatkan citra penyelenggara acara maupun usaha katering.",
       applications: ["Nasi kotak acara kantor & meeting", "Katering hajatan & pernikahan", "Kotak nasi acara keagamaan", "Prasmanan & buffet box", "Nasi tumpeng mini"],
-      commonMaterials: ["Duplex 310 gsm", "Food Grade Paper", "Ivory 250 gsm (untuk versi premium)", "Kraft Paper (untuk kesan natural)"]
+      commonMaterials: ["Duplex", "Food Grade Paper", "Ivory Paper", "Kraft Paper"]
     },
     {
       title: tCat('buku.title'), slug: "buku", img: "/buku%20(6).webp", desc: tCat('buku.desc'),
@@ -163,7 +162,7 @@ export default function ProductCategoryPage() {
       ],
       explanation: "Cetak Buku mencakup proses produksi berbagai jenis buku, mulai dari buku ajar, novel, company profile, hingga jurnal ilmiah. Kualitas cetak buku diukur dari kejelasan teks, ketajaman gambar, serta kekuatan jilid (binding) yang menentukan daya tahan buku. Di Dallas, kami menangani cetak buku dari skala kecil (print on demand) hingga produksi massal ribuan eksemplar dengan kualitas konsisten.",
       applications: ["Buku ajar & modul pembelajaran", "Novel & buku cerita", "Company profile & annual report", "Yearbook & buku wisuda", "Jurnal ilmiah & skripsi"],
-      commonMaterials: ["HVS 70–80 gsm (isi buku)", "Art Paper 120–150 gsm (isi full color)", "Art Carton 260 gsm (cover)", "Ivory 310 gsm (hard cover)", "Book Paper 57,5 gsm (novel)"]
+      commonMaterials: ["HVS", "Art Paper", "Art Carton", "Ivory Paper", "Book Paper"]
     },
     {
       title: tCat('kalender.title'), slug: "kalender", img: "/foto%20kalender.webp", desc: tCat('kalender.desc'),
@@ -174,7 +173,7 @@ export default function ProductCategoryPage() {
       ],
       explanation: "Kalender adalah media promosi fungsional yang hadir di meja atau dinding pelanggan selama satu tahun penuh. Artinya, brand Anda terlihat setiap hari — menjadikannya salah satu alat pemasaran paling efektif dari segi jangka waktu dan biaya. Desain yang menarik dan material premium membuat kalender custom menjadi hadiah korporat yang bernilai dan disukai penerima.",
       applications: ["Kalender dinding perusahaan", "Kalender meja / duduk", "Kalender spiralwire premium", "Kalender poster", "Kalender custom foto / keluarga"],
-      commonMaterials: ["Art Paper 150–260 gsm (lembar isi)", "Art Carton 310 gsm (stand/dudukan)", "Ivory 310 gsm (untuk kalender premium)", "Spiralwire / Ring jilid"]
+      commonMaterials: ["Art Paper", "Art Carton", "Ivory Paper", "Spiralwire / Ring Jilid"]
     },
     {
       title: tCat('paperbag.title'), slug: "paperbag", img: "/paperbag.webp", desc: tCat('paperbag.desc'),
@@ -186,7 +185,7 @@ export default function ProductCategoryPage() {
       ],
       explanation: "Paperbag (tas kertas) adalah kemasan jinjing yang stylish dan ramah lingkungan, menjadi pilihan utama brand-brand modern sebagai pengganti kantong plastik. Paperbag custom dengan logo dan desain eksklusif berfungsi sebagai 'iklan berjalan' — setiap orang yang membawa paperbag Anda secara tidak langsung mempromosikan brand. Material yang kuat memastikan paperbag tahan beban dan tidak mudah sobek.",
       applications: ["Shopping bag toko fashion & retail", "Paperbag event & launching produk", "Paperbag seminar & konferensi", "Goodie bag hadiah", "Paperbag restoran & coffee shop"],
-      commonMaterials: ["Ivory 230–310 gsm", "Art Paper 260 gsm", "Kraft Paper (untuk kesan eco-friendly)", "Art Carton (untuk paperbag tebal)"]
+      commonMaterials: ["Ivory Paper", "Art Paper", "Kraft Paper", "Art Carton"]
     },
     {
       title: tCat('map.title'), slug: "map", img: "/map.webp", desc: tCat('map.desc'),
@@ -198,14 +197,14 @@ export default function ProductCategoryPage() {
       ],
       explanation: "Map (folder) adalah wadah dokumen cetak yang memberikan kesan profesional dan terorganisir. Digunakan secara luas di dunia korporat, pendidikan, dan acara formal. Map custom dengan logo instansi atau perusahaan menunjukkan perhatian terhadap detail dan kredibilitas. Juga berfungsi sebagai media branding yang elegan saat digunakan di seminar, rapat, atau presentasi bisnis.",
       applications: ["Map seminar & workshop", "Map raport / rapor sekolah", "Map ijazah & sertifikat", "Document folder perusahaan", "Map presentasi & proposal bisnis"],
-      commonMaterials: ["Art Carton 260–310 gsm", "Ivory 310 gsm", "BC (Board Coated)", "Linen Paper (untuk kesan premium)"]
+      commonMaterials: ["Art Carton", "Ivory Paper", "BC (Board Coated)", "Linen Paper"]
     },
     {
       title: tCat('brosur.title'), slug: "brosur", img: "/foto%20brosur.webp", desc: tCat('brosur.desc'),
       tags: [tCat('brosur.tags.tag1')], gallery: ["/foto%20brosur.webp"],
       explanation: "Brosur adalah media cetak promosi yang efektif untuk menyampaikan informasi produk, layanan, atau acara secara ringkas dan visual. Dengan lipatan yang presisi dan desain yang menarik, brosur mampu menyampaikan pesan bisnis Anda secara langsung ke tangan calon pelanggan. Kualitas kertas dan cetakan yang tajam membuat brosur terlihat profesional dan meningkatkan kepercayaan konsumen terhadap brand Anda.",
       applications: ["Brosur promosi produk & layanan", "Leaflet acara & event", "Flyer promo restoran & kafe", "Pamflet pendidikan & kesehatan", "Menu lipat restoran"],
-      commonMaterials: ["Art Paper 120 gsm (standar)", "Art Paper 150 gsm (premium)", "Ivory 230 gsm (untuk brosur tebal)", "HVS 100 gsm (untuk leaflet ekonomis)"]
+      commonMaterials: ["Art Paper", "Ivory Paper", "HVS"]
     },
 
     // Materials with Detailed Info
@@ -267,15 +266,6 @@ export default function ProductCategoryPage() {
             <Link href="/" style={{ marginTop: '2rem', display: 'inline-block', color: '#0A4174', fontWeight: '600' }}>Kembali ke Home</Link>
           </div>
         </main>
-      </div>
-    );
-  }
-
-  if (!screenReady) {
-    return (
-      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#ffffff' }}>
-        <div style={{ width: '40px', height: '40px', border: '3px solid rgba(0,29,57,0.1)', borderTopColor: '#001D39', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
-        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
     );
   }

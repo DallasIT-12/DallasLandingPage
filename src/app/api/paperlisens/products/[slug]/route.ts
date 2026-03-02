@@ -36,7 +36,8 @@ function toProduct(row: any) {
 // GET /api/paperlisens/products/[slug]
 export async function GET(request: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   try {
-    const { slug } = await params;
+    const { slug: rawSlug } = await params;
+    const slug = decodeURIComponent(rawSlug);
     const supabase = getClient();
     if (!supabase) return NextResponse.json({ error: 'DB not configured' }, { status: 503 });
 
@@ -99,27 +100,76 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   }
 }
 
+// Helper: check if a URL is a Supabase Storage file (not a local path)
+function isSupabaseStorageUrl(url: string): boolean {
+  return typeof url === 'string' && url.includes('/storage/v1/object/public/');
+}
+
+// Helper: extract bucket + file path from a Supabase public URL
+function extractStoragePath(url: string): { bucket: string; path: string } | null {
+  const marker = '/storage/v1/object/public/';
+  const idx = url.indexOf(marker);
+  if (idx === -1) return null;
+  const after = url.substring(idx + marker.length);
+  const slash = after.indexOf('/');
+  if (slash === -1) return null;
+  return { bucket: after.substring(0, slash), path: after.substring(slash + 1) };
+}
+
+// Helper: delete a list of Supabase Storage URLs
+async function deleteStorageUrls(supabase: any, urls: string[]) {
+  if (urls.length === 0) return;
+  // Group by bucket
+  const byBucket = new Map<string, string[]>();
+  for (const url of urls) {
+    const parsed = extractStoragePath(url);
+    if (!parsed) continue;
+    if (!byBucket.has(parsed.bucket)) byBucket.set(parsed.bucket, []);
+    byBucket.get(parsed.bucket)!.push(parsed.path);
+  }
+  for (const [bucket, paths] of byBucket.entries()) {
+    console.log(`CLEANUP_STORAGE: Deleting ${paths.length} file(s) from bucket "${bucket}":`, paths);
+    const { error } = await supabase.storage.from(bucket).remove(paths);
+    if (error) console.warn(`CLEANUP_STORAGE_WARN: ${error.message}`);
+    else console.log(`CLEANUP_STORAGE_OK: Deleted from "${bucket}"`);
+  }
+}
+
 // PUT /api/paperlisens/products/[slug] - FIXED UNIQUE ID
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
-    const { slug } = await params;
+    const { slug: rawSlug } = await params;
+    const body = await request.json();
+    const slug = decodeURIComponent(rawSlug);
     const supabase = getClient();
     if (!supabase) return NextResponse.json({ error: 'DB not configured' }, { status: 503 });
-    const body = await request.json();
 
-    console.log(`--- API PUT (SECURE UNIQUE ID): ${slug} ---`);
+    console.log(`--- API PUT START ---`);
+    console.log(`RAW_SLUG: "${rawSlug}"`);
+    console.log(`DECODED_SLUG: "${slug}" (Length: ${slug.length})`);
+    console.log(`SLUG_HEX: ${Buffer.from(slug).toString('hex')}`);
+    console.log(`BODY_ID: ${body.id}`);
+    console.log(`BODY_NAME: ${body.name}`);
 
     // 1. Cari Base berdasarkan SLUG (Slug adalah identitas paling unik)
-    let { data: base } = await supabase.from('paperlisens_products_base').select('*').eq('product_slug', slug).maybeSingle();
+    const { data: foundBase, error: findErr } = await supabase.from('paperlisens_products_base').select('*').eq('product_slug', slug).maybeSingle();
+
+    if (findErr) {
+      console.error('FIND_BASE_ERROR:', findErr);
+      return NextResponse.json({ error: findErr.message }, { status: 500 });
+    }
+
+    let base = foundBase;
 
     // 2. Jika tidak ada, buat baru dengan ID yang dijamin unik
     if (!base) {
+      console.log(`BASE_NOT_FOUND: Slug "${slug}" not in paperlisens_products_base. Attempting insert...`);
       // JANGAN memotong ID lagi (pt-011 -> pt adalah kesalahan). 
       // Gunakan ID unik baru untuk setiap entitas produk utama.
-      const uniqueBaseId = `prod-${slug.slice(0, 15)}-${Math.random().toString(36).substr(2, 5)}`;
+      const uniqueBaseId = `prod-${slug.slice(0, 15).replace(/\//g, '-')}-${Math.random().toString(36).substr(2, 5)}`;
 
       const { data: newBase, error: insErr } = await supabase.from('paperlisens_products_base').insert({
         id: uniqueBaseId,
@@ -133,8 +183,10 @@ export async function PUT(
       }).select().single();
 
       if (insErr) {
-        console.error('INSERT_ERROR:', insErr);
-        return NextResponse.json({ error: insErr.message }, { status: 500 });
+        console.error('INSERT_ERROR (Base not found in select but exists on insert):', insErr);
+        // Jika gagal karena duplicate key, coba cari sekali lagi dengan paksa?
+        // Tapi unique constraint error 23505 itu berarti BENAR ada.
+        return NextResponse.json({ error: `Slug "${slug}" already exists but could not be retrieved. DB Error: ${insErr.message}` }, { status: 500 });
       }
       base = newBase;
     }
@@ -142,7 +194,46 @@ export async function PUT(
     if (base) {
       console.log(`UPDATING_BASE: ${base.id}`);
 
-      // 1. UPDATE INFO UTAMA (BASE)
+      // --- SERVER-SIDE STORAGE CLEANUP ---
+      // Collect all image URLs currently stored in the database for this product
+      const oldBaseImages: string[] = [
+        base.image,
+        ...(Array.isArray(base.images) ? base.images : [])
+      ].filter(isSupabaseStorageUrl);
+
+      // Also collect variant images stored in the database
+      const { data: oldVariants } = await supabase
+        .from('paperlisens_product_variants')
+        .select('image, images')
+        .eq('product_id', base.id);
+
+      const oldVariantImages: string[] = (oldVariants || []).flatMap((v: any) => [
+        v.image,
+        ...(Array.isArray(v.images) ? v.images : [])
+      ]).filter(isSupabaseStorageUrl);
+
+      const allOldUrls = new Set([...oldBaseImages, ...oldVariantImages]);
+
+      // Collect all image URLs in the new payload
+      const newBaseImages: string[] = [
+        body.image,
+        ...(Array.isArray(body.images) ? body.images : [])
+      ].filter(isSupabaseStorageUrl);
+
+      const newVariantImages: string[] = (Array.isArray(body.variants) ? body.variants : []).flatMap((v: any) => [
+        v.image,
+        ...(Array.isArray(v.images) ? v.images : [])
+      ]).filter(isSupabaseStorageUrl);
+
+      const allNewUrls = new Set([...newBaseImages, ...newVariantImages]);
+
+      // Orphaned = in old but not in new
+      const orphanedUrls = [...allOldUrls].filter(url => !allNewUrls.has(url));
+      if (orphanedUrls.length > 0) {
+        console.log(`CLEANUP: Found ${orphanedUrls.length} orphaned image(s) to delete from storage.`);
+        await deleteStorageUrls(supabase, orphanedUrls);
+      }
+      // --- END STORAGE CLEANUP ---
       const { error: updateErr } = await supabase.from('paperlisens_products_base').update({
         name: body.name,
         name_en: body.name_en || null,

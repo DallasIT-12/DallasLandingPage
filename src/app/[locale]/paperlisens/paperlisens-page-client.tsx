@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useRef, useMemo } from 'react';
-import Image from 'next/image';
 import { Link } from '@/i18n/routing';
 import { Icon } from '@iconify/react';
 import { useCart } from '@/context/CartContext';
@@ -190,11 +189,11 @@ const ProductCard = ({ product }: { product: any }) => {
     return getSmartTranslation(product[field], locale);
   };
 
-  const productName = getLocalized('name');
+  const productName = getLocalized('name') || 'Produk Paperlisens';
   const productVariant = getLocalized('variant');
-  const displayImage = (product.image && product.image !== '/placeholder.png' && !product.image.includes('placeholder'))
+  const displayImage = (product.image && typeof product.image === 'string' && product.image.trim() !== '' && !product.image.includes('placeholder'))
     ? product.image
-    : (product.images?.[0] || product.image || '/placeholder.png');
+    : (Array.isArray(product.images) && product.images[0] ? product.images[0] : (product.image || '/placeholder.png'));
 
   const { discountPercent, markupPrice } = useMemo(() => {
     let hash = 0;
@@ -208,14 +207,13 @@ const ProductCard = ({ product }: { product: any }) => {
     <div className="product-card">
       <Link href={`/paperlisens/product/${product.productSlug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
         <div className="card-image-wrapper">
-          <Image
+          <img
             src={displayImage}
             alt={productName}
-            fill
-            sizes="(max-width: 768px) 50vw, 25vw"
             className="card-image"
             style={{ objectFit: 'cover' }}
             loading="lazy"
+            onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder.png'; }}
           />
           <div style={{ position: 'absolute', top: 0, right: 0, backgroundColor: '#d6bd98', padding: '4px 8px', textAlign: 'center', zIndex: 2 }}>
             <div style={{ color: '#1a3636', fontSize: '12px', fontWeight: 'bold' }}>{discountPercent}%</div>

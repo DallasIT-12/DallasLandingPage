@@ -146,6 +146,9 @@ export async function POST(request: NextRequest) {
       );
     }
     const body = await request.json();
+    console.log('--- API POST START (ADD PRODUCT) ---');
+    console.log('BODY_NAME:', body.name);
+    console.log('BODY_ID:', body.id);
 
     if (body.product_id) {
       // Add variant to existing product

@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import Footer from '@/components/layout/Footer';
 import Navbar from '@/components/layout/Navbar';
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
 
 export default function ArticlesListPage() {
@@ -13,7 +14,6 @@ export default function ArticlesListPage() {
   const [isSmallMobile, setIsSmallMobile] = useState(false);
   const [isMediumMobile, setIsMediumMobile] = useState(false);
   const [isLargeMobile, setIsLargeMobile] = useState(false);
-  const [screenReady, setScreenReady] = useState(false);
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -22,7 +22,6 @@ export default function ArticlesListPage() {
       setIsLargeMobile(window.innerWidth < 768);
     };
     checkScreenSize();
-    setScreenReady(true);
     window.addEventListener('resize', checkScreenSize);
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
@@ -96,14 +95,7 @@ export default function ArticlesListPage() {
     }
   ];
 
-  if (!screenReady) {
-    return (
-      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f8fafc' }}>
-        <div style={{ width: '40px', height: '40px', border: '3px solid rgba(0,29,57,0.1)', borderTopColor: '#001D39', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
-        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-      </div>
-    );
-  }
+
 
   return (
     <div style={{ backgroundColor: '#f8fafc', minHeight: '100vh', color: '#1e293b', overflowX: 'hidden' }}>
@@ -126,8 +118,8 @@ export default function ArticlesListPage() {
                 whileHover={!isLargeMobile ? { y: -10 } : {}}
                 style={{ backgroundColor: '#ffffff', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', cursor: 'pointer', width: '100%' }}
               >
-                <div style={{ height: isSmallMobile ? '180px' : '220px', overflow: 'hidden' }}>
-                  <img src={article.image} alt={article.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <div style={{ height: isSmallMobile ? '180px' : '220px', overflow: 'hidden', position: 'relative' }}>
+                  <Image src={article.image} alt={article.title} fill sizes="(max-width: 768px) 100vw, 350px" style={{ objectFit: 'cover' }} />
                 </div>
                 <div style={{ padding: isLargeMobile ? '20px' : '32px', flex: 1, display: 'flex', flexDirection: 'column' }}>
                   <div style={{ marginBottom: '12px' }}>
@@ -146,9 +138,9 @@ export default function ArticlesListPage() {
             </Link>
           ))}
         </div>
-      </main>
+      </main >
 
       <Footer />
-    </div>
+    </div >
   );
 }

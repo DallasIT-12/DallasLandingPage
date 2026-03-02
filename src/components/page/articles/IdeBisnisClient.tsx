@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import Footer from '@/components/layout/Footer';
 import Navbar from '@/components/layout/Navbar';
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
 
 export default function BusinessTrendsArticle() {
@@ -13,7 +14,6 @@ export default function BusinessTrendsArticle() {
   const [isSmallMobile, setIsSmallMobile] = useState(false);
   const [isMediumMobile, setIsMediumMobile] = useState(false);
   const [isLargeMobile, setIsLargeMobile] = useState(false);
-  const [screenReady, setScreenReady] = useState(false);
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -22,7 +22,6 @@ export default function BusinessTrendsArticle() {
       setIsLargeMobile(window.innerWidth < 768);
     };
     checkScreenSize();
-    setScreenReady(true);
     window.addEventListener('resize', checkScreenSize);
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
@@ -74,14 +73,7 @@ export default function BusinessTrendsArticle() {
     }
   ];
 
-  if (!screenReady) {
-    return (
-      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#ffffff' }}>
-        <div style={{ width: '40px', height: '40px', border: '3px solid rgba(0,29,57,0.1)', borderTopColor: '#001D39', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
-        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-      </div>
-    );
-  }
+
 
   return (
     <div style={{ backgroundColor: '#ffffff', minHeight: '100vh', color: '#1e293b', overflowX: 'hidden' }}>
@@ -102,7 +94,16 @@ export default function BusinessTrendsArticle() {
             </p>
           </header>
 
-          <img src="/artikel (2).webp" alt="Tren Bisnis 2026" style={{ width: '100%', aspectRatio: '16/9', objectFit: 'cover', borderRadius: '24px', marginBottom: isLargeMobile ? '32px' : '48px', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)' }} />
+          <div style={{ width: '100%', aspectRatio: '16/9', position: 'relative', borderRadius: '24px', overflow: 'hidden', marginBottom: isLargeMobile ? '32px' : '48px', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)' }}>
+            <Image
+              src="/artikel (2).webp"
+              alt="Tren Bisnis 2026"
+              fill
+              sizes="(max-width: 900px) 100vw, 900px"
+              style={{ objectFit: 'cover' }}
+              priority
+            />
+          </div>
 
           <section style={{ fontSize: isLargeMobile ? '1rem' : '1.125rem', lineHeight: '1.8', color: '#334155' }}>
             <p style={{ marginBottom: '24px' }}>
