@@ -31,7 +31,7 @@ const FoldingBoxModel = ({ foldAmount = 0, lidOpenAmount = 0, zoom = 1 }: Foldin
     // 2. Load and Calibrate Texture
     const texture = useLoader(THREE.TextureLoader, '/KK_GAJAH_OLENG.jpg');
     texture.flipY = false;
-    texture.encoding = THREE.sRGBEncoding;
+    texture.colorSpace = THREE.SRGBColorSpace;
 
     // Helper to create calibrated materials
     const createMat = (offset: [number, number], repeat: [number, number], color = '#ffffff') => {
