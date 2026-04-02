@@ -1,0 +1,296 @@
+<!-- ============================================================
+     DALLAS PRINTING ID — Floating Parallax Hero Section
+     CARA PAKAI:
+     1. Paste blok <link> font ini di dalam <head> websitemu
+     2. Paste sisa kode ini (style + section + script) di tempat
+        kamu mau hero section muncul (ganti hero/banner lama)
+     ============================================================ -->
+
+<!-- 1. TARUH INI DI DALAM <head> -->
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+
+<!-- 2. STYLE — scoped dengan prefix #dp-hero agar tidak konflik -->
+<style>
+  #dp-hero *{ box-sizing: border-box; }
+
+  #dp-hero {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    min-height: 600px;
+    background: #0d0d0b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  /* Grain overlay */
+  #dp-hero::after {
+    content: '';
+    position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='.035'/%3E%3C/svg%3E");
+    opacity: .4;
+  }
+
+  #dp-hero .dp-glow {
+    position: absolute;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(212,67,30,.13) 0%, transparent 70%);
+    border-radius: 50%; pointer-events: none; z-index: 2;
+  }
+
+  /* Deco lines */
+  #dp-hero .dp-dline {
+    position: absolute;
+    background: #c9a535;
+    opacity: .12;
+    pointer-events: none;
+    z-index: 3;
+  }
+
+  /* Center text */
+  #dp-hero-center {
+    position: relative; z-index: 50;
+    text-align: center; max-width: 380px;
+  }
+  #dp-hero-center .dp-eyebrow {
+    font-size: 10px; letter-spacing: 5px; text-transform: uppercase;
+    color: #c9a535; margin-bottom: 16px;
+    opacity: 0; animation: dpFadeUp .7s .4s ease forwards;
+  }
+  #dp-hero-center h2.dp-h {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 8vw, 90px);
+    line-height: .92; letter-spacing: 1px;
+    color: #f5f0e8; margin: 0;
+    opacity: 0; animation: dpFadeUp .8s .55s ease forwards;
+  }
+  #dp-hero-center h2.dp-h em { color: #d4431e; font-style: normal; }
+  #dp-hero-center .dp-desc {
+    margin-top: 18px; font-size: 13px; color: #888;
+    font-weight: 300; line-height: 1.7;
+    opacity: 0; animation: dpFadeUp .8s .7s ease forwards;
+  }
+  #dp-hero-center .dp-btns {
+    margin-top: 28px; display: flex; gap: 12px; justify-content: center;
+    opacity: 0; animation: dpFadeUp .8s .85s ease forwards;
+  }
+  .dp-btn {
+    padding: 11px 28px; font-size: 11px; letter-spacing: 2.5px;
+    text-transform: uppercase; font-weight: 500;
+    border: none; text-decoration: none; display: inline-block;
+    transition: background .2s, color .2s; font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+  .dp-btn-primary { background: #d4431e; color: #f5f0e8; }
+  .dp-btn-primary:hover { background: #b83518; color: #f5f0e8; }
+  .dp-btn-ghost {
+    background: transparent; color: #f5f0e8;
+    border: 1px solid rgba(245,240,232,.25);
+  }
+  .dp-btn-ghost:hover { border-color: #f5f0e8; }
+
+  /* Floating cards */
+  .dp-fcard {
+    position: absolute;
+    border-radius: 6px; overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,.65);
+    will-change: transform; z-index: 30;
+    opacity: 0; animation: dpCardIn .9s ease both;
+    transition: box-shadow .3s;
+  }
+  .dp-fcard:hover {
+    box-shadow: 0 30px 80px rgba(0,0,0,.85);
+    z-index: 60;
+  }
+  .dp-fcard canvas { display: block; }
+  .dp-fcard .dp-label {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,.75));
+    color: #f5f0e8; font-size: 9px; letter-spacing: 2px;
+    text-transform: uppercase; padding: 18px 10px 8px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+  .dp-fcard .dp-badge {
+    position: absolute; top: 8px; right: 8px;
+    background: #d4431e; color: white;
+    font-size: 8px; letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 3px 7px; font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  /* Stats */
+  #dp-stats {
+    position: absolute; bottom: 28px; left: 36px; z-index: 100;
+    display: flex; gap: 32px;
+    opacity: 0; animation: dpFadeUp .8s 1.1s ease forwards;
+  }
+  .dp-stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px; color: #f5f0e8; line-height: 1;
+  }
+  .dp-stat-num span { color: #d4431e; }
+  .dp-stat-label {
+    font-size: 9px; letter-spacing: 2px; color: #555;
+    text-transform: uppercase; margin-top: 2px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  /* Hint */
+  #dp-hint {
+    position: absolute; bottom: 24px; left: 50%;
+    transform: translateX(-50%);
+    font-size: 9px; letter-spacing: 3px; text-transform: uppercase;
+    color: #555; z-index: 100;
+    opacity: 0; animation: dpFadeUp 1s 1.4s ease forwards;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    white-space: nowrap;
+  }
+
+  @keyframes dpFadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes dpCardIn {
+    from { opacity: 0; transform: scale(.85) translateY(24px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+</style>
+
+<!-- 3. HTML SECTION — paste ini menggantikan hero/banner lama -->
+<section id="dp-hero">
+  <div class="dp-glow"></div>
+
+  <!-- Deco lines -->
+  <div class="dp-dline" style="width:1px;height:160px;top:8%;left:16%"></div>
+  <div class="dp-dline" style="width:80px;height:1px;top:20%;right:13%"></div>
+  <div class="dp-dline" style="width:1px;height:110px;bottom:10%;right:18%"></div>
+  <div class="dp-dline" style="width:60px;height:1px;bottom:18%;left:20%"></div>
+
+  <!-- Hero Text Center -->
+  <div id="dp-hero-center">
+    <p class="dp-eyebrow">Percetakan Offset — Kediri</p>
+    <h2 class="dp-h">Cetak<br/><em>Kemasan</em><br/>Custom</h2>
+    <p class="dp-desc">Box rokok, hampers, bakery, paperbag & lebih.<br/>Kualitas premium, harga terbaik.</p>
+    <div class="dp-btns">
+      <a class="dp-btn dp-btn-primary" href="https://wa.me/6281260001487?text=Halo%20kak%2C%20saya%20ingin%20tanya%20produk%20percetakan">Pesan Sekarang</a>
+      <a class="dp-btn dp-btn-ghost" href="/KATALOG DALLAS.pdf">Lihat Katalog</a>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div id="dp-stats">
+    <div>
+      <div class="dp-stat-num">500<span>+</span></div>
+      <div class="dp-stat-label">Klien Puas</div>
+    </div>
+    <div>
+      <div class="dp-stat-num">12<span>+</span></div>
+      <div class="dp-stat-label">Tahun Pengalaman</div>
+    </div>
+    <div>
+      <div class="dp-stat-num">20<span>+</span></div>
+      <div class="dp-stat-label">Jenis Produk</div>
+    </div>
+  </div>
+
+  <p id="dp-hint">Gerakkan kursor untuk menjelajah</p>
+</section>
+
+<!-- 4. SCRIPT — otomatis membuat floating cards & parallax -->
+<script>
+(function() {
+  const scene = document.getElementById('dp-hero');
+  if (!scene) return;
+
+  // Product cards config
+  const cards = [
+    { w:150, h:180, top:'12%',  left:'7%',   speed:.05, delay:'.2s',  label:'Box Rokok',    badge:'Best Seller', colors:['#c9a535','#8B6914','#3d2f10'] },
+    { w:130, h:160, top:'8%',   right:'9%',  speed:.07, delay:'.4s',  label:'Kotak Hampers',badge:null,          colors:['#2d5a3d','#1a3d2a','#0d1f14'] },
+    { w:160, h:120, top:'65%',  left:'5%',   speed:.04, delay:'.6s',  label:'Paperbag',     badge:'New',         colors:['#8B3A3A','#5c2424','#2d0f0f'] },
+    { w:120, h:150, top:'70%',  right:'7%',  speed:.06, delay:'.35s', label:'Kotak Bakery', badge:null,          colors:['#c4956a','#8B5e3c','#3d2510'] },
+    { w:100, h:100, top:'30%',  left:'2%',   speed:.09, delay:'.5s',  label:'Brosur',       badge:null,          colors:['#3a4a8B','#252f5c','#0d1124'] },
+    { w:110, h:130, top:'25%',  right:'2%',  speed:.08, delay:'.45s', label:'Kalender',     badge:null,          colors:['#5a2d8B','#3a1d5c','#180d24'] },
+    { w: 90, h: 90, top:'50%',  left:'14%',  speed:.10, delay:'.3s',  label:'Buku',         badge:null,          colors:['#2d7a5a','#1a4a38','#0d2018'] },
+    { w:140, h:100, top:'48%',  right:'3%',  speed:.055,delay:'.55s', label:'Kotak Nasi',   badge:null,          colors:['#8B7a3a','#5c5024','#2d280f'] },
+  ];
+
+  const fcards = [];
+
+  // Draw product illustration
+  function drawProduct(ctx, w, h, colors) {
+    const [c1, c2, c3] = colors;
+    const bg = ctx.createLinearGradient(0,0,w,h);
+    bg.addColorStop(0,c1); bg.addColorStop(1,c3);
+    ctx.fillStyle = bg; ctx.fillRect(0,0,w,h);
+    const pad = w*.15;
+    ctx.fillStyle = c2; ctx.fillRect(pad,pad*1.2,w-pad*2,h-pad*2.5);
+    const shine = ctx.createLinearGradient(pad,pad,pad+(w-pad*2)*.5,pad);
+    shine.addColorStop(0,'rgba(255,255,255,.18)'); shine.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.fillStyle = shine; ctx.fillRect(pad,pad*1.2,(w-pad*2)*.5,h-pad*2.5);
+    ctx.fillStyle = c1; ctx.fillRect(pad,pad*.4,w-pad*2,pad*.9);
+    ctx.fillStyle = 'rgba(255,255,255,.12)'; ctx.fillRect(pad,h*.48,w-pad*2,h*.14);
+    ctx.fillStyle = 'rgba(255,255,255,.55)';
+    ctx.font = `bold ${w*.09}px Bebas Neue, sans-serif`;
+    ctx.textAlign = 'center'; ctx.fillText('DALLAS',w*.5,h*.57);
+    ctx.fillStyle = 'rgba(255,255,255,.06)';
+    for(let dx=pad;dx<w-pad;dx+=16) for(let dy=pad*2;dy<h-pad;dy+=16){
+      ctx.beginPath();ctx.arc(dx,dy,1.5,0,Math.PI*2);ctx.fill();
+    }
+  }
+
+  // Build cards
+  cards.forEach(cfg => {
+    const div = document.createElement('div');
+    div.className = 'dp-fcard';
+    div.style.animationDelay = cfg.delay;
+    div.style.width  = cfg.w + 'px';
+    div.style.height = cfg.h + 'px';
+    if (cfg.top)    div.style.top    = cfg.top;
+    if (cfg.left)   div.style.left   = cfg.left;
+    if (cfg.right)  div.style.right  = cfg.right;
+    if (cfg.bottom) div.style.bottom = cfg.bottom;
+
+    const canvas = document.createElement('canvas');
+    canvas.width = cfg.w*2; canvas.height = cfg.h*2;
+    canvas.style.width = cfg.w+'px'; canvas.style.height = cfg.h+'px';
+    drawProduct(canvas.getContext('2d'), cfg.w*2, cfg.h*2, cfg.colors);
+    div.appendChild(canvas);
+
+    const lbl = document.createElement('div');
+    lbl.className = 'dp-label'; lbl.textContent = cfg.label;
+    div.appendChild(lbl);
+
+    if (cfg.badge) {
+      const bdg = document.createElement('div');
+      bdg.className = 'dp-badge'; bdg.textContent = cfg.badge;
+      div.appendChild(bdg);
+    }
+
+    scene.appendChild(div);
+    fcards.push({ el: div, speed: cfg.speed });
+  });
+
+  // Parallax
+  const pos = fcards.map(() => ({ x:0, y:0, tx:0, ty:0 }));
+
+  scene.addEventListener('mousemove', e => {
+    const rect = scene.getBoundingClientRect();
+    const dx = (e.clientX - rect.left) - rect.width/2;
+    const dy = (e.clientY - rect.top)  - rect.height/2;
+    fcards.forEach((fc, i) => {
+      pos[i].tx = -dx * fc.speed;
+      pos[i].ty = -dy * fc.speed;
+    });
+  });
+
+  (function loop() {
+    fcards.forEach((fc, i) => {
+      pos[i].x += (pos[i].tx - pos[i].x) * .08;
+      pos[i].y += (pos[i].ty - pos[i].y) * .08;
+      fc.el.style.transform = `translate(${pos[i].x}px,${pos[i].y}px)`;
+    });
+    requestAnimationFrame(loop);
+  })();
+})();
+</script>

@@ -98,14 +98,63 @@ export default function ArticlesListPage() {
 
 
   return (
-    <div style={{ backgroundColor: '#f8fafc', minHeight: '100vh', color: '#1e293b', overflowX: 'hidden' }}>
+    <div style={{ backgroundColor: '#ffffff', minHeight: '100vh', color: '#1e293b', overflowX: 'hidden', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif' }}>
       <Navbar />
 
-      <main style={{ maxWidth: '1280px', margin: '120px auto 0', padding: isLargeMobile ? '32px 16px' : '60px 24px' }}>
-        <header style={{ marginBottom: isLargeMobile ? '32px' : '60px', textAlign: 'center' }}>
-          <h1 style={{ fontSize: isSmallMobile ? '1.75rem' : (isLargeMobile ? '2.25rem' : '3.5rem'), fontWeight: '800', color: '#001D39', marginBottom: '16px', lineHeight: '1.2' }}>{t('Navbar.articles')}</h1>
-          <p style={{ fontSize: isLargeMobile ? '1rem' : '1.25rem', color: '#64748b', maxWidth: '800px', margin: '0 auto', padding: isLargeMobile ? '0 8px' : '0' }}>Wawasan mendalam mengenai industri percetakan dan pengemasan premium.</p>
-        </header>
+      {/* Hero Header - Consistent with About, Career, and FAQ pages */}
+      <motion.header
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1 }}
+        style={{
+          paddingTop: isLargeMobile ? '180px' : '220px',
+          paddingBottom: isLargeMobile ? '100px' : '140px',
+          backgroundImage: 'linear-gradient(rgba(0, 29, 57, 0.7), rgba(0, 29, 57, 0.7)), url("/about_us.webp")',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          color: 'white',
+          textAlign: 'center',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          minHeight: isLargeMobile ? '350px' : '480px',
+          position: 'relative',
+          overflow: 'hidden'
+        }}
+      >
+        <motion.h1
+          initial={{ y: 30, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.5, duration: 0.8 }}
+          style={{
+            fontSize: isSmallMobile ? '1.85rem' : (isMediumMobile ? '2.25rem' : '4.5rem'),
+            fontWeight: '800',
+            lineHeight: '1.2',
+            padding: '0 20px',
+            textShadow: '0 2px 10px rgba(0,0,0,0.3)'
+          }}
+        >
+          {t('Navbar.articles')}
+        </motion.h1>
+        <motion.p
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.8, duration: 0.8 }}
+          style={{
+            color: '#BDD8E9',
+            marginTop: '24px',
+            fontSize: isSmallMobile ? '1rem' : '1.25rem',
+            padding: '0 20px',
+            maxWidth: '800px',
+            textShadow: '0 1px 5px rgba(0,0,0,0.2)'
+          }}
+        >
+          Wawasan Industri Percetakan & Pengemasan Premium
+        </motion.p>
+      </motion.header>
+
+      <main style={{ maxWidth: '1280px', margin: '0 auto', padding: isLargeMobile ? '40px 16px 80px' : '80px 24px 120px' }}>
 
         <div style={{
           display: 'grid',

@@ -30,8 +30,21 @@ const nextConfig = {
   async headers() {
     return [
       {
-        source: '/:all*(svg|jpg|jpeg|png|webp|webm|mp4|gif|ico|pdf|woff|woff2)',
+        source: '/:all*(svg|jpg|jpeg|png|webp|webm|mp4|gif|ico|pdf|woff|woff2|glb|gltf)',
         headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/models/:path*.glb',
+        headers: [
+          {
+            key: 'Content-Type',
+            value: 'model/gltf-binary',
+          },
           {
             key: 'Cache-Control',
             value: 'public, max-age=31536000, immutable',

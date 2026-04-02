@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Footer from '@/components/layout/Footer';
 import Navbar from '@/components/layout/Navbar';
 import { Icon } from '@iconify/react';
@@ -83,6 +83,20 @@ const generateFaqSchema = () => {
 export default function FaqClient() {
     const t = useTranslations();
     const [openIndexes, setOpenIndexes] = useState<{ [key: string]: boolean }>({});
+    const [isSmallMobile, setIsSmallMobile] = useState(false);
+    const [isMediumMobile, setIsMediumMobile] = useState(false);
+    const [isLargeMobile, setIsLargeMobile] = useState(false);
+
+    useEffect(() => {
+        const checkScreenSize = () => {
+            setIsSmallMobile(window.innerWidth < 480);
+            setIsMediumMobile(window.innerWidth < 640);
+            setIsLargeMobile(window.innerWidth < 768);
+        };
+        checkScreenSize();
+        window.addEventListener('resize', checkScreenSize);
+        return () => window.removeEventListener('resize', checkScreenSize);
+    }, []);
 
     const toggleAccordion = (catIndex: number, itemIndex: number) => {
         const key = `${catIndex}-${itemIndex}`;
@@ -90,7 +104,7 @@ export default function FaqClient() {
     };
 
     return (
-        <div style={{ backgroundColor: '#f8fafc', minHeight: '100vh', color: '#1e293b' }}>
+        <div style={{ backgroundColor: '#ffffff', minHeight: '100vh', color: '#1e293b', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif' }}>
             <Navbar />
 
             {/* Inject JSON-LD standard FAQ Schema for Google Rich Snippets */}
@@ -99,15 +113,60 @@ export default function FaqClient() {
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(generateFaqSchema()) }}
             />
 
-            <main style={{ maxWidth: '900px', margin: '140px auto 60px', padding: '0 24px' }}>
-                <header style={{ marginBottom: '60px', textAlign: 'center' }}>
-                    <h1 style={{ fontSize: '3rem', fontWeight: '800', color: '#001D39', marginBottom: '16px', lineHeight: '1.2' }}>
-                        Daftar FAQ<br />Percetakan Dallas
-                    </h1>
-                    <p style={{ fontSize: '1.2rem', color: '#64748b', maxWidth: '600px', margin: '0 auto' }}>
-                        Temukan jawaban atas pertanyaan yang sering diajukan seputar pemesanan, bahan, desain, dan pengiriman kami.
-                    </p>
-                </header>
+            {/* Hero Header - Consistent with About and Career pages */}
+            <motion.header
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1 }}
+                style={{
+                    paddingTop: isLargeMobile ? '180px' : '220px',
+                    paddingBottom: isLargeMobile ? '100px' : '140px',
+                    backgroundImage: 'linear-gradient(rgba(0, 29, 57, 0.7), rgba(0, 29, 57, 0.7)), url("/about_us.webp")',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    color: 'white',
+                    textAlign: 'center',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    minHeight: isLargeMobile ? '350px' : '480px',
+                    position: 'relative',
+                    overflow: 'hidden'
+                }}
+            >
+                <motion.h1
+                    initial={{ y: 30, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.5, duration: 0.8 }}
+                    style={{
+                        fontSize: isSmallMobile ? '1.85rem' : (isMediumMobile ? '2.25rem' : '4.5rem'),
+                        fontWeight: '800',
+                        lineHeight: '1.2',
+                        padding: '0 20px',
+                        textShadow: '0 2px 10px rgba(0,0,0,0.3)'
+                    }}
+                >
+                    Daftar FAQ<br />Percetakan Dallas
+                </motion.h1>
+                <motion.p
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.8, duration: 0.8 }}
+                    style={{
+                        color: '#BDD8E9',
+                        marginTop: '24px',
+                        fontSize: isSmallMobile ? '1rem' : '1.25rem',
+                        padding: '0 20px',
+                        maxWidth: '800px',
+                        textShadow: '0 1px 5px rgba(0,0,0,0.2)'
+                    }}
+                >
+                    Tanya Jawab Seputar Produk & Layanan Kami
+                </motion.p>
+            </motion.header>
+
+            <main style={{ maxWidth: '960px', margin: '0 auto', padding: '80px 24px' }}>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '48px' }}>
                     {faqs.map((category, catIndex) => (

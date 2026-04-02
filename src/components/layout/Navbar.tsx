@@ -55,11 +55,11 @@ export default function Navbar() {
                     </div>
                     <div className={`${dropdownWrapperClasses} ${isProductsOpen ? 'flex' : 'hidden'}`}>
                         <div className={dropdownMenuClasses}>
-                            <Link prefetch={false} href="/products" onClick={() => setIsMenuOpen(false)} className={dropdownItemClasses}>
-                                {t('Navbar.products')}
-                            </Link>
                             <Link prefetch={false} href="/produk/kotak-hampers" onClick={() => setIsMenuOpen(false)} className={dropdownItemClasses}>
                                 {t('Categories.hampers.title') || 'Kotak Hampers'}
+                            </Link>
+                            <Link prefetch={false} href="/produk/rokok" onClick={() => setIsMenuOpen(false)} className={dropdownItemClasses}>
+                                {t('Categories.rokok.title') || 'Kotak Rokok'}
                             </Link>
                             <Link prefetch={false} href="/produk/kotak-bakery" onClick={() => setIsMenuOpen(false)} className={dropdownItemClasses}>
                                 {t('Categories.bakery.title') || 'Kotak Bakery'}
