@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 
-export default function ProductsRedirect({ params }: { params: { locale: string } }) {
-  redirect(`/${params.locale}/produk/rokok`);
-  return null;
+export default async function ProductsRedirect({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  redirect(`/${locale}/produk/rokok`);
 }
