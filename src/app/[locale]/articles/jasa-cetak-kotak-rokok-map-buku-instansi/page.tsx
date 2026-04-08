@@ -3,15 +3,13 @@ import JasaCetakB2BClient from '@/components/page/articles/JasaCetakB2BClient';
 
 export const metadata: Metadata = {
     title: 'Jasa Cetak Kotak Rokok, Map Perusahaan & Buku | Solusi B2B Offset',
-    description: 'Percetakan Dallas melayani cetak skala besar untuk industri & instansi. Tersedia jasa cetak kotak rokok duplex presisi tinggi, map rekam medis anti air, hingga buku sekolah.',
+    description: 'Layanan cetak B2B untuk kotak rokok custom, map perusahaan, dan buku dengan teknologi offset. Dapatkan solusi cetak profesional untuk kebutuhan bisnis Anda.',
     keywords: [
-        'Cetak kotak rokok murah',
-        'Vendor kemasan rokok custom',
-        'Cetak box rokok bahan duplex',
-        'cetak map folder perusahaan',
-        'Cetak buku tahunan sekolah',
         'Jasa Cetak Kotak Rokok',
-        'Solusi Cetak Offset B2B'
+        'Map Perusahaan Custom',
+        'Cetak Buku Offset',
+        'solusi cetak B2B',
+        'cetak rokok custom logo'
     ],
     alternates: {
         canonical: 'https://dallas-printingid.com/id/articles/jasa-cetak-kotak-rokok-map-buku-instansi',
@@ -23,6 +21,28 @@ export const metadata: Metadata = {
     },
 };
 
+const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Jasa Cetak Kotak Rokok, Map Perusahaan & Buku | Solusi B2B Offset",
+    "description": "Layanan cetak B2B untuk kotak rokok custom, map perusahaan, dan buku dengan teknologi offset.",
+    "image": "https://dallas-printingid.com/custom%20rokok%203.webp",
+    "datePublished": "2025-11-26",
+    "dateModified": "2026-04-08",
+    "author": { "@type": "Organization", "name": "Percetakan Dallas", "url": "https://dallas-printingid.com" },
+    "publisher": {
+        "@type": "Organization",
+        "name": "Percetakan Dallas",
+        "logo": { "@type": "ImageObject", "url": "https://dallas-printingid.com/LOGO%201.png" }
+    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://dallas-printingid.com/id/articles/jasa-cetak-kotak-rokok-map-buku-instansi" }
+};
+
 export default function JasaCetakB2BPage() {
-    return <JasaCetakB2BClient />;
+    return (
+        <>
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
+            <JasaCetakB2BClient />
+        </>
+    );
 }

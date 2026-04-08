@@ -25,6 +25,28 @@ export const metadata: Metadata = {
     },
 };
 
+const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Panduan Lengkap Cetak Kemasan & Atribut Bisnis: Dari Box Makanan hingga Kotak Rokok",
+    "description": "Panduan lengkap cetak kemasan, packaging makanan, hampers, dan atribut bisnis perkantoran.",
+    "image": "https://dallas-printingid.com/artikel%20(1).jpg",
+    "datePublished": "2025-11-26",
+    "dateModified": "2026-04-08",
+    "author": { "@type": "Organization", "name": "Percetakan Dallas", "url": "https://dallas-printingid.com" },
+    "publisher": {
+        "@type": "Organization",
+        "name": "Percetakan Dallas",
+        "logo": { "@type": "ImageObject", "url": "https://dallas-printingid.com/LOGO%201.png" }
+    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://dallas-printingid.com/id/articles/panduan-lengkap-cetak-kemasan" }
+};
+
 export default function PanduanLengkapPage() {
-    return <PanduanLengkapClient />;
+    return (
+        <>
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
+            <PanduanLengkapClient />
+        </>
+    );
 }

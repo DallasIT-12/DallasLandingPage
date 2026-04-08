@@ -15,24 +15,47 @@ export const metadata: Metadata = {
     },
 };
 
+const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Ide Box Hampers Estetik Lebaran & Natal | Cetak Custom Satuan Terdekat",
+    "description": "Cari ide box hampers estetik untuk lebaran/natal? Kami melayani cetak box hampers custom satuan terdekat.",
+    "image": "https://dallas-printingid.com/cetak-box-hampers-idul-fitri-kediri.webp",
+    "datePublished": "2026-02-25",
+    "dateModified": "2026-04-08",
+    "author": { "@type": "Organization", "name": "Percetakan Dallas", "url": "https://dallas-printingid.com" },
+    "publisher": {
+        "@type": "Organization",
+        "name": "Percetakan Dallas",
+        "logo": { "@type": "ImageObject", "url": "https://dallas-printingid.com/LOGO%201.png" }
+    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://dallas-printingid.com/id/articles/ide-box-hampers-lebaran-natal" }
+};
+
 export default function HampersFAQPage() {
-    return <ArtikelPendekClient
-        title="Ide Box Hampers Estetik Lebaran & Natal | Cetak Custom Satuan Terdekat"
-        date="25 Februari 2026"
-        category="Tips Kemasan"
-        image="/cetak-box-hampers-idul-fitri-kediri.webp"
-        productLink="/produk/kotak-hampers"
-        productName="Box Hampers"
-        content={
-            <>
-                <p style={{ marginBottom: '24px' }}>Memasuki musim perayaan, <strong>ide box hampers estetik untuk lebaran/natal</strong> menjadi pencarian utama banyak pelaku usaha. Hampers yang menawan tidak hanya melindungi isi produk, tetapi juga mentransfer nilai eksklusivitas kepada penerimanya.</p>
+    return (
+        <>
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
+            <ArtikelPendekClient
+                title="Ide Box Hampers Estetik Lebaran & Natal | Cetak Custom Satuan Terdekat"
+                date="25 Februari 2026"
+                category="Tips Kemasan"
+                image="/cetak-box-hampers-idul-fitri-kediri.webp"
+                productLink="/produk/kotak-hampers"
+                productName="Box Hampers"
+                content={
+                    <>
+                        <p style={{ marginBottom: '24px' }}>Memasuki musim perayaan, <strong>ide box hampers estetik untuk lebaran/natal</strong> menjadi pencarian utama banyak pelaku usaha. Hampers yang menawan tidak hanya melindungi isi produk, tetapi juga mentransfer nilai eksklusivitas kepada penerimanya.</p>
 
-                <h3 style={{ fontSize: '1.4rem', fontWeight: '700', marginBottom: '16px', color: '#001D39' }}>Mengapa Desain Box Hampers Penting?</h3>
-                <p style={{ marginBottom: '24px' }}>Hampers seringkali menjadi representasi personal atau korporat. Menggunakan box dengan finishing premium seperti <em>hot print</em> (foil emas/perak) atau <em>emboss</em> dapat seketika menaikkan kelas produk Anda di mata klien atau kerabat.</p>
+                        <h3 style={{ fontSize: '1.4rem', fontWeight: '700', marginBottom: '16px', color: '#001D39' }}>Mengapa Desain Box Hampers Penting?</h3>
+                        <p style={{ marginBottom: '24px' }}>Hampers seringkali menjadi representasi personal atau korporat. Menggunakan box dengan finishing premium seperti <em>hot print</em> (foil emas/perak) atau <em>emboss</em> dapat seketika menaikkan kelas produk Anda di mata klien atau kerabat.</p>
 
-                <h3 style={{ fontSize: '1.4rem', fontWeight: '700', marginBottom: '16px', color: '#001D39' }}>Cetak Box Satuan Terdekat</h3>
-                <p style={{ marginBottom: '24px' }}>Banyak UMKM yang terkendala masalah kuantitas saat ingin membuat hampers. Memilih layanan <strong>cetak box hampers custom satuan terdekat</strong> adalah solusi cerdas untuk menguji pasar tanpa harus menumpuk stok kemasan di gudang.</p>
-            </>
-        }
-    />;
+                        <h3 style={{ fontSize: '1.4rem', fontWeight: '700', marginBottom: '16px', color: '#001D39' }}>Cetak Box Satuan Terdekat</h3>
+                        <p style={{ marginBottom: '24px' }}>Banyak UMKM yang terkendala masalah kuantitas saat ingin membuat hampers. Memilih layanan <strong>cetak box hampers custom satuan terdekat</strong> adalah solusi cerdas untuk menguji pasar tanpa harus menumpuk stok kemasan di gudang.</p>
+                    </>
+                }
+            />
+        </>
+    );
 }
+

@@ -3,7 +3,7 @@ import KemasanRamahClient from '@/components/page/articles/KemasanRamahClient';
 
 export const metadata: Metadata = {
   title: 'Kemasan Kertas vs Plastik: Solusi Packaging Ramah Lingkungan',
-  description: 'Mengapa brand besar beralih ke kemasan kertas? Pelajari manfaat packaging ramah lingkungan untuk citra brand dan keberlanjutan bisnis Anda.',
+  description: 'Kenapa kemasan kertas lebih baik daripada plastik? Pelajari dampak lingkungan dan keunggulan beralih ke packaging berbahan kertas.',
   alternates: {
     canonical: 'https://dallas-printingid.com/id/articles/kemasan-ramah-lingkungan',
     languages: {
@@ -14,6 +14,28 @@ export const metadata: Metadata = {
   },
 };
 
-export default function EcoFriendlyPage() {
-  return <KemasanRamahClient />;
+const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Kemasan Kertas vs Plastik: Solusi Packaging Ramah Lingkungan",
+    "description": "Kenapa kemasan kertas lebih baik daripada plastik? Pelajari dampak lingkungan dan keunggulan beralih ke packaging berbahan kertas.",
+    "image": "https://dallas-printingid.com/artikel%20(2).png",
+    "datePublished": "2025-11-26",
+    "dateModified": "2026-04-08",
+    "author": { "@type": "Organization", "name": "Percetakan Dallas", "url": "https://dallas-printingid.com" },
+    "publisher": {
+        "@type": "Organization",
+        "name": "Percetakan Dallas",
+        "logo": { "@type": "ImageObject", "url": "https://dallas-printingid.com/LOGO%201.png" }
+    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://dallas-printingid.com/id/articles/kemasan-ramah-lingkungan" }
+};
+
+export default function KemasanRamahLingkunganPage() {
+    return (
+        <>
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
+            <KemasanRamahClient />
+        </>
+    );
 }
