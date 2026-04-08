@@ -99,23 +99,21 @@ export default async function LocaleLayout({
         <link rel="preconnect" href="https://api.unisvg.com" crossOrigin="anonymous" />
       </head>
       <body className="antialiased font-sans">
-        {/* Google Analytics 4 */}
-        {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
-          <>
-            <Script
-              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}`}
-              strategy="afterInteractive"
-            />
-            <Script id="google-analytics" strategy="afterInteractive">
-              {`
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', '${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}');
-              `}
-            </Script>
-          </>
-        )}
+        {/* Google Analytics 4 - G-JV0LX6488S */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-JV0LX6488S"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-JV0LX6488S', {
+              page_path: window.location.pathname,
+            });
+          `}
+        </Script>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <CartProvider>
             {children}
