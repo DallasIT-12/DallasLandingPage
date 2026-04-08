@@ -13,6 +13,15 @@ export async function generateMetadata({ params }: Props) {
     return {
         title: `${t('title')} | ${homeT('mainH1')}`,
         description: t('subtitle'),
+        alternates: {
+            canonical: 'https://dallas-printingid.com/id/karir',
+            languages: {
+                'id': 'https://dallas-printingid.com/id/karir',
+                'en': 'https://dallas-printingid.com/en/karir',
+                'zh': 'https://dallas-printingid.com/zh/karir',
+                'x-default': 'https://dallas-printingid.com/id/karir',
+            },
+        },
     };
 }
 

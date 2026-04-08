@@ -28,6 +28,15 @@ export const metadata: Metadata = {
   authors: [{ name: 'Dallas Printing' }],
   creator: 'Dallas Printing',
   publisher: 'Dallas Printing',
+  alternates: {
+    canonical: 'https://dallas-printingid.com/id',
+    languages: {
+      'id': 'https://dallas-printingid.com/id',
+      'en': 'https://dallas-printingid.com/en',
+      'zh': 'https://dallas-printingid.com/zh',
+      'x-default': 'https://dallas-printingid.com/id',
+    },
+  },
   robots: {
     index: true,
     follow: true,

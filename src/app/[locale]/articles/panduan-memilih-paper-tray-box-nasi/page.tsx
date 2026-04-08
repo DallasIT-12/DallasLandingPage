@@ -13,6 +13,14 @@ export const metadata: Metadata = {
         'cetak paper tray makanan custom',
         'Box Nasi Berkualitas'
     ],
+    alternates: {
+        canonical: 'https://dallas-printingid.com/id/articles/panduan-memilih-paper-tray-box-nasi',
+        languages: {
+            'id': 'https://dallas-printingid.com/id/articles/panduan-memilih-paper-tray-box-nasi',
+            'en': 'https://dallas-printingid.com/en/articles/panduan-memilih-paper-tray-box-nasi',
+            'x-default': 'https://dallas-printingid.com/id/articles/panduan-memilih-paper-tray-box-nasi',
+        },
+    },
 };
 
 export default function PaperTrayBoxNasiPage() {

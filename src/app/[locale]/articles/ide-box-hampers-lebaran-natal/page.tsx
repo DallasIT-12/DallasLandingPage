@@ -5,6 +5,14 @@ export const metadata: Metadata = {
     title: 'Ide Box Hampers Estetik Lebaran & Natal | Cetak Custom Satuan Terdekat',
     description: 'Cari ide box hampers estetik untuk lebaran/natal? Kami melayani cetak box hampers custom satuan terdekat dengan material premium.',
     keywords: ['Ide box hampers estetik untuk lebaran/natal', 'cetak box hampers custom satuan terdekat', 'box hampers custom'],
+    alternates: {
+        canonical: 'https://dallas-printingid.com/id/articles/ide-box-hampers-lebaran-natal',
+        languages: {
+            'id': 'https://dallas-printingid.com/id/articles/ide-box-hampers-lebaran-natal',
+            'en': 'https://dallas-printingid.com/en/articles/ide-box-hampers-lebaran-natal',
+            'x-default': 'https://dallas-printingid.com/id/articles/ide-box-hampers-lebaran-natal',
+        },
+    },
 };
 
 export default function HampersFAQPage() {

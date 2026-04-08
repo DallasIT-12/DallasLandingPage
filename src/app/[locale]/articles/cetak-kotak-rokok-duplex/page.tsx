@@ -5,6 +5,14 @@ export const metadata: Metadata = {
     title: 'Jasa Cetak Kotak Rokok Murah Bahan Duplex | Minimum Order Custom',
     description: 'Cari jasa cetak kotak rokok murah bahan duplex? Dapatkan minimum order cetak box rokok custom logo sendiri dengan kualitas cetak offset.',
     keywords: ['Jasa cetak kotak rokok murah bahan duplex', 'minimum order cetak box rokok custom logo sendiri', 'cetak kemasan rokok'],
+    alternates: {
+        canonical: 'https://dallas-printingid.com/id/articles/cetak-kotak-rokok-duplex',
+        languages: {
+            'id': 'https://dallas-printingid.com/id/articles/cetak-kotak-rokok-duplex',
+            'en': 'https://dallas-printingid.com/en/articles/cetak-kotak-rokok-duplex',
+            'x-default': 'https://dallas-printingid.com/id/articles/cetak-kotak-rokok-duplex',
+        },
+    },
 };
 
 export default function KotakRokokFAQPage() {

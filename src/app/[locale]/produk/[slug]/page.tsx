@@ -52,17 +52,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: fullTitle,
       description: metaDescription,
-      url: `https://percetakandallas.com/${locale}/produk/${slug}`,
+      url: `https://dallas-printingid.com/id/produk/${slug}`,
       siteName: 'Percetakan Offset Dallas',
       images: [
         {
-          url: category.img, // Standard product image
+          url: category.img,
           width: 800,
           height: 800,
           alt: category.title,
         },
       ],
-      locale: locale,
+      locale: 'id_ID',
       type: 'website',
     },
     twitter: {
@@ -72,7 +72,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       images: [category.img],
     },
     alternates: {
-      canonical: `https://percetakandallas.com/${locale}/produk/${slug}`,
+      canonical: `https://dallas-printingid.com/id/produk/${slug}`,
+      languages: {
+        'id': `https://dallas-printingid.com/id/produk/${slug}`,
+        'en': `https://dallas-printingid.com/en/produk/${slug}`,
+        'zh': `https://dallas-printingid.com/zh/produk/${slug}`,
+        'x-default': `https://dallas-printingid.com/id/produk/${slug}`,
+      },
     }
   };
 }
@@ -94,18 +100,19 @@ export default async function CategoryDetailPage({ params }: Props) {
     "@type": "Product",
     "name": `${category.title} Custom`,
     "description": category.explanation,
-    "image": `https://percetakandallas.com${category.img}`,
+    "image": `https://dallas-printingid.com${category.img}`,
     "brand": { "@type": "Brand", "name": "Dallas Printing" },
     "offers": {
       "@type": "Offer",
-      "url": `https://percetakandallas.com/${locale}/produk/${slug}`,
+      "url": `https://dallas-printingid.com/id/produk/${slug}`,
       "priceCurrency": "IDR",
-      "price": category.slug === 'rokok' ? "200" : (category.slug === 'kotak-nasi' ? "300" : "500"), // Dynamic fallback prices
+      "price": category.slug === 'rokok' ? "200" : (category.slug === 'kotak-nasi' ? "300" : "500"),
       "availability": "https://schema.org/InStock",
       "seller": {
         "@type": "LocalBusiness",
         "name": "Percetakan Offset Dallas",
-        "image": "https://percetakandallas.com/logo.png",
+        "image": "https://dallas-printingid.com/LOGO 1.png",
+        "url": "https://dallas-printingid.com",
         "address": {
           "@type": "PostalAddress",
           "streetAddress": "Jl. Kilisuci No.71, Setono Pande",

@@ -22,7 +22,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: `Cetak ${product.name} di Percetakan Dallas Kediri. ${product.description} Harga terbaik, kualitas premium, dan pengerjaan cepat.`,
     openGraph: {
       images: [product.image],
-    }
+    },
+    alternates: {
+      canonical: `https://dallas-printingid.com/id/products/${slug}`,
+      languages: {
+        'id': `https://dallas-printingid.com/id/products/${slug}`,
+        'en': `https://dallas-printingid.com/en/products/${slug}`,
+        'zh': `https://dallas-printingid.com/zh/products/${slug}`,
+        'x-default': `https://dallas-printingid.com/id/products/${slug}`,
+      },
+    },
   };
 }
 

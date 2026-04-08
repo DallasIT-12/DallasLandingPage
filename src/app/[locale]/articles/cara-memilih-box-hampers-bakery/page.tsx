@@ -12,6 +12,14 @@ export const metadata: Metadata = {
         'box hampers ramah lingkungan',
         'harga cetak box hampers'
     ],
+    alternates: {
+        canonical: 'https://dallas-printingid.com/id/articles/cara-memilih-box-hampers-bakery',
+        languages: {
+            'id': 'https://dallas-printingid.com/id/articles/cara-memilih-box-hampers-bakery',
+            'en': 'https://dallas-printingid.com/en/articles/cara-memilih-box-hampers-bakery',
+            'x-default': 'https://dallas-printingid.com/id/articles/cara-memilih-box-hampers-bakery',
+        },
+    },
 };
 
 export default function CaraMemilihBoxHampersPage() {

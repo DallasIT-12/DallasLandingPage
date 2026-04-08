@@ -13,6 +13,14 @@ export const metadata: Metadata = {
         'Jasa Cetak Kotak Rokok',
         'Solusi Cetak Offset B2B'
     ],
+    alternates: {
+        canonical: 'https://dallas-printingid.com/id/articles/jasa-cetak-kotak-rokok-map-buku-instansi',
+        languages: {
+            'id': 'https://dallas-printingid.com/id/articles/jasa-cetak-kotak-rokok-map-buku-instansi',
+            'en': 'https://dallas-printingid.com/en/articles/jasa-cetak-kotak-rokok-map-buku-instansi',
+            'x-default': 'https://dallas-printingid.com/id/articles/jasa-cetak-kotak-rokok-map-buku-instansi',
+        },
+    },
 };
 
 export default function JasaCetakB2BPage() {

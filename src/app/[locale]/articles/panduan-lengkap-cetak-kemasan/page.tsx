@@ -15,6 +15,14 @@ export const metadata: Metadata = {
         'Cetak buku tahunan sekolah kualitas offset',
         'Harga paperbag sablon vs offset untuk hajatan'
     ],
+    alternates: {
+        canonical: 'https://dallas-printingid.com/id/articles/panduan-lengkap-cetak-kemasan',
+        languages: {
+            'id': 'https://dallas-printingid.com/id/articles/panduan-lengkap-cetak-kemasan',
+            'en': 'https://dallas-printingid.com/en/articles/panduan-lengkap-cetak-kemasan',
+            'x-default': 'https://dallas-printingid.com/id/articles/panduan-lengkap-cetak-kemasan',
+        },
+    },
 };
 
 export default function PanduanLengkapPage() {

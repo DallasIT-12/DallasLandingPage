@@ -11,6 +11,15 @@ export const metadata: Metadata = {
         'bahan box nasi food grade',
         'pengiriman cetak seluruh indonesia'
     ],
+    alternates: {
+        canonical: 'https://dallas-printingid.com/id/faq',
+        languages: {
+            'id': 'https://dallas-printingid.com/id/faq',
+            'en': 'https://dallas-printingid.com/en/faq',
+            'zh': 'https://dallas-printingid.com/zh/faq',
+            'x-default': 'https://dallas-printingid.com/id/faq',
+        },
+    },
 };
 
 export default function FaqPage() {

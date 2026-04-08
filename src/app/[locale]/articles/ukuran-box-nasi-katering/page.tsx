@@ -5,6 +5,14 @@ export const metadata: Metadata = {
     title: 'Ukuran Box Nasi Standar Katering | Cetak Box Nasi Laminasi Tahan Panas',
     description: 'Ketahui ukuran box nasi standar katering (18x18 / 20x20). Kami sedia layanan cetak box nasi laminasi tahan uap panas agar makanan tetap higienis.',
     keywords: ['Ukuran box nasi standar katering (18x18 / 20x20)', 'cetak box nasi laminasi tahan uap panas', 'ukuran box kue', 'kemasan katering'],
+    alternates: {
+        canonical: 'https://dallas-printingid.com/id/articles/ukuran-box-nasi-katering',
+        languages: {
+            'id': 'https://dallas-printingid.com/id/articles/ukuran-box-nasi-katering',
+            'en': 'https://dallas-printingid.com/en/articles/ukuran-box-nasi-katering',
+            'x-default': 'https://dallas-printingid.com/id/articles/ukuran-box-nasi-katering',
+        },
+    },
 };
 
 export default function BoxNasiFAQPage() {
