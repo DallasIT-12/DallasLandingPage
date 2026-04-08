@@ -89,5 +89,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
         }))
     );
 
-    return [...staticEntries, ...categoryEntries, ...productEntries, ...articleEntries];
+    // 5. Landing Page Routes (/layanan/)
+    const layananSlugs = [
+        'percetakan-offset-kediri',
+        'cetak-kemasan-custom',
+        'cetak-packaging-skincare',
+    ];
+
+    const layananEntries = layananSlugs.flatMap((slug) =>
+        ['id', 'en'].map((locale) => ({
+            url: `${BASE_URL}/${locale}/layanan/${slug}`,
+            lastModified: new Date(),
+            changeFrequency: 'weekly' as const,
+            priority: 0.95, // High priority — these are primary conversion landing pages
+        }))
+    );
+
+    return [...staticEntries, ...categoryEntries, ...productEntries, ...articleEntries, ...layananEntries];
 }
