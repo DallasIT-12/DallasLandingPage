@@ -12,6 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         '/about',
         '/products',
         '/paperlisens',
+        '/tools',
         '/tools/image-compressor',
         '/faq',
         '/articles',

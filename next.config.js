@@ -27,6 +27,52 @@ const nextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: '/layanan/cetak-packaging-skincare',
+        destination: '/id/layanan/cetak-packaging-skincare',
+        permanent: true,
+      },
+      {
+        source: '/karir',
+        destination: '/id/karir',
+        permanent: true,
+      },
+      {
+        source: '/id/produk',
+        destination: '/id/products',
+        permanent: true,
+      },
+      {
+        source: '/en/produk',
+        destination: '/en/products',
+        permanent: true,
+      },
+      {
+        source: '/zh/produk',
+        destination: '/zh/products',
+        permanent: true,
+      },
+      {
+        source: '/produk',
+        destination: '/id/products',
+        permanent: true,
+      },
+      // Since /id/tools, /en/tools, /zh/tools exist now, but they were 404s before. We don't redirect them.
+      // But we will catch the weird symbols that 404'd.
+      {
+        source: '/\\&',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/\\$',
+        destination: '/',
+        permanent: true,
+      }
+    ];
+  },
   async headers() {
     return [
       // Security headers for all pages
