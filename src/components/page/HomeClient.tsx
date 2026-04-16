@@ -20,6 +20,30 @@ const GoogleMapEmbed = dynamic(() => import('@/components/common/GoogleMapEmbed'
 export default function Home() {
   const t = useTranslations();
   const [showPromo, setShowPromo] = useState(false);
+  const [showScrollIndicator, setShowScrollIndicator] = useState(false);
+
+  // Show scroll indicator if idle for 10 seconds
+  useEffect(() => {
+    let hasScrolled = false;
+    const handleScroll = () => {
+      hasScrolled = true;
+      setShowScrollIndicator(false);
+      window.removeEventListener('scroll', handleScroll);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    const scrollTimer = setTimeout(() => {
+      if (!hasScrolled && window.scrollY < 100) {
+        setShowScrollIndicator(true);
+      }
+    }, 10000);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      clearTimeout(scrollTimer);
+    };
+  }, []);
 
   // Smart promo: IntersectionObserver to trigger when scrolled down 20-30%
   useEffect(() => {
@@ -134,11 +158,11 @@ export default function Home() {
 
         {/* Scroll Down Indicator */}
         <div 
-          className="absolute bottom-6 md:bottom-10 left-1/2 transform -translate-x-1/2 z-[3] animate-bounce cursor-pointer flex flex-col items-center opacity-70 hover:opacity-100 transition-opacity"
+          className={`absolute bottom-6 md:bottom-10 left-1/2 transform -translate-x-1/2 z-[3] animate-bounce cursor-pointer flex flex-col items-center hover:opacity-100 transition-all duration-700 ease-in-out ${showScrollIndicator ? 'opacity-80 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}
           onClick={() => window.scrollBy({ top: window.innerHeight - 88, behavior: 'smooth' })}
           title="Scroll down for more"
         >
-          <span className="text-white text-[10px] md:text-sm font-semibold tracking-[0.2em] mb-1 opacity-90">SCROLL</span>
+          <span className="text-white text-[10px] md:text-sm font-semibold tracking-[0.2em] mb-1">SCROLL</span>
           <Icon icon="mdi:chevron-down" className="text-white text-[30px] md:text-[40px]" />
         </div>
       </section>
