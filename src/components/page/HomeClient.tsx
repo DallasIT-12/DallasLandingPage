@@ -207,14 +207,9 @@ export default function Home() {
       {/* Footer */}
       <Footer />
 
-      {/* Global Scroll Down Indicator */}
+      {/* Global Scroll Down Indicator (Non-Interactive) */}
       <div 
-        className={`fixed bottom-8 left-1/2 transform -translate-x-1/2 z-[99] animate-bounce cursor-pointer flex flex-col items-center transition-all duration-700 ease-in-out ${showScrollIndicator ? 'opacity-90 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}
-        onClick={() => {
-          setShowScrollIndicator(false); // Hide immediately on click
-          window.scrollBy({ top: Math.min(window.innerHeight - 100, Math.max(0, document.documentElement.scrollHeight - window.innerHeight - window.scrollY)), behavior: 'smooth' });
-        }}
-        title="Scroll down for more"
+        className={`fixed bottom-8 left-1/2 transform -translate-x-1/2 z-[99] animate-bounce flex flex-col items-center transition-all duration-700 ease-in-out pointer-events-none ${showScrollIndicator ? 'opacity-90 translate-y-0' : 'opacity-0 translate-y-4'}`}
         style={{
           backgroundColor: 'rgba(0, 29, 57, 0.75)',
           backdropFilter: 'blur(8px)',
@@ -224,8 +219,6 @@ export default function Home() {
           border: '1px solid rgba(255, 255, 255, 0.15)',
           boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.5)'
         }}
-        onMouseOver={(e) => (e.currentTarget.style.opacity = '1')}
-        onMouseOut={(e) => (e.currentTarget.style.opacity = '0.9')}
       >
         <span className="text-white text-[10px] md:text-xs font-semibold tracking-[0.2em] mb-1">SCROLL</span>
         <Icon icon="mdi:chevron-down" className="text-white text-[24px] md:text-[28px]" />
