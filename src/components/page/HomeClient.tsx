@@ -131,6 +131,16 @@ export default function Home() {
             </a>
           </div>
         </div>
+
+        {/* Scroll Down Indicator */}
+        <div 
+          className="absolute bottom-6 md:bottom-10 left-1/2 transform -translate-x-1/2 z-[3] animate-bounce cursor-pointer flex flex-col items-center opacity-70 hover:opacity-100 transition-opacity"
+          onClick={() => window.scrollBy({ top: window.innerHeight - 88, behavior: 'smooth' })}
+          title="Scroll down for more"
+        >
+          <span className="text-white text-[10px] md:text-sm font-semibold tracking-[0.2em] mb-1 opacity-90">SCROLL</span>
+          <Icon icon="mdi:chevron-down" className="text-white text-[30px] md:text-[40px]" />
+        </div>
       </section>
 
       {/* --- LAZY LOADED COMPONENTS MAPPED OVER ORIGINAL UI SEQUENCE --- */}

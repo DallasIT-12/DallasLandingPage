@@ -6,6 +6,7 @@ import '@/app/globals.css';
 import { CartProvider } from '@/context/CartContext';
 import CartModal from '@/components/cart/CartModal';
 import FloatingWhatsApp from '@/components/common/FloatingWhatsApp';
+import FloatingMaps from '@/components/common/FloatingMaps';
 import Script from 'next/script';
 import type { Metadata } from 'next';
 
@@ -118,6 +119,7 @@ export default async function LocaleLayout({
           <CartProvider>
             {children}
             <CartModal />
+            <FloatingMaps />
             <FloatingWhatsApp />
           </CartProvider>
         </NextIntlClientProvider>
