@@ -7,6 +7,9 @@ import { Icon } from '@iconify/react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import Footer from '@/components/layout/Footer';
 import Navbar from '@/components/layout/Navbar';
+import dynamic from 'next/dynamic';
+
+const GoogleMapEmbed = dynamic(() => import('@/components/common/GoogleMapEmbed'), { ssr: false });
 import { useTranslations } from 'next-intl';
 
 // --- Banner Slider Component ---
@@ -779,6 +782,7 @@ export default function AboutPage() {
         </div>
       </section>
 
+      <GoogleMapEmbed backgroundColor="#ffffff" />
       <Footer />
     </div>
   );

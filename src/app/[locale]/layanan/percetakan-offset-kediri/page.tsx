@@ -41,7 +41,7 @@ const jsonLd = {
     "telephone": "+6281260001487",
     "address": {
       "@type": "PostalAddress",
-      "streetAddress": "Jl. Kilisuci No.71, Setono Pande",
+      "streetAddress": "Jl. Kilisuci No.71, Singonegaran",
       "addressLocality": "Kediri",
       "addressRegion": "Jawa Timur",
       "postalCode": "64129",

@@ -167,7 +167,7 @@ export default async function CategoryDetailPage({ params }: Props) {
         "url": "https://dallas-printingid.com",
         "address": {
           "@type": "PostalAddress",
-          "streetAddress": "Jl. Kilisuci No.71, Setono Pande",
+          "streetAddress": "Jl. Kilisuci No.71, Singonegaran",
           "addressLocality": "Kediri",
           "addressRegion": "Jawa Timur",
           "postalCode": "64129",

@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
@@ -15,6 +15,7 @@ const WhyChooseUs = dynamic(() => import('@/components/page/home/WhyChooseUs'), 
 const FeaturedProducts = dynamic(() => import('@/components/page/home/FeaturedProducts'), { ssr: false });
 const MaterialsSection = dynamic(() => import('@/components/page/home/MaterialsSection'), { ssr: false });
 const NonCigaretteSection = dynamic(() => import('@/components/page/home/NonCigaretteSection'), { ssr: false });
+const GoogleMapEmbed = dynamic(() => import('@/components/common/GoogleMapEmbed'), { ssr: false });
 
 export default function Home() {
   const t = useTranslations();
@@ -151,6 +152,9 @@ export default function Home() {
 
       {/* Non-Cigarette Products Section */}
       <NonCigaretteSection />
+
+      {/* Location Map Section */}
+      <GoogleMapEmbed backgroundColor="#001D39" />
 
       {/* Footer */}
       <Footer />
