@@ -26,16 +26,27 @@ export default function Home() {
   useEffect(() => {
     let scrollTimer: NodeJS.Timeout;
 
-    const handleScroll = () => {
-      setShowScrollIndicator(false);
+    const handleInteraction = () => {
+      setShowScrollIndicator(false); // Hide instantly
       clearTimeout(scrollTimer);
       
       // Don't show if we are near the very bottom of the page
-      const isNearBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 200;
+      const scrollHeight = Math.max(
+        document.body.scrollHeight, document.documentElement.scrollHeight,
+        document.body.offsetHeight, document.documentElement.offsetHeight
+      );
+      const isNearBottom = window.innerHeight + window.scrollY >= scrollHeight - 200;
       
       if (!isNearBottom) {
         scrollTimer = setTimeout(() => {
-          setShowScrollIndicator(true);
+          // Double check bottom position before showing
+          const currentScrollHeight = Math.max(
+            document.body.scrollHeight, document.documentElement.scrollHeight,
+            document.body.offsetHeight, document.documentElement.offsetHeight
+          );
+          if (window.innerHeight + window.scrollY < currentScrollHeight - 200) {
+            setShowScrollIndicator(true);
+          }
         }, 10000);
       }
     };
@@ -45,10 +56,15 @@ export default function Home() {
       setShowScrollIndicator(true);
     }, 10000);
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    // Bind to multiple events for guaranteed capture
+    window.addEventListener('scroll', handleInteraction, { passive: true });
+    window.addEventListener('wheel', handleInteraction, { passive: true });
+    window.addEventListener('touchmove', handleInteraction, { passive: true });
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('scroll', handleInteraction);
+      window.removeEventListener('wheel', handleInteraction);
+      window.removeEventListener('touchmove', handleInteraction);
       clearTimeout(scrollTimer);
     };
   }, []);
@@ -196,7 +212,7 @@ export default function Home() {
         className={`fixed bottom-8 left-1/2 transform -translate-x-1/2 z-[99] animate-bounce cursor-pointer flex flex-col items-center transition-all duration-700 ease-in-out ${showScrollIndicator ? 'opacity-90 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}
         onClick={() => {
           setShowScrollIndicator(false); // Hide immediately on click
-          window.scrollBy({ top: Math.min(window.innerHeight - 100, Math.max(0, document.body.offsetHeight - window.innerHeight - window.scrollY)), behavior: 'smooth' });
+          window.scrollBy({ top: Math.min(window.innerHeight - 100, Math.max(0, document.documentElement.scrollHeight - window.innerHeight - window.scrollY)), behavior: 'smooth' });
         }}
         title="Scroll down for more"
         style={{
