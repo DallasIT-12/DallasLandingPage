@@ -76,7 +76,11 @@
       },
       "punctuality": {
         "title": "Jaminan Ketepatan Waktu",
-        "desc": "Kami menghargai bisnis Anda dengan menghargai waktu Anda. Dengan manajemen alur kerja yang terstruktur, kami berkomitmen menyelesaikan pesanan sesuai tenggat yang disepakati."
+        "desc": "Dallas menjamin ketepatan Waktu yang telah ditetapkan diawal setelah selesai melakukan acc design dan melanjutkan proses cetak sesuai dengan prosedur yang berlaku."
+      },
+      "discussion": {
+        "title": "Terbuka untuk Diskusi",
+        "desc": "Dallas sangat terbuka jika bertukar pikiran melalui diskusi yang menuju pada kesepakatan Bersama. berdiskusi mengenai design, ukuran, bahan, hingga Harga. kami sangat terbuka jadi konsultasikan segera"
       }
     },
     "cta": "Percayakan citra bisnis Anda pada ahlinya. Hubungi Percetakan Offset Dallas hari ini untuk konsultasi proyek Anda."
@@ -110,6 +114,10 @@
     "duplex": {
       "name": "Duplex",
       "desc": "Kertas karton daur ulang berlapis white liner, dengan satu sisi putih dan satu sisi abu-abu."
+    },
+    "kraftPaper": {
+      "name": "Kraft Paper",
+      "desc": "Kertas coklat alami yang sangat kuat, tahan lama dan serbaguna. Dihasilkan dari pemrosesan pulp kayu sulfat, menjadikannya pilihan ramah lingkungan yang klasik dan profesional."
     }
   },
   "NonCigarette": {

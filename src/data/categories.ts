@@ -240,5 +240,16 @@ export const getDallasCategories = (tCat: any, tMaterials: any): Category[] => [
     applications: ["Box martabak & nasi", "Packaging produk massal", "Alas kue", "Box kemasan sparepart", "Packaging mainan"],
     varieties: ["250 gsm", "310 gsm", "400 gsm (Sangat tebal dan kaku)"],
     gallery: ["/BAHAN-DC.webp"]
+  },
+  {
+    title: tMaterials('kraftPaper.name'),
+    slug: "kraft-paper",
+    img: "/box%20hampers%20kraft%20(1).webp",
+    desc: tMaterials('kraftPaper.desc'),
+    isMaterial: true,
+    explanation: "Kertas Kraft merupakan pilihan material yang sangat populer dalam dunia packaging karena kombinasi kekuatan, estetika klasik, dan ramah lingkungan. Kraft paper memiliki karakteristik warna coklat alaminya yang memberikan kesan organik dan rustic. Selain tahan lama karena terbuat dari proses pulp sulfat, kertas ini juga sangat fleksibel dan eco-friendly (mudah terurai/biodegradable).",
+    applications: ["Paper bag / kantong belanja", "Kemasan makanan eco-friendly", "Box hampers premium", "Label dan hang tag", "Kemasan kosmetik organik"],
+    varieties: ["125 gsm", "150 gsm", "200 gsm", "275 gsm", "350 gsm"],
+    gallery: ["/box%20hampers%20kraft%20(1).webp", "/box%20hampers%20kraft%20(2).webp", "/corndog-kraft.webp"]
   }
 ];

@@ -18,7 +18,8 @@ export const MaterialsSection = () => {
                             { name: t('Materials.artPaper.name'), slug: 'art-paper', description: t('Materials.artPaper.desc'), image: '/BAHAN-AP.webp' },
                             { name: t('Materials.ivoryPaper.name'), slug: 'ivory-paper', description: t('Materials.ivoryPaper.desc'), image: '/BAHAN-IVORY.webp' },
                             { name: t('Materials.tipping.name'), slug: 'bahan-tipping', description: t('Materials.tipping.desc'), image: '/BAHAN-TIPPING.webp' },
-                            { name: t('Materials.duplex.name'), slug: 'duplex', description: t('Materials.duplex.desc'), image: '/BAHAN-DC.webp' }
+                            { name: t('Materials.duplex.name'), slug: 'duplex', description: t('Materials.duplex.desc'), image: '/BAHAN-DC.webp' },
+                            { name: t('Materials.kraftPaper.name'), slug: 'kraft-paper', description: t('Materials.kraftPaper.desc'), image: '/box%20hampers%20kraft%20(1).webp' }
                         ].map((product, index) => (
                             <Link key={product.slug} href={`/produk/${product.slug}`} style={{ textDecoration: 'none', height: '100%' }}>
                                 <motion.div

@@ -18,9 +18,9 @@ export const WhyChooseUs = () => {
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+                <div className="flex flex-wrap justify-center gap-8 mb-16">
                     {/* POIN 1: PENGALAMAN */}
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
+                    <div className="w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.5rem)] max-w-[320px]" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
                         <div style={{
                             width: '80px', height: '80px',
                             borderRadius: '50%',
@@ -37,7 +37,7 @@ export const WhyChooseUs = () => {
                     </div>
 
                     {/* POIN 2: KUALITAS */}
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
+                    <div className="w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.5rem)] max-w-[320px]" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
                         <div style={{
                             width: '80px', height: '80px',
                             borderRadius: '50%',
@@ -54,7 +54,7 @@ export const WhyChooseUs = () => {
                     </div>
 
                     {/* POIN 3: KONSULTASI */}
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
+                    <div className="w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.5rem)] max-w-[320px]" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
                         <div style={{
                             width: '80px', height: '80px',
                             borderRadius: '50%',
@@ -71,7 +71,7 @@ export const WhyChooseUs = () => {
                     </div>
 
                     {/* POIN 4: WAKTU */}
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
+                    <div className="w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.5rem)] max-w-[320px]" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
                         <div style={{
                             width: '80px', height: '80px',
                             borderRadius: '50%',
@@ -84,6 +84,23 @@ export const WhyChooseUs = () => {
                         <h3 style={{ fontSize: '1.25rem', fontWeight: '600' }}>{t('WhyChoose.points.punctuality.title')}</h3>
                         <p style={{ color: '#e5e7eb', fontSize: '0.95rem', lineHeight: '1.6' }}>
                             {t('WhyChoose.points.punctuality.desc')}
+                        </p>
+                    </div>
+
+                    {/* POIN 5: DISKUSI */}
+                    <div className="w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.5rem)] max-w-[320px]" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
+                        <div style={{
+                            width: '80px', height: '80px',
+                            borderRadius: '50%',
+                            backgroundColor: 'rgba(73, 118, 159, 0.2)',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            marginBottom: '8px'
+                        }}>
+                            <Icon icon="mdi:account-group-outline" width="40" height="40" color="#f97316" />
+                        </div>
+                        <h3 style={{ fontSize: '1.25rem', fontWeight: '600' }}>{t('WhyChoose.points.discussion.title')}</h3>
+                        <p style={{ color: '#e5e7eb', fontSize: '0.95rem', lineHeight: '1.6' }}>
+                            {t('WhyChoose.points.discussion.desc')}
                         </p>
                     </div>
                 </div>

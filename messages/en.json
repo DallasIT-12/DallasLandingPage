@@ -76,7 +76,11 @@
       },
       "punctuality": {
         "title": "Punctuality Guarantee",
-        "desc": "We value your business by valuing your time. With structured workflow management, we are committed to completing orders according to the agreed deadline."
+        "desc": "Dallas guarantees the predetermined timeframe after the design is approved and the printing process continues according to the applicable procedures."
+      },
+      "discussion": {
+        "title": "Open for Discussion",
+        "desc": "Dallas is very open to exchanging ideas through discussions leading to mutual agreement. Discussing design, size, materials, to prices. We are very open, so consult immediately."
       }
     },
     "cta": "Entrust your business image to the experts. Contact Dallas Offset Printing today for your project consultation."
@@ -110,6 +114,10 @@
     "duplex": {
       "name": "Duplex",
       "desc": "Recycled cardboard paper layered with white liner, with one white side and one gray side."
+    },
+    "kraftPaper": {
+      "name": "Kraft Paper",
+      "desc": "Natural brown paper that is very strong, durable, and versatile. Produced from sulfate wood pulp processing, making it an eco-friendly choice with a classic and professional look."
     }
   },
   "NonCigarette": {
