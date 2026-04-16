@@ -62,6 +62,12 @@ const Footer = () => {
             <div style={{ color: '#4b5563', display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <p>{t('email')}: <a href="mailto:percetakandallas@gmail.com" style={{ color: '#4b5563', textDecoration: 'underline' }}>percetakandallas@gmail.com</a></p>
               <p>{t('phone')}: <a href="https://wa.me/6281260001487" target="_blank" rel="noopener noreferrer" style={{ color: '#4b5563', textDecoration: 'underline' }}>(+62) 812-6000-1487</a></p>
+              <div style={{ marginTop: '8px', lineHeight: '1.5' }}>
+                <strong style={{ color: '#111827' }}>Alamat:</strong><br />
+                Jl. Kilisuci No.71, Singonegaran,<br />
+                Kec. Pesantren, Kabupaten Kediri,<br />
+                Jawa Timur 64129
+              </div>
             </div>
           </div>
         </div>
