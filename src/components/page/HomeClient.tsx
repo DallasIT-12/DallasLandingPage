@@ -22,22 +22,30 @@ export default function Home() {
   const [showPromo, setShowPromo] = useState(false);
   const [showScrollIndicator, setShowScrollIndicator] = useState(false);
 
-  // Show scroll indicator if idle for 10 seconds
+  // Show scroll indicator if idle for 10 seconds anywhere on the page
   useEffect(() => {
-    let hasScrolled = false;
+    let scrollTimer: NodeJS.Timeout;
+
     const handleScroll = () => {
-      hasScrolled = true;
       setShowScrollIndicator(false);
-      window.removeEventListener('scroll', handleScroll);
+      clearTimeout(scrollTimer);
+      
+      // Don't show if we are near the very bottom of the page
+      const isNearBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 200;
+      
+      if (!isNearBottom) {
+        scrollTimer = setTimeout(() => {
+          setShowScrollIndicator(true);
+        }, 10000);
+      }
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-
-    const scrollTimer = setTimeout(() => {
-      if (!hasScrolled && window.scrollY < 100) {
-        setShowScrollIndicator(true);
-      }
+    // Initial timeout when page loads
+    scrollTimer = setTimeout(() => {
+      setShowScrollIndicator(true);
     }, 10000);
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
@@ -155,16 +163,6 @@ export default function Home() {
             </a>
           </div>
         </div>
-
-        {/* Scroll Down Indicator */}
-        <div 
-          className={`absolute bottom-6 md:bottom-10 left-1/2 transform -translate-x-1/2 z-[3] animate-bounce cursor-pointer flex flex-col items-center hover:opacity-100 transition-all duration-700 ease-in-out ${showScrollIndicator ? 'opacity-80 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}
-          onClick={() => window.scrollBy({ top: window.innerHeight - 88, behavior: 'smooth' })}
-          title="Scroll down for more"
-        >
-          <span className="text-white text-[10px] md:text-sm font-semibold tracking-[0.2em] mb-1">SCROLL</span>
-          <Icon icon="mdi:chevron-down" className="text-white text-[30px] md:text-[40px]" />
-        </div>
       </section>
 
       {/* --- LAZY LOADED COMPONENTS MAPPED OVER ORIGINAL UI SEQUENCE --- */}
@@ -192,6 +190,30 @@ export default function Home() {
 
       {/* Footer */}
       <Footer />
+
+      {/* Global Scroll Down Indicator */}
+      <div 
+        className={`fixed bottom-8 left-1/2 transform -translate-x-1/2 z-[99] animate-bounce cursor-pointer flex flex-col items-center transition-all duration-700 ease-in-out ${showScrollIndicator ? 'opacity-90 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}
+        onClick={() => {
+          setShowScrollIndicator(false); // Hide immediately on click
+          window.scrollBy({ top: Math.min(window.innerHeight - 100, Math.max(0, document.body.offsetHeight - window.innerHeight - window.scrollY)), behavior: 'smooth' });
+        }}
+        title="Scroll down for more"
+        style={{
+          backgroundColor: 'rgba(0, 29, 57, 0.75)',
+          backdropFilter: 'blur(8px)',
+          WebkitBackdropFilter: 'blur(8px)',
+          padding: '12px 24px',
+          borderRadius: '30px',
+          border: '1px solid rgba(255, 255, 255, 0.15)',
+          boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.5)'
+        }}
+        onMouseOver={(e) => (e.currentTarget.style.opacity = '1')}
+        onMouseOut={(e) => (e.currentTarget.style.opacity = '0.9')}
+      >
+        <span className="text-white text-[10px] md:text-xs font-semibold tracking-[0.2em] mb-1">SCROLL</span>
+        <Icon icon="mdi:chevron-down" className="text-white text-[24px] md:text-[28px]" />
+      </div>
     </div>
   );
 }
