@@ -441,11 +441,11 @@ export default function PaperlisensPageClient() {
         <div style={{ position: 'relative' }}>
           <button className="category-nav-btn left" onClick={() => scrollCategories('left')} style={{ display: 'none' }}><Icon icon="mdi:chevron-left" width="20" /></button>
           <div className="category-grid" ref={categoryScrollRef} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '16px', marginBottom: '24px' }}>
-            <div className="category-card-wrapper"><CategoryCard title={pt('categories.paperTray')} image="/paperlisens%20papertray.png" slug="paper-tray" /></div>
-            <div className="category-card-wrapper"><CategoryCard title={pt('categories.boxTakeaway')} image="/paperlisens%20box%20takeaway.png" slug="box-take-away" /></div>
-            <div className="category-card-wrapper"><CategoryCard title={pt('categories.tempatPensil')} image="/paperlisens%20tempat%20pensil.png" slug="tempat-pensil" /></div>
-            <div className="category-card-wrapper"><CategoryCard title={pt('categories.boxCupcake')} image="/paperlisens%20cupcake.png" slug="box-cupcake" /></div>
-            <div className="category-card-wrapper"><CategoryCard title={pt('categories.lainLain')} image="/angpao%20karakter.jpeg" slug="lain-lain" /></div>
+            <div className="category-card-wrapper"><CategoryCard title={pt('categories.paperTray')} image="/paperlisens%20papertray.webp" slug="paper-tray" /></div>
+            <div className="category-card-wrapper"><CategoryCard title={pt('categories.boxTakeaway')} image="/paperlisens%20box%20takeaway.webp" slug="box-take-away" /></div>
+            <div className="category-card-wrapper"><CategoryCard title={pt('categories.tempatPensil')} image="/box%20tabung%20(1).webp" slug="tempat-pensil" /></div>
+            <div className="category-card-wrapper"><CategoryCard title={pt('categories.boxCupcake')} image="/paperlisens%20cupcake.webp" slug="box-cupcake" /></div>
+            <div className="category-card-wrapper"><CategoryCard title={pt('categories.lainLain')} image="/angpao%20karakter.webp" slug="lain-lain" /></div>
           </div>
           <button className="category-nav-btn right" onClick={() => scrollCategories('right')} style={{ display: 'none' }}><Icon icon="mdi:chevron-right" width="20" /></button>
         </div>

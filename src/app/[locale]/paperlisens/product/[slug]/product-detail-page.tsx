@@ -379,14 +379,16 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
   }, [initialProduct]);
 
   // Mobile & Lightbox gallery logic: Includes variant preview if applicable
+  const isPlaceholder = useCallback((url: string) => !url || url === '/placeholder.png' || url.includes('placeholder'), []);
+
   const fullGalleryImages = useMemo(() => {
-    if (activeVisualVariant?.image && !productImages.includes(activeVisualVariant.image)) {
+    if (activeVisualVariant?.image && !isPlaceholder(activeVisualVariant.image) && !productImages.includes(activeVisualVariant.image)) {
       return [activeVisualVariant.image, ...productImages];
     }
     return productImages;
-  }, [productImages, activeVisualVariant]);
+  }, [productImages, activeVisualVariant, isPlaceholder]);
 
-  const mainDisplayImage = selectedImage === -1 && activeVisualVariant?.image 
+  const mainDisplayImage = selectedImage === -1 && activeVisualVariant?.image && !isPlaceholder(activeVisualVariant.image)
     ? activeVisualVariant.image 
     : productImages[Math.max(0, selectedImage)];
 
