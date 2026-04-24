@@ -30,12 +30,12 @@ export const metadata: Metadata = {
   creator: 'Dallas Printing',
   publisher: 'Dallas Printing',
   alternates: {
-    canonical: 'https://dallas-printingid.com/id',
+    canonical: 'https://dallas-printingid.com',
     languages: {
       'id': 'https://dallas-printingid.com/id',
       'en': 'https://dallas-printingid.com/en',
       'zh': 'https://dallas-printingid.com/zh',
-      'x-default': 'https://dallas-printingid.com/id',
+      'x-default': 'https://dallas-printingid.com',
     },
   },
   robots: {

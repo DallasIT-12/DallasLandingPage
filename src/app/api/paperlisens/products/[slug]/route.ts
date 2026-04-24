@@ -340,19 +340,52 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
     const supabase = getClient();
     if (!supabase) return NextResponse.json({ error: 'DB not configured' }, { status: 503 });
 
-    // Cari ID base sebelum hapus agar varian ikut terhapus (cascade)
-    const { data: base } = await supabase.from('paperlisens_products_base').select('id').eq('product_slug', slug).maybeSingle();
+    // Cari base product beserta semua data gambar sebelum menghapus
+    const { data: base } = await supabase
+      .from('paperlisens_products_base')
+      .select('id, image, images')
+      .eq('product_slug', slug)
+      .maybeSingle();
 
     if (base) {
+      // 1. Kumpulkan semua URL gambar dari base + varian untuk cleanup storage
+      const allImageUrls: string[] = [];
+
+      // Gambar base product
+      if (base.image) allImageUrls.push(base.image);
+      const baseImages = Array.isArray(base.images) ? base.images : [];
+      allImageUrls.push(...baseImages);
+
+      // Gambar semua varian
+      const { data: variants } = await supabase
+        .from('paperlisens_product_variants')
+        .select('image, images')
+        .eq('product_id', base.id);
+
+      for (const v of variants || []) {
+        if (v.image) allImageUrls.push(v.image);
+        const vImages = Array.isArray(v.images) ? v.images : [];
+        allImageUrls.push(...vImages);
+      }
+
+      // 2. Hapus file dari Supabase Storage
+      const supabaseUrls = allImageUrls.filter(isSupabaseStorageUrl);
+      if (supabaseUrls.length > 0) {
+        console.log(`DELETE_CLEANUP: Deleting ${supabaseUrls.length} image(s) from storage for product "${slug}"`);
+        await deleteStorageUrls(supabase, supabaseUrls);
+      }
+
+      // 3. Hapus data dari database
       await supabase.from('paperlisens_product_variants').delete().eq('product_id', base.id);
       await supabase.from('paperlisens_products_base').delete().eq('id', base.id);
     }
 
-    // Hapus juga dari tabel lama
+    // Hapus juga dari tabel lama (tanpa cleanup storage karena tabel lama tidak dikelola)
     await supabase.from('paperlisens_products').delete().eq('product_slug', slug);
 
     return NextResponse.json({ success: true });
   } catch (err) {
+    console.error('DELETE_ERROR:', err);
     return NextResponse.json({ error: 'Delete failed' }, { status: 500 });
   }
 }

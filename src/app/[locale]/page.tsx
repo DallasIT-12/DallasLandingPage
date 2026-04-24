@@ -6,12 +6,12 @@ export const metadata: Metadata = {
   description: 'Percetakan terdekat di Kediri. Melayani jasa cetak murah, box custom, & offset printing dengan kualitas premium dan harga terjangkau.',
   keywords: ['percetakan terdekat', 'percetakan murah terdekat', 'Percetakan offset dallas kediri', 'offset printing', 'Jasa cetak murah di kediri', 'cetak box custom', 'kemasan premium', 'box terjangkau', 'percetakan kediri', 'Cetak Paper Tray makanan custom', 'Cetak Dus Box kemasan murah', 'Jasa cetak undangan pernikahan elegan', 'Cetak stiker label kemasan terdekat', 'Cetak brosur kilat 1 hari jadi', 'Cetak nota rangkap (NCR) custom'],
   alternates: {
-    canonical: 'https://dallas-printingid.com/id',
+    canonical: 'https://dallas-printingid.com',
     languages: {
       'id': 'https://dallas-printingid.com/id',
       'en': 'https://dallas-printingid.com/en',
       'zh': 'https://dallas-printingid.com/zh',
-      'x-default': 'https://dallas-printingid.com/id',
+      'x-default': 'https://dallas-printingid.com',
     },
   }
 };
@@ -102,14 +102,9 @@ const localBusinessSchema = {
     "https://www.instagram.com/percetakandallas/",
     "https://www.facebook.com/percetakandallas"
   ],
-  "foundingDate": "1983",
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "4.8",
-    "reviewCount": "156",
-    "bestRating": "5",
-    "worstRating": "1"
-  }
+  "foundingDate": "1983"
+  // NOTE: AggregateRating removed — only add back once Google Business Profile
+  // has real, verifiable reviews. Using unverifiable rating data risks Google penalty.
 };
 
 const websiteSchema = {

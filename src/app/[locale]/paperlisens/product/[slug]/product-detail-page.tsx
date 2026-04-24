@@ -276,7 +276,7 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
   const router = useRouter();
   const { addToCart, cartCount, setIsCartOpen } = useCart();
   const [activeTab, setActiveTab] = useState('deskripsi');
-  const [selectedImage, setSelectedImage] = useState(0);
+  const [selectedImage, setSelectedImage] = useState(-1);
   const [quantity, setQuantity] = useState(1);
   const [selectedVariant, setSelectedVariant] = useState<any | null>(null);
   const [hoveredVariant, setHoveredVariant] = useState<any | null>(null);
@@ -321,7 +321,7 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
 
   const handleAttr1Click = useCallback((val: string) => {
     setSelectedAttr1(val);
-    setSelectedImage(0);
+    setSelectedImage(-1);
     const match = variations.find((v: any) => {
       const n1 = v.variant_name || getLocalized(v, 'variant') || 'Standard';
       if (attributes.attr2.length > 0) {
@@ -335,7 +335,7 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
 
   const handleAttr2Click = useCallback((val: string) => {
     setSelectedAttr2(val);
-    setSelectedImage(0);
+    setSelectedImage(-1);
     const match = variations.find((v: any) => {
       const n1 = v.variant_name || getLocalized(v, 'variant') || 'Standard';
       const n2 = v.variant_name_2 || null;
@@ -362,24 +362,33 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
         seen.add(url);
       }
     };
-    add(displayProduct.image);
-    if (activeVisualVariant) {
-      add(initialProduct.image);
-      if (Array.isArray(initialProduct.images)) {
-        initialProduct.images.forEach((img: string) => add(img));
-      }
-    }
-    if (Array.isArray(displayProduct.images)) {
-      displayProduct.images.forEach((img: string) => add(img));
-    } else if (displayProduct.images && typeof displayProduct.images === 'string') {
+    
+    // Always use base product gallery only (no variant images mixed in)
+    add(initialProduct.image);
+    if (Array.isArray(initialProduct.images)) {
+      initialProduct.images.forEach((img: string) => add(img));
+    } else if (initialProduct.images && typeof initialProduct.images === 'string') {
       try {
-        const parsed = JSON.parse(displayProduct.images);
+        const parsed = JSON.parse(initialProduct.images);
         if (Array.isArray(parsed)) parsed.forEach((img: string) => add(img));
       } catch (e) { }
     }
+    
     if (list.length === 0) list.push('/placeholder.png');
     return list;
-  }, [displayProduct, initialProduct, activeVisualVariant]);
+  }, [initialProduct]);
+
+  // Mobile & Lightbox gallery logic: Includes variant preview if applicable
+  const fullGalleryImages = useMemo(() => {
+    if (activeVisualVariant?.image && !productImages.includes(activeVisualVariant.image)) {
+      return [activeVisualVariant.image, ...productImages];
+    }
+    return productImages;
+  }, [productImages, activeVisualVariant]);
+
+  const mainDisplayImage = selectedImage === -1 && activeVisualVariant?.image 
+    ? activeVisualVariant.image 
+    : productImages[Math.max(0, selectedImage)];
 
   const product = {
     ...displayProduct,
@@ -496,12 +505,37 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
             <div className="gallery-container">
               <div className="desktop-gallery" style={{ position: 'relative' }}>
                 <img
-                  src={product.images[selectedImage]}
+                  src={mainDisplayImage}
                   className="main-image"
                   alt={product.localizedName}
                   onClick={() => setIsLightboxOpen(true)}
                   style={{ cursor: 'pointer' }}
                 />
+
+                {/* Left Arrow */}
+                {productImages.length > 1 && (
+                  <button
+                    onClick={(e) => { e.stopPropagation(); setSelectedImage(prev => { const idx = prev === -1 ? 0 : prev; return idx <= 0 ? productImages.length - 1 : idx - 1; }); }}
+                    style={{ position: 'absolute', top: '50%', left: '12px', transform: 'translateY(-50%)', backgroundColor: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(4px)', width: '40px', height: '40px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.08)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.12)', transition: 'all 0.2s', zIndex: 2 }}
+                    onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'rgba(255,255,255,1)'; (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-50%) scale(1.1)'; }}
+                    onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'rgba(255,255,255,0.85)'; (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-50%) scale(1)'; }}
+                  >
+                    <Icon icon="lucide:chevron-left" style={{ color: '#1a3636', fontSize: '22px' }} />
+                  </button>
+                )}
+
+                {/* Right Arrow */}
+                {productImages.length > 1 && (
+                  <button
+                    onClick={(e) => { e.stopPropagation(); setSelectedImage(prev => { const idx = prev === -1 ? 0 : prev; return idx >= productImages.length - 1 ? 0 : idx + 1; }); }}
+                    style={{ position: 'absolute', top: '50%', right: '12px', transform: 'translateY(-50%)', backgroundColor: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(4px)', width: '40px', height: '40px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.08)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.12)', transition: 'all 0.2s', zIndex: 2 }}
+                    onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'rgba(255,255,255,1)'; (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-50%) scale(1.1)'; }}
+                    onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'rgba(255,255,255,0.85)'; (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-50%) scale(1)'; }}
+                  >
+                    <Icon icon="lucide:chevron-right" style={{ color: '#1a3636', fontSize: '22px' }} />
+                  </button>
+                )}
+
                 <button
                   onClick={() => setIsLightboxOpen(true)}
                   style={{ position: 'absolute', bottom: '16px', right: '16px', backgroundColor: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(4px)', padding: '8px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.1)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
@@ -516,10 +550,10 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
                 </div>
               </div>
               <div className="mobile-gallery">
-                {product.images.map((img: string, idx: number) => (
+                {fullGalleryImages.map((img: string, idx: number) => (
                   <div key={idx} className="mobile-gallery-item" onClick={() => { setSelectedImage(idx); setIsLightboxOpen(true); }}>
                     <img src={img} className="mobile-gallery-img" alt={`Product ${idx}`} />
-                    <div style={{ position: 'absolute', bottom: '10px', right: '10px', background: 'rgba(0,0,0,0.6)', color: 'white', padding: '4px 8px', borderRadius: '12px', fontSize: '10px' }}>{idx + 1} / {product.images.length}</div>
+                    <div style={{ position: 'absolute', bottom: '10px', right: '10px', background: 'rgba(0,0,0,0.6)', color: 'white', padding: '4px 8px', borderRadius: '12px', fontSize: '10px' }}>{idx + 1} / {fullGalleryImages.length}</div>
 
                     <button
                       style={{ position: 'absolute', top: '10px', right: '10px', backgroundColor: 'rgba(255,255,255,0.8)', padding: '6px', borderRadius: '50%', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
@@ -561,10 +595,17 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
                         <button
                           key={val}
                           onClick={() => {
-                            setSelectedAttr1(val);
-                            if (attributes.attr2.length === 0) {
-                              const match = variations.find((v: any) => (v.variant_name || getLocalized(v, 'variant')) === val);
-                              if (match) { setSelectedVariant(match); setSelectedImage(0); }
+                            if (selectedAttr1 === val || selectedVariant?.variant_name === val) {
+                              // Double-click / toggle: deselect variant
+                              setSelectedAttr1(null);
+                              setSelectedVariant(null);
+                              setSelectedImage(0);
+                            } else {
+                              setSelectedAttr1(val);
+                              if (attributes.attr2.length === 0) {
+                                const match = variations.find((v: any) => (v.variant_name || getLocalized(v, 'variant')) === val);
+                                if (match) { setSelectedVariant(match); setSelectedImage(-1); }
+                              }
                             }
                           }}
                           style={{
@@ -594,8 +635,14 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
                           <button
                             key={val}
                             onClick={() => {
-                              setSelectedAttr2(val);
-                              setSelectedImage(0);
+                              if (selectedAttr2 === val) {
+                                // Toggle: deselect attr2
+                                setSelectedAttr2(null);
+                                setSelectedImage(0);
+                              } else {
+                                setSelectedAttr2(val);
+                                setSelectedImage(-1);
+                              }
                             }}
                             style={{
                               padding: '8px 16px',
@@ -662,16 +709,16 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
           </button>
 
           <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }} onClick={(e) => e.stopPropagation()}>
-            {product.images.length > 1 && (
+            {fullGalleryImages.length > 1 && (
               <>
                 <button
-                  onClick={(e) => { e.stopPropagation(); setSelectedImage(prev => (prev === 0 ? product.images.length - 1 : prev - 1)); }}
+                  onClick={(e) => { e.stopPropagation(); setSelectedImage(prev => (prev === -1 || prev === 0 ? fullGalleryImages.length - 1 : prev - 1)); }}
                   style={{ position: 'absolute', left: '20px', backgroundColor: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '50%', width: '48px', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 10, backdropFilter: 'blur(4px)' }}
                 >
                   <Icon icon="lucide:chevron-left" style={{ color: 'white', fontSize: '28px' }} />
                 </button>
                 <button
-                  onClick={(e) => { e.stopPropagation(); setSelectedImage(prev => (prev === product.images.length - 1 ? 0 : prev + 1)); }}
+                  onClick={(e) => { e.stopPropagation(); setSelectedImage(prev => (prev === fullGalleryImages.length - 1 ? 0 : (prev === -1 ? 1 : prev + 1))); }}
                   style={{ position: 'absolute', right: '20px', backgroundColor: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '50%', width: '48px', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 10, backdropFilter: 'blur(4px)' }}
                 >
                   <Icon icon="lucide:chevron-right" style={{ color: 'white', fontSize: '28px' }} />
@@ -680,13 +727,13 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
             )}
 
             <img
-              src={product.images[selectedImage]}
+              src={selectedImage === -1 ? fullGalleryImages[0] : fullGalleryImages[selectedImage] || fullGalleryImages[0]}
               alt="Full Preview"
               style={{ maxHeight: '90vh', maxWidth: '90vw', objectFit: 'contain', borderRadius: '4px' }}
             />
 
             <div style={{ position: 'absolute', bottom: '24px', left: '50%', transform: 'translateX(-50%)', backgroundColor: 'rgba(0,0,0,0.5)', padding: '6px 12px', borderRadius: '20px', color: 'white', fontSize: '14px', backdropFilter: 'blur(4px)' }}>
-              {selectedImage + 1} / {product.images.length}
+              {(selectedImage === -1 ? 0 : selectedImage) + 1} / {fullGalleryImages.length}
             </div>
           </div>
         </div>

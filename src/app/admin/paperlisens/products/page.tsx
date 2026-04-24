@@ -872,9 +872,23 @@ export default function PaperlisensProductsAdmin() {
                       </div>
                     </div>
                   </div>
-                  <div className="space-y-4">
-                    <div>
-                      <label className={labelClasses}>Label Variasi 2 (Opsional: Ukuran)</label>
+                  {v2Options.length > 0 ? (
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <label className={labelClasses}>Label Variasi 2 (Opsional: Ukuran)</label>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setV2Options([]);
+                            if (editingProduct) {
+                              setEditingProduct({ ...editingProduct, attr_label_2: '' } as any);
+                            }
+                          }}
+                          className="text-[9px] font-bold text-rose-400 uppercase tracking-wider hover:text-rose-300 transition-colors flex items-center gap-1"
+                        >
+                          <Icon icon="lucide:x" className="text-xs" /> Hapus Variasi 2
+                        </button>
+                      </div>
                       <input
                         type="text"
                         value={(editingProduct as any).attr_label_2 || ''}
@@ -882,45 +896,56 @@ export default function PaperlisensProductsAdmin() {
                         className={inputClasses}
                         placeholder="Contoh: Ukuran"
                       />
-                    </div>
-                    <div>
-                      <label className={labelClasses}>Pilihan Variasi 2</label>
-                      <div className="space-y-3">
-                        {v2Options.map((opt, idx) => (
-                          <div key={idx} className="flex items-center gap-2">
-                            <input
-                              type="text"
-                              value={opt}
-                              onChange={(e) => {
-                                const newOpts = [...v2Options];
-                                newOpts[idx] = e.target.value;
-                                setV2Options(newOpts);
-                              }}
-                              className={`${inputClasses} py-3`}
-                              placeholder="Contoh: 20 pcs"
-                            />
-                            <button
-                              type="button"
-                              onClick={() => {
-                                const newOpts = v2Options.filter((_, i) => i !== idx);
-                                setV2Options(newOpts);
-                              }}
-                              className="w-12 h-12 flex-shrink-0 flex items-center justify-center bg-rose-500/10 hover:bg-rose-500 text-rose-500 hover:text-white rounded-xl transition-all border border-rose-500/30"
-                            >
-                              <Icon icon="lucide:trash-2" className="text-lg" />
-                            </button>
-                          </div>
-                        ))}
-                        <button
-                          type="button"
-                          onClick={() => setV2Options([...v2Options, ''])}
-                          className="w-full py-3 bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 border-dashed rounded-xl font-bold text-xs uppercase transition-all flex items-center justify-center gap-2"
-                        >
-                          <Icon icon="lucide:plus" className="text-sm" /> Tambah Pilihan
-                        </button>
+                      <div>
+                        <label className={labelClasses}>Pilihan Variasi 2</label>
+                        <div className="space-y-3">
+                          {v2Options.map((opt, idx) => (
+                            <div key={idx} className="flex items-center gap-2">
+                              <input
+                                type="text"
+                                value={opt}
+                                onChange={(e) => {
+                                  const newOpts = [...v2Options];
+                                  newOpts[idx] = e.target.value;
+                                  setV2Options(newOpts);
+                                }}
+                                className={`${inputClasses} py-3`}
+                                placeholder="Contoh: 20 pcs"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const newOpts = v2Options.filter((_, i) => i !== idx);
+                                  setV2Options(newOpts);
+                                }}
+                                className="w-12 h-12 flex-shrink-0 flex items-center justify-center bg-rose-500/10 hover:bg-rose-500 text-rose-500 hover:text-white rounded-xl transition-all border border-rose-500/30"
+                              >
+                                <Icon icon="lucide:trash-2" className="text-lg" />
+                              </button>
+                            </div>
+                          ))}
+                          <button
+                            type="button"
+                            onClick={() => setV2Options([...v2Options, ''])}
+                            className="w-full py-3 bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 border-dashed rounded-xl font-bold text-xs uppercase transition-all flex items-center justify-center gap-2"
+                          >
+                            <Icon icon="lucide:plus" className="text-sm" /> Tambah Pilihan
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  ) : (
+                    <div className="flex items-center justify-center">
+                      <button
+                        type="button"
+                        onClick={() => setV2Options([''])}
+                        className="w-full py-6 bg-white/[0.02] hover:bg-white/5 text-slate-500 hover:text-slate-300 border border-white/5 border-dashed rounded-2xl font-bold text-xs uppercase transition-all flex flex-col items-center justify-center gap-2"
+                      >
+                        <Icon icon="lucide:plus-circle" className="text-2xl" />
+                        <span>Tambah Variasi 2 (Opsional)</span>
+                      </button>
+                    </div>
+                  )}
                 </div>
 
                 <button
@@ -991,9 +1016,9 @@ export default function PaperlisensProductsAdmin() {
                 </div>
 
                 {/* Variant Table Header */}
-                <div className="hidden lg:grid grid-cols-[1fr_1fr_120px_160px_48px] gap-4 px-5 py-3 bg-white/[0.02] rounded-xl mb-3 border border-white/5">
+                <div className={`hidden lg:grid ${v2Options.length > 0 ? 'grid-cols-[1fr_1fr_120px_160px_48px]' : 'grid-cols-[1fr_120px_160px_48px]'} gap-4 px-5 py-3 bg-white/[0.02] rounded-xl mb-3 border border-white/5`}>
                   <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Variasi 1</span>
-                  <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Variasi 2</span>
+                  {v2Options.length > 0 && <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Variasi 2</span>}
                   <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Harga (Rp)</span>
                   <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Foto</span>
                   <span></span>
@@ -1002,7 +1027,7 @@ export default function PaperlisensProductsAdmin() {
                 {/* Variant Rows */}
                 <div className="space-y-2 max-h-[600px] overflow-y-auto pr-1 custom-scrollbar">
                   {(editingProduct.variants || []).map((v, idx) => (
-                    <div key={v.id} className="grid grid-cols-1 lg:grid-cols-[1fr_1fr_120px_160px_48px] gap-4 p-5 bg-[#0f172a] rounded-2xl border border-white/5 hover:border-[#d6bd98]/20 transition-all items-center">
+                    <div key={v.id} className={`grid grid-cols-1 ${v2Options.length > 0 ? 'lg:grid-cols-[1fr_1fr_120px_160px_48px]' : 'lg:grid-cols-[1fr_120px_160px_48px]'} gap-4 p-5 bg-[#0f172a] rounded-2xl border border-white/5 hover:border-[#d6bd98]/20 transition-all items-center`}>
                       {/* Variant 1 Names */}
                       <div className="space-y-2">
                         <input
@@ -1042,44 +1067,46 @@ export default function PaperlisensProductsAdmin() {
                         </div>
                       </div>
 
-                      {/* Variant 2 Names */}
-                      <div className="space-y-2">
-                        <input
-                          type="text"
-                          value={v.variant_name_2 || ''}
-                          onChange={(e) => {
-                            const newVariants = [...(editingProduct.variants || [])];
-                            newVariants[idx].variant_name_2 = e.target.value;
-                            setEditingProduct({ ...editingProduct, variants: newVariants });
-                          }}
-                          placeholder="Nama Varian 2 (ID)"
-                          className="bg-transparent border-b border-white/10 outline-none text-white font-bold text-sm focus:border-[#d6bd98] pb-1 w-full"
-                        />
-                        <div className="grid grid-cols-2 gap-2">
+                      {/* Variant 2 Names - Only shown when v2Options has entries */}
+                      {v2Options.length > 0 && (
+                        <div className="space-y-2">
                           <input
                             type="text"
-                            value={v.variant_name_2_en || ''}
+                            value={v.variant_name_2 || ''}
                             onChange={(e) => {
                               const newVariants = [...(editingProduct.variants || [])];
-                              newVariants[idx].variant_name_2_en = e.target.value;
+                              newVariants[idx].variant_name_2 = e.target.value;
                               setEditingProduct({ ...editingProduct, variants: newVariants });
                             }}
-                            placeholder="EN"
-                            className="bg-transparent border-b border-white/5 outline-none text-slate-400 font-medium text-[10px] focus:border-blue-400 pb-1 w-full"
+                            placeholder="Nama Varian 2 (ID)"
+                            className="bg-transparent border-b border-white/10 outline-none text-white font-bold text-sm focus:border-[#d6bd98] pb-1 w-full"
                           />
-                          <input
-                            type="text"
-                            value={v.variant_name_2_zh || ''}
-                            onChange={(e) => {
-                              const newVariants = [...(editingProduct.variants || [])];
-                              newVariants[idx].variant_name_2_zh = e.target.value;
-                              setEditingProduct({ ...editingProduct, variants: newVariants });
-                            }}
-                            placeholder="ZH"
-                            className="bg-transparent border-b border-white/5 outline-none text-slate-400 font-medium text-[10px] focus:border-emerald-400 pb-1 w-full"
-                          />
+                          <div className="grid grid-cols-2 gap-2">
+                            <input
+                              type="text"
+                              value={v.variant_name_2_en || ''}
+                              onChange={(e) => {
+                                const newVariants = [...(editingProduct.variants || [])];
+                                newVariants[idx].variant_name_2_en = e.target.value;
+                                setEditingProduct({ ...editingProduct, variants: newVariants });
+                              }}
+                              placeholder="EN"
+                              className="bg-transparent border-b border-white/5 outline-none text-slate-400 font-medium text-[10px] focus:border-blue-400 pb-1 w-full"
+                            />
+                            <input
+                              type="text"
+                              value={v.variant_name_2_zh || ''}
+                              onChange={(e) => {
+                                const newVariants = [...(editingProduct.variants || [])];
+                                newVariants[idx].variant_name_2_zh = e.target.value;
+                                setEditingProduct({ ...editingProduct, variants: newVariants });
+                              }}
+                              placeholder="ZH"
+                              className="bg-transparent border-b border-white/5 outline-none text-slate-400 font-medium text-[10px] focus:border-emerald-400 pb-1 w-full"
+                            />
+                          </div>
                         </div>
-                      </div>
+                      )}
 
                       {/* Price */}
                       <div>
