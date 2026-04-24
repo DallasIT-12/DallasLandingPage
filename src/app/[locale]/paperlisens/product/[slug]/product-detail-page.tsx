@@ -144,7 +144,13 @@ const ProductCard = memo(({ product }: { product: any }) => {
     <Link href={`/paperlisens/product/${product.productSlug}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block', width: '220px', flexShrink: 0 }}>
       <div style={{ border: '1px solid #e5e7eb', borderRadius: '8px', overflow: 'hidden', backgroundColor: 'white', height: '100%', transition: 'all 0.3s ease', display: 'flex', flexDirection: 'column' }}>
         <div style={{ height: '200px', backgroundColor: '#f9fafb', position: 'relative', overflow: 'hidden' }}>
-          <img src={product.image} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} loading="lazy" onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder.png'; }} />
+          {product.image && !product.image.includes('placeholder') ? (
+            <img src={product.image} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} loading="lazy" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+          ) : (
+            <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#d1d5db' }}>
+              <Icon icon="mdi:image-off-outline" style={{ fontSize: '48px' }} />
+            </div>
+          )}
           <div style={{ position: 'absolute', top: 0, right: 0, backgroundColor: '#d6bd98', padding: '4px 8px', fontSize: '10px', color: '#1a3636', fontWeight: 'bold', borderBottomLeftRadius: '8px' }}>
             {discountPercent}% OFF
           </div>
@@ -374,7 +380,6 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
       } catch (e) { }
     }
     
-    if (list.length === 0) list.push('/placeholder.png');
     return list;
   }, [initialProduct]);
 
@@ -503,7 +508,8 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
         <div style={{ backgroundColor: 'white', padding: '24px', borderRadius: '8px', border: '1px solid #e5e7eb', marginBottom: '24px' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '32px' }}>
 
-            {/* Gallery Section */}
+            {/* Gallery Section - only show if there are real images */}
+            {productImages.length > 0 ? (
             <div className="gallery-container">
               <div className="desktop-gallery" style={{ position: 'relative' }}>
                 <img
@@ -512,7 +518,7 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
                   alt={product.localizedName}
                   onClick={() => setIsLightboxOpen(true)}
                   style={{ cursor: 'pointer' }}
-                  onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder.png'; }}
+                  onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                 />
 
                 {/* Left Arrow */}
@@ -555,7 +561,7 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
               <div className="mobile-gallery">
                 {fullGalleryImages.map((img: string, idx: number) => (
                   <div key={idx} className="mobile-gallery-item" onClick={() => { setSelectedImage(idx); setIsLightboxOpen(true); }}>
-                    <img src={img} className="mobile-gallery-img" alt={`Product ${idx}`} loading="lazy" onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder.png'; }} />
+                    <img src={img} className="mobile-gallery-img" alt={`Product ${idx}`} loading="lazy" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
                     <div style={{ position: 'absolute', bottom: '10px', right: '10px', background: 'rgba(0,0,0,0.6)', color: 'white', padding: '4px 8px', borderRadius: '12px', fontSize: '10px' }}>{idx + 1} / {fullGalleryImages.length}</div>
 
                     <button
@@ -567,6 +573,12 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
                 ))}
               </div>
             </div>
+            ) : (
+              <div style={{ backgroundColor: '#f9fafb', borderRadius: '8px', border: '1px solid #e5e7eb', height: '300px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#9ca3af' }}>
+                <Icon icon="mdi:image-off-outline" style={{ fontSize: '48px', marginBottom: '8px' }} />
+                <span style={{ fontSize: '14px' }}>Foto belum tersedia</span>
+              </div>
+            )}
             <div>
               <h1 style={{ fontSize: '24px', fontWeight: '500', marginBottom: '12px', color: '#1a3636', lineHeight: '1.3' }}>{product.localizedName}</h1>
               <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px', fontSize: '14px' }}>
@@ -702,7 +714,7 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
       </main>
 
       {/* LIGHTBOX MODAL */}
-      {isLightboxOpen && (
+      {isLightboxOpen && fullGalleryImages.length > 0 && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 9999, backgroundColor: 'rgba(0,0,0,0.95)', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 1, transition: 'opacity 0.3s ease' }} onClick={() => setIsLightboxOpen(false)}>
           <button
             onClick={() => setIsLightboxOpen(false)}
@@ -733,7 +745,7 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
               src={selectedImage === -1 ? fullGalleryImages[0] : fullGalleryImages[selectedImage] || fullGalleryImages[0]}
               alt="Full Preview"
               style={{ maxHeight: '90vh', maxWidth: '90vw', objectFit: 'contain', borderRadius: '4px' }}
-              onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder.png'; }}
+              onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
             />
 
             <div style={{ position: 'absolute', bottom: '24px', left: '50%', transform: 'translateX(-50%)', backgroundColor: 'rgba(0,0,0,0.5)', padding: '6px 12px', borderRadius: '20px', color: 'white', fontSize: '14px', backdropFilter: 'blur(4px)' }}>
