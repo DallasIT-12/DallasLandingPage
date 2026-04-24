@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect, useMemo, memo, useCallback } from 'react';
+import { useState, useRef, useEffect, useMemo, memo, useCallback, useTransition } from 'react';
 import { Icon } from '@iconify/react';
 import { Link, useRouter } from '@/i18n/routing';
 import { useCart } from '@/context/CartContext';
@@ -292,6 +292,7 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
   const [selectedAttr1, setSelectedAttr1] = useState<string | null>(null);
   const [selectedAttr2, setSelectedAttr2] = useState<string | null>(null);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [, startTransition] = useTransition();
 
   const getLocalized = useCallback((item: any, field: string) => {
     // @ts-ignore
@@ -325,6 +326,19 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
     };
   }, [variations, getLocalized]);
 
+  // Pre-build lookup maps for O(1) variant matching instead of O(n) find()
+  const variantLookup = useMemo(() => {
+    const map1 = new Map<string, any>(); // attr1 only
+    const map2 = new Map<string, any>(); // attr1+attr2 combo
+    variations.forEach((v: any) => {
+      const n1 = v.variant_name || getLocalized(v, 'variant') || 'Standard';
+      const n2 = v.variant_name_2 || null;
+      if (!map1.has(n1)) map1.set(n1, v);
+      if (n2) map2.set(`${n1}||${n2}`, v);
+    });
+    return { map1, map2 };
+  }, [variations, getLocalized]);
+
   const handleAttr1Click = useCallback((val: string) => {
     setSelectedAttr1(val);
     setSelectedImage(-1);
@@ -355,8 +369,8 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
 
   const productName = getLocalized(initialProduct, 'name');
   const productDescription = getLocalized(initialProduct, 'description');
-  const discountPercent = generateDiscount(displayProduct.id || displayProduct.name);
-  const originalPrice = Math.ceil(displayProduct.price / (1 - (discountPercent / 100)));
+  const discountPercent = useMemo(() => generateDiscount(displayProduct.id || displayProduct.name), [displayProduct.id, displayProduct.name]);
+  const originalPrice = useMemo(() => Math.ceil(displayProduct.price / (1 - (discountPercent / 100))), [displayProduct.price, discountPercent]);
 
   const productImages = useMemo(() => {
     const list: string[] = [];
@@ -397,7 +411,7 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
     ? activeVisualVariant.image 
     : productImages[Math.max(0, selectedImage)];
 
-  const product = {
+  const product = useMemo(() => ({
     ...displayProduct,
     localizedName: productName,
     localizedDescription: productDescription,
@@ -409,7 +423,7 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
     originalPrice: originalPrice,
     stock: 150,
     weight: '1000 gr',
-  };
+  }), [displayProduct, productName, productDescription, initialProduct.category, initialProduct.slug, productImages, originalPrice]);
 
   const handleAddToCart = () => { addToCart(product, quantity, selectedVariant); };
 
@@ -611,15 +625,29 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
                           key={val}
                           onClick={() => {
                             if (selectedAttr1 === val || selectedVariant?.variant_name === val) {
-                              // Double-click / toggle: deselect variant
                               setSelectedAttr1(null);
-                              setSelectedVariant(null);
-                              setSelectedImage(0);
+                              startTransition(() => {
+                                setSelectedVariant(null);
+                                setSelectedImage(0);
+                              });
                             } else {
                               setSelectedAttr1(val);
                               if (attributes.attr2.length === 0) {
-                                const match = variations.find((v: any) => (v.variant_name || getLocalized(v, 'variant')) === val);
-                                if (match) { setSelectedVariant(match); setSelectedImage(-1); }
+                                const match = variantLookup.map1.get(val);
+                                if (match) {
+                                  startTransition(() => {
+                                    setSelectedVariant(match);
+                                    setSelectedImage(-1);
+                                  });
+                                }
+                              } else if (selectedAttr2) {
+                                const match = variantLookup.map2.get(`${val}||${selectedAttr2}`);
+                                if (match) {
+                                  startTransition(() => {
+                                    setSelectedVariant(match);
+                                    setSelectedImage(-1);
+                                  });
+                                }
                               }
                             }
                           }}
@@ -651,12 +679,21 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
                             key={val}
                             onClick={() => {
                               if (selectedAttr2 === val) {
-                                // Toggle: deselect attr2
                                 setSelectedAttr2(null);
-                                setSelectedImage(0);
+                                startTransition(() => {
+                                  setSelectedImage(0);
+                                });
                               } else {
                                 setSelectedAttr2(val);
-                                setSelectedImage(-1);
+                                if (selectedAttr1) {
+                                  const match = variantLookup.map2.get(`${selectedAttr1}||${val}`);
+                                  if (match) {
+                                    startTransition(() => {
+                                      setSelectedVariant(match);
+                                      setSelectedImage(-1);
+                                    });
+                                  }
+                                }
                               }
                             }}
                             style={{
