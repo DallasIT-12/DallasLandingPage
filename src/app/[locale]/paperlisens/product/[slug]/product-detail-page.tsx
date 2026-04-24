@@ -144,7 +144,7 @@ const ProductCard = memo(({ product }: { product: any }) => {
     <Link href={`/paperlisens/product/${product.productSlug}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block', width: '220px', flexShrink: 0 }}>
       <div style={{ border: '1px solid #e5e7eb', borderRadius: '8px', overflow: 'hidden', backgroundColor: 'white', height: '100%', transition: 'all 0.3s ease', display: 'flex', flexDirection: 'column' }}>
         <div style={{ height: '200px', backgroundColor: '#f9fafb', position: 'relative', overflow: 'hidden' }}>
-          <img src={product.image} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          <img src={product.image} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} loading="lazy" onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder.png'; }} />
           <div style={{ position: 'absolute', top: 0, right: 0, backgroundColor: '#d6bd98', padding: '4px 8px', fontSize: '10px', color: '#1a3636', fontWeight: 'bold', borderBottomLeftRadius: '8px' }}>
             {discountPercent}% OFF
           </div>
@@ -512,6 +512,7 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
                   alt={product.localizedName}
                   onClick={() => setIsLightboxOpen(true)}
                   style={{ cursor: 'pointer' }}
+                  onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder.png'; }}
                 />
 
                 {/* Left Arrow */}
@@ -547,14 +548,14 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
 
                 <div className="thumbnail-list" style={{ marginTop: '12px' }}>
                   {product.images.map((img: string, idx: number) => (
-                    <img key={idx} src={img} className={`thumbnail ${selectedImage === idx ? 'active' : ''}`} onClick={() => setSelectedImage(idx)} alt={`Thumb ${idx}`} />
+                    <img key={idx} src={img} className={`thumbnail ${selectedImage === idx ? 'active' : ''}`} onClick={() => setSelectedImage(idx)} alt={`Thumb ${idx}`} loading="lazy" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
                   ))}
                 </div>
               </div>
               <div className="mobile-gallery">
                 {fullGalleryImages.map((img: string, idx: number) => (
                   <div key={idx} className="mobile-gallery-item" onClick={() => { setSelectedImage(idx); setIsLightboxOpen(true); }}>
-                    <img src={img} className="mobile-gallery-img" alt={`Product ${idx}`} />
+                    <img src={img} className="mobile-gallery-img" alt={`Product ${idx}`} loading="lazy" onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder.png'; }} />
                     <div style={{ position: 'absolute', bottom: '10px', right: '10px', background: 'rgba(0,0,0,0.6)', color: 'white', padding: '4px 8px', borderRadius: '12px', fontSize: '10px' }}>{idx + 1} / {fullGalleryImages.length}</div>
 
                     <button
@@ -732,6 +733,7 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
               src={selectedImage === -1 ? fullGalleryImages[0] : fullGalleryImages[selectedImage] || fullGalleryImages[0]}
               alt="Full Preview"
               style={{ maxHeight: '90vh', maxWidth: '90vw', objectFit: 'contain', borderRadius: '4px' }}
+              onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder.png'; }}
             />
 
             <div style={{ position: 'absolute', bottom: '24px', left: '50%', transform: 'translateX(-50%)', backgroundColor: 'rgba(0,0,0,0.5)', padding: '6px 12px', borderRadius: '20px', color: 'white', fontSize: '14px', backdropFilter: 'blur(4px)' }}>
