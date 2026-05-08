@@ -647,7 +647,7 @@ export default function AboutPage() {
                         {currentPptSlide + 1} / {totalSlides}
                       </span>
                       <a
-                        href="/portofolio_produk.pptx"
+                        href="/portofolio_produk.pdf"
                         download
                         style={{
                           display: 'flex',
