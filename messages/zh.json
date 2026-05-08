@@ -3,7 +3,8 @@
     "back": "返回",
     "categoryNotFound": "未找到类别",
     "categoryNotFoundDesc": "抱歉，我们找不到此类别的产品。",
-    "moreExamplesComing": "此类别的更多示例将很快添加。"
+    "moreExamplesComing": "此类别的更多示例将很快添加。",
+    "relatedProducts": "其他印刷产品"
   },
   "Navbar": {
     "home": "首页",

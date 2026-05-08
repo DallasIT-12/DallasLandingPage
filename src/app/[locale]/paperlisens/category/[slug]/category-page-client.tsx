@@ -87,7 +87,7 @@ const ProductCard = ({ product }: { product: any }) => {
 
   return (
     <div className="product-card">
-      <Link href={`/paperlisens/product/${product.productSlug}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
+      <Link href={`/paperlisens/product/${encodeURIComponent(product.productSlug)}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
 
         <div className="card-image-wrapper">
           <img src={product.image} alt={product.name} className="card-image" loading="lazy" />
@@ -279,7 +279,7 @@ export default function CategoryPageClient({ params }: { params: Promise<{ slug:
       </div>
       <header style={{ backgroundColor: '#40534c', padding: '16px 0', position: 'sticky', top: 0, zIndex: 1000 }}>
         <div className="header-container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 16px', display: 'flex', alignItems: 'center', gap: '32px' }}>
-          <Link href="/paperlisens"><img src="/logo-paperlisens.png" alt="Paperlisens" className="header-logo" style={{ height: '40px', filter: 'brightness(0) invert(1)' }} /></Link>
+          <Link href="/paperlisens"><img src="/paperlisens.jpg" alt="Paperlisens" className="header-logo" style={{ height: '40px' }} /></Link>
           <div style={{ flexGrow: 1 }}>
             <form onSubmit={handleSearch} style={{ position: 'relative' }}>
               <input type="text" placeholder={pt('searchInCategory', { category: categoryName })} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="search-input" style={{ width: '100%', padding: '10px 16px', borderRadius: '3px', border: 'none', fontSize: '14px', backgroundColor: 'white', color: '#1a3636', outline: 'none' }} />

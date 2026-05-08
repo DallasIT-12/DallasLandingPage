@@ -120,6 +120,11 @@ const CATEGORY_SLUGS = [
 const labelClasses = "block text-[10px] font-black text-slate-500 uppercase mb-2 tracking-[0.2em]";
 const inputClasses = "w-full p-4 bg-[#0f172a] border border-white/10 rounded-2xl outline-none focus:ring-2 focus:ring-[#d6bd98] text-white transition-all shadow-inner";
 
+// --- HELPER: Check if URL is a Supabase Storage URL ---
+function isSupabaseUrl(url: string): boolean {
+  return typeof url === 'string' && url.includes('/storage/v1/object/public/');
+}
+
 // --- MAIN PAGE COMPONENT ---
 export default function PaperlisensProductsAdmin() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -171,35 +176,46 @@ export default function PaperlisensProductsAdmin() {
         data = JSON.parse(JSON.stringify(product));
       }
 
-      // LOGIK LEBIH KETAT:
-      // Gunakan data ASLI dari database (baseImage/baseGallery).
-      // Jangan gunakan fallback varian agar tidak tercampur.
-
       const dbImage = data.baseImage || '/placeholder.png';
       const dbGallery = Array.isArray(data.baseGallery) && data.baseGallery.length > 0
-        ? data.baseGallery
-        : [dbImage];
-
-      // Bersihkan dari duplikat/invalid
+        ? data.baseGallery : [dbImage];
       const finalGallery = Array.from(new Set(dbGallery.filter((img: string) => !!img)));
 
-      setEditingProduct({
-        ...data,
-        images: finalGallery,
-        image: dbImage,
-        slug: data.slug || CATEGORY_SLUGS.find(c => c.label === data.category)?.slug || 'lain-lain'
-      });
-
-      // Initialize variant options for Shopee-style generator
+      // Compute variant options first so we can run migration
       const v1s = Array.from(new Set((data.variants || []).map((v: any) => v.variant_name).filter(Boolean))) as string[];
       const v2s = Array.from(new Set((data.variants || []).map((v: any) => v.variant_name_2).filter(Boolean))) as string[];
       setV1Options(v1s);
       setV2Options(v2s);
 
+      // MIGRATION: If product has v2, consolidate photos — one shared photo per v1 group.
+      // Takes the first non-placeholder image found in each group and applies it to all children.
+      // This means old per-combination photos are preserved and consolidated automatically.
+      let finalVariants = data.variants || [];
+      if (v2s.length > 0) {
+        const groupPhotos: Record<string, string> = {};
+        finalVariants.forEach((v: any) => {
+          if (v.variant_name && v.image && v.image !== '/placeholder.png' && !v.image.includes('placeholder')) {
+            if (!groupPhotos[v.variant_name]) groupPhotos[v.variant_name] = v.image;
+          }
+        });
+        finalVariants = finalVariants.map((v: any) => ({
+          ...v,
+          image: groupPhotos[v.variant_name] || '/placeholder.png'
+        }));
+      }
+
+      setEditingProduct({
+        ...data,
+        images: finalGallery,
+        image: dbImage,
+        variants: finalVariants,
+        slug: data.slug || CATEGORY_SLUGS.find(c => c.label === data.category)?.slug || 'lain-lain'
+      });
+
     } catch (err) {
       setEditingProduct(JSON.parse(JSON.stringify(product)));
     }
-    setDeletedImageUrls([]); // Reset deleted list every time we open the modal
+    setDeletedImageUrls([]);
     setIsEditModalOpen(true);
   };
 
@@ -978,240 +994,227 @@ export default function PaperlisensProductsAdmin() {
               </div>
             </div>
 
-            {/* ═══════════ SECTION 4: DAFTAR VARIAN (TABLE) ═══════════ */}
+
+            {/* ═══════════ SECTION 4: DAFTAR VARIAN ═══════════ */}
             {editingProduct.variants && editingProduct.variants.length > 0 && (
               <div className="bg-[#1e293b] rounded-3xl border border-white/5 shadow-2xl p-8 lg:p-10 mb-6">
                 <div className="flex items-center gap-3 mb-6">
                   <Icon icon="lucide:layers" className="text-[#d6bd98] text-xl" />
                   <h2 className="text-lg font-black text-white tracking-tight">Daftar Varian</h2>
                   <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-2">({editingProduct.variants.length} kombinasi)</span>
-
                   <div className="ml-auto flex items-center gap-4">
-                    <label className="flex items-center gap-2 cursor-pointer group select-none">
-                      <div className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${isBulkPrice ? 'bg-[#d6bd98] border-[#d6bd98]' : 'border-slate-500 group-hover:border-[#d6bd98]'}`}>
-                        {isBulkPrice && <Icon icon="lucide:check" className="text-[#111827] text-xs" />}
-                      </div>
-                      <input type="checkbox" className="hidden" checked={isBulkPrice} onChange={e => setIsBulkPrice(e.target.checked)} />
-                      <span className={`text-[10px] font-bold uppercase tracking-wider ${isBulkPrice ? 'text-[#d6bd98]' : 'text-slate-500 group-hover:text-slate-300'}`}>Batch Edit Harga</span>
-                    </label>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const newVariants = [...(editingProduct.variants || [])];
-                        newVariants.push({
-                          id: `new-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
-                          variant_name: 'Varian Baru',
-                          price: editingProduct.price,
-                          image: '/placeholder.png',
-                          images: [],
-                          variant_slug: `${editingProduct.productSlug || 'prod'}-v${Date.now().toString(36)}`
-                        });
-                        setEditingProduct({ ...editingProduct, variants: newVariants });
-                      }}
-                      className="text-[10px] font-black text-[#d6bd98] uppercase tracking-widest hover:text-white transition-all flex items-center gap-2"
-                    >
-                      <Icon icon="lucide:plus" /> Tambah
-                    </button>
+                    {v2Options.length === 0 && (
+                      <button type="button" onClick={() => {
+                        const nv = [...(editingProduct.variants || [])];
+                        nv.push({ id: `new-${Date.now()}`, variant_name: 'Varian Baru', price: editingProduct.price, image: '/placeholder.png', images: [], variant_slug: `${editingProduct.productSlug || 'prod'}-v${Date.now().toString(36)}` });
+                        setEditingProduct({ ...editingProduct, variants: nv });
+                      }} className="text-[10px] font-black text-[#d6bd98] uppercase tracking-widest hover:text-white transition-all flex items-center gap-2">
+                        <Icon icon="lucide:plus" /> Tambah
+                      </button>
+                    )}
                   </div>
                 </div>
 
-                {/* Variant Table Header */}
-                <div className={`hidden lg:grid ${v2Options.length > 0 ? 'grid-cols-[1fr_1fr_120px_160px_48px]' : 'grid-cols-[1fr_120px_160px_48px]'} gap-4 px-5 py-3 bg-white/[0.02] rounded-xl mb-3 border border-white/5`}>
-                  <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Variasi 1</span>
-                  {v2Options.length > 0 && <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Variasi 2</span>}
-                  <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Harga (Rp)</span>
-                  <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Foto</span>
-                  <span></span>
-                </div>
+                <div className="space-y-3 max-h-[700px] overflow-y-auto pr-1 custom-scrollbar">
+                  {v2Options.length > 0 ? (
+                    // ── GROUPED VIEW: Varian 1 = Parent (foto), Varian 2 = Children (harga) ──
+                    (() => {
+                      const groupOrder: string[] = [];
+                      const groups: Record<string, { v: ProductVariant; idx: number }[]> = {};
+                      (editingProduct.variants || []).forEach((v, idx) => {
+                        const key = v.variant_name || '';
+                        if (!groups[key]) { groups[key] = []; groupOrder.push(key); }
+                        groups[key].push({ v, idx });
+                      });
 
-                {/* Variant Rows */}
-                <div className="space-y-2 max-h-[600px] overflow-y-auto pr-1 custom-scrollbar">
-                  {(editingProduct.variants || []).map((v, idx) => (
-                    <div key={v.id} className={`grid grid-cols-1 ${v2Options.length > 0 ? 'lg:grid-cols-[1fr_1fr_120px_160px_48px]' : 'lg:grid-cols-[1fr_120px_160px_48px]'} gap-4 p-5 bg-[#0f172a] rounded-2xl border border-white/5 hover:border-[#d6bd98]/20 transition-all items-center`}>
-                      {/* Variant 1 Names */}
-                      <div className="space-y-2">
-                        <input
-                          type="text"
-                          value={v.variant_name || ''}
-                          onChange={(e) => {
-                            const newVariants = [...(editingProduct.variants || [])];
-                            newVariants[idx].variant_name = e.target.value;
-                            setEditingProduct({ ...editingProduct, variants: newVariants });
-                          }}
-                          placeholder="Nama Varian 1 (ID)"
-                          className="bg-transparent border-b border-white/10 outline-none text-white font-bold text-sm focus:border-[#d6bd98] pb-1 w-full"
-                        />
-                        <div className="grid grid-cols-2 gap-2">
-                          <input
-                            type="text"
-                            value={(v as any).variant_name_en || ''}
-                            onChange={(e) => {
-                              const newVariants = [...(editingProduct.variants || [])];
-                              (newVariants[idx] as any).variant_name_en = e.target.value;
-                              setEditingProduct({ ...editingProduct, variants: newVariants });
-                            }}
-                            placeholder="EN"
-                            className="bg-transparent border-b border-white/5 outline-none text-slate-400 font-medium text-[10px] focus:border-blue-400 pb-1 w-full"
-                          />
-                          <input
-                            type="text"
-                            value={(v as any).variant_name_zh || ''}
-                            onChange={(e) => {
-                              const newVariants = [...(editingProduct.variants || [])];
-                              (newVariants[idx] as any).variant_name_zh = e.target.value;
-                              setEditingProduct({ ...editingProduct, variants: newVariants });
-                            }}
-                            placeholder="ZH"
-                            className="bg-transparent border-b border-white/5 outline-none text-slate-400 font-medium text-[10px] focus:border-emerald-400 pb-1 w-full"
-                          />
-                        </div>
-                      </div>
+                      return groupOrder.map((groupName) => {
+                        const groupItems = groups[groupName];
+                        const groupPhoto = groupItems.find(g => g.v.image && g.v.image !== '/placeholder.png' && !g.v.image.includes('placeholder'))?.v.image || '/placeholder.png';
+                        const hasPhoto = groupPhoto !== '/placeholder.png';
+                        const uploadId = `v-group-${Date.now()}-${groupName.replace(/\W/g, '')}`;
 
-                      {/* Variant 2 Names - Only shown when v2Options has entries */}
-                      {v2Options.length > 0 && (
-                        <div className="space-y-2">
-                          <input
-                            type="text"
-                            value={v.variant_name_2 || ''}
-                            onChange={(e) => {
-                              const newVariants = [...(editingProduct.variants || [])];
-                              newVariants[idx].variant_name_2 = e.target.value;
-                              setEditingProduct({ ...editingProduct, variants: newVariants });
-                            }}
-                            placeholder="Nama Varian 2 (ID)"
-                            className="bg-transparent border-b border-white/10 outline-none text-white font-bold text-sm focus:border-[#d6bd98] pb-1 w-full"
-                          />
-                          <div className="grid grid-cols-2 gap-2">
-                            <input
-                              type="text"
-                              value={v.variant_name_2_en || ''}
-                              onChange={(e) => {
-                                const newVariants = [...(editingProduct.variants || [])];
-                                newVariants[idx].variant_name_2_en = e.target.value;
-                                setEditingProduct({ ...editingProduct, variants: newVariants });
-                              }}
-                              placeholder="EN"
-                              className="bg-transparent border-b border-white/5 outline-none text-slate-400 font-medium text-[10px] focus:border-blue-400 pb-1 w-full"
-                            />
-                            <input
-                              type="text"
-                              value={v.variant_name_2_zh || ''}
-                              onChange={(e) => {
-                                const newVariants = [...(editingProduct.variants || [])];
-                                newVariants[idx].variant_name_2_zh = e.target.value;
-                                setEditingProduct({ ...editingProduct, variants: newVariants });
-                              }}
-                              placeholder="ZH"
-                              className="bg-transparent border-b border-white/5 outline-none text-slate-400 font-medium text-[10px] focus:border-emerald-400 pb-1 w-full"
-                            />
+                        return (
+                          <div key={groupName} className="bg-[#0f172a] rounded-2xl border border-white/5 hover:border-[#d6bd98]/20 transition-all overflow-hidden">
+                            {/* Parent Row */}
+                            <div className="flex items-center gap-4 p-4 bg-white/[0.02] border-b border-white/5">
+                              {/* Foto (shared for all children) */}
+                              <div className="relative flex-shrink-0">
+                                <div className="w-14 h-14 rounded-xl overflow-hidden bg-black/30 border border-white/10">
+                                  <img src={groupPhoto} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder.png'; }} />
+                                </div>
+                                <input type="file" id={uploadId} className="hidden" accept="image/*"
+                                  onChange={async (e) => {
+                                    const file = e.target.files?.[0]; if (!file) return;
+                                    setIsSaving(true);
+                                    try {
+                                      // Track old group photo for storage cleanup
+                                      if (isSupabaseUrl(groupPhoto)) {
+                                        setDeletedImageUrls(prev => [...prev, groupPhoto]);
+                                      }
+                                      const blob = await smartCompressToWebP(file, 0.5);
+                                      if (!blob) throw new Error();
+                                      const wf = new File([blob], file.name.replace(/\.[^/.]+$/, '') + '.webp', { type: 'image/webp' });
+                                      const fd = new FormData(); fd.append('file', wf);
+                                      const r = await fetch('/api/upload', { method: 'POST', body: fd });
+                                      const d = await r.json();
+                                      if (d.url) {
+                                        const nv = (editingProduct.variants || []).map(v => v.variant_name === groupName ? { ...v, image: d.url } : v);
+                                        setEditingProduct({ ...editingProduct, variants: nv });
+                                      }
+                                    } catch { } finally { setIsSaving(false); }
+                                  }} />
+                                <label htmlFor={uploadId} className="absolute -bottom-1 -right-1 w-6 h-6 bg-[#d6bd98] hover:bg-white rounded-full flex items-center justify-center cursor-pointer shadow-lg transition-colors" title="Upload foto (berlaku untuk semua varian 2)">
+                                  <Icon icon="lucide:camera" className="text-[#111827] text-[10px]" />
+                                </label>
+                              </div>
+
+                              {/* V1 Name */}
+                              <div className="flex-1 min-w-0">
+                                <span className="text-[8px] font-black text-[#d6bd98] uppercase tracking-widest block mb-1">Varian 1 · {groupItems.length} pilihan</span>
+                                <input type="text" value={groupItems[0].v.variant_name || ''} placeholder="Nama Varian 1"
+                                  onChange={(e) => {
+                                    const newName = e.target.value;
+                                    const nv = (editingProduct.variants || []).map(v => v.variant_name === groupName ? { ...v, variant_name: newName } : v);
+                                    setEditingProduct({ ...editingProduct, variants: nv });
+                                  }}
+                                  className="bg-transparent border-b border-white/10 outline-none text-white font-bold text-sm focus:border-[#d6bd98] pb-1 w-full" />
+                                <div className="grid grid-cols-2 gap-2 mt-1">
+                                  <input type="text" value={(groupItems[0].v as any).variant_name_en || ''} placeholder="EN"
+                                    onChange={(e) => { const nv = (editingProduct.variants || []).map(v => v.variant_name === groupName ? { ...v, variant_name_en: e.target.value } : v); setEditingProduct({ ...editingProduct, variants: nv }); }}
+                                    className="bg-transparent border-b border-white/5 outline-none text-slate-400 text-[10px] focus:border-blue-400 pb-1 w-full" />
+                                  <input type="text" value={(groupItems[0].v as any).variant_name_zh || ''} placeholder="ZH"
+                                    onChange={(e) => { const nv = (editingProduct.variants || []).map(v => v.variant_name === groupName ? { ...v, variant_name_zh: e.target.value } : v); setEditingProduct({ ...editingProduct, variants: nv }); }}
+                                    className="bg-transparent border-b border-white/5 outline-none text-slate-400 text-[10px] focus:border-emerald-400 pb-1 w-full" />
+                                </div>
+                              </div>
+
+                              {/* Actions */}
+                              <div className="flex flex-col items-end gap-2 flex-shrink-0">
+                                {hasPhoto && (
+                                  <button type="button" onClick={() => {
+                                    // Track the old photo URL for storage cleanup on save
+                                    if (isSupabaseUrl(groupPhoto)) {
+                                      setDeletedImageUrls(prev => [...prev, groupPhoto]);
+                                    }
+                                    const nv = (editingProduct.variants || []).map(v => v.variant_name === groupName ? { ...v, image: '/placeholder.png' } : v);
+                                    setEditingProduct({ ...editingProduct, variants: nv });
+                                  }} className="text-[8px] text-rose-400 hover:text-rose-300 font-bold uppercase tracking-wider transition-colors">Hapus Foto</button>
+                                )}
+                                <button type="button" onClick={() => {
+                                  const newChild = { id: `new-${Date.now()}-${Math.random().toString(36).substr(2,5)}`, variant_name: groupName, variant_name_2: '', price: editingProduct.price, image: groupPhoto, images: [], variant_slug: `${editingProduct.productSlug||'prod'}-v${Math.random().toString(36).substr(2,5)}` } as any;
+                                  setEditingProduct({ ...editingProduct, variants: [...(editingProduct.variants||[]), newChild] });
+                                }} className="text-[8px] text-[#d6bd98] hover:text-white font-bold uppercase tracking-wider transition-colors flex items-center gap-1">
+                                  <Icon icon="lucide:plus" className="text-[10px]" />+ Pilihan
+                                </button>
+                              </div>
+                            </div>
+
+                            {/* Children Rows (Varian 2) */}
+                            <div className="divide-y divide-white/[0.03]">
+                              {groupItems.map(({ v, idx }) => (
+                                <div key={v.id} className="flex items-center gap-3 px-4 py-2.5 pl-6 hover:bg-white/[0.02] transition-colors">
+                                  <span className="text-slate-600 text-xs flex-shrink-0">↳</span>
+                                  <div className="flex-1 min-w-0">
+                                    <input type="text" value={v.variant_name_2 || ''} placeholder="Nama Varian 2 (ID)"
+                                      onChange={(e) => { const nv = [...(editingProduct.variants||[])]; nv[idx].variant_name_2 = e.target.value; setEditingProduct({ ...editingProduct, variants: nv }); }}
+                                      className="bg-transparent border-b border-white/5 outline-none text-slate-200 font-medium text-sm focus:border-[#d6bd98] pb-0.5 w-full" />
+                                    <div className="grid grid-cols-2 gap-2 mt-0.5">
+                                      <input type="text" value={v.variant_name_2_en || ''} placeholder="EN"
+                                        onChange={(e) => { const nv = [...(editingProduct.variants||[])]; nv[idx].variant_name_2_en = e.target.value; setEditingProduct({ ...editingProduct, variants: nv }); }}
+                                        className="bg-transparent border-b border-white/5 outline-none text-slate-500 text-[10px] focus:border-blue-400 pb-0.5 w-full" />
+                                      <input type="text" value={v.variant_name_2_zh || ''} placeholder="ZH"
+                                        onChange={(e) => { const nv = [...(editingProduct.variants||[])]; nv[idx].variant_name_2_zh = e.target.value; setEditingProduct({ ...editingProduct, variants: nv }); }}
+                                        className="bg-transparent border-b border-white/5 outline-none text-slate-500 text-[10px] focus:border-emerald-400 pb-0.5 w-full" />
+                                    </div>
+                                  </div>
+                                  <div className="flex items-center gap-2 flex-shrink-0">
+                                    <span className="text-[9px] text-slate-500 font-bold">Rp</span>
+                                    <input type="number" value={v.price}
+                                      onChange={(e) => { const nv = [...(editingProduct.variants||[])]; nv[idx].price = parseInt(e.target.value)||0; setEditingProduct({ ...editingProduct, variants: nv }); }}
+                                      className="w-28 bg-white/5 rounded-lg px-3 py-1.5 text-sm outline-none focus:ring-1 focus:ring-[#d6bd98] text-white font-bold" />
+                                    <button type="button" onClick={() => { const nv = (editingProduct.variants||[]).filter((_,i) => i !== idx); setEditingProduct({ ...editingProduct, variants: nv }); }}
+                                      className="text-slate-600 hover:text-rose-500 transition-colors p-1">
+                                      <Icon icon="lucide:trash-2" className="text-base" />
+                                    </button>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
                           </div>
-                        </div>
-                      )}
-
-                      {/* Price */}
-                      <div>
-                        <label className="text-[8px] font-bold text-slate-600 uppercase block mb-1 lg:hidden">Harga (Rp)</label>
-                        <input
-                          type="number"
-                          value={v.price}
-                          onChange={(e) => {
-                            const newVal = parseInt(e.target.value) || 0;
-                            let newVariants = [...(editingProduct.variants || [])];
-
-                            if (isBulkPrice) {
-                              const currentV2 = newVariants[idx].variant_name_2;
-                              newVariants = newVariants.map((v) => {
-                                if (v.variant_name_2 === currentV2) {
-                                  return { ...v, price: newVal };
+                        );
+                      });
+                    })()
+                  ) : (
+                    // ── FLAT LIST: Only Varian 1, each has own photo ──
+                    (editingProduct.variants || []).map((v, idx) => (
+                      <div key={v.id} className="flex items-center gap-4 p-4 bg-[#0f172a] rounded-2xl border border-white/5 hover:border-[#d6bd98]/20 transition-all">
+                        {/* Photo */}
+                        <div className="relative flex-shrink-0">
+                          <div className="w-12 h-12 rounded-xl overflow-hidden bg-black/20 border border-white/10">
+                            <img src={v.image || '/placeholder.png'} className="w-full h-full object-cover" />
+                          </div>
+                          <input type="file" id={`vf-${idx}`} className="hidden" accept="image/*"
+                            onChange={async (e) => {
+                              const file = e.target.files?.[0]; if (!file) return;
+                              setIsSaving(true);
+                              try {
+                                // Track old image for cleanup if replacing
+                                const oldImg = editingProduct.variants?.[idx]?.image;
+                                if (oldImg && isSupabaseUrl(oldImg)) {
+                                  setDeletedImageUrls(prev => [...prev, oldImg]);
                                 }
-                                return v;
-                              });
-                            } else {
-                              newVariants[idx].price = newVal;
-                            }
-
-                            setEditingProduct({ ...editingProduct, variants: newVariants });
-                          }}
-                          className="w-full bg-white/5 rounded-xl p-3 text-sm outline-none focus:ring-1 focus:ring-[#d6bd98] text-white font-bold"
-                        />
-                      </div>
-
-                      {/* Variant Image */}
-                      <div className="flex gap-3 items-center">
-                        <div className="w-12 h-12 rounded-xl overflow-hidden bg-black/20 border border-white/10 flex-shrink-0">
-                          <img src={v.image || '/placeholder.png'} className="w-full h-full object-cover" />
-                        </div>
-                        <input
-                          type="file"
-                          id={`v-img-${idx}`}
-                          className="hidden"
-                          accept="image/*"
-                          onChange={async (e) => {
-                            const file = e.target.files?.[0];
-                            if (!file) return;
-                            setIsSaving(true);
-                            try {
-                              console.log(`[VARIANT_UPLOAD] Compressing ${file.name}...`);
-                              const webpBlob = await smartCompressToWebP(file, 0.5);
-                              if (!webpBlob) throw new Error('Compression failed');
-
-                              const webpFile = new File([webpBlob], file.name.replace(/\.[^/.]+$/, "") + ".webp", { type: 'image/webp' });
-                              const formData = new FormData();
-                              formData.append('file', webpFile);
-
-                              const res = await fetch('/api/upload', { method: 'POST', body: formData });
-                              const data = await res.json();
-                              if (data.url) {
-                                const newVariants = [...(editingProduct.variants || [])];
-                                const currentVariantName = newVariants[idx].variant_name;
-                                const updatedVariants = newVariants.map((v: ProductVariant) => {
-                                  if (v.variant_name === currentVariantName) {
-                                    return { ...v, image: data.url };
-                                  }
-                                  return v;
-                                });
-                                setEditingProduct({ ...editingProduct, variants: updatedVariants });
+                                const blob = await smartCompressToWebP(file, 0.5); if (!blob) throw new Error();
+                                const wf = new File([blob], file.name.replace(/\.[^/.]+$/, '') + '.webp', { type: 'image/webp' });
+                                const fd = new FormData(); fd.append('file', wf);
+                                const r = await fetch('/api/upload', { method: 'POST', body: fd });
+                                const d = await r.json();
+                                if (d.url) { const nv = [...(editingProduct.variants||[])]; nv[idx] = { ...nv[idx], image: d.url }; setEditingProduct({ ...editingProduct, variants: nv }); }
+                              } catch { } finally { setIsSaving(false); }
+                            }} />
+                          <label htmlFor={`vf-${idx}`} className="absolute -bottom-1 -right-1 w-5 h-5 bg-[#d6bd98] rounded-full flex items-center justify-center cursor-pointer shadow-lg">
+                            <Icon icon="lucide:camera" className="text-[#111827] text-[8px]" />
+                          </label>
+                          {v.image && v.image !== '/placeholder.png' && !v.image.includes('placeholder') && (
+                            <button type="button" onClick={() => {
+                              if (isSupabaseUrl(v.image)) {
+                                setDeletedImageUrls(prev => [...prev, v.image]);
                               }
-                            } catch (err) {
-                              console.error(`[VARIANT_UPLOAD] Error:`, err);
-                            } finally {
-                              setIsSaving(false);
-                            }
-                          }}
-                        />
-                        <div className="flex flex-col gap-1.5 flex-1">
-                          <label htmlFor={`v-img-${idx}`} className="bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg p-2 text-[8px] font-black uppercase text-center cursor-pointer transition-all">Ganti</label>
-                          {v.image && v.image !== '/placeholder.png' && (
-                            <button
-                              type="button"
-                              onClick={() => {
-                                const newVariants = [...(editingProduct.variants || [])];
-                                const currentVariantName = newVariants[idx].variant_name;
-                                const updatedVariants = newVariants.map((v: ProductVariant) => {
-                                  if (v.variant_name === currentVariantName) {
-                                    return { ...v, image: '/placeholder.png' };
-                                  }
-                                  return v;
-                                });
-                                setEditingProduct({ ...editingProduct, variants: updatedVariants });
-                              }}
-                              className="bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 text-rose-400 rounded-lg p-2 text-[8px] font-black uppercase text-center cursor-pointer transition-all"
-                            >
-                              Hapus
+                              const nv = [...(editingProduct.variants||[])]; nv[idx] = { ...nv[idx], image: '/placeholder.png' }; setEditingProduct({ ...editingProduct, variants: nv });
+                            }} className="absolute -top-1 -right-1 w-5 h-5 bg-rose-500 rounded-full flex items-center justify-center cursor-pointer shadow-lg z-10 opacity-0 group-hover:opacity-100 transition-opacity" title="Hapus foto varian">
+                              <Icon icon="lucide:x" className="text-white text-[8px]" />
                             </button>
                           )}
                         </div>
-                      </div>
 
-                      {/* Delete Button */}
-                      <button type="button" onClick={() => {
-                        const newVariants = (editingProduct.variants || []).filter((_, i) => i !== idx);
-                        setEditingProduct({ ...editingProduct, variants: newVariants });
-                      }} className="text-slate-500 hover:text-rose-500 hover:scale-110 transition-all justify-self-center">
-                        <Icon icon="lucide:trash-2" className="text-lg" />
-                      </button>
-                    </div>
-                  ))}
+                        {/* Name */}
+                        <div className="flex-1 min-w-0 space-y-1">
+                          <input type="text" value={v.variant_name || ''} placeholder="Nama Varian (ID)"
+                            onChange={(e) => { const nv = [...(editingProduct.variants||[])]; nv[idx].variant_name = e.target.value; setEditingProduct({ ...editingProduct, variants: nv }); }}
+                            className="bg-transparent border-b border-white/10 outline-none text-white font-bold text-sm focus:border-[#d6bd98] pb-1 w-full" />
+                          <div className="grid grid-cols-2 gap-2">
+                            <input type="text" value={(v as any).variant_name_en || ''} placeholder="EN"
+                              onChange={(e) => { const nv = [...(editingProduct.variants||[])]; (nv[idx] as any).variant_name_en = e.target.value; setEditingProduct({ ...editingProduct, variants: nv }); }}
+                              className="bg-transparent border-b border-white/5 outline-none text-slate-400 text-[10px] focus:border-blue-400 pb-1 w-full" />
+                            <input type="text" value={(v as any).variant_name_zh || ''} placeholder="ZH"
+                              onChange={(e) => { const nv = [...(editingProduct.variants||[])]; (nv[idx] as any).variant_name_zh = e.target.value; setEditingProduct({ ...editingProduct, variants: nv }); }}
+                              className="bg-transparent border-b border-white/5 outline-none text-slate-400 text-[10px] focus:border-emerald-400 pb-1 w-full" />
+                          </div>
+                        </div>
+
+                        {/* Price */}
+                        <div className="flex items-center gap-2 flex-shrink-0">
+                          <span className="text-[9px] text-slate-500 font-bold">Rp</span>
+                          <input type="number" value={v.price}
+                            onChange={(e) => { const nv = [...(editingProduct.variants||[])]; nv[idx].price = parseInt(e.target.value)||0; setEditingProduct({ ...editingProduct, variants: nv }); }}
+                            className="w-32 bg-white/5 rounded-xl p-3 text-sm outline-none focus:ring-1 focus:ring-[#d6bd98] text-white font-bold" />
+                          <button type="button" onClick={() => { const nv = (editingProduct.variants||[]).filter((_,i) => i !== idx); setEditingProduct({ ...editingProduct, variants: nv }); }}
+                            className="text-slate-500 hover:text-rose-500 transition-colors">
+                            <Icon icon="lucide:trash-2" className="text-lg" />
+                          </button>
+                        </div>
+                      </div>
+                    ))
+                  )}
                 </div>
               </div>
             )}

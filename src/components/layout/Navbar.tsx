@@ -113,6 +113,12 @@ export default function Navbar() {
                             <Link prefetch={false} href="/about" onClick={() => setIsMenuOpen(false)} className={dropdownItemClasses}>
                                 {t('Navbar.about')}
                             </Link>
+                            <Link prefetch={false} href="/about#visi-misi" onClick={() => setIsMenuOpen(false)} className={dropdownItemClasses}>
+                                Visi & Misi
+                            </Link>
+                            <Link prefetch={false} href="/about#portofolio" onClick={() => setIsMenuOpen(false)} className={dropdownItemClasses}>
+                                Portofolio
+                            </Link>
                             <Link prefetch={false} href="/karir" onClick={() => setIsMenuOpen(false)} className={dropdownItemClasses}>
                                 {t('Navbar.karir')}
                             </Link>

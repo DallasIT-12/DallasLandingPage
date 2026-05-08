@@ -205,7 +205,7 @@ const ProductCard = ({ product }: { product: any }) => {
 
   return (
     <div className="product-card">
-      <Link href={`/paperlisens/product/${product.productSlug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+      <Link href={`/paperlisens/product/${encodeURIComponent(product.productSlug)}`} style={{ textDecoration: 'none', color: 'inherit' }}>
         <div className="card-image-wrapper">
           <img
             src={displayImage}
@@ -291,7 +291,7 @@ export default function PaperlisensPageClient() {
     const shuffled = [...uniqueProducts].sort(() => 0.5 - Math.random());
     const selected = shuffled.slice(0, 12).map(p => {
       const img = (p.image && p.image !== '/placeholder.png') ? p.image : (p.images?.[0] || p.image);
-      return { image: img, link: `/paperlisens/product/${p.productSlug}` };
+      return { image: img, link: `/paperlisens/product/${encodeURIComponent(p.productSlug)}` };
     });
     setBannerItems(selected);
   }, [products]);
@@ -415,7 +415,7 @@ export default function PaperlisensPageClient() {
       </div>
       <header style={{ backgroundColor: '#40534c', padding: '16px 0', position: 'sticky', top: 0, zIndex: 1000 }}>
         <div className="header-container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 16px', display: 'flex', alignItems: 'center', gap: '32px' }}>
-          <Link href="/paperlisens"><img src="/logo-paperlisens.png" alt="Paperlisens" className="header-logo" style={{ height: '40px', filter: 'brightness(0) invert(1)' }} /></Link>
+          <Link href="/paperlisens"><img src="/paperlisens.jpg" alt="Paperlisens" className="header-logo" style={{ height: '40px' }} /></Link>
           <div style={{ flexGrow: 1, position: 'relative' }}>
             <input type="text" placeholder={pt('searchPlaceholder')} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="search-input" style={{ width: '100%', padding: '10px 16px', borderRadius: '3px', border: 'none', fontSize: '14px', backgroundColor: 'white', color: '#1a3636', outline: 'none' }} />
             <button style={{ position: 'absolute', right: '5px', top: '5px', bottom: '5px', width: '40px', backgroundColor: '#1a3636', color: '#d6bd98', border: 'none', borderRadius: '3px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -443,7 +443,7 @@ export default function PaperlisensPageClient() {
           <div className="category-grid" ref={categoryScrollRef} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '16px', marginBottom: '24px' }}>
             <div className="category-card-wrapper"><CategoryCard title={pt('categories.paperTray')} image="/paperlisens%20papertray.webp" slug="paper-tray" /></div>
             <div className="category-card-wrapper"><CategoryCard title={pt('categories.boxTakeaway')} image="/paperlisens%20box%20takeaway.webp" slug="box-take-away" /></div>
-            <div className="category-card-wrapper"><CategoryCard title={pt('categories.tempatPensil')} image="/box%20tabung%20(1).webp" slug="tempat-pensil" /></div>
+            <div className="category-card-wrapper"><CategoryCard title={pt('categories.tempatPensil')} image="/tempat_pensil.webp" slug="tempat-pensil" /></div>
             <div className="category-card-wrapper"><CategoryCard title={pt('categories.boxCupcake')} image="/paperlisens%20cupcake.webp" slug="box-cupcake" /></div>
             <div className="category-card-wrapper"><CategoryCard title={pt('categories.lainLain')} image="/angpao%20karakter.webp" slug="lain-lain" /></div>
           </div>

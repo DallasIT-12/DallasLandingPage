@@ -9,6 +9,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import Footer from '@/components/layout/Footer';
 import LanguageSwitcher from '@/components/common/LanguageSwitcher';
 import { getSmartTranslation } from '@/utils/productTranslations';
+import VariantSelector from './VariantSelector';
 
 // --- Constants & Helpers ---
 const generateDiscount = (idStr: string) => {
@@ -141,7 +142,7 @@ const ProductCard = memo(({ product }: { product: any }) => {
   const markupPrice = Math.ceil(product.price / (1 - (discountPercent / 100)));
 
   return (
-    <Link href={`/paperlisens/product/${product.productSlug}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block', width: '220px', flexShrink: 0 }}>
+    <Link href={`/paperlisens/product/${encodeURIComponent(product.productSlug)}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block', width: '220px', flexShrink: 0 }}>
       <div style={{ border: '1px solid #e5e7eb', borderRadius: '8px', overflow: 'hidden', backgroundColor: 'white', height: '100%', transition: 'all 0.3s ease', display: 'flex', flexDirection: 'column' }}>
         <div style={{ height: '200px', backgroundColor: '#f9fafb', position: 'relative', overflow: 'hidden' }}>
           {product.image && !product.image.includes('placeholder') ? (
@@ -275,6 +276,105 @@ const DescriptionFormatter = ({ text }: { text: string }) => {
   );
 };
 
+// --- Price Box: only re-renders when price/discount changes ---
+const PriceBox = memo(({ price, originalPrice, discountPercent }: { price: number; originalPrice: number; discountPercent: number }) => (
+  <div style={{ backgroundColor: '#f9fafb', padding: '16px', borderRadius: '4px', marginBottom: '24px' }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+      <span style={{ textDecoration: 'line-through', color: '#9ca3af', fontSize: '14px' }}>Rp {originalPrice.toLocaleString('id-ID')}</span>
+      <span style={{ backgroundColor: '#d6bd98', color: '#1a3636', fontSize: '10px', fontWeight: 'bold', padding: '2px 4px', borderRadius: '2px' }}>{discountPercent}% OFF</span>
+    </div>
+    <div style={{ fontSize: '32px', fontWeight: 'bold', color: '#40534c' }}>Rp {price.toLocaleString('id-ID')}</div>
+  </div>
+));
+
+// --- Product Meta: name + ratings — NEVER re-renders on variant click ---
+const ProductMeta = memo(({ name, rating, reviewCount, sold, pt }: any) => (
+  <>
+    <h1 style={{ fontSize: '24px', fontWeight: '500', marginBottom: '12px', color: '#1a3636', lineHeight: '1.3' }}>{name}</h1>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px', fontSize: '14px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#40534c' }}>
+        <span style={{ fontWeight: 'bold', textDecoration: 'underline' }}>{rating}</span>
+        <Icon icon="material-symbols:star" />
+      </div>
+      <div style={{ height: '16px', width: '1px', backgroundColor: '#ddd' }}></div>
+      <div style={{ color: '#677d6a' }}>{reviewCount} {pt('rating')}</div>
+      <div style={{ height: '16px', width: '1px', backgroundColor: '#ddd' }}></div>
+      <div style={{ color: '#677d6a' }}>{sold} {pt('sold')}</div>
+    </div>
+  </>
+));
+
+// --- Tabs Section: only re-renders when activeTab changes ---
+const TabsSection = memo(({ pt, activeTab, setActiveTab, description, weight, slug, category }: any) => (
+  <div style={{ backgroundColor: 'white', padding: '24px', borderRadius: '8px', border: '1px solid #e5e7eb', marginBottom: '24px' }}>
+    <div className="tab-nav">
+      {['deskripsi', 'info', 'review', 'pengiriman'].map(tab => (
+        <div key={tab} className={`tab-item ${activeTab === tab ? 'active' : ''}`} onClick={() => setActiveTab(tab)}>{pt(tab)}</div>
+      ))}
+    </div>
+    <div style={{ padding: '0 12px' }}>
+      {activeTab === 'deskripsi' && <DescriptionFormatter text={description} />}
+      {activeTab === 'info' && <div style={{ color: '#1a3636' }}><p><strong>{pt('weight')}:</strong> {weight}</p><p><strong>{pt('category')}:</strong> {pt(`categories.${slug.replace(/-./g, (x: string) => x[1].toUpperCase())}` as any) || category}</p></div>}
+      {activeTab === 'review' && <div style={{ color: '#1a3636' }}><strong>4.9</strong> ({pt('reviewsCount', { count: 128 })})</div>}
+      {activeTab === 'pengiriman' && <div style={{ color: '#1a3636' }}><p>{pt('shippingInfo.from')}</p></div>}
+    </div>
+  </div>
+));
+
+// --- Static Sections (memoized to prevent re-render on variant click) ---
+const StaticTopBar = memo(({ pt, t }: { pt: any; t: any }) => (
+  <div style={{ backgroundColor: '#ffffff', color: '#1a3636', fontSize: '12px', padding: '8px 0', borderBottom: '1px solid #eee' }}>
+    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+        <Link href="/" style={{ color: '#40534c', textDecoration: 'none', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '4px' }}>
+          <Icon icon="mdi:arrow-left" />
+          <span className="back-text-full">{pt('backToDallas')}</span>
+          <span className="back-text-short" style={{ display: 'none' }}>{t('Common.back')}</span>
+        </Link>
+        <span className="top-bar-separator" style={{ borderLeft: '1px solid #ddd', height: '12px' }}></span>
+        <span className="top-bar-address" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Icon icon="mdi:map-marker" style={{ fontSize: '14px', color: '#40534c' }} /> {t('TopBar.address')}</span>
+        <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Icon icon="mdi:phone" style={{ fontSize: '14px', color: '#40534c' }} /> 081260001487</span>
+      </div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <a href="https://www.instagram.com/paperlisens22" target="_blank" style={{ color: '#1a3636' }}><Icon icon="mdi:instagram" style={{ fontSize: '18px' }} /></a>
+        <a href="https://www.tiktok.com/@paperlisenss22" target="_blank" style={{ color: '#1a3636' }}><Icon icon="ic:baseline-tiktok" style={{ fontSize: '18px' }} /></a>
+        <a href="https://id.shp.ee/tpQ9dbH" target="_blank" style={{ color: '#1a3636' }}><Icon icon="ic:baseline-shopping-bag" style={{ fontSize: '18px' }} /></a>
+        <a href="https://www.facebook.com/share/1G3GADNMZi/" target="_blank" style={{ color: '#1a3636' }}><Icon icon="mdi:facebook" style={{ fontSize: '18px' }} /></a>
+      </div>
+    </div>
+  </div>
+));
+
+const StaticHeader = memo(({ pt, searchQuery, setSearchQuery, handleSearch, cartCount, setIsCartOpen }: any) => (
+  <header style={{ backgroundColor: '#40534c', padding: '16px 0', position: 'sticky', top: 0, zIndex: 1000 }}>
+    <div className="header-container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 16px', display: 'flex', alignItems: 'center', gap: '32px' }}>
+      <Link href="/paperlisens"><img src="/paperlisens.jpg" alt="Paperlisens" className="header-logo" style={{ height: '40px' }} /></Link>
+      <div style={{ flexGrow: 1 }}>
+        <form onSubmit={handleSearch} style={{ position: 'relative' }}>
+          <input
+            type="text"
+            placeholder={pt('searchPlaceholder')}
+            value={searchQuery}
+            onChange={(e: any) => setSearchQuery(e.target.value)}
+            className="search-input"
+            style={{ width: '100%', padding: '10px 16px', paddingRight: '48px', borderRadius: '3px', border: 'none', fontSize: '14px', backgroundColor: 'white', color: '#1a3636', outline: 'none' }}
+          />
+          <button type="submit" style={{ position: 'absolute', right: '5px', top: '5px', bottom: '5px', width: '40px', backgroundColor: '#1a3636', color: '#d6bd98', border: 'none', borderRadius: '3px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Icon icon="material-symbols:search" style={{ fontSize: '20px', color: '#d6bd98' }} />
+          </button>
+        </form>
+      </div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+        <LanguageSwitcher light />
+        <div onClick={() => setIsCartOpen(true)} style={{ position: 'relative', padding: '8px', display: 'flex', alignItems: 'center', cursor: 'pointer', color: '#d6bd98' }}>
+          <Icon icon="material-symbols:shopping-cart-outline" style={{ fontSize: '24px', color: '#d6bd98' }} />
+          {cartCount > 0 && <span style={{ position: 'absolute', top: 0, right: 0, backgroundColor: '#d6bd98', color: '#40534c', fontSize: '10px', fontWeight: 'bold', borderRadius: '50%', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{cartCount}</span>}
+        </div>
+      </div>
+    </div>
+  </header>
+));
+
 export default function ProductDetailPage({ initialProduct, relatedProducts, otherProducts }: any) {
   const t = useTranslations();
   const pt = useTranslations('Paperlisens');
@@ -283,16 +383,32 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
   const { addToCart, cartCount, setIsCartOpen } = useCart();
   const [activeTab, setActiveTab] = useState('deskripsi');
   const [selectedImage, setSelectedImage] = useState(-1);
-  const [quantity, setQuantity] = useState(1);
   const [selectedVariant, setSelectedVariant] = useState<any | null>(null);
   const [hoveredVariant, setHoveredVariant] = useState<any | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-
-  // State untuk Multi-Attribute Selection
-  const [selectedAttr1, setSelectedAttr1] = useState<string | null>(null);
-  const [selectedAttr2, setSelectedAttr2] = useState<string | null>(null);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  // Refs to hold current variant/quantity from child without re-rendering parent
+  const selectedVariantRef = useRef<any>(null);
+  const quantityRef = useRef(1);
   const [, startTransition] = useTransition();
+
+  // Preload ALL variant images on mount so switching variants is instant
+  // Root cause: variants 2,5-12 are slow because browser fetches image on click
+  useEffect(() => {
+    const variants: any[] = initialProduct.variants || [];
+    const toPreload = new Set<string>();
+
+    variants.forEach((v: any) => {
+      if (v.image && !v.image.includes('placeholder') && v.image !== '/placeholder.png') {
+        toPreload.add(v.image);
+      }
+    });
+
+    toPreload.forEach((src) => {
+      const img = new window.Image();
+      img.src = src;
+    });
+  }, [initialProduct.variants]);
 
   const getLocalized = useCallback((item: any, field: string) => {
     // @ts-ignore
@@ -301,68 +417,25 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
     return getSmartTranslation(item[field], locale);
   }, [locale]);
 
-  const variations = useMemo(() => {
-    if (initialProduct.variants && initialProduct.variants.length > 0) {
-      return initialProduct.variants;
-    }
-    return [initialProduct];
-  }, [initialProduct]);
 
-  // Logika Ekstraksi Daftar Atribut Unik
-  const attributes = useMemo(() => {
-    const list1 = new Set<string>();
-    const list2 = new Set<string>();
+  const handleVariantChange = useCallback((variant: any | null) => {
+    selectedVariantRef.current = variant;
+    // Only update parent state for price/image display
+    startTransition(() => {
+      setSelectedVariant(variant);
 
-    variations.forEach((v: any) => {
-      const n1 = v.variant_name || getLocalized(v, 'variant') || 'Standard';
-      const n2 = v.variant_name_2 || null;
-      if (n1) list1.add(n1);
-      if (n2) list2.add(n2);
-    });
-
-    return {
-      attr1: Array.from(list1),
-      attr2: Array.from(list2)
-    };
-  }, [variations, getLocalized]);
-
-  // Pre-build lookup maps for O(1) variant matching instead of O(n) find()
-  const variantLookup = useMemo(() => {
-    const map1 = new Map<string, any>(); // attr1 only
-    const map2 = new Map<string, any>(); // attr1+attr2 combo
-    variations.forEach((v: any) => {
-      const n1 = v.variant_name || getLocalized(v, 'variant') || 'Standard';
-      const n2 = v.variant_name_2 || null;
-      if (!map1.has(n1)) map1.set(n1, v);
-      if (n2) map2.set(`${n1}||${n2}`, v);
-    });
-    return { map1, map2 };
-  }, [variations, getLocalized]);
-
-  const handleAttr1Click = useCallback((val: string) => {
-    setSelectedAttr1(val);
-    setSelectedImage(-1);
-    const match = variations.find((v: any) => {
-      const n1 = v.variant_name || getLocalized(v, 'variant') || 'Standard';
-      if (attributes.attr2.length > 0) {
-        const n2 = v.variant_name_2 || null;
-        return n1 === val && n2 === selectedAttr2;
+      // Only reset the gallery if the new variant actually has a unique image.
+      // If it has no image (or placeholder), don't force the gallery to jump.
+      const hasValidImage = variant?.image && !variant.image.includes('placeholder') && variant.image !== '/placeholder.png';
+      if (hasValidImage) {
+        setSelectedImage(-1);
       }
-      return n1 === val;
     });
-    if (match) setSelectedVariant(match);
-  }, [variations, selectedAttr2, attributes.attr2.length, getLocalized]);
+  }, []);
 
-  const handleAttr2Click = useCallback((val: string) => {
-    setSelectedAttr2(val);
-    setSelectedImage(-1);
-    const match = variations.find((v: any) => {
-      const n1 = v.variant_name || getLocalized(v, 'variant') || 'Standard';
-      const n2 = v.variant_name_2 || null;
-      return n1 === selectedAttr1 && n2 === val;
-    });
-    if (match) setSelectedVariant(match);
-  }, [variations, selectedAttr1, getLocalized]);
+  const handleQuantityChange = useCallback((qty: number) => {
+    quantityRef.current = qty;
+  }, []);
 
   const activeVisualVariant = hoveredVariant || selectedVariant;
   const displayProduct = activeVisualVariant || initialProduct;
@@ -382,7 +455,7 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
         seen.add(url);
       }
     };
-    
+
     // Always use base product gallery only (no variant images mixed in)
     add(initialProduct.image);
     if (Array.isArray(initialProduct.images)) {
@@ -393,7 +466,7 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
         if (Array.isArray(parsed)) parsed.forEach((img: string) => add(img));
       } catch (e) { }
     }
-    
+
     return list;
   }, [initialProduct]);
 
@@ -408,10 +481,12 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
   }, [productImages, activeVisualVariant, isPlaceholder]);
 
   const mainDisplayImage = selectedImage === -1 && activeVisualVariant?.image && !isPlaceholder(activeVisualVariant.image)
-    ? activeVisualVariant.image 
+    ? activeVisualVariant.image
     : productImages[Math.max(0, selectedImage)];
 
-  const product = useMemo(() => ({
+  // Ref always holds latest product data for cart — updating ref does NOT trigger re-render
+  const cartProductRef = useRef<any>(null);
+  cartProductRef.current = {
     ...displayProduct,
     localizedName: productName,
     localizedDescription: productDescription,
@@ -423,99 +498,54 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
     originalPrice: originalPrice,
     stock: 150,
     weight: '1000 gr',
-  }), [displayProduct, productName, productDescription, initialProduct.category, initialProduct.slug, productImages, originalPrice]);
+  };
 
-  const handleAddToCart = () => { addToCart(product, quantity, selectedVariant); };
-
-  const getVariantName = (p: any) => {
+  const getVariantName = useCallback((p: any) => {
     const localizedName = getLocalized(p, 'variant_name');
     if (localizedName && localizedName !== 'Standard') return localizedName;
     return getLocalized(p, 'variant') || 'Standard';
-  };
+  }, [getLocalized]);
 
-  const handleOrderNow = async () => {
+  // STABLE: no longer depends on product useMemo — VariantSelector won't re-render on variant change
+  const handleAddToCart = useCallback((variant: any | null, qty: number) => {
+    addToCart(cartProductRef.current, qty, variant);
+  }, [addToCart]);
+
+  const handleOrderNow = useCallback(async (variant: any | null, qty: number) => {
     try {
       await fetch(`/api/paperlisens/products/${initialProduct.productSlug}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ variant_id: selectedVariant?.id })
+        body: JSON.stringify({ variant_id: variant?.id })
       });
     } catch (e) { }
-    const variantName = selectedVariant ? getVariantName(selectedVariant) : (initialProduct.variant || 'Standard');
-    const message = `Halo Paperlisens,\n\nSaya ingin memesan produk berikut:\n📦 *${productName}*\n🔹 Varian: ${variantName}\n🔢 Jumlah: ${quantity} pcs\n\nMohon informasi selanjutnya, terima kasih!`;
+    const variantName = variant ? getVariantName(variant) : (initialProduct.variant || 'Standard');
+    const message = `Halo Paperlisens,\n\nSaya ingin memesan produk berikut:\n📦 *${productName}*\n🔹 Varian: ${variantName}\n🔢 Jumlah: ${qty} pcs\n\nMohon informasi selanjutnya, terima kasih!`;
     window.open(`https://wa.me/6281260001487?text=${encodeURIComponent(message)}`, '_blank');
-  };
+  }, [getVariantName, initialProduct, productName]);
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = useCallback((e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
       router.push(`/paperlisens?search=${encodeURIComponent(searchQuery.trim())}`);
     }
-  };
+  }, [searchQuery, router]);
 
   return (
     <div style={{ backgroundColor: '#f5f5f5', minHeight: '100vh', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
       <Styles />
 
-      {/* ===== TOP BAR ===== */}
-      <div style={{ backgroundColor: '#ffffff', color: '#1a3636', fontSize: '12px', padding: '8px 0', borderBottom: '1px solid #eee' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <Link href="/" style={{ color: '#40534c', textDecoration: 'none', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <Icon icon="mdi:arrow-left" />
-              <span className="back-text-full">{pt('backToDallas')}</span>
-              <span className="back-text-short" style={{ display: 'none' }}>{t('Common.back')}</span>
-            </Link>
-            <span className="top-bar-separator" style={{ borderLeft: '1px solid #ddd', height: '12px' }}></span>
-            <span className="top-bar-address" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Icon icon="mdi:map-marker" style={{ fontSize: '14px', color: '#40534c' }} /> {t('TopBar.address')}</span>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Icon icon="mdi:phone" style={{ fontSize: '14px', color: '#40534c' }} /> 081260001487</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <a href="https://www.instagram.com/paperlisens22" target="_blank" style={{ color: '#1a3636' }}><Icon icon="mdi:instagram" style={{ fontSize: '18px' }} /></a>
-            <a href="https://www.tiktok.com/@paperlisenss22" target="_blank" style={{ color: '#1a3636' }}><Icon icon="ic:baseline-tiktok" style={{ fontSize: '18px' }} /></a>
-            <a href="https://id.shp.ee/tpQ9dbH" target="_blank" style={{ color: '#1a3636' }}><Icon icon="ic:baseline-shopping-bag" style={{ fontSize: '18px' }} /></a>
-            <a href="https://www.facebook.com/share/1G3GADNMZi/" target="_blank" style={{ color: '#1a3636' }}><Icon icon="mdi:facebook" style={{ fontSize: '18px' }} /></a>
-          </div>
-        </div>
-      </div>
-
-      {/* ===== HEADER ===== */}
-      <header style={{ backgroundColor: '#40534c', padding: '16px 0', position: 'sticky', top: 0, zIndex: 1000 }}>
-        <div className="header-container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 16px', display: 'flex', alignItems: 'center', gap: '32px' }}>
-          <Link href="/paperlisens"><img src="/logo-paperlisens.png" alt="Paperlisens" className="header-logo" style={{ height: '40px', filter: 'brightness(0) invert(1)' }} /></Link>
-          <div style={{ flexGrow: 1 }}>
-            <form onSubmit={handleSearch} style={{ position: 'relative' }}>
-              <input
-                type="text"
-                placeholder={pt('searchPlaceholder')}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="search-input"
-                style={{ width: '100%', padding: '10px 16px', paddingRight: '48px', borderRadius: '3px', border: 'none', fontSize: '14px', backgroundColor: 'white', color: '#1a3636', outline: 'none' }}
-              />
-              <button type="submit" style={{ position: 'absolute', right: '5px', top: '5px', bottom: '5px', width: '40px', backgroundColor: '#1a3636', color: '#d6bd98', border: 'none', borderRadius: '3px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Icon icon="material-symbols:search" style={{ fontSize: '20px', color: '#d6bd98' }} />
-              </button>
-            </form>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <LanguageSwitcher light />
-            <div onClick={() => setIsCartOpen(true)} style={{ position: 'relative', padding: '8px', display: 'flex', alignItems: 'center', cursor: 'pointer', color: '#d6bd98' }}>
-              <Icon icon="material-symbols:shopping-cart-outline" style={{ fontSize: '24px', color: '#d6bd98' }} />
-              {cartCount > 0 && <span style={{ position: 'absolute', top: 0, right: 0, backgroundColor: '#d6bd98', color: '#40534c', fontSize: '10px', fontWeight: 'bold', borderRadius: '50%', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{cartCount}</span>}
-            </div>
-          </div>
-        </div>
-      </header>
+      <StaticTopBar pt={pt} t={t} />
+      <StaticHeader pt={pt} searchQuery={searchQuery} setSearchQuery={setSearchQuery} handleSearch={handleSearch} cartCount={cartCount} setIsCartOpen={setIsCartOpen} />
 
       <main style={{ maxWidth: '1200px', margin: '24px auto', padding: '0 16px' }}>
-        {/* BREADCRUMB */}
+        {/* BREADCRUMB - uses initialProduct directly (stable, never changes with variant) */}
         <div style={{ fontSize: '14px', color: '#677d6a', marginBottom: '16px', display: 'flex', alignItems: 'center', flexWrap: 'nowrap' }}>
           <Link href="/paperlisens" style={{ textDecoration: 'none', color: '#40534c' }}>{pt('home')}</Link>
           <span style={{ margin: '0 8px' }}>&gt;</span>
-          <Link href={`/paperlisens/category/${product.slug}`} style={{ textDecoration: 'none', color: '#40534c' }}>{product.category}</Link>
+          <Link href={`/paperlisens/category/${initialProduct.slug}`} style={{ textDecoration: 'none', color: '#40534c' }}>{initialProduct.category}</Link>
           <span style={{ margin: '0 8px' }}>&gt;</span>
-          <span style={{ color: '#1a3636', fontWeight: 'bold', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{product.localizedName}</span>
+          <span style={{ color: '#1a3636', fontWeight: 'bold', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{productName}</span>
         </div>
 
         {/* MAIN PRODUCT AREA */}
@@ -524,69 +554,69 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
 
             {/* Gallery Section - only show if there are real images */}
             {productImages.length > 0 ? (
-            <div className="gallery-container">
-              <div className="desktop-gallery" style={{ position: 'relative' }}>
-                <img
-                  src={mainDisplayImage}
-                  className="main-image"
-                  alt={product.localizedName}
-                  onClick={() => setIsLightboxOpen(true)}
-                  style={{ cursor: 'pointer' }}
-                  onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                />
+              <div className="gallery-container">
+                <div className="desktop-gallery" style={{ position: 'relative' }}>
+                  <img
+                    src={mainDisplayImage}
+                    className="main-image"
+                    alt={productName}
+                    onClick={() => setIsLightboxOpen(true)}
+                    style={{ cursor: 'pointer' }}
+                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                  />
 
-                {/* Left Arrow */}
-                {productImages.length > 1 && (
+                  {/* Left Arrow */}
+                  {productImages.length > 1 && (
+                    <button
+                      onClick={(e) => { e.stopPropagation(); setSelectedImage(prev => { const idx = prev === -1 ? 0 : prev; return idx <= 0 ? productImages.length - 1 : idx - 1; }); }}
+                      style={{ position: 'absolute', top: '50%', left: '12px', transform: 'translateY(-50%)', backgroundColor: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(4px)', width: '40px', height: '40px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.08)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.12)', transition: 'all 0.2s', zIndex: 2 }}
+                      onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'rgba(255,255,255,1)'; (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-50%) scale(1.1)'; }}
+                      onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'rgba(255,255,255,0.85)'; (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-50%) scale(1)'; }}
+                    >
+                      <Icon icon="lucide:chevron-left" style={{ color: '#1a3636', fontSize: '22px' }} />
+                    </button>
+                  )}
+
+                  {/* Right Arrow */}
+                  {productImages.length > 1 && (
+                    <button
+                      onClick={(e) => { e.stopPropagation(); setSelectedImage(prev => { const idx = prev === -1 ? 0 : prev; return idx >= productImages.length - 1 ? 0 : idx + 1; }); }}
+                      style={{ position: 'absolute', top: '50%', right: '12px', transform: 'translateY(-50%)', backgroundColor: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(4px)', width: '40px', height: '40px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.08)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.12)', transition: 'all 0.2s', zIndex: 2 }}
+                      onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'rgba(255,255,255,1)'; (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-50%) scale(1.1)'; }}
+                      onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'rgba(255,255,255,0.85)'; (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-50%) scale(1)'; }}
+                    >
+                      <Icon icon="lucide:chevron-right" style={{ color: '#1a3636', fontSize: '22px' }} />
+                    </button>
+                  )}
+
                   <button
-                    onClick={(e) => { e.stopPropagation(); setSelectedImage(prev => { const idx = prev === -1 ? 0 : prev; return idx <= 0 ? productImages.length - 1 : idx - 1; }); }}
-                    style={{ position: 'absolute', top: '50%', left: '12px', transform: 'translateY(-50%)', backgroundColor: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(4px)', width: '40px', height: '40px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.08)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.12)', transition: 'all 0.2s', zIndex: 2 }}
-                    onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'rgba(255,255,255,1)'; (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-50%) scale(1.1)'; }}
-                    onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'rgba(255,255,255,0.85)'; (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-50%) scale(1)'; }}
+                    onClick={() => setIsLightboxOpen(true)}
+                    style={{ position: 'absolute', bottom: '16px', right: '16px', backgroundColor: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(4px)', padding: '8px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.1)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
                   >
-                    <Icon icon="lucide:chevron-left" style={{ color: '#1a3636', fontSize: '22px' }} />
+                    <Icon icon="lucide:maximize-2" style={{ color: '#1a3636', fontSize: '20px' }} />
                   </button>
-                )}
 
-                {/* Right Arrow */}
-                {productImages.length > 1 && (
-                  <button
-                    onClick={(e) => { e.stopPropagation(); setSelectedImage(prev => { const idx = prev === -1 ? 0 : prev; return idx >= productImages.length - 1 ? 0 : idx + 1; }); }}
-                    style={{ position: 'absolute', top: '50%', right: '12px', transform: 'translateY(-50%)', backgroundColor: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(4px)', width: '40px', height: '40px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.08)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.12)', transition: 'all 0.2s', zIndex: 2 }}
-                    onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'rgba(255,255,255,1)'; (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-50%) scale(1.1)'; }}
-                    onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'rgba(255,255,255,0.85)'; (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-50%) scale(1)'; }}
-                  >
-                    <Icon icon="lucide:chevron-right" style={{ color: '#1a3636', fontSize: '22px' }} />
-                  </button>
-                )}
+                  <div className="thumbnail-list" style={{ marginTop: '12px' }}>
+                    {productImages.map((img: string, idx: number) => (
+                      <img key={idx} src={img} className={`thumbnail ${selectedImage === idx ? 'active' : ''}`} onClick={() => setSelectedImage(idx)} alt={`Thumb ${idx}`} loading="lazy" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                    ))}
+                  </div>
+                </div>
+                <div className="mobile-gallery">
+                  {fullGalleryImages.map((img: string, idx: number) => (
+                    <div key={idx} className="mobile-gallery-item" onClick={() => { setSelectedImage(idx); setIsLightboxOpen(true); }}>
+                      <img src={img} className="mobile-gallery-img" alt={`Product ${idx}`} loading="lazy" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                      <div style={{ position: 'absolute', bottom: '10px', right: '10px', background: 'rgba(0,0,0,0.6)', color: 'white', padding: '4px 8px', borderRadius: '12px', fontSize: '10px' }}>{idx + 1} / {fullGalleryImages.length}</div>
 
-                <button
-                  onClick={() => setIsLightboxOpen(true)}
-                  style={{ position: 'absolute', bottom: '16px', right: '16px', backgroundColor: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(4px)', padding: '8px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.1)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
-                >
-                  <Icon icon="lucide:maximize-2" style={{ color: '#1a3636', fontSize: '20px' }} />
-                </button>
-
-                <div className="thumbnail-list" style={{ marginTop: '12px' }}>
-                  {product.images.map((img: string, idx: number) => (
-                    <img key={idx} src={img} className={`thumbnail ${selectedImage === idx ? 'active' : ''}`} onClick={() => setSelectedImage(idx)} alt={`Thumb ${idx}`} loading="lazy" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                      <button
+                        style={{ position: 'absolute', top: '10px', right: '10px', backgroundColor: 'rgba(255,255,255,0.8)', padding: '6px', borderRadius: '50%', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                      >
+                        <Icon icon="lucide:maximize-2" style={{ color: '#1a3636', fontSize: '16px' }} />
+                      </button>
+                    </div>
                   ))}
                 </div>
               </div>
-              <div className="mobile-gallery">
-                {fullGalleryImages.map((img: string, idx: number) => (
-                  <div key={idx} className="mobile-gallery-item" onClick={() => { setSelectedImage(idx); setIsLightboxOpen(true); }}>
-                    <img src={img} className="mobile-gallery-img" alt={`Product ${idx}`} loading="lazy" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
-                    <div style={{ position: 'absolute', bottom: '10px', right: '10px', background: 'rgba(0,0,0,0.6)', color: 'white', padding: '4px 8px', borderRadius: '12px', fontSize: '10px' }}>{idx + 1} / {fullGalleryImages.length}</div>
-
-                    <button
-                      style={{ position: 'absolute', top: '10px', right: '10px', backgroundColor: 'rgba(255,255,255,0.8)', padding: '6px', borderRadius: '50%', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                    >
-                      <Icon icon="lucide:maximize-2" style={{ color: '#1a3636', fontSize: '16px' }} />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
             ) : (
               <div style={{ backgroundColor: '#f9fafb', borderRadius: '8px', border: '1px solid #e5e7eb', height: '300px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#9ca3af' }}>
                 <Icon icon="mdi:image-off-outline" style={{ fontSize: '48px', marginBottom: '8px' }} />
@@ -594,157 +624,39 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
               </div>
             )}
             <div>
-              <h1 style={{ fontSize: '24px', fontWeight: '500', marginBottom: '12px', color: '#1a3636', lineHeight: '1.3' }}>{product.localizedName}</h1>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px', fontSize: '14px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#40534c' }}>
-                  <span style={{ fontWeight: 'bold', textDecoration: 'underline' }}>{product.rating}</span>
-                  <Icon icon="material-symbols:star" />
-                </div>
-                <div style={{ height: '16px', width: '1px', backgroundColor: '#ddd' }}></div>
-                <div style={{ color: '#677d6a' }}>{product.reviewCount} {pt('rating')}</div>
-                <div style={{ height: '16px', width: '1px', backgroundColor: '#ddd' }}></div>
-                <div style={{ color: '#677d6a' }}>{product.sold} {pt('sold')}</div>
-              </div>
-              <div style={{ backgroundColor: '#f9fafb', padding: '16px', borderRadius: '4px', marginBottom: '24px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                  <span style={{ textDecoration: 'line-through', color: '#9ca3af', fontSize: '14px' }}>Rp {product.originalPrice.toLocaleString('id-ID')}</span>
-                  <span style={{ backgroundColor: '#d6bd98', color: '#1a3636', fontSize: '10px', fontWeight: 'bold', padding: '2px 4px', borderRadius: '2px' }}>{discountPercent}% OFF</span>
-                </div>
-                <div style={{ fontSize: '32px', fontWeight: 'bold', color: '#40534c' }}>Rp {product.price.toLocaleString('id-ID')}</div>
-              </div>
-              {variations.length > 1 && (
-                <div style={{ marginBottom: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                  {/* BARIS VARIASI 1 */}
-                  <div>
-                    <div style={{ fontSize: '14px', color: '#677d6a', marginBottom: '8px' }}>
-                      {initialProduct.attr_label_1 || pt('selectVariant')}
-                    </div>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                      {attributes.attr1.map((val: string) => (
-                        <button
-                          key={val}
-                          onClick={() => {
-                            if (selectedAttr1 === val || selectedVariant?.variant_name === val) {
-                              setSelectedAttr1(null);
-                              startTransition(() => {
-                                setSelectedVariant(null);
-                                setSelectedImage(0);
-                              });
-                            } else {
-                              setSelectedAttr1(val);
-                              if (attributes.attr2.length === 0) {
-                                const match = variantLookup.map1.get(val);
-                                if (match) {
-                                  startTransition(() => {
-                                    setSelectedVariant(match);
-                                    setSelectedImage(-1);
-                                  });
-                                }
-                              } else if (selectedAttr2) {
-                                const match = variantLookup.map2.get(`${val}||${selectedAttr2}`);
-                                if (match) {
-                                  startTransition(() => {
-                                    setSelectedVariant(match);
-                                    setSelectedImage(-1);
-                                  });
-                                }
-                              }
-                            }
-                          }}
-                          style={{
-                            padding: '8px 16px',
-                            border: (selectedAttr1 === val || selectedVariant?.variant_name === val) ? '1px solid #40534c' : '1px solid #e5e7eb',
-                            backgroundColor: (selectedAttr1 === val || selectedVariant?.variant_name === val) ? '#40534c' : 'white',
-                            color: (selectedAttr1 === val || selectedVariant?.variant_name === val) ? '#d6bd98' : '#1a3636',
-                            borderRadius: '4px',
-                            cursor: 'pointer',
-                            fontSize: '14px'
-                          }}
-                        >
-                          {val}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* BARIS VARIASI 2 (HANYA MUNCUL JIKA ADA DATA) */}
-                  {attributes.attr2.length > 0 && (
-                    <div>
-                      <div style={{ fontSize: '14px', color: '#677d6a', marginBottom: '8px' }}>
-                        {initialProduct.attr_label_2 || 'Pilihan Tambahan'}
-                      </div>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                        {attributes.attr2.map((val: string) => (
-                          <button
-                            key={val}
-                            onClick={() => {
-                              if (selectedAttr2 === val) {
-                                setSelectedAttr2(null);
-                                startTransition(() => {
-                                  setSelectedImage(0);
-                                });
-                              } else {
-                                setSelectedAttr2(val);
-                                if (selectedAttr1) {
-                                  const match = variantLookup.map2.get(`${selectedAttr1}||${val}`);
-                                  if (match) {
-                                    startTransition(() => {
-                                      setSelectedVariant(match);
-                                      setSelectedImage(-1);
-                                    });
-                                  }
-                                }
-                              }
-                            }}
-                            style={{
-                              padding: '8px 16px',
-                              border: selectedAttr2 === val ? '1px solid #40534c' : '1px solid #e5e7eb',
-                              backgroundColor: selectedAttr2 === val ? '#40534c' : 'white',
-                              color: selectedAttr2 === val ? '#d6bd98' : '#1a3636',
-                              borderRadius: '4px',
-                              cursor: 'pointer',
-                              fontSize: '14px'
-                            }}
-                          >
-                            {val}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '24px' }}>
-                <span style={{ color: '#677d6a', fontSize: '14px' }}>{pt('quantity')}</span>
-                <div style={{ display: 'flex', border: '1px solid #e5e7eb', borderRadius: '4px' }}>
-                  <button onClick={() => setQuantity(Math.max(1, quantity - 1))} style={{ padding: '4px 12px', borderRight: '1px solid #e5e7eb' }}>-</button>
-                  <input type="text" value={quantity} readOnly style={{ width: '40px', textAlign: 'center', border: 'none', outline: 'none' }} />
-                  <button onClick={() => setQuantity(quantity + 1)} style={{ padding: '4px 12px', borderLeft: '1px solid #e5e7eb' }}>+</button>
-                </div>
-                <span style={{ fontSize: '12px', color: '#9ca3af' }}>{pt('available', { count: product.stock })}</span>
-              </div>
-              <div style={{ display: 'flex', gap: '12px' }}>
-                <button onClick={handleAddToCart} style={{ flex: 1, padding: '12px', backgroundColor: 'rgba(64, 83, 76, 0.1)', color: '#40534c', border: '1px solid #40534c', borderRadius: '4px', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}><Icon icon="material-symbols:add-shopping-cart" /> {pt('addToCart')}</button>
-                <button onClick={handleOrderNow} style={{ flex: 1, padding: '12px', backgroundColor: '#40534c', color: '#d6bd98', border: 'none', borderRadius: '4px', fontWeight: 'bold' }}>{pt('orderNow')}</button>
-              </div>
+              <ProductMeta
+                name={productName}
+                rating={4.9}
+                reviewCount={128}
+                sold={initialProduct.sold}
+                pt={pt}
+              />
+              <PriceBox
+                price={displayProduct.price}
+                originalPrice={originalPrice}
+                discountPercent={discountPercent}
+              />
+              <VariantSelector
+                initialProduct={initialProduct}
+                onVariantChange={handleVariantChange}
+                onQuantityChange={handleQuantityChange}
+                onOrderNow={handleOrderNow}
+                onAddToCart={handleAddToCart}
+                pt={pt}
+              />
             </div>
           </div>
         </div>
 
-        {/* TABS */}
-        <div style={{ backgroundColor: 'white', padding: '24px', borderRadius: '8px', border: '1px solid #e5e7eb', marginBottom: '24px' }}>
-          <div className="tab-nav">
-            {['deskripsi', 'info', 'review', 'pengiriman'].map(tab => (
-              <div key={tab} className={`tab-item ${activeTab === tab ? 'active' : ''}`} onClick={() => setActiveTab(tab)}>{pt(tab)}</div>
-            ))}
-          </div>
-          <div style={{ padding: '0 12px' }}>
-            {activeTab === 'deskripsi' && <DescriptionFormatter text={product.localizedDescription} />}
-            {activeTab === 'info' && <div style={{ color: '#1a3636' }}><p><strong>{pt('weight')}:</strong> {product.weight}</p><p><strong>{pt('category')}:</strong> {pt(`categories.${product.slug.replace(/-./g, (x: string) => x[1].toUpperCase())}` as any) || product.category}</p></div>}
-            {activeTab === 'review' && <div style={{ color: '#1a3636' }}><strong>4.9</strong> ({pt('reviewsCount', { count: 128 })})</div>}
-            {activeTab === 'pengiriman' && <div style={{ color: '#1a3636' }}><p>{pt('shippingInfo.from')}</p></div>}
-          </div>
-        </div>
+        <TabsSection
+          pt={pt}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          description={productDescription}
+          weight="1000 gr"
+          slug={initialProduct.slug}
+          category={initialProduct.category}
+        />
 
         <ProductSlider title={pt('relatedProducts')} products={relatedProducts} />
         <ProductSlider title={pt('youMayAlsoLike')} products={otherProducts} />

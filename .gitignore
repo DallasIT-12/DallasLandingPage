@@ -38,3 +38,6 @@ next-env.d.ts
 
 # prisma
 /generated/prisma
+
+# Ignore large PPTX files
+public/portofolio_produk.pptx

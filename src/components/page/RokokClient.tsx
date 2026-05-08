@@ -261,10 +261,12 @@ export default function RokokClient() {
     const rokokCategory = useMemo(() => ({
         title: tCat('rokok.title'),
         slug: "rokok",
-        img: "/custom%20rokok%203.webp",
+        img: "/foto_rokok_1.webp",
         desc: tCat('rokok.desc'),
         tags: [tCat('rokok.tags.tag1'), tCat('rokok.tags.tag2')],
         gallery: [
+            "/foto_rokok_1.webp", "/foto_rokok_2.webp", "/foto_rokok_3.webp", "/foto_rokok_4.webp",
+            "/foto_rokok_5.webp", "/foto_rokok_6.webp", "/foto_rokok_7.webp", "/foto_rokok_8.webp",
             "/custom%20rokok%20(1).webp", "/custom%20rokok%20(10).webp", "/custom%20rokok%20(11).webp",
             "/custom%20rokok%20(12).webp", "/custom%20rokok%20(13).webp", "/custom%20rokok%20(14).webp",
             "/custom%20rokok%20(15).webp", "/custom%20rokok%20(16).webp", "/custom%20rokok%20(17).webp",

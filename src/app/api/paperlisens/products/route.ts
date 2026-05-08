@@ -13,6 +13,16 @@ function getClient() {
   return createClient(supabaseUrl, supabaseKey);
 }
 
+function sanitizeSlug(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/\//g, '-')           // Replace / with -
+    .replace(/[()]/g, '')          // Remove parentheses
+    .replace(/\s+/g, '-')          // Replace spaces with -
+    .replace(/-{2,}/g, '-')        // Collapse multiple dashes
+    .replace(/^-|-$/g, '');        // Trim leading/trailing dashes
+}
+
 function toProduct(row: any) {
   return {
     id: row.id,
@@ -188,7 +198,7 @@ export async function POST(request: NextRequest) {
       ? `prod-${Date.now().toString(36)}-${Math.random().toString(36).substr(2, 5)}`
       : rawId;
 
-    const productSlug = body.productSlug || body.product_slug || (body.name || baseId).replace(/\s+/g, '-').toLowerCase();
+    const productSlug = sanitizeSlug(body.productSlug || body.product_slug || body.name || baseId);
 
     try {
       // Cek apakah slug sudah ada untuk menghindari 'menimpa' data via slug

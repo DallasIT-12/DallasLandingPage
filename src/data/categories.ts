@@ -43,10 +43,11 @@ export const getDallasCategories = (tCat: any, tMaterials: any): Category[] => [
   {
     title: tCat('bakery.title'),
     slug: "kotak-bakery",
-    img: "/kotak%20cake.webp",
+    img: "/foto_bakery_1.webp",
     desc: tCat('bakery.desc'),
     tags: [tCat('bakery.tags.tag1'), tCat('bakery.tags.tag2')],
     gallery: [
+      "/foto_bakery_1.webp", "/foto_bakery_2.webp", "/foto_bakery_3.webp",
       "/box%20bakery%20(1).webp", "/box%20bakery%20(2).webp", "/box%20bakery%20(3).webp",
       "/box%20bakery%20(4).webp", "/box%20bakery%20(5).webp", "/box%20bakery%20(6).webp",
       "/box%20bakery%20(7).webp", "/box%20bakery.webp",
@@ -89,10 +90,12 @@ export const getDallasCategories = (tCat: any, tMaterials: any): Category[] => [
   {
     title: tCat('rokok.title'),
     slug: "rokok",
-    img: "/custom%20rokok%203.webp",
+    img: "/foto_rokok_1.webp",
     desc: tCat('rokok.desc'),
     tags: [tCat('rokok.tags.tag1'), tCat('rokok.tags.tag2')],
     gallery: [
+      "/foto_rokok_1.webp", "/foto_rokok_2.webp", "/foto_rokok_3.webp", "/foto_rokok_4.webp",
+      "/foto_rokok_5.webp", "/foto_rokok_6.webp", "/foto_rokok_7.webp", "/foto_rokok_8.webp",
       "/custom%20rokok%20(1).webp", "/custom%20rokok%20(10).webp", "/custom%20rokok%20(11).webp",
       "/custom%20rokok%20(12).webp", "/custom%20rokok%20(13).webp", "/custom%20rokok%20(14).webp",
       "/custom%20rokok%20(15).webp", "/custom%20rokok%20(16).webp", "/custom%20rokok%20(17).webp",
@@ -112,10 +115,11 @@ export const getDallasCategories = (tCat: any, tMaterials: any): Category[] => [
   {
     title: tCat('nasi.title'),
     slug: "kotak-nasi",
-    img: "/kotak%20nasi%20(1).webp",
+    img: "/foto_ricebox.webp",
     desc: tCat('nasi.desc'),
     tags: [tCat('nasi.tags.tag1'), tCat('nasi.tags.tag2')],
     gallery: [
+      "/foto_ricebox.webp",
       "/box%20nasi%20(1).webp", "/box%20nasi%20(2).webp", "/box%20nasi%20(3).webp", "/box%20nasi%20(4).webp",
       "/kotak%20nasi%20(1).webp", "/kotak%20nasi%20(2).webp", "/kotak%20nasi%20(3).webp",
       "/kotak%20nasi%20(4).webp", "/kotak%20nasi%20(5).webp", "/kotak%20nasi%20(6).webp",
@@ -128,10 +132,11 @@ export const getDallasCategories = (tCat: any, tMaterials: any): Category[] => [
   {
     title: tCat('buku.title'),
     slug: "buku",
-    img: "/buku%20(6).webp",
+    img: "/foto_buku.webp",
     desc: tCat('buku.desc'),
     tags: [tCat('buku.tags.tag1')],
     gallery: [
+      "/foto_buku.webp",
       "/buku%20(1).webp", "/buku%20(2).webp", "/buku%20(3).webp",
       "/buku%20(4).webp", "/buku%20(5).webp", "/buku%20(6).webp",
       "/buku%20(7).webp", "/buku%20(8).webp", "/buku%20(9).webp", "/foto%20buku.webp"
@@ -143,10 +148,11 @@ export const getDallasCategories = (tCat: any, tMaterials: any): Category[] => [
   {
     title: tCat('kalender.title'),
     slug: "kalender",
-    img: "/foto%20kalender.webp",
+    img: "/foto_kalender.webp",
     desc: tCat('kalender.desc'),
     tags: [tCat('kalender.tags.tag1')],
     gallery: [
+      "/foto_kalender.webp",
       "/foto%20kalender.webp", "/kalender%20(1).webp", "/kalender%20(2).webp",
       "/kalender%20(3).webp", "/kalender%20(4).webp", "/kalender.webp"
     ],

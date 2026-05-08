@@ -499,7 +499,7 @@ export default function AboutPage() {
       </section>
 
       {/* 2. Visi & Misi Section */}
-      <section style={{ padding: '140px 24px', backgroundColor: '#f8fafc', position: 'relative', overflow: 'hidden' }}>
+      <section id="visi-misi" style={{ padding: '140px 24px', backgroundColor: '#f8fafc', position: 'relative', overflow: 'hidden', scrollMarginTop: '120px' }}>
         <BackgroundDecoration />
         <div style={{ maxWidth: '1200px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div style={{
@@ -568,7 +568,7 @@ export default function AboutPage() {
       </section>
 
       {/* 3. Produk Kami Section */}
-      <section style={{ padding: '140px 24px', backgroundColor: '#ffffff', position: 'relative', overflow: 'hidden' }}>
+      <section id="portofolio" style={{ padding: '140px 24px', backgroundColor: '#ffffff', position: 'relative', overflow: 'hidden', scrollMarginTop: '120px' }}>
         <BackgroundDecoration />
         <div style={{ maxWidth: '1200px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <motion.div
@@ -576,7 +576,7 @@ export default function AboutPage() {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ type: "spring", stiffness: 100, damping: 20 }}
-            style={{ textAlign: 'center', marginBottom: '100px' }}
+            style={{ textAlign: 'center', marginBottom: '60px' }}
           >
             <h2 style={{ fontSize: isMediumMobile ? '2.5rem' : '4.5rem', fontWeight: '900', marginBottom: '32px', color: '#0f172a', letterSpacing: '-0.04em', lineHeight: '1' }}>
               {t('AboutUs.produk.title')}
@@ -586,6 +586,212 @@ export default function AboutPage() {
             </p>
           </motion.div>
 
+          {/* PPT Presentation Slideshow */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ type: "spring", stiffness: 80, damping: 18, delay: 0.2 }}
+            style={{ marginBottom: '100px' }}
+          >
+            {(() => {
+              const totalSlides = 16;
+              const slideImages = Array.from({ length: totalSlides }, (_, i) => `/ppt-slides/slide_${i + 1}.jpg`);
+
+              const [currentPptSlide, setCurrentPptSlide] = useState(0);
+
+              const goToPrevPptSlide = () => {
+                setCurrentPptSlide((prev) => (prev === 0 ? totalSlides - 1 : prev - 1));
+              };
+
+              const goToNextPptSlide = () => {
+                setCurrentPptSlide((prev) => (prev + 1) % totalSlides);
+              };
+
+              return (
+                <div style={{
+                  position: 'relative',
+                  borderRadius: '24px',
+                  overflow: 'hidden',
+                  boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.15)',
+                  border: '1px solid rgba(0, 0, 0, 0.08)',
+                  background: '#0f172a',
+                }}>
+                  {/* Header Bar */}
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: isMediumMobile ? '14px 16px' : '16px 32px',
+                    background: 'linear-gradient(135deg, #0A4174 0%, #0d5a9e 100%)',
+                    borderBottom: '1px solid rgba(255,255,255,0.1)',
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <Icon icon="solar:presentation-graph-bold-duotone" style={{ fontSize: isMediumMobile ? '22px' : '26px', color: '#f97316' }} />
+                      <span style={{
+                        color: '#ffffff',
+                        fontSize: isMediumMobile ? '0.9rem' : '1.1rem',
+                        fontWeight: '700',
+                        letterSpacing: '-0.01em'
+                      }}>
+                        Portofolio Produk
+                      </span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      {/* Slide Counter */}
+                      <span style={{
+                        color: 'rgba(255,255,255,0.6)',
+                        fontSize: '0.85rem',
+                        fontWeight: '600',
+                      }}>
+                        {currentPptSlide + 1} / {totalSlides}
+                      </span>
+                      <a
+                        href="/portofolio_produk.pptx"
+                        download
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          padding: isMediumMobile ? '7px 12px' : '8px 20px',
+                          borderRadius: '10px',
+                          background: 'rgba(255,255,255,0.12)',
+                          border: '1px solid rgba(255,255,255,0.15)',
+                          color: '#ffffff',
+                          textDecoration: 'none',
+                          fontSize: isMediumMobile ? '0.75rem' : '0.85rem',
+                          fontWeight: '600',
+                          cursor: 'pointer',
+                          transition: 'all 0.3s ease',
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = 'rgba(249, 115, 22, 0.8)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = 'rgba(255,255,255,0.12)';
+                        }}
+                      >
+                        <Icon icon="solar:download-minimalistic-bold" style={{ fontSize: '16px' }} />
+                        {!isSmallMobile && 'Download'}
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* Slide Area */}
+                  <div style={{
+                    position: 'relative',
+                    width: '100%',
+                    aspectRatio: '16 / 9',
+                    backgroundColor: '#0f172a',
+                    overflow: 'hidden',
+                  }}>
+                    {slideImages.map((src, index) => (
+                      <img
+                        key={index}
+                        src={src}
+                        alt={`Portofolio Slide ${index + 1}`}
+                        style={{
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'contain',
+                          opacity: currentPptSlide === index ? 1 : 0,
+                          transition: 'opacity 0.5s ease-in-out',
+                          pointerEvents: currentPptSlide === index ? 'auto' : 'none',
+                        }}
+                      />
+                    ))}
+
+                    {/* Navigation Arrows */}
+                    <button
+                      onClick={goToPrevPptSlide}
+                      style={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: isMediumMobile ? '8px' : '16px',
+                        transform: 'translateY(-50%)',
+                        width: isMediumMobile ? '36px' : '48px',
+                        height: isMediumMobile ? '36px' : '48px',
+                        borderRadius: '50%',
+                        backgroundColor: 'rgba(0,0,0,0.5)',
+                        backdropFilter: 'blur(8px)',
+                        border: '1px solid rgba(255,255,255,0.15)',
+                        color: '#ffffff',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: isMediumMobile ? '18px' : '22px',
+                        zIndex: 10,
+                        transition: 'all 0.2s ease',
+                      }}
+                      onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(249, 115, 22, 0.7)'; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.5)'; }}
+                    >
+                      &#10094;
+                    </button>
+                    <button
+                      onClick={goToNextPptSlide}
+                      style={{
+                        position: 'absolute',
+                        top: '50%',
+                        right: isMediumMobile ? '8px' : '16px',
+                        transform: 'translateY(-50%)',
+                        width: isMediumMobile ? '36px' : '48px',
+                        height: isMediumMobile ? '36px' : '48px',
+                        borderRadius: '50%',
+                        backgroundColor: 'rgba(0,0,0,0.5)',
+                        backdropFilter: 'blur(8px)',
+                        border: '1px solid rgba(255,255,255,0.15)',
+                        color: '#ffffff',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: isMediumMobile ? '18px' : '22px',
+                        zIndex: 10,
+                        transition: 'all 0.2s ease',
+                      }}
+                      onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(249, 115, 22, 0.7)'; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.5)'; }}
+                    >
+                      &#10095;
+                    </button>
+                  </div>
+
+                  {/* Dot Indicators */}
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    gap: '6px',
+                    padding: '14px 16px',
+                    background: 'linear-gradient(135deg, #0A4174 0%, #0d5a9e 100%)',
+                    flexWrap: 'wrap',
+                  }}>
+                    {slideImages.map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setCurrentPptSlide(index)}
+                        style={{
+                          width: currentPptSlide === index ? '24px' : '8px',
+                          height: '8px',
+                          borderRadius: '4px',
+                          border: 'none',
+                          backgroundColor: currentPptSlide === index ? '#f97316' : 'rgba(255,255,255,0.25)',
+                          cursor: 'pointer',
+                          transition: 'all 0.3s ease',
+                          padding: 0,
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
+          </motion.div>
+
           <div style={{
             display: 'grid',
             gridTemplateColumns: isMediumMobile ? '1fr' : isLargeMobile ? '1fr 1fr' : 'repeat(3, 1fr)',
@@ -593,14 +799,14 @@ export default function AboutPage() {
           }}>
             {/* Detailed Portfolio Grid */}
             {[
-              { slug: 'rokok', category: 'Industry Specialty', title: tCat('rokok.title'), desc: tCat('rokok.desc'), image: '/custom%20rokok%203.webp', delay: 0.1 },
+              { slug: 'rokok', category: 'Industry Specialty', title: tCat('rokok.title'), desc: tCat('rokok.desc'), image: '/foto_rokok_1.webp', delay: 0.1 },
               { slug: 'kotak-hampers', category: 'Gift & Heritage', title: tCat('hampers.title'), desc: tCat('hampers.desc'), image: '/kotak%20hampers.webp', delay: 0.2 },
-              { slug: 'kotak-bakery', category: 'Food & Culinary', title: tCat('bakery.title'), desc: tCat('bakery.desc'), image: '/kotak%20cake.webp', delay: 0.3 },
-              { slug: 'kotak-nasi', category: 'Catering Solutions', title: tCat('nasi.title'), desc: tCat('nasi.desc'), image: '/kotak%20nasi%20(1).webp', delay: 0.4 },
+              { slug: 'kotak-bakery', category: 'Food & Culinary', title: tCat('bakery.title'), desc: tCat('bakery.desc'), image: '/foto_bakery_1.webp', delay: 0.3 },
+              { slug: 'kotak-nasi', category: 'Catering Solutions', title: tCat('nasi.title'), desc: tCat('nasi.desc'), image: '/foto_ricebox.webp', delay: 0.4 },
               { slug: 'paperbag', category: 'Retail & Branding', title: tCat('paperbag.title'), desc: tCat('paperbag.desc'), image: '/paperbag.webp', delay: 0.5 },
               { slug: 'brosur', category: 'Marketing Media', title: tCat('brosur.title'), desc: tCat('brosur.desc'), image: '/foto%20brosur.webp', delay: 0.6 },
-              { slug: 'buku', category: 'Publication & Print', title: tCat('buku.title'), desc: tCat('buku.desc'), image: '/buku%20(6).webp', delay: 0.7 },
-              { slug: 'kalender', category: 'Corporate Gifts', title: tCat('kalender.title'), desc: tCat('kalender.desc'), image: '/foto%20kalender.webp', delay: 0.8 },
+              { slug: 'buku', category: 'Publication & Print', title: tCat('buku.title'), desc: tCat('buku.desc'), image: '/foto_buku.webp', delay: 0.7 },
+              { slug: 'kalender', category: 'Corporate Gifts', title: tCat('kalender.title'), desc: tCat('kalender.desc'), image: '/foto_kalender.webp', delay: 0.8 },
               { slug: 'map', category: 'Office Essentials', title: tCat('map.title'), desc: tCat('map.desc'), image: '/map.webp', delay: 0.9 }
             ].map((item) => (
               <PremiumPortfolioCard key={item.slug} href={`/produk/${item.slug}`} category={item.category} image={item.image} delay={item.delay}>
