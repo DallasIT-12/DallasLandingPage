@@ -11,11 +11,12 @@ export interface CartItem {
   price: number;
   image: string;
   quantity: number;
+  weight: number; // berat dalam gram
 }
 
 interface CartContextType {
   cartItems: CartItem[];
-  addToCart: (product: any, quantity: number, variant?: any) => void;
+  addToCart: (product: any, quantity: number, variant?: any, silent?: boolean) => void;
   removeFromCart: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
@@ -51,7 +52,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [cartItems, isMounted]);
 
-  const addToCart = (product: any, quantity: number, variant?: any) => {
+  const addToCart = (product: any, quantity: number, variant?: any, silent?: boolean) => {
     setCartItems((prev) => {
       // Create a truly unique ID for this product + variant combination
       const baseId = String(product.id);
@@ -79,10 +80,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
         variantName: variantName,
         price: variant ? variant.price : product.price, 
         image: variant?.image || (product.images ? product.images[0] : product.image), 
-        quantity 
+        quantity,
+        weight: product.weight || 200, // berat dalam gram, default 200g
       }];
     });
-    setIsCartOpen(true);
+    if (!silent) setIsCartOpen(true);
   };
 
   const removeFromCart = (id: string) => {

@@ -98,6 +98,17 @@ export default function AdminDashboard() {
               </Link>
 
               <Link 
+                href="/admin/orders" 
+                className="group p-8 rounded-[2rem] bg-white/5 border border-white/5 hover:bg-amber-500 transition-all duration-500"
+              >
+                <div className="w-14 h-14 rounded-2xl bg-amber-500/10 group-hover:bg-[#1e293b]/20 flex items-center justify-center mb-6 transition-colors">
+                  <Icon icon="lucide:shopping-bag" className="text-3xl text-amber-400 group-hover:text-white" />
+                </div>
+                <h4 className="text-xl font-bold text-white group-hover:text-white mb-1">Pesanan Masuk</h4>
+                <p className="text-sm text-slate-400 group-hover:text-white/70 font-medium">Pantau & kelola order pelanggan.</p>
+              </Link>
+
+              <Link 
                 href="/admin/articles" 
                 className="group p-8 rounded-[2rem] bg-white/5 border border-white/5 hover:bg-blue-500 transition-all duration-500"
               >

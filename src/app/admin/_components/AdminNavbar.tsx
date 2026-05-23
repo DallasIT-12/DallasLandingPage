@@ -35,6 +35,13 @@ export default function AdminNavbar() {
                         Dashboard
                     </Link>
                     <Link
+                        href="/admin/orders"
+                        className="flex items-center gap-2 px-4 py-2 rounded-xl hover:bg-white/5 transition-colors text-sm font-bold text-slate-400 hover:text-white"
+                    >
+                        <Icon icon="lucide:shopping-bag" className="text-lg" />
+                        <span className="hidden sm:inline">Pesanan</span>
+                    </Link>
+                    <Link
                         href="/admin/paperlisens/products"
                         className="flex items-center gap-2 px-4 py-2 rounded-xl hover:bg-white/5 transition-colors text-sm font-bold text-slate-400 hover:text-white"
                     >

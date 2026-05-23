@@ -129,27 +129,29 @@ export default function CartModal() {
               <span style={{ color: '#40534c' }}>Rp {cartTotal.toLocaleString('id-ID')}</span>
             </div>
             <button 
-              onClick={handleCheckout}
+              onClick={() => { setIsCartOpen(false); window.location.href = '/id/paperlisens/checkout'; }}
               style={{ 
-                width: '100%', 
-                backgroundColor: '#40534c', 
-                color: '#d6bd98', 
-                border: 'none', 
-                padding: '14px', 
-                borderRadius: '8px', 
-                fontSize: '16px', 
-                fontWeight: 'bold', 
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '10px',
-                transition: 'all 0.2s',
-                textTransform: 'uppercase',
-                letterSpacing: '1px'
+                width: '100%', backgroundColor: '#40534c', color: '#d6bd98', 
+                border: 'none', padding: '14px', borderRadius: '8px', 
+                fontSize: '16px', fontWeight: 'bold', cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                gap: '10px', transition: 'all 0.2s', textTransform: 'uppercase',
+                letterSpacing: '1px', marginBottom: '8px'
               }}
             >
-              <Icon icon="mdi:whatsapp" width="22" /> Pesan Sekarang
+              <Icon icon="mdi:credit-card-outline" width="22" /> Checkout
+            </button>
+            <button 
+              onClick={handleCheckout}
+              style={{ 
+                width: '100%', backgroundColor: 'transparent', color: '#40534c', 
+                border: '1px solid #d1d5db', padding: '10px', borderRadius: '8px', 
+                fontSize: '13px', fontWeight: '600', cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                gap: '8px', transition: 'all 0.2s'
+              }}
+            >
+              <Icon icon="mdi:whatsapp" width="18" style={{ color: '#25d366' }} /> Pesan via WhatsApp
             </button>
           </div>
         )}

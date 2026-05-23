@@ -1,12 +1,13 @@
 'use client';
 
 import { useState, useEffect, useRef, useMemo } from 'react';
-import { Link } from '@/i18n/routing';
+import { Link, useRouter } from '@/i18n/routing';
 import { Icon } from '@iconify/react';
 import { useCart } from '@/context/CartContext';
 import { useTranslations, useLocale } from 'next-intl';
 import Footer from '@/components/layout/Footer';
 import LanguageSwitcher from '@/components/common/LanguageSwitcher';
+import UserMenu from '@/components/auth/UserMenu';
 import { getSmartTranslation } from '@/utils/productTranslations';
 
 // --- Desktop Banner Slider Component ---
@@ -180,6 +181,7 @@ const ProductCard = ({ product }: { product: any }) => {
   const { addToCart } = useCart();
   const pt = useTranslations('Paperlisens');
   const locale = useLocale();
+  const router = useRouter();
 
   // Helper to get localized field with fallback
   const getLocalized = (field: string) => {
@@ -221,7 +223,7 @@ const ProductCard = ({ product }: { product: any }) => {
           </div>
           <div className="card-overlay">
             <button onClick={(e) => { e.preventDefault(); addToCart(product, 1); }} style={{ backgroundColor: 'rgba(214,189,152,0.95)', color: '#1a3636', border: 'none', padding: '10px', borderRadius: '8px', cursor: 'pointer', width: '100%', marginBottom: '8px', fontSize: '12px', fontWeight: '700', letterSpacing: '0.3px' }}>{pt('addToCart')}</button>
-            <button onClick={(e) => { e.preventDefault(); window.open(`https://wa.me/6281260001487?text=Halo%20Paperlisens,%20saya%20mau%20pesan%20${productName}`, '_blank'); }} style={{ backgroundColor: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(4px)', color: '#ffffff', border: '1px solid rgba(255,255,255,0.3)', padding: '10px', borderRadius: '8px', cursor: 'pointer', width: '100%', fontSize: '12px', fontWeight: '600' }}>{pt('orderWa')}</button>
+            <button onClick={(e) => { e.preventDefault(); addToCart(product, 1, undefined, true); router.push('/paperlisens/checkout'); }} style={{ backgroundColor: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(4px)', color: '#ffffff', border: '1px solid rgba(255,255,255,0.3)', padding: '10px', borderRadius: '8px', cursor: 'pointer', width: '100%', fontSize: '12px', fontWeight: '600' }}>{pt('orderNow')}</button>
           </div>
         </div>
         <div className="card-info">
@@ -422,8 +424,9 @@ export default function PaperlisensPageClient() {
               <Icon icon="material-symbols:search" style={{ fontSize: '20px', color: '#d6bd98' }} />
             </button>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <LanguageSwitcher light />
+            <UserMenu />
             <div onClick={() => setIsCartOpen(true)} style={{ position: 'relative', cursor: 'pointer', color: '#d6bd98' }}>
               <Icon icon="material-symbols:shopping-cart-outline" style={{ fontSize: '24px', color: '#d6bd98' }} />
               {cartCount > 0 && <span style={{ position: 'absolute', top: '-5px', right: '-5px', backgroundColor: '#d6bd98', color: '#40534c', fontSize: '10px', fontWeight: 'bold', borderRadius: '50%', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{cartCount}</span>}
@@ -442,7 +445,7 @@ export default function PaperlisensPageClient() {
           <button className="category-nav-btn left" onClick={() => scrollCategories('left')} style={{ display: 'none' }}><Icon icon="mdi:chevron-left" width="20" /></button>
           <div className="category-grid" ref={categoryScrollRef} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '16px', marginBottom: '24px' }}>
             <div className="category-card-wrapper"><CategoryCard title={pt('categories.paperTray')} image="/paperlisens%20papertray.webp" slug="paper-tray" /></div>
-            <div className="category-card-wrapper"><CategoryCard title={pt('categories.boxTakeaway')} image="/paperlisens%20box%20takeaway.webp" slug="box-take-away" /></div>
+            <div className="category-card-wrapper"><CategoryCard title={pt('categories.boxTakeAway')} image="/paperlisens%20box%20takeaway.webp" slug="box-take-away" /></div>
             <div className="category-card-wrapper"><CategoryCard title={pt('categories.tempatPensil')} image="/tempat_pensil.webp" slug="tempat-pensil" /></div>
             <div className="category-card-wrapper"><CategoryCard title={pt('categories.boxCupcake')} image="/paperlisens%20cupcake.webp" slug="box-cupcake" /></div>
             <div className="category-card-wrapper"><CategoryCard title={pt('categories.lainLain')} image="/angpao%20karakter.webp" slug="lain-lain" /></div>

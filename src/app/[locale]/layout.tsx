@@ -7,6 +7,7 @@ import { CartProvider } from '@/context/CartContext';
 import CartModal from '@/components/cart/CartModal';
 import FloatingWhatsApp from '@/components/common/FloatingWhatsApp';
 import FloatingMaps from '@/components/common/FloatingMaps';
+import AuthProvider from '@/components/auth/AuthProvider';
 import Script from 'next/script';
 import type { Metadata } from 'next';
 
@@ -116,12 +117,14 @@ export default async function LocaleLayout({
           `}
         </Script>
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <CartProvider>
-            {children}
-            <CartModal />
-            <FloatingMaps />
-            <FloatingWhatsApp />
-          </CartProvider>
+          <AuthProvider>
+            <CartProvider>
+              {children}
+              <CartModal />
+              <FloatingMaps />
+              <FloatingWhatsApp />
+            </CartProvider>
+          </AuthProvider>
         </NextIntlClientProvider>
 
 

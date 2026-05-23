@@ -793,6 +793,22 @@ export default function PaperlisensProductsAdmin() {
                   </div>
                 </div>
 
+                {/* Berat Produk */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className={labelClasses}>Berat Produk (gram) <span className="text-rose-400">*</span></label>
+                    <input
+                      type="number"
+                      min="1"
+                      value={(editingProduct as any).weight || 200}
+                      onChange={(e) => setEditingProduct({ ...editingProduct, weight: parseInt(e.target.value) || 200 } as any)}
+                      className={inputClasses}
+                      placeholder="Contoh: 200"
+                    />
+                    <p className="text-[9px] text-slate-500 font-medium mt-2">Digunakan untuk menghitung ongkos kirim otomatis via RajaOngkir</p>
+                  </div>
+                </div>
+
                 {/* Description */}
                 <div>
                   <label className={labelClasses}>Deskripsi Produk (ID)</label>

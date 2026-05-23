@@ -16,6 +16,7 @@ export type ProductBase = {
   category: string;
   image?: string | null; // Thumbnail Utama
   images?: string[] | any; // Galeri Utama
+  weight?: number | null; // Berat dalam gram
   slug: string;
   attr_label_1?: string | null;
   attr_label_2?: string | null;
@@ -75,6 +76,7 @@ export function flattenBaseAndVariants(
   variants?: ProductVariant[];
   attr_label_1?: string | null;
   attr_label_2?: string | null;
+  weight?: number | null;
 }> {
   const result: any[] = [];
 
@@ -149,6 +151,7 @@ export function flattenBaseAndVariants(
       })),
       attr_label_1: base.attr_label_1,
       attr_label_2: base.attr_label_2,
+      weight: base.weight ?? 200,
     });
   }
 

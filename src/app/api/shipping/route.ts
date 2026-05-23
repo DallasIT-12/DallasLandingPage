@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
         const origin = searchParams.get('origin'); // This should now be ID
         const destination = searchParams.get('destination'); // This should now be ID
         const weight = searchParams.get('weight') || '1000'; // grams
-        const courier = searchParams.get('courier') || 'jne,sicepat,pos';
+        const courier = searchParams.get('courier') || 'jnt:jne:anteraja:ninja';
 
         if (!origin || !destination) {
             return NextResponse.json(
