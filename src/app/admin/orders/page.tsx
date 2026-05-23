@@ -181,10 +181,10 @@ export default function AdminOrdersPage() {
                         {/* Resi */}
                         <div className="bg-[#0f172a] rounded-2xl p-5 border border-white/5">
                           <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3">No. Resi</p>
-                          {editingResi?.id === order.id ? (
+                          {editingResi && editingResi.id === order.id ? (
                             <div className="flex gap-2">
-                              <input value={editingResi!.value} onChange={e => setEditingResi({ ...editingResi!, value: e.target.value })} className="flex-1 p-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm outline-none focus:ring-1 focus:ring-[#d6bd98]" placeholder="Masukkan no. resi" />
-                              <button onClick={() => { updateOrder(order.id, { trackingNumber: editingResi!.value, status: 'shipped' }); setEditingResi(null); }} className="px-3 py-2 bg-[#d6bd98] text-[#111827] rounded-lg text-xs font-black">
+                              <input value={editingResi.value} onChange={e => setEditingResi({ id: editingResi.id, value: e.target.value })} className="flex-1 p-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm outline-none focus:ring-1 focus:ring-[#d6bd98]" placeholder="Masukkan no. resi" />
+                              <button onClick={() => { updateOrder(order.id, { trackingNumber: editingResi.value, status: 'shipped' }); setEditingResi(null); }} className="px-3 py-2 bg-[#d6bd98] text-[#111827] rounded-lg text-xs font-black">
                                 {updatingId === order.id ? '...' : 'Simpan'}
                               </button>
                             </div>
