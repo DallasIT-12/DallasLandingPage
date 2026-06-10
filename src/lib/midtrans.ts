@@ -4,7 +4,7 @@
  */
 
 const MIDTRANS_SERVER_KEY = process.env.MIDTRANS_SERVER_KEY || '';
-const IS_PRODUCTION = process.env.MIDTRANS_IS_PRODUCTION === 'true';
+const IS_PRODUCTION = process.env.MIDTRANS_IS_PRODUCTION === 'true' || process.env.NEXT_PUBLIC_MIDTRANS_IS_PRODUCTION === 'true';
 
 const BASE_URL = IS_PRODUCTION
   ? 'https://app.midtrans.com/snap/v1'
@@ -19,7 +19,9 @@ export const SNAP_JS_URL = IS_PRODUCTION
   : 'https://app.sandbox.midtrans.com/snap/snap.js';
 
 function getAuthHeader() {
-  return 'Basic ' + Buffer.from(MIDTRANS_SERVER_KEY + ':').toString('base64');
+  // Ensure the key is trimmed to avoid whitespace issues which cause 401
+  const key = MIDTRANS_SERVER_KEY.trim();
+  return 'Basic ' + Buffer.from(key + ':').toString('base64');
 }
 
 export interface MidtransItemDetail {
@@ -68,7 +70,7 @@ export async function createSnapTransaction(params: CreateTransactionParams) {
     },
     item_details: items.map(item => ({
       id: item.id,
-      name: item.name.substring(0, 50), // Midtrans max 50 chars
+      name: item.name.substring(0, 50),
       price: item.price,
       quantity: item.quantity,
     })),
@@ -80,14 +82,19 @@ export async function createSnapTransaction(params: CreateTransactionParams) {
       billing_address: customer.billing_address,
       shipping_address: customer.shipping_address,
     },
-    callbacks: {
-      finish: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://dallas-printingid.com'}/id/paperlisens/checkout/success`,
-    },
-    // QRIS only payment
-    enabled_payments: ['other_qris', 'gopay'],
+    enabled_payments: [
+      "credit_card", "cimb_clicks", "bca_klikbca", "bca_klikpay", "bri_epay", 
+      "echannel", "permata_va", "bca_va", "bni_va", "bri_va", "cimb_va", 
+      "other_va", "gopay", "indomaret", "danamon_online", "akulaku", 
+      "shopeepay", "kredivo", "uob_ezpay", "other_qris"
+    ],
     credit_card: {
       secure: true,
     },
+    expiry: {
+      unit: "minutes",
+      duration: 30
+    }
   };
 
   const response = await fetch(`${BASE_URL}/transactions`, {
@@ -110,76 +117,6 @@ export async function createSnapTransaction(params: CreateTransactionParams) {
   return {
     token: data.token as string,
     redirect_url: data.redirect_url as string,
-  };
-}
-
-/**
- * Create a QRIS charge directly via Core API
- * Returns QR code URL for direct display (no Snap popup needed)
- */
-export async function createQRISCharge(params: CreateTransactionParams) {
-  const { orderId, grossAmount, items, customer } = params;
-
-  const payload = {
-    payment_type: 'qris',
-    transaction_details: {
-      order_id: orderId,
-      gross_amount: grossAmount,
-    },
-    item_details: items.map(item => ({
-      id: item.id,
-      name: item.name.substring(0, 50),
-      price: item.price,
-      quantity: item.quantity,
-    })),
-    customer_details: {
-      first_name: customer.first_name,
-      last_name: customer.last_name || '',
-      email: customer.email,
-      phone: customer.phone,
-      billing_address: customer.billing_address,
-      shipping_address: customer.shipping_address,
-    },
-    qris: {
-      acquirer: 'gopay',
-    },
-    custom_expiry: {
-      expiry_duration: 5,
-      unit: 'minute',
-    },
-  };
-
-  const response = await fetch(`${CORE_API_URL}/charge`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': getAuthHeader(),
-      'Accept': 'application/json',
-    },
-    body: JSON.stringify(payload),
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    console.error('[Midtrans] QRIS charge error:', response.status, errorData);
-    throw new Error(`Midtrans QRIS error: ${response.status} - ${JSON.stringify(errorData)}`);
-  }
-
-  const data = await response.json();
-  
-  // Extract QR code URL from actions
-  const qrAction = data.actions?.find((a: any) => a.name === 'generate-qr-code');
-  const qrUrl = qrAction?.url || null;
-  const qrString = data.actions?.find((a: any) => a.name === 'deeplink-redirect')?.url || null;
-
-  return {
-    transaction_id: data.transaction_id as string,
-    order_id: data.order_id as string,
-    qr_url: qrUrl as string | null,
-    qr_string: qrString as string | null,
-    expiry_time: data.expiry_time as string,
-    transaction_status: data.transaction_status as string,
-    gross_amount: data.gross_amount as string,
   };
 }
 
@@ -212,7 +149,7 @@ export function verifySignature(
   grossAmount: string
 ): string {
   const crypto = require('crypto');
-  const input = orderId + statusCode + grossAmount + MIDTRANS_SERVER_KEY;
+  const input = orderId + statusCode + grossAmount + MIDTRANS_SERVER_KEY.trim();
   return crypto.createHash('sha512').update(input).digest('hex');
 }
 
