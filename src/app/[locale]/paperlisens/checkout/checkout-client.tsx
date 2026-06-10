@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import { useCart } from '@/context/CartContext';
 import { Icon } from '@iconify/react';
-import { Link } from '@/i18n/routing';
+import { Link, useRouter } from '@/i18n/routing';
 import LoginModal from '@/components/auth/LoginModal';
 
 // --- Store & Distance Config ---
@@ -23,6 +23,7 @@ function calcLocalShippingCost(distanceKm: number, cartTotal: number): number {
 }
 
 export default function CheckoutClient() {
+  const router = useRouter();
   const { data: session } = useSession();
   const { cartItems, cartTotal, clearCart } = useCart();
   const [step, setStep] = useState(1);
@@ -45,7 +46,7 @@ export default function CheckoutClient() {
   const [wilayahQuery, setWilayahQuery] = useState('');
   const [wilayahResults, setWilayahResults] = useState<any[]>([]);
   const [wilayahLoading, setWilayahLoading] = useState(false);
-  const [selectedWilayah, setSelectedWilayah] = useState<{id:string;name:string}|null>(null);
+  const [selectedWilayah, setSelectedWilayah] = useState<{id:string;name:string;postal_code?:number}|null>(null);
   const [showWilayahDropdown, setShowWilayahDropdown] = useState(false);
   const wilayahTimeout = useRef<any>(null);
 
@@ -140,8 +141,22 @@ export default function CheckoutClient() {
     setShippingLoading(true);
     setShippingOptions([]);
     try {
-      const totalWeight = cartItems.reduce((w, item) => w + ((item.weight || 200) * item.quantity), 0);
-      const res = await fetch(`/api/shipping?origin=34056&destination=${selectedWilayah.id}&weight=${totalWeight}&courier=jnt:jne:anteraja:ninja`);
+      const res = await fetch('/api/shipping', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          destination_area_id: selectedWilayah.id,
+          destination_postal_code: parseInt(postalCode || '0') || selectedWilayah.postal_code,
+          couriers: 'jne,jnt,sicepat,anteraja,ninja',
+          items: cartItems.map(item => ({
+            name: item.name,
+            value: item.price,
+            weight: item.weight || 200,
+            quantity: item.quantity,
+            length: 10, width: 10, height: 10 // default dimensions
+          }))
+        })
+      });
       const data = await res.json();
       if (data?.data?.costs) {
         setShippingOptions(data.data.costs);
@@ -211,6 +226,22 @@ export default function CheckoutClient() {
 
   const grandTotal = cartTotal + (selectedShipping ? parseInt(selectedShipping.price) : 0);
 
+  // Snap URL based on environment
+  const snapJsUrl = process.env.NEXT_PUBLIC_MIDTRANS_IS_PRODUCTION === 'true'
+    ? 'https://app.midtrans.com/snap/snap.js'
+    : 'https://app.sandbox.midtrans.com/snap/snap.js';
+
+  // Load Snap JS
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = snapJsUrl;
+    script.setAttribute('data-client-key', process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY || '');
+    document.body.appendChild(script);
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, [snapJsUrl]);
+
   const handlePayment = async () => {
     setIsLoading(true);
     setError('');
@@ -221,12 +252,22 @@ export default function CheckoutClient() {
           productId: item.productId, id: item.id, name: item.name,
           variantId: item.variantId, variantName: item.variantName,
           price: item.price, quantity: item.quantity, image: item.image,
+          weight: item.weight || 200,
         })),
-        customer: { name, phone, email, address, city: cityName, district: selectedWilayah?.name?.split(',')[0]?.trim() || '', province: selectedWilayah?.name?.split(',')[2]?.trim() || '', postalCode },
+        customer: { 
+          name, phone, email, address, 
+          city: cityName, 
+          district: selectedWilayah?.name?.split(',')[0]?.trim() || '', 
+          province: selectedWilayah?.name?.split(',')[2]?.trim() || '', 
+          postalCode: postalCode || selectedWilayah?.postal_code?.toString() || '' 
+        },
         shippingCost: selectedShipping ? parseInt(selectedShipping.price) : 0,
         shippingCourier: selectedShipping?.code || '',
         shippingService: selectedShipping?.service || '',
         shippingEtd: selectedShipping?.estimated || '',
+        courierCode: selectedShipping?.code || '',
+        courierServiceCode: selectedShipping?.service_code || '',
+        destinationAreaId: selectedWilayah?.id || '',
         userId: session?.user?.id || null,
         notes,
         paymentMethod, // 'qris' or 'cod'
@@ -242,26 +283,36 @@ export default function CheckoutClient() {
       if (!res.ok) throw new Error(data.error || 'Gagal membuat pesanan');
 
       if (paymentMethod === 'cod') {
-        // COD: order created, go to success
         const orderNum = data.data?.orderNumber || data.data?.orderId || '';
         clearCart();
         window.location.href = `/id/paperlisens/checkout/success?order=${orderNum}&method=cod`;
       } else {
-        // QRIS: show QR code
-        if (data.data?.qrUrl) {
-          setQrUrl(data.data.qrUrl);
-          setExpiryTime(data.data.expiryTime || '');
-          setMidtransOrderId(data.data.midtransOrderId);
-          setPaymentStatus('polling');
-          setStep(4);
+        // Use Midtrans Snap
+        if (data.data?.snapToken) {
+          (window as any).snap.pay(data.data.snapToken, {
+            onSuccess: (result: any) => {
+              clearCart();
+              window.location.href = `/id/paperlisens/checkout/success?order=${data.data.orderNumber}`;
+            },
+            onPending: (result: any) => {
+              // Redirect to order page or show pending status
+              window.location.href = `/id/paperlisens/checkout/success?order=${data.data.orderNumber}&status=pending`;
+            },
+            onError: (result: any) => {
+              setError('Pembayaran gagal. Silakan coba lagi.');
+            },
+            onClose: () => {
+              setIsLoading(false);
+            }
+          });
         } else {
-          throw new Error('QR Code tidak tersedia. Silakan coba lagi.');
+          throw new Error('Sistem pembayaran (Snap) tidak tersedia.');
         }
       }
     } catch (err: any) {
       setError(err.message);
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   if (cartItems.length === 0) {
@@ -285,9 +336,29 @@ export default function CheckoutClient() {
       {/* Header */}
       <div style={{ backgroundColor: '#40534c', padding: '16px 0', position: 'sticky', top: 0, zIndex: 100 }}>
         <div style={{ maxWidth: '900px', margin: '0 auto', padding: '0 16px', display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <Link href="/paperlisens" style={{ color: '#d6bd98', display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none', fontSize: '14px' }}>
+          <button 
+            onClick={() => {
+              if (step > 1) {
+                setStep(step - 1);
+                if (step === 4) setPaymentStatus('idle');
+              } else {
+                router.back();
+              }
+            }} 
+            style={{ 
+              background: 'none', 
+              border: 'none', 
+              color: '#d6bd98', 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '6px', 
+              cursor: 'pointer', 
+              fontSize: '14px', 
+              padding: 0 
+            }}
+          >
             <Icon icon="mdi:arrow-left" width="20" /> Kembali
-          </Link>
+          </button>
           <h1 style={{ margin: 0, color: '#d6bd98', fontSize: '18px', fontWeight: '700' }}>Checkout</h1>
         </div>
       </div>

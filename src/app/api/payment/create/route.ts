@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createQRISCharge } from '@/lib/midtrans';
+import { createSnapTransaction } from '@/lib/midtrans';
 import { createClient } from '@supabase/supabase-js';
 import { generateOrderId } from '@/lib/payment';
+import { biteship } from '@/lib/biteship';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -9,7 +10,10 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { items, customer, shippingCost, shippingCourier, shippingService, shippingEtd, userId, notes, paymentMethod } = body;
+    const { 
+      items, customer, shippingCost, shippingCourier, shippingService, shippingEtd, 
+      userId, notes, paymentMethod, courierCode, courierServiceCode, destinationAreaId 
+    } = body;
 
     // Validate required fields
     if (!items || !Array.isArray(items) || items.length === 0) {
@@ -55,6 +59,7 @@ export async function POST(request: NextRequest) {
         price: item.price,
         quantity: item.quantity,
         image: item.image || null,
+        weight: item.weight || 200,
       }));
       const { error } = await supabase.from('order_items').insert(orderItems);
       if (error) console.error('[Payment] Order items save error:', error);
@@ -83,9 +88,12 @@ export async function POST(request: NextRequest) {
           shipping_courier: shippingCourier || null,
           shipping_service: shippingService || null,
           shipping_etd: shippingEtd || null,
+          courier_code: courierCode || null,
+          courier_service_code: courierServiceCode || null,
+          destination_area_id: destinationAreaId || null,
           notes: notes || null,
         })
-        .select('id')
+        .select('*')
         .single();
 
       if (orderError) {
@@ -94,6 +102,7 @@ export async function POST(request: NextRequest) {
       }
 
       await saveOrderItems(order.id);
+      
       console.log(`[Payment] COD order created: ${orderNumber}`);
 
       return NextResponse.json({
@@ -103,7 +112,7 @@ export async function POST(request: NextRequest) {
     }
 
     // ==========================================
-    // QRIS Flow: create Midtrans charge
+    // QRIS Flow: create Midtrans Snap transaction
     // ==========================================
     const midtransItems = items.map((item: any) => ({
       id: String(item.productId || item.id),
@@ -121,7 +130,7 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    const qrisResult = await createQRISCharge({
+    const snapResult = await createSnapTransaction({
       orderId: midtransOrderId,
       grossAmount: total,
       items: midtransItems,
@@ -159,6 +168,9 @@ export async function POST(request: NextRequest) {
         shipping_courier: shippingCourier || null,
         shipping_service: shippingService || null,
         shipping_etd: shippingEtd || null,
+        courier_code: courierCode || null,
+        courier_service_code: courierServiceCode || null,
+        destination_area_id: destinationAreaId || null,
         notes: notes || null,
       })
       .select('id')
@@ -177,10 +189,8 @@ export async function POST(request: NextRequest) {
         orderId: order.id,
         orderNumber,
         midtransOrderId,
-        qrUrl: qrisResult.qr_url,
-        expiryTime: qrisResult.expiry_time,
-        transactionStatus: qrisResult.transaction_status,
-        grossAmount: qrisResult.gross_amount,
+        snapToken: snapResult.token,
+        redirectUrl: snapResult.redirect_url,
       },
     });
   } catch (error: any) {

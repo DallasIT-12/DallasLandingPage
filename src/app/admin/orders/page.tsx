@@ -178,26 +178,98 @@ export default function AdminOrdersPage() {
                             </span>
                           </p>
                         </div>
-                        {/* Resi */}
+                        {/* Biteship / Resi */}
                         <div className="bg-[#0f172a] rounded-2xl p-5 border border-white/5">
-                          <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3">No. Resi</p>
-                          {editingResi && editingResi.id === order.id ? (
-                            <div className="flex gap-2">
-                              <input value={editingResi.value} onChange={e => setEditingResi({ id: editingResi.id, value: e.target.value })} className="flex-1 p-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm outline-none focus:ring-1 focus:ring-[#d6bd98]" placeholder="Masukkan no. resi" />
-                              <button onClick={() => { updateOrder(order.id, { trackingNumber: editingResi.value, status: 'shipped' }); setEditingResi(null); }} className="px-3 py-2 bg-[#d6bd98] text-[#111827] rounded-lg text-xs font-black">
-                                {updatingId === order.id ? '...' : 'Simpan'}
-                              </button>
+                          <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3">Pengiriman (Biteship)</p>
+                          
+                          {order.biteship_order_id ? (
+                            <div className="space-y-3">
+                              <div className="flex items-center justify-between">
+                                <span className="text-[10px] text-slate-500 uppercase font-bold">Status</span>
+                                <span className="text-emerald-400 font-bold text-xs uppercase">{order.tracking_status || 'Allocated'}</span>
+                              </div>
+                              <div className="flex items-center justify-between">
+                                <span className="text-[10px] text-slate-500 uppercase font-bold">Waybill</span>
+                                <span className="text-white font-bold text-xs tracking-wider">{order.waybill_id || order.tracking_number || 'Pending'}</span>
+                              </div>
+                              {order.biteship_tracking_id && (
+                                <div className="pt-2">
+                                  <a href={`https://biteship.com/id/tracking/${order.biteship_tracking_id}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 w-full py-2 bg-white/5 hover:bg-white/10 text-white rounded-lg text-[10px] font-black uppercase tracking-widest transition-all">
+                                    <Icon icon="lucide:external-link" /> Lacak di Biteship
+                                  </a>
+                                </div>
+                              )}
                             </div>
                           ) : (
-                            <div className="flex items-center gap-2">
-                              <p className="text-white font-bold text-sm">{order.tracking_number || '-'}</p>
-                              <button onClick={() => setEditingResi({ id: order.id, value: order.tracking_number || '' })} className="p-1.5 bg-white/5 hover:bg-white/10 rounded-lg transition-all">
-                                <Icon icon="lucide:edit-3" className="text-xs text-slate-400" />
-                              </button>
+                            <div>
+                              {order.shipping_courier === 'local' ? (
+                                <p className="text-slate-500 text-xs italic">Pengiriman Lokal</p>
+                              ) : (
+                                <button 
+                                  onClick={async () => {
+                                    setUpdatingId(order.id);
+                                    try {
+                                      const res = await fetch('/api/biteship/orders', {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({ orderId: order.id })
+                                      });
+                                      const result = await res.json();
+                                      if (res.ok) fetchOrders();
+                                      else alert(result.error || 'Gagal booking Biteship');
+                                    } catch { alert('Terjadi kesalahan'); }
+                                    setUpdatingId(null);
+                                  }}
+                                  disabled={updatingId === order.id}
+                                  className="w-full py-3 bg-[#d6bd98] text-[#111827] rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-[#c5ab87] transition-all disabled:opacity-50"
+                                >
+                                  {updatingId === order.id ? 'Booking...' : 'Book Biteship'}
+                                </button>
+                              )}
+                              
+                              <div className="mt-4 pt-4 border-t border-white/5">
+                                <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">Resi Manual</p>
+                                {editingResi && editingResi.id === order.id ? (
+                                  <div className="flex gap-2">
+                                    <input value={editingResi.value} onChange={e => setEditingResi({ id: editingResi.id, value: e.target.value })} className="flex-1 p-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm outline-none focus:ring-1 focus:ring-[#d6bd98]" placeholder="No. resi" />
+                                    <button onClick={() => { updateOrder(order.id, { trackingNumber: editingResi.value, status: 'shipped' }); setEditingResi(null); }} className="px-3 py-2 bg-[#d6bd98] text-[#111827] rounded-lg text-xs font-black">
+                                      OK
+                                    </button>
+                                  </div>
+                                ) : (
+                                  <div className="flex items-center gap-2">
+                                    <p className="text-white font-bold text-xs truncate max-w-[100px]">{order.tracking_number || '-'}</p>
+                                    <button onClick={() => setEditingResi({ id: order.id, value: order.tracking_number || '' })} className="p-1 bg-white/5 hover:bg-white/10 rounded-lg">
+                                      <Icon icon="lucide:edit-3" className="text-[10px] text-slate-400" />
+                                    </button>
+                                  </div>
+                                )}
+                              </div>
                             </div>
                           )}
                         </div>
                       </div>
+
+                      {/* Biteship Tracking History */}
+                      {order.tracking_history && order.tracking_history.length > 0 && (
+                        <div className="bg-[#0f172a] rounded-2xl p-5 border border-white/5">
+                          <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4">Riwayat Pengiriman</p>
+                          <div className="space-y-4">
+                            {order.tracking_history.slice(0, 5).map((h: any, i: number) => (
+                              <div key={i} className="flex gap-3 relative">
+                                {i < Math.min(order.tracking_history.length, 5) - 1 && (
+                                  <div className="absolute left-1.5 top-4 bottom-0 w-px bg-white/10" />
+                                )}
+                                <div className={`w-3 h-3 rounded-full mt-1 flex-shrink-0 ${i === 0 ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]' : 'bg-slate-700'}`} />
+                                <div>
+                                  <p className={`text-[11px] font-bold ${i === 0 ? 'text-white' : 'text-slate-400'}`}>{h.note}</p>
+                                  <p className="text-[9px] text-slate-500 font-medium uppercase mt-0.5">{fmtDate(h.updated_at || h.time)}</p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
 
                       {/* Items */}
                       <div className="bg-[#0f172a] rounded-2xl p-5 border border-white/5">

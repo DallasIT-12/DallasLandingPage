@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifySignature, mapTransactionStatus } from '@/lib/midtrans';
 import { createClient } from '@supabase/supabase-js';
+import { biteship } from '@/lib/biteship';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -66,7 +67,7 @@ export async function POST(request: NextRequest) {
 
     // Optional: Send WhatsApp notification to admin for successful payments
     if (orderStatus === 'paid') {
-      // Fetch order details for notification
+      // Fetch order details for notification and Biteship
       const { data: order } = await supabase
         .from('orders')
         .select('*, order_items(*)')

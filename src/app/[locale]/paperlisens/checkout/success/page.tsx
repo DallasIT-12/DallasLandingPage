@@ -32,11 +32,30 @@ export default function CheckoutSuccessPage() {
           )}
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <Link href="/paperlisens" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '14px', backgroundColor: '#40534c', color: '#d6bd98', borderRadius: '10px', textDecoration: 'none', fontWeight: '700', fontSize: '15px' }}>
-              <Icon icon="mdi:shopping" width="20" /> Lanjut Belanja
+            <Link 
+              href={`/track-order?q=${orderNumber}`} 
+              style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center', 
+                gap: '8px', 
+                padding: '14px', 
+                backgroundColor: '#d6bd98', 
+                color: '#40534c', 
+                borderRadius: '10px', 
+                textDecoration: 'none', 
+                fontWeight: '800', 
+                fontSize: '15px',
+                boxShadow: '0 4px 12px rgba(214, 189, 152, 0.2)'
+              }}
+            >
+              <Icon icon="mdi:package-variant-closed" width="20" /> Lacak Pesanan
+            </Link>
+            <Link href="/paperlisens" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '12px', border: '1px solid #40534c', color: '#40534c', borderRadius: '10px', textDecoration: 'none', fontWeight: '700', fontSize: '14px' }}>
+              <Icon icon="mdi:shopping" width="18" /> Lanjut Belanja
             </Link>
             <a href={`https://wa.me/6281260001487?text=${encodeURIComponent(`Halo, saya ingin mengecek status pesanan ${orderNumber}`)}`} target="_blank" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '12px', border: '1px solid #d1d5db', borderRadius: '10px', textDecoration: 'none', color: '#374151', fontWeight: '600', fontSize: '14px' }}>
-              <Icon icon="mdi:whatsapp" width="20" style={{ color: '#25d366' }} /> Hubungi Admin
+              <Icon icon="mdi:whatsapp" width="18" style={{ color: '#25d366' }} /> Hubungi Admin
             </a>
           </div>
         </div>
