@@ -23,7 +23,8 @@ function TrackOrderContent() {
   const [retryLoadingId, setRetryLoadingId] = useState<string | null>(null);
 
   // Snap URL based on environment
-  const snapJsUrl = process.env.NEXT_PUBLIC_MIDTRANS_IS_PRODUCTION === 'true'
+  const isProduction = process.env.NEXT_PUBLIC_MIDTRANS_IS_PRODUCTION === 'true' || process.env.MIDTRANS_IS_PRODUCTION === 'true';
+  const snapJsUrl = isProduction
     ? 'https://app.midtrans.com/snap/snap.js'
     : 'https://app.sandbox.midtrans.com/snap/snap.js';
 
