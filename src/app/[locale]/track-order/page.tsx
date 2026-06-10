@@ -157,7 +157,7 @@ function TrackOrderContent() {
                   <div style={{ fontSize: '18px', fontWeight: '800', color: '#40534c' }}>{fmtRp(order.total)}</div>
                 </div>
                 
-                {order.status === 'pending_payment' && order.payment_method === 'qris' && (
+                {order.status === 'pending_payment' && order.payment_status !== 'paid' && order.payment_method === 'qris' && (
                   <button 
                     onClick={() => handleRetryPayment(order)}
                     disabled={retryLoadingId === order.id}
@@ -167,7 +167,6 @@ function TrackOrderContent() {
                     Bayar Sekarang
                   </button>
                 )}
-
                 {order.waybill_id && (
                   <a 
                     href={`https://biteship.com/id/tracking/${order.biteship_tracking_id || order.waybill_id}`}

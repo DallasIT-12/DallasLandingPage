@@ -52,9 +52,13 @@ export async function POST(request: NextRequest) {
     }
 
     const addr = order.shipping_address as any;
+    
+    // Use a unique order ID for Midtrans by adding a timestamp suffix 
+    // to avoid "order_id already used" error
+    const retryOrderId = `${order.midtrans_order_id}-R${Math.floor(Date.now() / 1000)}`;
 
     const snapResult = await createSnapTransaction({
-      orderId: order.midtrans_order_id,
+      orderId: retryOrderId,
       grossAmount: order.total,
       items: midtransItems,
       customer: {
