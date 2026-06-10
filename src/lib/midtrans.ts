@@ -19,8 +19,20 @@ export const SNAP_JS_URL = IS_PRODUCTION
   : 'https://app.sandbox.midtrans.com/snap/snap.js';
 
 function getAuthHeader() {
-  // Ensure the key is trimmed to avoid whitespace issues which cause 401
-  const key = MIDTRANS_SERVER_KEY.trim();
+  const key = (MIDTRANS_SERVER_KEY || '').trim();
+  
+  // SECURE DEBUG LOG (Only shows prefix and length)
+  console.log('[Midtrans Debug]', {
+    isProduction: IS_PRODUCTION,
+    keyPrefix: key.substring(0, 11), // Should show 'Mid-server-'
+    keyLength: key.length,
+    endpoint: IS_PRODUCTION ? 'PRODUCTION' : 'SANDBOX'
+  });
+
+  if (!key) {
+    console.error('[Midtrans Debug] ERROR: Server Key is EMPTY!');
+  }
+
   return 'Basic ' + Buffer.from(key + ':').toString('base64');
 }
 
