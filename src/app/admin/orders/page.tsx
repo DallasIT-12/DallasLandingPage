@@ -182,57 +182,59 @@ export default function AdminOrdersPage() {
                         <div className="bg-[#0f172a] rounded-2xl p-5 border border-white/5">
                           <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3">Pengiriman (Biteship)</p>
                           
-                          {order.biteship_order_id ? (
-                            <div className="space-y-3">
-                              <div className="flex items-center justify-between">
-                                <span className="text-[10px] text-slate-500 uppercase font-bold">Status</span>
-                                <span className="text-emerald-400 font-bold text-xs uppercase">{order.tracking_status || 'Allocated'}</span>
-                              </div>
-                              <div className="flex items-center justify-between">
-                                <span className="text-[10px] text-slate-500 uppercase font-bold">Waybill</span>
-                                <span className="text-white font-bold text-xs tracking-wider">{order.waybill_id || order.tracking_number || 'Pending'}</span>
-                              </div>
-                              {order.biteship_tracking_id && (
-                                <div className="pt-2">
-                                  <a href={`https://biteship.com/id/tracking/${order.biteship_tracking_id}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 w-full py-2 bg-white/5 hover:bg-white/10 text-white rounded-lg text-[10px] font-black uppercase tracking-widest transition-all">
-                                    <Icon icon="lucide:external-link" /> Lacak di Biteship
-                                  </a>
+                          {order.shipping_courier === 'local' ? (
+                            <p className="text-slate-500 text-xs italic">Pengiriman Lokal</p>
+                          ) : (
+                            <div className="space-y-4">
+                              {/* Biteship Status Info if exists */}
+                              {order.biteship_order_id && (
+                                <div className="space-y-2 p-3 bg-white/5 rounded-xl border border-white/5">
+                                  <div className="flex items-center justify-between">
+                                    <span className="text-[10px] text-slate-500 uppercase font-bold">Status</span>
+                                    <span className="text-emerald-400 font-bold text-xs uppercase">{order.tracking_status || 'Allocated'}</span>
+                                  </div>
+                                  <div className="flex items-center justify-between">
+                                    <span className="text-[10px] text-slate-500 uppercase font-bold">Waybill</span>
+                                    <span className="text-white font-bold text-xs tracking-wider">{order.waybill_id || order.tracking_number || 'Pending'}</span>
+                                  </div>
+                                  {order.biteship_tracking_id && (
+                                    <a href={`https://biteship.com/id/tracking/${order.biteship_tracking_id}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 w-full py-2 mt-1 bg-white/5 hover:bg-white/10 text-white rounded-lg text-[9px] font-black uppercase tracking-widest transition-all">
+                                      <Icon icon="lucide:external-link" /> Lacak
+                                    </a>
+                                  )}
                                 </div>
                               )}
-                            </div>
-                          ) : (
-                            <div>
-                              {order.shipping_courier === 'local' ? (
-                                <p className="text-slate-500 text-xs italic">Pengiriman Lokal</p>
-                              ) : (
-                                <button 
-                                  onClick={async () => {
-                                    setUpdatingId(order.id);
-                                    try {
-                                      const res = await fetch('/api/biteship/orders', {
-                                        method: 'POST',
-                                        headers: { 'Content-Type': 'application/json' },
-                                        body: JSON.stringify({ orderId: order.id })
-                                      });
-                                      const result = await res.json();
-                                      if (res.ok) fetchOrders();
-                                      else alert(result.error || 'Gagal booking Biteship');
-                                    } catch { alert('Terjadi kesalahan'); }
-                                    setUpdatingId(null);
-                                  }}
-                                  disabled={updatingId === order.id}
-                                  className="w-full py-3 bg-[#d6bd98] text-[#111827] rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-[#c5ab87] transition-all disabled:opacity-50"
-                                >
-                                  {updatingId === order.id ? 'Booking...' : 'Book Biteship'}
-                                </button>
-                              )}
-                              
-                              <div className="mt-4 pt-4 border-t border-white/5">
-                                <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">Resi Manual</p>
+
+                              {/* Booking Button */}
+                              <button 
+                                onClick={async () => {
+                                  if (order.biteship_order_id && !confirm('Pesanan ini sudah pernah di-book. Yakin ingin membuat booking ulang di Biteship? (Ini akan memotong saldo kembali)')) return;
+                                  setUpdatingId(order.id);
+                                  try {
+                                    const res = await fetch('/api/biteship/orders', {
+                                      method: 'POST',
+                                      headers: { 'Content-Type': 'application/json' },
+                                      body: JSON.stringify({ orderId: order.id })
+                                    });
+                                    const result = await res.json();
+                                    if (res.ok) fetchOrders();
+                                    else alert(result.error || 'Gagal booking Biteship');
+                                  } catch { alert('Terjadi kesalahan'); }
+                                  setUpdatingId(null);
+                                }}
+                                disabled={updatingId === order.id}
+                                className={`w-full py-3 ${order.biteship_order_id ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-[#d6bd98] text-[#111827]'} rounded-xl text-[10px] font-black uppercase tracking-widest hover:opacity-80 transition-all disabled:opacity-50`}
+                              >
+                                {updatingId === order.id ? 'Booking...' : order.biteship_order_id ? 'Re-book Biteship' : 'Book Biteship'}
+                              </button>
+
+                              {/* Manual Resi Fallback */}
+                              <div className="pt-2 border-t border-white/5">
+                                <p className="text-[9px] font-bold text-slate-600 uppercase tracking-widest mb-2">Resi Manual</p>
                                 {editingResi && editingResi.id === order.id ? (
                                   <div className="flex gap-2">
-                                    <input value={editingResi.value} onChange={e => setEditingResi({ id: editingResi.id, value: e.target.value })} className="flex-1 p-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm outline-none focus:ring-1 focus:ring-[#d6bd98]" placeholder="No. resi" />
-                                    <button onClick={() => { updateOrder(order.id, { trackingNumber: editingResi.value, status: 'shipped' }); setEditingResi(null); }} className="px-3 py-2 bg-[#d6bd98] text-[#111827] rounded-lg text-xs font-black">
+                                    <input value={editingResi.value} onChange={e => setEditingResi({ id: editingResi.id, value: e.target.value })} className="flex-1 p-2 bg-white/5 border border-white/10 rounded-lg text-white text-xs outline-none focus:ring-1 focus:ring-[#d6bd98]" placeholder="No. resi" />
+                                    <button onClick={() => { updateOrder(order.id, { trackingNumber: editingResi.value, status: 'shipped' }); setEditingResi(null); }} className="px-3 py-2 bg-[#d6bd98] text-[#111827] rounded-lg text-[10px] font-black">
                                       OK
                                     </button>
                                   </div>

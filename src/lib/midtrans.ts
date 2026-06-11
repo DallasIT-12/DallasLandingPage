@@ -21,17 +21,14 @@ export const SNAP_JS_URL = IS_PRODUCTION
 function getAuthHeader() {
   const key = (MIDTRANS_SERVER_KEY || '').trim();
   
-  // SECURE DEBUG LOG (Only shows prefix and length)
-  console.log('[Midtrans Debug]', {
-    isProduction: IS_PRODUCTION,
-    keyPrefix: key.substring(0, 11), // Should show 'Mid-server-'
+  // FORCE LOG AS ERROR TO ENSURE VISIBILITY
+  console.error('[Midtrans Debug Check]', {
+    isProductionVar: process.env.MIDTRANS_IS_PRODUCTION,
+    isProductionCalculated: IS_PRODUCTION,
+    keyPrefix: key.substring(0, 11),
     keyLength: key.length,
-    endpoint: IS_PRODUCTION ? 'PRODUCTION' : 'SANDBOX'
+    targetEndpoint: BASE_URL
   });
-
-  if (!key) {
-    console.error('[Midtrans Debug] ERROR: Server Key is EMPTY!');
-  }
 
   return 'Basic ' + Buffer.from(key + ':').toString('base64');
 }
@@ -75,6 +72,8 @@ export interface CreateTransactionParams {
 export async function createSnapTransaction(params: CreateTransactionParams) {
   const { orderId, grossAmount, items, customer } = params;
 
+  const authHeader = getAuthHeader();
+
   const payload = {
     transaction_details: {
       order_id: orderId,
@@ -113,7 +112,7 @@ export async function createSnapTransaction(params: CreateTransactionParams) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': getAuthHeader(),
+      'Authorization': authHeader,
       'Accept': 'application/json',
     },
     body: JSON.stringify(payload),

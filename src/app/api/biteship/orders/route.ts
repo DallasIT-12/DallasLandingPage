@@ -30,10 +30,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Pesanan tidak ditemukan' }, { status: 404 });
     }
 
-    if (order.biteship_order_id) {
-      return NextResponse.json({ error: 'Pesanan sudah terdaftar di Biteship', biteship_order_id: order.biteship_order_id }, { status: 400 });
-    }
-
     if (order.shipping_courier === 'local') {
       return NextResponse.json({ error: 'Pengiriman lokal tidak memerlukan Biteship' }, { status: 400 });
     }

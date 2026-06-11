@@ -197,7 +197,8 @@ export const biteship = {
 
     const data = await response.json();
     if (!response.ok) {
-      throw new Error(data.message || 'Failed to create order in Biteship');
+      console.error('[Biteship] createOrder ERROR details:', JSON.stringify(data, null, 2));
+      throw new Error(data.message || `Biteship Error (${response.status}): ${JSON.stringify(data)}`);
     }
     return data;
   },
