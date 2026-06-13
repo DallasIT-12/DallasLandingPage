@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { syncOrderWithBiteship } from '@/lib/biteship-sync';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -38,10 +39,21 @@ export async function GET(request: NextRequest) {
       if (!ordersByAddr || ordersByAddr.length === 0) {
         return NextResponse.json({ success: true, data: [] });
       }
-      return NextResponse.json({ success: true, data: ordersByAddr });
+
+      // Sync active orders before returning
+      const syncedOrdersByAddr = await Promise.all(
+        ordersByAddr.map(order => syncOrderWithBiteship(order, supabase))
+      );
+      
+      return NextResponse.json({ success: true, data: syncedOrdersByAddr });
     }
 
-    return NextResponse.json({ success: true, data: orders });
+    // Sync active orders before returning
+    const syncedOrders = await Promise.all(
+      orders.map(order => syncOrderWithBiteship(order, supabase))
+    );
+
+    return NextResponse.json({ success: true, data: syncedOrders });
   } catch (error: any) {
     console.error('[Track Order] GET error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });

@@ -42,6 +42,7 @@ function toProduct(row: any) {
     images: Array.isArray(row.images) ? row.images : (row.images ? JSON.parse(row.images) : []),
     sold: row.sold || 0,
     slug: row.slug,
+    weight: row.weight,
   };
 }
 
@@ -95,10 +96,12 @@ export async function GET(request: NextRequest) {
             // @ts-ignore
             const variants = b.variants || [];
             if (variants.length > 0) {
-              const list = variants.map((v: any) => ({
-                ...v,
-                images: Array.isArray(v.images) ? v.images : (v.images ? JSON.parse(v.images) : [])
-              }));
+              const list = variants.map((v: any) => {
+                return {
+                  ...v,
+                  images: Array.isArray(v.images) ? v.images : (v.images ? JSON.parse(v.images) : [])
+                };
+              });
               byProductId.set(b.id, list);
             }
           }
@@ -173,6 +176,7 @@ export async function POST(request: NextRequest) {
         variant_name_en: body.variantName_en ?? body.variant_name_en ?? null,
         variant_name_zh: body.variantName_zh ?? body.variant_name_zh ?? null,
         price: parseInt(String(body.price), 10) || 0,
+        cost_price: parseInt(String(body.cost_price), 10) || 0,
         image: body.image || '/placeholder.png',
         images: Array.isArray(body.images) ? body.images : (body.images ? JSON.parse(body.images || '[]') : []),
         sold: parseInt(String(body.sold), 10) || 0,
@@ -222,6 +226,9 @@ export async function POST(request: NextRequest) {
         slug: body.slug || body.category?.toLowerCase().replace(/\s+/g, '-') || 'box-cupcake',
         attr_label_1: body.attr_label_1 || 'Pilih Variasi',
         attr_label_2: body.attr_label_2 || null,
+        price: parseInt(String(body.price), 10) || 0,
+        cost_price: parseInt(String(body.cost_price), 10) || 0,
+        weight: parseInt(String(body.weight), 10) || 200,
         updated_at: new Date().toISOString(),
       };
       const { data: baseData, error: baseErr } = await supabase
@@ -244,6 +251,7 @@ export async function POST(request: NextRequest) {
               product_id: baseId,
               variant_name: v.variant_name || null,
               price: parseInt(String(v.price), 10) || 0,
+              cost_price: parseInt(String(v.cost_price), 10) || 0,
               image: v.image || '/placeholder.png',
               images: Array.isArray(v.images) ? v.images : [],
               sold: parseInt(String(v.sold), 10) || 0,
@@ -260,6 +268,7 @@ export async function POST(request: NextRequest) {
             variant_name_en: body.variantName_en ?? body.variant_en ?? null,
             variant_name_zh: body.variantName_zh ?? body.variant_zh ?? null,
             price: parseInt(String(body.price), 10) || 0,
+            cost_price: parseInt(String(body.cost_price), 10) || 0,
             image: body.image || '/placeholder.png',
             images: Array.isArray(body.images) ? body.images : [],
             sold: parseInt(String(body.sold), 10) || 0,
@@ -291,6 +300,7 @@ export async function POST(request: NextRequest) {
       description_zh: body.description_zh ?? null,
       category: body.category,
       price: parseInt(String(body.price), 10) || 0,
+      cost_price: parseInt(String(body.cost_price), 10) || 0,
       image: body.image || '/placeholder.png',
       images: Array.isArray(body.images) ? body.images : (body.images ? JSON.parse(body.images) : []),
       sold: parseInt(String(body.sold), 10) || 0,

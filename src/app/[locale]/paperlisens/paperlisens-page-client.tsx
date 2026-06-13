@@ -9,6 +9,7 @@ import Footer from '@/components/layout/Footer';
 import LanguageSwitcher from '@/components/common/LanguageSwitcher';
 import UserMenu from '@/components/auth/UserMenu';
 import { getSmartTranslation } from '@/utils/productTranslations';
+import PaperlisensFloatingCart from '@/components/paperlisens/PaperlisensFloatingCart';
 
 // --- Desktop Banner Slider Component ---
 const DesktopBannerSlider = ({ items }: { items: { image: string, link?: string }[] }) => {
@@ -142,6 +143,8 @@ const ResponsiveStyles = () => (
     .category-card img { transition: transform 0.5s ease; }
 
     @media (max-width: 768px) {
+      .header-cart-btn { display: none !important; }
+      .header-lang-switcher { display: none !important; }
       .top-bar-address, .top-bar-separator { display: none !important; }
       .back-text-full { display: none; }
       .back-text-short { display: inline !important; }
@@ -177,7 +180,7 @@ const CategoryCard = ({ title, image, slug }: { title: string; image: string; sl
 );
 
 // --- ProductCard Component ---
-const ProductCard = ({ product }: { product: any }) => {
+const ProductCard = ({ product, onQuickView }: { product: any; onQuickView?: (p: any) => void }) => {
   const { addToCart } = useCart();
   const pt = useTranslations('Paperlisens');
   const locale = useLocale();
@@ -206,48 +209,56 @@ const ProductCard = ({ product }: { product: any }) => {
   }, [product.id, product.name, product.price]);
 
   return (
-    <div className="product-card">
-      <Link href={`/paperlisens/product/${encodeURIComponent(product.productSlug)}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-        <div className="card-image-wrapper">
-          <img
-            src={displayImage}
-            alt={productName}
-            className="card-image"
-            style={{ objectFit: 'cover' }}
-            loading="lazy"
-            onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder.png'; }}
-          />
-          <div style={{ position: 'absolute', top: 0, right: 0, backgroundColor: '#d6bd98', padding: '4px 8px', textAlign: 'center', zIndex: 2 }}>
-            <div style={{ color: '#1a3636', fontSize: '12px', fontWeight: 'bold' }}>{discountPercent}%</div>
-            <div style={{ color: '#40534c', fontSize: '10px', fontWeight: 'bold' }}>OFF</div>
+    <div 
+      className="product-card"
+      onClick={() => {
+        if (window.innerWidth <= 768 && onQuickView) {
+          onQuickView(product);
+        } else {
+          router.push(`/paperlisens/product/${encodeURIComponent(product.productSlug)}`);
+        }
+      }}
+      style={{ cursor: 'pointer' }}
+    >
+      <div className="card-image-wrapper">
+        <img
+          src={displayImage}
+          alt={productName}
+          className="card-image"
+          style={{ objectFit: 'cover' }}
+          loading="lazy"
+          onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder.png'; }}
+        />
+        <div style={{ position: 'absolute', top: 0, right: 0, backgroundColor: '#d6bd98', padding: '4px 8px', textAlign: 'center', zIndex: 2 }}>
+          <div style={{ color: '#1a3636', fontSize: '12px', fontWeight: 'bold' }}>{discountPercent}%</div>
+          <div style={{ color: '#40534c', fontSize: '10px', fontWeight: 'bold' }}>OFF</div>
+        </div>
+        <div className="card-overlay">
+          <button onClick={(e) => { e.stopPropagation(); e.preventDefault(); addToCart(product, 1); }} style={{ backgroundColor: 'rgba(214,189,152,0.95)', color: '#1a3636', border: 'none', padding: '10px', borderRadius: '8px', cursor: 'pointer', width: '100%', marginBottom: '8px', fontSize: '12px', fontWeight: '700', letterSpacing: '0.3px' }}>{pt('addToCart')}</button>
+          <button onClick={(e) => { e.stopPropagation(); e.preventDefault(); if (onQuickView) { onQuickView(product); } else { addToCart(product, 1, undefined, true); router.push('/paperlisens/checkout'); } }} style={{ backgroundColor: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(4px)', color: '#ffffff', border: '1px solid rgba(255,255,255,0.3)', padding: '10px', borderRadius: '8px', cursor: 'pointer', width: '100%', fontSize: '12px', fontWeight: '600' }}>{pt('orderNow')}</button>
+        </div>
+      </div>
+      <div className="card-info">
+        <div style={{ flexGrow: 1 }}>
+          <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap', marginBottom: '4px' }}>
+            <div style={{ fontSize: '10px', color: '#40534c', border: '1px solid #40534c', display: 'inline-block', padding: '1px 4px', borderRadius: '4px', fontWeight: 'bold' }}>{product.category || 'Paperlisens'}</div>
+            {productVariant && (
+              <div style={{ fontSize: '10px', color: '#677d6a', backgroundColor: '#f3f4f6', display: 'inline-block', padding: '1px 4px', borderRadius: '4px' }}>{productVariant}</div>
+            )}
           </div>
-          <div className="card-overlay">
-            <button onClick={(e) => { e.preventDefault(); addToCart(product, 1); }} style={{ backgroundColor: 'rgba(214,189,152,0.95)', color: '#1a3636', border: 'none', padding: '10px', borderRadius: '8px', cursor: 'pointer', width: '100%', marginBottom: '8px', fontSize: '12px', fontWeight: '700', letterSpacing: '0.3px' }}>{pt('addToCart')}</button>
-            <button onClick={(e) => { e.preventDefault(); addToCart(product, 1, undefined, true); router.push('/paperlisens/checkout'); }} style={{ backgroundColor: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(4px)', color: '#ffffff', border: '1px solid rgba(255,255,255,0.3)', padding: '10px', borderRadius: '8px', cursor: 'pointer', width: '100%', fontSize: '12px', fontWeight: '600' }}>{pt('orderNow')}</button>
+          <h3 style={{ fontSize: '14px', lineHeight: '1.4', height: '40px', overflow: 'hidden', marginBottom: '8px', fontWeight: '500', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>{productName}</h3>
+        </div>
+        <div style={{ marginTop: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
+          <div style={{ minWidth: 0, flexShrink: 0 }}>
+            <span style={{ fontSize: '10px', textDecoration: 'line-through', color: '#9ca3af', display: 'block' }}>Rp {markupPrice.toLocaleString('id-ID')}</span>
+            <span style={{ fontSize: '16px', fontWeight: 'bold', color: '#40534c' }}>Rp {product.price.toLocaleString('id-ID')}</span>
+          </div>
+          <div style={{ fontSize: '11px', color: '#677d6a', display: 'flex', alignItems: 'center', whiteSpace: 'nowrap', flexShrink: 1, minWidth: 0, overflow: 'hidden' }}>
+            <Icon icon="material-symbols:star" style={{ color: '#d6bd98', fontSize: '12px', marginRight: '2px', flexShrink: 0 }} />
+            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{product.sold} {pt('sold')}</span>
           </div>
         </div>
-        <div className="card-info">
-          <div style={{ flexGrow: 1 }}>
-            <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap', marginBottom: '4px' }}>
-              <div style={{ fontSize: '10px', color: '#40534c', border: '1px solid #40534c', display: 'inline-block', padding: '1px 4px', borderRadius: '4px', fontWeight: 'bold' }}>{product.category || 'Paperlisens'}</div>
-              {productVariant && (
-                <div style={{ fontSize: '10px', color: '#677d6a', backgroundColor: '#f3f4f6', display: 'inline-block', padding: '1px 4px', borderRadius: '4px' }}>{productVariant}</div>
-              )}
-            </div>
-            <h3 style={{ fontSize: '14px', lineHeight: '1.4', height: '40px', overflow: 'hidden', marginBottom: '8px', fontWeight: '500', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>{productName}</h3>
-          </div>
-          <div style={{ marginTop: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
-            <div style={{ minWidth: 0, flexShrink: 0 }}>
-              <span style={{ fontSize: '10px', textDecoration: 'line-through', color: '#9ca3af', display: 'block' }}>Rp {markupPrice.toLocaleString('id-ID')}</span>
-              <span style={{ fontSize: '16px', fontWeight: 'bold', color: '#40534c' }}>Rp {product.price.toLocaleString('id-ID')}</span>
-            </div>
-            <div style={{ fontSize: '11px', color: '#677d6a', display: 'flex', alignItems: 'center', whiteSpace: 'nowrap', flexShrink: 1, minWidth: 0, overflow: 'hidden' }}>
-              <Icon icon="material-symbols:star" style={{ color: '#d6bd98', fontSize: '12px', marginRight: '2px', flexShrink: 0 }} />
-              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{product.sold} {pt('sold')}</span>
-            </div>
-          </div>
-        </div>
-      </Link>
+      </div>
     </div>
   );
 };
@@ -258,6 +269,7 @@ export default function PaperlisensPageClient() {
   const t = useTranslations();
   const pt = useTranslations('Paperlisens');
   const [searchQuery, setSearchQuery] = useState('');
+  const [quickViewProduct, setQuickViewProduct] = useState<any>(null);
   const { cartCount, setIsCartOpen } = useCart();
   const categoryScrollRef = useRef<HTMLDivElement>(null);
   const [visibleCount, setVisibleCount] = useState(24);
@@ -403,8 +415,6 @@ export default function PaperlisensPageClient() {
               <span className="back-text-full">{pt('backToDallas')}</span>
               <span className="back-text-short" style={{ display: 'none' }}>{t('Common.back')}</span>
             </Link>
-            <span className="top-bar-separator" style={{ borderLeft: '1px solid #ddd', height: '12px' }}></span>
-            <span className="top-bar-address" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Icon icon="mdi:map-marker" style={{ fontSize: '14px', color: '#40534c' }} /> {t('TopBar.address')}</span>
             <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Icon icon="mdi:phone" style={{ fontSize: '14px', color: '#40534c' }} /> 081260001487</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -417,7 +427,7 @@ export default function PaperlisensPageClient() {
       </div>
       <header style={{ backgroundColor: '#40534c', padding: '16px 0', position: 'sticky', top: 0, zIndex: 1000 }}>
         <div className="header-container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 16px', display: 'flex', alignItems: 'center', gap: '32px' }}>
-          <Link href="/paperlisens"><img src="/paperlisens.jpg" alt="Paperlisens" className="header-logo" style={{ height: '40px' }} /></Link>
+          <Link href="/paperlisens" style={{ flexShrink: 0 }}><img src="/paperlisens.jpg" alt="Paperlisens" className="header-logo" style={{ height: '40px', flexShrink: 0, width: 'auto' }} /></Link>
           <div style={{ flexGrow: 1, position: 'relative' }}>
             <input type="text" placeholder={pt('searchPlaceholder')} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="search-input" style={{ width: '100%', padding: '10px 16px', borderRadius: '3px', border: 'none', fontSize: '14px', backgroundColor: 'white', color: '#1a3636', outline: 'none' }} />
             <button style={{ position: 'absolute', right: '5px', top: '5px', bottom: '5px', width: '40px', backgroundColor: '#1a3636', color: '#d6bd98', border: 'none', borderRadius: '3px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -425,12 +435,49 @@ export default function PaperlisensPageClient() {
             </button>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <LanguageSwitcher light />
+            <button 
+              onClick={() => setIsCartOpen(true)}
+              className="header-cart-btn"
+              style={{
+                position: 'relative',
+                backgroundColor: 'transparent',
+                border: 'none',
+                color: '#d6bd98',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '8px',
+                marginRight: '4px'
+              }}
+              aria-label="Keranjang Belanja"
+            >
+              <Icon icon="material-symbols:shopping-cart-outline" style={{ fontSize: '24px' }} />
+              {cartCount > 0 && (
+                <span style={{
+                  position: 'absolute',
+                  top: '-2px',
+                  right: '-2px',
+                  backgroundColor: '#d6bd98',
+                  color: '#40534c',
+                  fontSize: '9px',
+                  fontWeight: '900',
+                  borderRadius: '50%',
+                  width: '16px',
+                  height: '16px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  border: '1.5px solid #40534c'
+                }}>
+                  {cartCount}
+                </span>
+              )}
+            </button>
+            <span className="header-lang-switcher">
+              <LanguageSwitcher light />
+            </span>
             <UserMenu />
-            <div onClick={() => setIsCartOpen(true)} style={{ position: 'relative', cursor: 'pointer', color: '#d6bd98' }}>
-              <Icon icon="material-symbols:shopping-cart-outline" style={{ fontSize: '24px', color: '#d6bd98' }} />
-              {cartCount > 0 && <span style={{ position: 'absolute', top: '-5px', right: '-5px', backgroundColor: '#d6bd98', color: '#40534c', fontSize: '10px', fontWeight: 'bold', borderRadius: '50%', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{cartCount}</span>}
-            </div>
           </div>
         </div>
       </header>
@@ -456,7 +503,7 @@ export default function PaperlisensPageClient() {
           <div style={{ padding: '16px', borderBottom: '4px solid #40534c' }}><h2 style={{ fontSize: '18px', fontWeight: '500', color: '#40534c' }}>{searchQuery ? pt('searchResults') : pt('recommendation')}</h2></div>
           <div style={{ padding: '20px' }}>
             {displayedProducts.length > 0 ? (
-              <div className="product-grid">{displayedProducts.map((p) => <ProductCard key={p.id} product={p} />)}</div>
+              <div className="product-grid">{displayedProducts.map((p) => <ProductCard key={p.id} product={p} onQuickView={(prod) => setQuickViewProduct(prod)} />)}</div>
             ) : (
               <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
                 <Icon icon="mdi:emoticon-sad-outline" style={{ fontSize: '48px', marginBottom: '16px', color: '#999' }} />
@@ -471,6 +518,11 @@ export default function PaperlisensPageClient() {
 
       </main>
       <Footer />
+
+      <PaperlisensFloatingCart 
+        quickViewProduct={quickViewProduct} 
+        setQuickViewProduct={setQuickViewProduct} 
+      />
     </div>
   );
 }

@@ -3,9 +3,11 @@
 import { useCart } from '../../context/CartContext';
 import { Icon } from '@iconify/react';
 import { useEffect } from 'react';
+import { useRouter } from '@/i18n/routing';
 
 export default function CartModal() {
   const { cartItems, removeFromCart, updateQuantity, isCartOpen, setIsCartOpen, cartTotal } = useCart();
+  const router = useRouter();
 
   // Close on escape key
   useEffect(() => {
@@ -19,14 +21,8 @@ export default function CartModal() {
   if (!isCartOpen) return null;
 
   const handleCheckout = () => {
-    const itemsList = cartItems.map((item, index) => {
-      const variantInfo = item.variantName ? ` [${item.variantName}]` : '';
-      return `${index + 1}. *${item.name}${variantInfo}*\n   ${item.quantity} pcs x Rp ${item.price.toLocaleString('id-ID')} = Rp ${(item.price * item.quantity).toLocaleString('id-ID')}`;
-    }).join('\n\n');
-
-    const message = `Halo Paperlisens,\n\nSaya ingin memesan beberapa produk dari keranjang belanja saya:\n\n${itemsList}\n\n*Total Keseluruhan:* Rp ${cartTotal.toLocaleString('id-ID')}\n\nMohon konfirmasi ketersediaan stok dan rincian pembayarannya. Terima kasih!`;
-    
-    window.open(`https://wa.me/6281260001487?text=${encodeURIComponent(message)}`, '_blank');
+    setIsCartOpen(false);
+    router.push('/paperlisens/checkout');
   };
 
   return (
@@ -38,6 +34,7 @@ export default function CartModal() {
       height: '100%',
       zIndex: 3000,
       display: 'flex',
+      flexDirection: 'column',
       justifyContent: 'flex-end',
       backgroundColor: 'rgba(0,0,0,0.5)',
     }}>
@@ -47,72 +44,85 @@ export default function CartModal() {
         onClick={() => setIsCartOpen(false)}
       />
 
-      {/* Modal Content (Right Drawer) */}
+      {/* Modal Content (Bottom Sheet) */}
       <div style={{
         width: '100%',
-        maxWidth: '400px',
+        maxWidth: '640px',
+        margin: '0 auto',
         backgroundColor: 'white',
-        height: '100%',
+        maxHeight: '85vh',
         position: 'relative',
-        boxShadow: '-2px 0 5px rgba(0,0,0,0.1)',
+        boxShadow: '0 -10px 40px rgba(0,0,0,0.15)',
         display: 'flex',
         flexDirection: 'column',
-        animation: 'slideInRight 0.3s ease-out'
+        borderRadius: '24px 24px 0 0',
+        animation: 'slideInUp 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+        overflow: 'hidden'
       }}>
+        {/* Drag Handle */}
+        <div style={{ display: 'flex', justifyContent: 'center', padding: '12px 0 4px' }}>
+          <div style={{ width: '40px', height: '4px', borderRadius: '2px', backgroundColor: '#d1d5db' }} />
+        </div>
+
         {/* Header */}
-        <div style={{ padding: '16px', borderBottom: '1px solid #e5e7eb', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h2 style={{ margin: 0, fontSize: '18px', fontWeight: '600' }}>Keranjang Belanja</h2>
-          <button onClick={() => setIsCartOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
-            <Icon icon="mdi:close" width="24" />
+        <div style={{ padding: '8px 24px 16px', borderBottom: '1px solid #f3f4f6', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h2 style={{ margin: 0, fontSize: '20px', fontWeight: '800', color: '#1a3636' }}>Keranjang Belanja</h2>
+          <button onClick={() => setIsCartOpen(false)} style={{ background: '#f3f4f6', border: 'none', cursor: 'pointer', width: '32px', height: '32px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6b7280' }}>
+            <Icon icon="mdi:close" width="20" />
           </button>
         </div>
 
         {/* Items List */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '16px' }}>
+        <div style={{ flex: 1, overflowY: 'auto', padding: '24px', backgroundColor: '#fff' }}>
           {cartItems.length === 0 ? (
-            <div style={{ textAlign: 'center', color: '#888', marginTop: '40px' }}>
-              <Icon icon="material-symbols:shopping-cart-off-outline" width="48" style={{ marginBottom: '16px', opacity: 0.5 }} />
-              <p>Keranjang Anda kosong.</p>
+            <div style={{ textAlign: 'center', color: '#9ca3af', padding: '60px 0' }}>
+              <div style={{ backgroundColor: '#f9fafb', width: '80px', height: '80px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
+                <Icon icon="material-symbols:shopping-cart-off-outline" width="40" style={{ opacity: 0.5 }} />
+              </div>
+              <p style={{ fontWeight: '600', fontSize: '16px' }}>Keranjang Anda kosong.</p>
+              <p style={{ fontSize: '14px', marginTop: '4px' }}>Ayo tambahkan produk menarik sekarang!</p>
             </div>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
               {cartItems.map((item) => (
-                <div key={item.id} style={{ display: 'flex', gap: '12px', borderBottom: '1px solid #f0f0f0', paddingBottom: '16px' }}>
-                  <div style={{ width: '60px', height: '60px', flexShrink: 0, backgroundColor: '#f9f9f9', borderRadius: '4px', overflow: 'hidden' }}>
+                <div key={item.id} style={{ display: 'flex', gap: '16px', borderBottom: '1px solid #f9fafb', paddingBottom: '20px' }}>
+                  <div style={{ width: '80px', height: '80px', flexShrink: 0, backgroundColor: '#f9f9f9', borderRadius: '12px', overflow: 'hidden', border: '1px solid #f3f4f6' }}>
                     <img src={item.image} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   </div>
                   <div style={{ flex: 1 }}>
-                    <h4 style={{ margin: '0 0 2px 0', fontSize: '13px', fontWeight: '500', lineHeight: '1.4', maxHeight: '36px', overflow: 'hidden' }}>{item.name}</h4>
+                    <h4 style={{ margin: '0 0 4px 0', fontSize: '14px', fontWeight: '700', color: '#1a3636', lineHeight: '1.4', maxHeight: '40px', overflow: 'hidden' }}>{item.name}</h4>
                     {item.variantName && (
-                      <div style={{ fontSize: '11px', color: '#666', marginBottom: '4px', backgroundColor: '#f5f5f5', display: 'inline-block', padding: '1px 6px', borderRadius: '2px' }}>
-                        Varian: {item.variantName}
+                      <div style={{ fontSize: '11px', color: '#40534c', marginBottom: '8px', backgroundColor: '#f0fdf4', border: '1px solid #dcfce7', display: 'inline-block', padding: '2px 8px', borderRadius: '6px', fontWeight: '600' }}>
+                        {item.variantName}
                       </div>
                     )}
-                    <div style={{ color: '#40534c', fontWeight: 'bold', fontSize: '14px', marginBottom: '8px' }}>
-                      Rp {item.price.toLocaleString('id-ID')}
-                    </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', border: '1px solid #e0e0e0', borderRadius: '4px' }}>
+                      <div style={{ color: '#40534c', fontWeight: '800', fontSize: '16px' }}>
+                        Rp {item.price.toLocaleString('id-ID')}
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', border: '1.5px solid #e5e7eb', borderRadius: '10px', overflow: 'hidden', height: '32px' }}>
+                          <button 
+                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                            style={{ width: '32px', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', background: 'transparent', cursor: 'pointer', fontSize: '18px', color: '#1a3636' }}
+                          >
+                            -
+                          </button>
+                          <span style={{ width: '32px', textAlign: 'center', fontSize: '13px', fontWeight: '700', borderLeft: '1.5px solid #e5e7eb', borderRight: '1.5px solid #e5e7eb', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{item.quantity}</span>
+                          <button 
+                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                            style={{ width: '32px', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', background: 'transparent', cursor: 'pointer', fontSize: '18px', color: '#1a3636' }}
+                          >
+                            +
+                          </button>
+                        </div>
                         <button 
-                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                          style={{ width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', background: 'transparent', cursor: 'pointer' }}
+                          onClick={() => removeFromCart(item.id)}
+                          style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4px' }}
                         >
-                          -
-                        </button>
-                        <span style={{ width: '32px', textAlign: 'center', fontSize: '13px' }}>{item.quantity}</span>
-                        <button 
-                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                          style={{ width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', background: 'transparent', cursor: 'pointer' }}
-                        >
-                          +
+                          <Icon icon="mdi:trash-can-outline" width="20" />
                         </button>
                       </div>
-                      <button 
-                        onClick={() => removeFromCart(item.id)}
-                        style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#999' }}
-                      >
-                        <Icon icon="mdi:trash-can-outline" width="18" />
-                      </button>
                     </div>
                   </div>
                 </div>
@@ -123,43 +133,34 @@ export default function CartModal() {
 
         {/* Footer */}
         {cartItems.length > 0 && (
-          <div style={{ padding: '16px', borderTop: '1px solid #e5e7eb', backgroundColor: '#f9f9f9' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px', fontSize: '16px', fontWeight: 'bold' }}>
-              <span>Total:</span>
-              <span style={{ color: '#40534c' }}>Rp {cartTotal.toLocaleString('id-ID')}</span>
+          <div style={{ padding: '24px', borderTop: '1px solid #f3f4f6', backgroundColor: '#fff', boxShadow: '0 -4px 20px rgba(0,0,0,0.02)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', alignItems: 'baseline' }}>
+              <span style={{ fontSize: '14px', color: '#6b7280', fontWeight: '600' }}>Total Pembayaran:</span>
+              <span style={{ color: '#1a3636', fontSize: '24px', fontWeight: '900' }}>Rp {cartTotal.toLocaleString('id-ID')}</span>
             </div>
-            <button 
-              onClick={() => { setIsCartOpen(false); window.location.href = '/id/paperlisens/checkout'; }}
-              style={{ 
-                width: '100%', backgroundColor: '#40534c', color: '#d6bd98', 
-                border: 'none', padding: '14px', borderRadius: '8px', 
-                fontSize: '16px', fontWeight: 'bold', cursor: 'pointer',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                gap: '10px', transition: 'all 0.2s', textTransform: 'uppercase',
-                letterSpacing: '1px', marginBottom: '8px'
-              }}
-            >
-              <Icon icon="mdi:credit-card-outline" width="22" /> Checkout
-            </button>
-            <button 
-              onClick={handleCheckout}
-              style={{ 
-                width: '100%', backgroundColor: 'transparent', color: '#40534c', 
-                border: '1px solid #d1d5db', padding: '10px', borderRadius: '8px', 
-                fontSize: '13px', fontWeight: '600', cursor: 'pointer',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                gap: '8px', transition: 'all 0.2s'
-              }}
-            >
-              <Icon icon="mdi:whatsapp" width="18" style={{ color: '#25d366' }} /> Pesan via WhatsApp
-            </button>
+            
+            <div style={{ display: 'flex' }}>
+              <button 
+                onClick={handleCheckout}
+                style={{ 
+                  flex: 1, backgroundColor: '#40534c', color: '#d6bd98', 
+                  border: 'none', padding: '16px', borderRadius: '16px', 
+                  fontSize: '16px', fontWeight: '900', cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  gap: '12px', transition: 'all 0.2s', textTransform: 'uppercase',
+                  letterSpacing: '1px', boxShadow: '0 8px 24px rgba(64,83,76,0.25)'
+                }}
+              >
+                Checkout <Icon icon="mdi:arrow-right" width="20" />
+              </button>
+            </div>
           </div>
         )}
       </div>
       <style jsx global>{`
-        @keyframes slideInRight {
-          from { transform: translateX(100%); }
-          to { transform: translateX(0); }
+        @keyframes slideInUp {
+          from { transform: translateY(100%); }
+          to { transform: translateY(0); }
         }
       `}</style>
     </div>

@@ -15,6 +15,11 @@ const intlMiddleware = createMiddleware({
 export default function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // Early return for API paths to avoid CSRF issues with next-intl
+  if (pathname.startsWith('/api')) {
+    return NextResponse.next();
+  }
+
   // Admin Authentication
   if (pathname.startsWith('/admin')) {
     // Allow public access to login page

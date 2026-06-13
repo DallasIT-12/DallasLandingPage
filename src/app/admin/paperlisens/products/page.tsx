@@ -85,6 +85,7 @@ type ProductVariant = {
   variant_name_2_en?: string | null;
   variant_name_2_zh?: string | null;
   price: number;
+  cost_price?: number;
   image: string;
   images: string[];
   variant_slug: string;
@@ -99,6 +100,7 @@ type Product = {
   category: string;
   slug?: string;
   price: number;
+  cost_price?: number;
   image: string;
   images: string[];
   description?: string;
@@ -980,18 +982,53 @@ export default function PaperlisensProductsAdmin() {
                   )}
                 </div>
 
+                {/* Default Price & HPP (Visible only if no variants) */}
+                {(!editingProduct.variants || editingProduct.variants.length === 0) && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className={labelClasses}>Harga Jual Dasar <span className="text-rose-400">*</span></label>
+                      <div className="relative">
+                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold text-xs">Rp</span>
+                        <input
+                          type="number"
+                          value={editingProduct.price}
+                          onChange={(e) => setEditingProduct({ ...editingProduct, price: parseInt(e.target.value) || 0 })}
+                          className={`${inputClasses} pl-12`}
+                          placeholder="0"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label className={labelClasses}>HPP Dasar (Modal)</label>
+                      <div className="relative">
+                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold text-xs">Rp</span>
+                        <input
+                          type="number"
+                          value={editingProduct.cost_price || 0}
+                          onChange={(e) => setEditingProduct({ ...editingProduct, cost_price: parseInt(e.target.value) || 0 })}
+                          className={`${inputClasses} pl-12 border-amber-500/10 bg-amber-500/5 text-amber-200 focus:ring-amber-500`}
+                          placeholder="0"
+                        />
+                      </div>
+                      <p className="text-[9px] text-amber-500/50 font-bold uppercase mt-2 flex items-center gap-1">
+                        <Icon icon="lucide:lock" className="text-xs" /> Digunakan untuk perhitungan subsidi ongkir
+                      </p>
+                    </div>
+                  </div>
+                )}
+
                 <button
                   type="button"
                   onClick={generateVariants}
                   className="w-full py-4 bg-white/5 hover:bg-[#d6bd98]/10 text-[#d6bd98] border border-[#d6bd98]/20 rounded-2xl font-black uppercase text-[10px] tracking-widest transition-all flex items-center justify-center gap-2 group"
                 >
                   <Icon icon="lucide:refresh-cw" className="group-hover:rotate-180 transition-transform duration-500" />
-                  Generate / Update Kombinasi Varian
+                  {editingProduct.variants && editingProduct.variants.length > 0 ? 'Update Kombinasi Varian' : 'Generate Kombinasi Varian'}
                 </button>
 
                 {/* Price Range Display */}
                 <div className="p-5 bg-[#0f172a] rounded-2xl border border-white/5">
-                  <label className={labelClasses}>Rentang Harga (Otomatis dari Varian)</label>
+                  <label className={labelClasses}>{editingProduct.variants && editingProduct.variants.length > 0 ? 'Rentang Harga (Otomatis dari Varian)' : 'Status Harga'}</label>
                   <p className="font-black text-[#d6bd98] text-xl mt-2">
                     {(() => {
                       if (editingProduct.variants && editingProduct.variants.length > 0) {
@@ -1002,8 +1039,9 @@ export default function PaperlisensProductsAdmin() {
                           if (min === max) return `Rp ${min.toLocaleString('id-ID')}`;
                           return `Rp ${min.toLocaleString('id-ID')} - Rp ${max.toLocaleString('id-ID')}`;
                         }
+                        return 'Harga varian belum diatur';
                       }
-                      return 'Belum ada varian / harga';
+                      return editingProduct.price > 0 ? `Rp ${editingProduct.price.toLocaleString('id-ID')}` : 'Harga belum diatur';
                     })()}
                   </p>
                 </div>
@@ -1117,8 +1155,8 @@ export default function PaperlisensProductsAdmin() {
                                   }} className="text-[8px] text-rose-400 hover:text-rose-300 font-bold uppercase tracking-wider transition-colors">Hapus Foto</button>
                                 )}
                                 <button type="button" onClick={() => {
-                                  const newChild = { id: `new-${Date.now()}-${Math.random().toString(36).substr(2,5)}`, variant_name: groupName, variant_name_2: '', price: editingProduct.price, image: groupPhoto, images: [], variant_slug: `${editingProduct.productSlug||'prod'}-v${Math.random().toString(36).substr(2,5)}` } as any;
-                                  setEditingProduct({ ...editingProduct, variants: [...(editingProduct.variants||[]), newChild] });
+                                  const newChild = { id: `new-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`, variant_name: groupName, variant_name_2: '', price: editingProduct.price, image: groupPhoto, images: [], variant_slug: `${editingProduct.productSlug || 'prod'}-v${Math.random().toString(36).substr(2, 5)}` } as any;
+                                  setEditingProduct({ ...editingProduct, variants: [...(editingProduct.variants || []), newChild] });
                                 }} className="text-[8px] text-[#d6bd98] hover:text-white font-bold uppercase tracking-wider transition-colors flex items-center gap-1">
                                   <Icon icon="lucide:plus" className="text-[10px]" />+ Pilihan
                                 </button>
@@ -1132,23 +1170,40 @@ export default function PaperlisensProductsAdmin() {
                                   <span className="text-slate-600 text-xs flex-shrink-0">↳</span>
                                   <div className="flex-1 min-w-0">
                                     <input type="text" value={v.variant_name_2 || ''} placeholder="Nama Varian 2 (ID)"
-                                      onChange={(e) => { const nv = [...(editingProduct.variants||[])]; nv[idx].variant_name_2 = e.target.value; setEditingProduct({ ...editingProduct, variants: nv }); }}
+                                      onChange={(e) => { const nv = [...(editingProduct.variants || [])]; nv[idx].variant_name_2 = e.target.value; setEditingProduct({ ...editingProduct, variants: nv }); }}
                                       className="bg-transparent border-b border-white/5 outline-none text-slate-200 font-medium text-sm focus:border-[#d6bd98] pb-0.5 w-full" />
                                     <div className="grid grid-cols-2 gap-2 mt-0.5">
                                       <input type="text" value={v.variant_name_2_en || ''} placeholder="EN"
-                                        onChange={(e) => { const nv = [...(editingProduct.variants||[])]; nv[idx].variant_name_2_en = e.target.value; setEditingProduct({ ...editingProduct, variants: nv }); }}
+                                        onChange={(e) => { const nv = [...(editingProduct.variants || [])]; nv[idx].variant_name_2_en = e.target.value; setEditingProduct({ ...editingProduct, variants: nv }); }}
                                         className="bg-transparent border-b border-white/5 outline-none text-slate-500 text-[10px] focus:border-blue-400 pb-0.5 w-full" />
                                       <input type="text" value={v.variant_name_2_zh || ''} placeholder="ZH"
-                                        onChange={(e) => { const nv = [...(editingProduct.variants||[])]; nv[idx].variant_name_2_zh = e.target.value; setEditingProduct({ ...editingProduct, variants: nv }); }}
+                                        onChange={(e) => { const nv = [...(editingProduct.variants || [])]; nv[idx].variant_name_2_zh = e.target.value; setEditingProduct({ ...editingProduct, variants: nv }); }}
                                         className="bg-transparent border-b border-white/5 outline-none text-slate-500 text-[10px] focus:border-emerald-400 pb-0.5 w-full" />
                                     </div>
                                   </div>
-                                  <div className="flex items-center gap-2 flex-shrink-0">
-                                    <span className="text-[9px] text-slate-500 font-bold">Rp</span>
-                                    <input type="number" value={v.price}
-                                      onChange={(e) => { const nv = [...(editingProduct.variants||[])]; nv[idx].price = parseInt(e.target.value)||0; setEditingProduct({ ...editingProduct, variants: nv }); }}
-                                      className="w-28 bg-white/5 rounded-lg px-3 py-1.5 text-sm outline-none focus:ring-1 focus:ring-[#d6bd98] text-white font-bold" />
-                                    <button type="button" onClick={() => { const nv = (editingProduct.variants||[]).filter((_,i) => i !== idx); setEditingProduct({ ...editingProduct, variants: nv }); }}
+                                  <div className="flex items-center gap-3 flex-shrink-0">
+                                    <div className="flex flex-col items-end">
+                                      <div className="flex items-center gap-1.5">
+                                        <span className="text-[9px] text-slate-500 font-bold">Rp</span>
+                                        <input type="number" value={v.price}
+                                          onChange={(e) => { const nv = [...(editingProduct.variants || [])]; nv[idx].price = parseInt(e.target.value) || 0; setEditingProduct({ ...editingProduct, variants: nv }); }}
+                                          className="w-24 bg-white/5 rounded-lg px-2 py-1.5 text-xs outline-none focus:ring-1 focus:ring-[#d6bd98] text-white font-bold" />
+                                      </div>
+                                      <span className="text-[7px] font-bold text-slate-600 uppercase tracking-tighter mt-1">Harga Jual</span>
+                                    </div>
+
+                                    <div className="flex flex-col items-end">
+                                      <div className="flex items-center gap-1.5 opacity-60 hover:opacity-100 transition-opacity">
+                                        <Icon icon="lucide:lock" className="text-[9px] text-amber-500/50" />
+                                        <span className="text-[9px] text-slate-500 font-bold">Rp</span>
+                                        <input type="number" value={v.cost_price || 0}
+                                          onChange={(e) => { const nv = [...(editingProduct.variants || [])]; nv[idx].cost_price = parseInt(e.target.value) || 0; setEditingProduct({ ...editingProduct, variants: nv }); }}
+                                          className="w-24 bg-amber-500/5 border border-amber-500/10 rounded-lg px-2 py-1.5 text-xs outline-none focus:ring-1 focus:ring-amber-500 text-amber-200 font-bold" />
+                                      </div>
+                                      <span className="text-[7px] font-bold text-amber-500/40 uppercase tracking-tighter mt-1">HPP (Modal)</span>
+                                    </div>
+
+                                    <button type="button" onClick={() => { const nv = (editingProduct.variants || []).filter((_, i) => i !== idx); setEditingProduct({ ...editingProduct, variants: nv }); }}
                                       className="text-slate-600 hover:text-rose-500 transition-colors p-1">
                                       <Icon icon="lucide:trash-2" className="text-base" />
                                     </button>
@@ -1184,7 +1239,7 @@ export default function PaperlisensProductsAdmin() {
                                 const fd = new FormData(); fd.append('file', wf);
                                 const r = await fetch('/api/upload', { method: 'POST', body: fd });
                                 const d = await r.json();
-                                if (d.url) { const nv = [...(editingProduct.variants||[])]; nv[idx] = { ...nv[idx], image: d.url }; setEditingProduct({ ...editingProduct, variants: nv }); }
+                                if (d.url) { const nv = [...(editingProduct.variants || [])]; nv[idx] = { ...nv[idx], image: d.url }; setEditingProduct({ ...editingProduct, variants: nv }); }
                               } catch { } finally { setIsSaving(false); }
                             }} />
                           <label htmlFor={`vf-${idx}`} className="absolute -bottom-1 -right-1 w-5 h-5 bg-[#d6bd98] rounded-full flex items-center justify-center cursor-pointer shadow-lg">
@@ -1195,7 +1250,7 @@ export default function PaperlisensProductsAdmin() {
                               if (isSupabaseUrl(v.image)) {
                                 setDeletedImageUrls(prev => [...prev, v.image]);
                               }
-                              const nv = [...(editingProduct.variants||[])]; nv[idx] = { ...nv[idx], image: '/placeholder.png' }; setEditingProduct({ ...editingProduct, variants: nv });
+                              const nv = [...(editingProduct.variants || [])]; nv[idx] = { ...nv[idx], image: '/placeholder.png' }; setEditingProduct({ ...editingProduct, variants: nv });
                             }} className="absolute -top-1 -right-1 w-5 h-5 bg-rose-500 rounded-full flex items-center justify-center cursor-pointer shadow-lg z-10 opacity-0 group-hover:opacity-100 transition-opacity" title="Hapus foto varian">
                               <Icon icon="lucide:x" className="text-white text-[8px]" />
                             </button>
@@ -1205,27 +1260,44 @@ export default function PaperlisensProductsAdmin() {
                         {/* Name */}
                         <div className="flex-1 min-w-0 space-y-1">
                           <input type="text" value={v.variant_name || ''} placeholder="Nama Varian (ID)"
-                            onChange={(e) => { const nv = [...(editingProduct.variants||[])]; nv[idx].variant_name = e.target.value; setEditingProduct({ ...editingProduct, variants: nv }); }}
+                            onChange={(e) => { const nv = [...(editingProduct.variants || [])]; nv[idx].variant_name = e.target.value; setEditingProduct({ ...editingProduct, variants: nv }); }}
                             className="bg-transparent border-b border-white/10 outline-none text-white font-bold text-sm focus:border-[#d6bd98] pb-1 w-full" />
                           <div className="grid grid-cols-2 gap-2">
                             <input type="text" value={(v as any).variant_name_en || ''} placeholder="EN"
-                              onChange={(e) => { const nv = [...(editingProduct.variants||[])]; (nv[idx] as any).variant_name_en = e.target.value; setEditingProduct({ ...editingProduct, variants: nv }); }}
+                              onChange={(e) => { const nv = [...(editingProduct.variants || [])]; (nv[idx] as any).variant_name_en = e.target.value; setEditingProduct({ ...editingProduct, variants: nv }); }}
                               className="bg-transparent border-b border-white/5 outline-none text-slate-400 text-[10px] focus:border-blue-400 pb-1 w-full" />
                             <input type="text" value={(v as any).variant_name_zh || ''} placeholder="ZH"
-                              onChange={(e) => { const nv = [...(editingProduct.variants||[])]; (nv[idx] as any).variant_name_zh = e.target.value; setEditingProduct({ ...editingProduct, variants: nv }); }}
+                              onChange={(e) => { const nv = [...(editingProduct.variants || [])]; (nv[idx] as any).variant_name_zh = e.target.value; setEditingProduct({ ...editingProduct, variants: nv }); }}
                               className="bg-transparent border-b border-white/5 outline-none text-slate-400 text-[10px] focus:border-emerald-400 pb-1 w-full" />
                           </div>
                         </div>
 
-                        {/* Price */}
-                        <div className="flex items-center gap-2 flex-shrink-0">
-                          <span className="text-[9px] text-slate-500 font-bold">Rp</span>
-                          <input type="number" value={v.price}
-                            onChange={(e) => { const nv = [...(editingProduct.variants||[])]; nv[idx].price = parseInt(e.target.value)||0; setEditingProduct({ ...editingProduct, variants: nv }); }}
-                            className="w-32 bg-white/5 rounded-xl p-3 text-sm outline-none focus:ring-1 focus:ring-[#d6bd98] text-white font-bold" />
-                          <button type="button" onClick={() => { const nv = (editingProduct.variants||[]).filter((_,i) => i !== idx); setEditingProduct({ ...editingProduct, variants: nv }); }}
-                            className="text-slate-500 hover:text-rose-500 transition-colors">
-                            <Icon icon="lucide:trash-2" className="text-lg" />
+                        {/* Price & HPP */}
+                        <div className="flex items-center gap-3 flex-shrink-0">
+                          <div className="flex flex-col items-end">
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-[9px] text-slate-500 font-bold">Rp</span>
+                              <input type="number" value={v.price}
+                                onChange={(e) => { const nv = [...(editingProduct.variants || [])]; nv[idx].price = parseInt(e.target.value) || 0; setEditingProduct({ ...editingProduct, variants: nv }); }}
+                                className="w-24 bg-white/5 rounded-lg px-2 py-1.5 text-xs outline-none focus:ring-1 focus:ring-[#d6bd98] text-white font-bold" />
+                            </div>
+                            <span className="text-[7px] font-bold text-slate-600 uppercase tracking-tighter mt-1">Harga Jual</span>
+                          </div>
+
+                          <div className="flex flex-col items-end">
+                            <div className="flex items-center gap-1.5 opacity-60 hover:opacity-100 transition-opacity">
+                              <Icon icon="lucide:lock" className="text-[9px] text-amber-500/50" />
+                              <span className="text-[9px] text-slate-500 font-bold">Rp</span>
+                              <input type="number" value={v.cost_price || 0}
+                                onChange={(e) => { const nv = [...(editingProduct.variants || [])]; nv[idx].cost_price = parseInt(e.target.value) || 0; setEditingProduct({ ...editingProduct, variants: nv }); }}
+                                className="w-24 bg-amber-500/5 border border-amber-500/10 rounded-lg px-2 py-1.5 text-xs outline-none focus:ring-1 focus:ring-amber-500 text-amber-200 font-bold" />
+                            </div>
+                            <span className="text-[7px] font-bold text-amber-500/40 uppercase tracking-tighter mt-1">HPP (Modal)</span>
+                          </div>
+
+                          <button type="button" onClick={() => { const nv = (editingProduct.variants || []).filter((_, i) => i !== idx); setEditingProduct({ ...editingProduct, variants: nv }); }}
+                            className="text-slate-600 hover:text-rose-500 transition-colors p-1">
+                            <Icon icon="lucide:trash-2" className="text-base" />
                           </button>
                         </div>
                       </div>

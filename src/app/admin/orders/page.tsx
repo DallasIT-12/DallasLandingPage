@@ -23,6 +23,14 @@ const STATUS_COLORS: Record<string, { bg: string; text: string; label: string }>
   expired: { bg: 'bg-slate-500/10', text: 'text-slate-400', label: 'Expired' },
 };
 
+const ORDER_STEPS = [
+  { status: 'pending_payment', label: 'Diterima' },
+  { status: 'paid', label: 'Dibayar' },
+  { status: 'processing', label: 'Diproses' },
+  { status: 'shipped', label: 'Dikirim' },
+  { status: 'completed', label: 'Selesai' },
+];
+
 export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -151,6 +159,41 @@ export default function AdminOrdersPage() {
                   {/* Expanded Detail */}
                   {isExpanded && (
                     <div className="px-8 pb-8 space-y-4 bg-white/[0.01] border-t border-white/5">
+                      
+                      {/* Visual Stepper */}
+                      {order.status !== 'cancelled' && order.status !== 'expired' && (
+                        <div className="py-8 border-b border-white/5">
+                          <div className="max-w-3xl mx-auto flex justify-between relative">
+                            {/* Background Line */}
+                            <div className="absolute top-[11px] left-0 right-0 h-0.5 bg-white/5 z-0" />
+                            {/* Active Line */}
+                            <div 
+                              className="absolute top-[11px] left-0 h-0.5 bg-[#d6bd98] z-[1] transition-all duration-500"
+                              style={{ 
+                                width: `${(ORDER_STEPS.findIndex(s => s.status === order.status) / (ORDER_STEPS.length - 1)) * 100}%` 
+                              }}
+                            />
+                            
+                            {ORDER_STEPS.map((step, idx) => {
+                              const currentIdx = ORDER_STEPS.findIndex(s => s.status === order.status);
+                              const isActive = idx <= currentIdx;
+                              return (
+                                <div key={idx} className="relative z-[2] flex flex-col items-center w-20">
+                                  <div className={`w-6 h-6 rounded-full flex items-center justify-center border-2 transition-all ${
+                                    isActive ? 'bg-[#d6bd98] border-[#d6bd98]' : 'bg-[#0f172a] border-white/10'
+                                  }`}>
+                                    {isActive && <Icon icon="lucide:check" className="text-[#0f172a] text-xs font-bold" />}
+                                  </div>
+                                  <span className={`text-[10px] font-black uppercase mt-3 tracking-widest ${isActive ? 'text-[#d6bd98]' : 'text-slate-600'}`}>
+                                    {step.label}
+                                  </span>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4">
                         {/* Address */}
                         <div className="bg-[#0f172a] rounded-2xl p-5 border border-white/5">
@@ -197,11 +240,40 @@ export default function AdminOrdersPage() {
                                     <span className="text-[10px] text-slate-500 uppercase font-bold">Waybill</span>
                                     <span className="text-white font-bold text-xs tracking-wider">{order.waybill_id || order.tracking_number || 'Pending'}</span>
                                   </div>
-                                  {order.biteship_tracking_id && (
-                                    <a href={`https://biteship.com/id/tracking/${order.biteship_tracking_id}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 w-full py-2 mt-1 bg-white/5 hover:bg-white/10 text-white rounded-lg text-[9px] font-black uppercase tracking-widest transition-all">
-                                      <Icon icon="lucide:external-link" /> Lacak
-                                    </a>
-                                  )}
+                                  <div className="flex gap-2 mt-2">
+                                    {order.biteship_tracking_id && (
+                                      <a href={`https://biteship.com/id/tracking/${order.biteship_tracking_id}`} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center gap-2 py-2 bg-white/5 hover:bg-white/10 text-white rounded-lg text-[9px] font-black uppercase tracking-widest transition-all">
+                                        <Icon icon="lucide:external-link" /> Lacak
+                                      </a>
+                                    )}
+                                    <button 
+                                      onClick={async (e) => {
+                                        e.stopPropagation();
+                                        setUpdatingId(order.id);
+                                        try {
+                                          const res = await fetch('/api/admin/orders', {
+                                            method: 'PATCH',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            body: JSON.stringify({ orderId: order.id, action: 'sync' })
+                                          });
+                                          const result = await res.json();
+                                          if (res.ok) {
+                                            await fetchOrders();
+                                          } else {
+                                            alert(result.error || 'Gagal sinkronisasi status');
+                                          }
+                                        } catch {
+                                          alert('Terjadi kesalahan');
+                                        }
+                                        setUpdatingId(null);
+                                      }}
+                                      disabled={updatingId === order.id}
+                                      className="flex-1 flex items-center justify-center gap-2 py-2 bg-[#d6bd98]/10 hover:bg-[#d6bd98]/20 text-[#d6bd98] rounded-lg text-[9px] font-black uppercase tracking-widest transition-all disabled:opacity-50"
+                                    >
+                                      <Icon icon="lucide:refresh-cw" className={updatingId === order.id ? "animate-spin" : ""} />
+                                      {updatingId === order.id ? 'Syncing...' : 'Sync Status'}
+                                    </button>
+                                  </div>
                                 </div>
                               )}
 
@@ -227,26 +299,6 @@ export default function AdminOrdersPage() {
                               >
                                 {updatingId === order.id ? 'Booking...' : order.biteship_order_id ? 'Re-book Biteship' : 'Book Biteship'}
                               </button>
-
-                              {/* Manual Resi Fallback */}
-                              <div className="pt-2 border-t border-white/5">
-                                <p className="text-[9px] font-bold text-slate-600 uppercase tracking-widest mb-2">Resi Manual</p>
-                                {editingResi && editingResi.id === order.id ? (
-                                  <div className="flex gap-2">
-                                    <input value={editingResi.value} onChange={e => setEditingResi({ id: editingResi.id, value: e.target.value })} className="flex-1 p-2 bg-white/5 border border-white/10 rounded-lg text-white text-xs outline-none focus:ring-1 focus:ring-[#d6bd98]" placeholder="No. resi" />
-                                    <button onClick={() => { updateOrder(order.id, { trackingNumber: editingResi.value, status: 'shipped' }); setEditingResi(null); }} className="px-3 py-2 bg-[#d6bd98] text-[#111827] rounded-lg text-[10px] font-black">
-                                      OK
-                                    </button>
-                                  </div>
-                                ) : (
-                                  <div className="flex items-center gap-2">
-                                    <p className="text-white font-bold text-xs truncate max-w-[100px]">{order.tracking_number || '-'}</p>
-                                    <button onClick={() => setEditingResi({ id: order.id, value: order.tracking_number || '' })} className="p-1 bg-white/5 hover:bg-white/10 rounded-lg">
-                                      <Icon icon="lucide:edit-3" className="text-[10px] text-slate-400" />
-                                    </button>
-                                  </div>
-                                )}
-                              </div>
                             </div>
                           )}
                         </div>
@@ -312,12 +364,6 @@ export default function AdminOrdersPage() {
                           <button onClick={() => updateOrder(order.id, { status: 'processing' })} disabled={updatingId === order.id}
                             className="px-5 py-3 bg-blue-500 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-blue-600 transition-all disabled:opacity-50">
                             <Icon icon="lucide:package" className="inline mr-2" /> Proses Pesanan
-                          </button>
-                        )}
-                        {order.status === 'processing' && (
-                          <button onClick={() => setEditingResi({ id: order.id, value: order.tracking_number || '' })}
-                            className="px-5 py-3 bg-purple-500 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-purple-600 transition-all">
-                            <Icon icon="lucide:truck" className="inline mr-2" /> Input Resi & Kirim
                           </button>
                         )}
                         {order.status === 'shipped' && (

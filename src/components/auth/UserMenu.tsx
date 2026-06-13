@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import { Icon } from '@iconify/react';
 import LoginModal from './LoginModal';
+import LanguageSwitcher from '@/components/common/LanguageSwitcher';
 
 export default function UserMenu() {
   const { data: session, status } = useSession();
@@ -46,8 +47,8 @@ export default function UserMenu() {
           onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(214,189,152,0.15)'; e.currentTarget.style.borderColor = '#d6bd98'; }}
           onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.borderColor = 'rgba(214,189,152,0.5)'; }}
         >
-          <Icon icon="mdi:account-circle-outline" width="18" />
-          Masuk
+          <Icon icon="mdi:truck-delivery-outline" width="18" />
+          Lacak Pesanan
         </button>
         <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
       </>
@@ -89,13 +90,15 @@ export default function UserMenu() {
           position: 'absolute', top: 'calc(100% + 8px)', right: 0,
           backgroundColor: '#fff', borderRadius: '12px',
           boxShadow: '0 10px 40px rgba(0,0,0,0.15)', border: '1px solid #e5e7eb',
-          minWidth: '220px', zIndex: 2000, overflow: 'hidden',
+          minWidth: '220px', zIndex: 2000, overflow: 'visible',
           animation: 'menuFadeIn 0.2s ease-out',
         }}>
           {/* User Info */}
           <div style={{
             padding: '16px', borderBottom: '1px solid #f0f0f0',
             background: 'linear-gradient(135deg, #f8faf9 0%, #fff 100%)',
+            borderTopLeftRadius: '12px',
+            borderTopRightRadius: '12px',
           }}>
             <p style={{ margin: 0, fontWeight: '700', fontSize: '14px', color: '#1a3636' }}>
               {userName}
@@ -109,6 +112,24 @@ export default function UserMenu() {
           <div style={{ padding: '8px' }}>
             <MenuItem icon="mdi:package-variant" label="Pesanan Saya" href="/paperlisens/orders" onClick={() => setIsMenuOpen(false)} />
             <MenuItem icon="mdi:map-marker" label="Alamat Saya" href="/paperlisens/account" onClick={() => setIsMenuOpen(false)} />
+            <div style={{ height: '1px', backgroundColor: '#f0f0f0', margin: '4px 0' }} />
+            
+            {/* Language Switcher */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '6px 12px',
+              borderRadius: '8px',
+              marginBottom: '4px'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#374151', fontSize: '13px', fontWeight: '500' }}>
+                <Icon icon="mdi:translate" width="18" style={{ color: '#6b7280' }} />
+                <span>Bahasa</span>
+              </div>
+              <LanguageSwitcher />
+            </div>
+            
             <div style={{ height: '1px', backgroundColor: '#f0f0f0', margin: '4px 0' }} />
             <MenuItem
               icon="mdi:logout"

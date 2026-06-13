@@ -7,6 +7,14 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 
+// In local development, delete AUTH_URL to let NextAuth auto-detect localhost.
+// This prevents CSRF token missing errors and redirects to the production site.
+console.log(`[NextAuth] Init - NODE_ENV: ${process.env.NODE_ENV}, AUTH_URL in env: ${process.env.AUTH_URL}`);
+if (process.env.NODE_ENV === 'development') {
+  delete process.env.AUTH_URL;
+  console.log(`[NextAuth] Deleted AUTH_URL for local development auto-detection.`);
+}
+
 function getSupabase() {
   return createClient(supabaseUrl, supabaseServiceKey);
 }

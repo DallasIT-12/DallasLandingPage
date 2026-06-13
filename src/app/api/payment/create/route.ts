@@ -12,7 +12,8 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { 
       items, customer, shippingCost, shippingCourier, shippingService, shippingEtd, 
-      userId, notes, paymentMethod, courierCode, courierServiceCode, destinationAreaId 
+      userId, notes, paymentMethod, courierCode, courierServiceCode, destinationAreaId,
+      shippingDiscount, productDiscount, originalShippingCost
     } = body;
 
     // Validate required fields
@@ -29,7 +30,7 @@ export async function POST(request: NextRequest) {
     // Calculate totals
     const subtotal = items.reduce((sum: number, item: any) => sum + (item.price * item.quantity), 0);
     const shipping = shippingCost || 0;
-    const total = subtotal + shipping;
+    const total = subtotal + shipping - (productDiscount || 0);
 
     // Generate order ID
     const orderNumber = generateOrderId();
@@ -83,6 +84,9 @@ export async function POST(request: NextRequest) {
           midtrans_order_id: midtransOrderId,
           subtotal,
           shipping_cost: shipping,
+          shipping_discount: shippingDiscount || 0,
+          product_discount: productDiscount || 0,
+          original_shipping_cost: originalShippingCost || 0,
           total,
           shipping_address: shippingAddress,
           shipping_courier: shippingCourier || null,
@@ -148,7 +152,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Save order to database
+    // 1. Create order in DB (status: pending_payment)
     const { data: order, error: orderError } = await supabase
       .from('orders')
       .insert({
@@ -158,11 +162,14 @@ export async function POST(request: NextRequest) {
         guest_email: !userId ? customer.email : null,
         guest_phone: !userId ? customer.phone : null,
         status: 'pending_payment',
-        payment_status: 'unpaid',
+        payment_status: 'pending',
         payment_method: 'qris',
         midtrans_order_id: midtransOrderId,
         subtotal,
         shipping_cost: shipping,
+        shipping_discount: shippingDiscount || 0,
+        product_discount: productDiscount || 0,
+        original_shipping_cost: originalShippingCost || 0,
         total,
         shipping_address: shippingAddress,
         shipping_courier: shippingCourier || null,
@@ -173,7 +180,7 @@ export async function POST(request: NextRequest) {
         destination_area_id: destinationAreaId || null,
         notes: notes || null,
       })
-      .select('id')
+      .select('*')
       .single();
 
     if (orderError) {

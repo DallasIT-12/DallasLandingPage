@@ -2,8 +2,14 @@
 
 import React from 'react';
 import { Icon } from '@iconify/react';
+import { usePathname } from 'next/navigation';
 
 const FloatingMaps = () => {
+  const pathname = usePathname();
+
+  // Hide on Paperlisens section — it has its own floating cart button
+  if (pathname?.includes('/paperlisens')) return null;
+
   return (
     <a
       href="https://www.google.com/maps/search/Percetakan+Dallas+Kediri"

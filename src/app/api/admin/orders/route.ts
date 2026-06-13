@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { syncOrderWithBiteship } from '@/lib/biteship-sync';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -41,10 +42,27 @@ export async function GET(request: NextRequest) {
 export async function PATCH(request: NextRequest) {
   try {
     const body = await request.json();
-    const { orderId, status, trackingNumber } = body;
+    const { orderId, status, trackingNumber, action } = body;
 
     if (!orderId) {
       return NextResponse.json({ error: 'orderId wajib diisi' }, { status: 400 });
+    }
+
+    if (action === 'sync') {
+      // Fetch full order details with order_items
+      const { data: order, error: findError } = await supabase
+        .from('orders')
+        .select('*, order_items(*)')
+        .eq('id', orderId)
+        .single();
+
+      if (findError || !order) {
+        return NextResponse.json({ error: 'Pesanan tidak ditemukan' }, { status: 404 });
+      }
+
+      // Sync status with Biteship
+      const syncedOrder = await syncOrderWithBiteship(order, supabase);
+      return NextResponse.json({ success: true, data: syncedOrder });
     }
 
     const updateData: any = {};

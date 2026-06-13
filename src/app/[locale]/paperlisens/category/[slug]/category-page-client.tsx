@@ -8,6 +8,8 @@ import { useTranslations, useLocale } from 'next-intl';
 import Footer from '@/components/layout/Footer';
 import LanguageSwitcher from '@/components/common/LanguageSwitcher';
 import { getSmartTranslation } from '@/utils/productTranslations';
+import PaperlisensFloatingCart from '@/components/paperlisens/PaperlisensFloatingCart';
+import UserMenu from '@/components/auth/UserMenu';
 
 // --- Responsive Styles Component ---
 const ResponsiveStyles = () => (
@@ -22,7 +24,7 @@ const ResponsiveStyles = () => (
     .product-card:hover .card-image { transform: scale(1.06); }
     .card-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, rgba(26,54,54,0.9) 0%, rgba(26,54,54,0.4) 50%, transparent 100%); opacity: 0; transition: opacity 0.35s ease; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; padding: 16px; text-align: center; z-index: 10; }
     .product-card:hover .card-overlay { opacity: 1; }
-    .card-info { padding: 14px; flex-grow: 1; display: flex; flex-direction: column; color: #1a3636; }
+    .card-info { padding: 14px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; color: #1a3636; }
 
     .skeleton-card { border-radius: 12px; overflow: hidden; background: #fff; border: 1px solid #e5e7eb; }
     .skeleton-img { width: 100%; padding-top: 100%; background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 800px 100%; animation: shimmer 1.5s infinite linear; }
@@ -35,6 +37,8 @@ const ResponsiveStyles = () => (
     .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; width: 100%; }
 
     @media (max-width: 768px) {
+      .header-cart-btn { display: none !important; }
+      .header-lang-switcher { display: none !important; }
       .top-bar-address, .top-bar-separator { display: none !important; }
       .back-text-full { display: none; }
       .back-text-short { display: inline !important; }
@@ -59,10 +63,11 @@ const ResponsiveStyles = () => (
 );
 
 // --- Fade Product Card Component ---
-const ProductCard = ({ product }: { product: any }) => {
+const ProductCard = ({ product, onQuickView }: { product: any; onQuickView?: (p: any) => void }) => {
   const { addToCart } = useCart();
   const pt = useTranslations('Paperlisens');
   const locale = useLocale();
+  const router = useRouter();
 
   const getLocalized = (item: any, field: string) => {
     // @ts-ignore
@@ -86,45 +91,52 @@ const ProductCard = ({ product }: { product: any }) => {
   }, [product.id, product.name, product.price]);
 
   return (
-    <div className="product-card">
-      <Link href={`/paperlisens/product/${encodeURIComponent(product.productSlug)}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
-
-        <div className="card-image-wrapper">
-          <img src={product.image} alt={product.name} className="card-image" loading="lazy" />
-          <div style={{
-            position: 'absolute', top: '0px', right: '0px', backgroundColor: '#d6bd98',
-            padding: '4px 8px', textAlign: 'center', lineHeight: '1', zIndex: 2
-          }}>
-            <div style={{ color: '#1a3636', fontSize: '12px', fontWeight: 'bold' }}>{discountPercent}%</div>
-            <div style={{ color: '#40534c', fontSize: '10px', fontWeight: 'bold' }}>OFF</div>
-          </div>
-
-          <div className="card-overlay">
-            <button onClick={(e) => { e.preventDefault(); addToCart(product, 1); }} style={{ backgroundColor: 'rgba(214,189,152,0.95)', color: '#1a3636', border: 'none', padding: '10px', borderRadius: '8px', cursor: 'pointer', width: '100%', marginBottom: '8px', fontSize: '12px', fontWeight: '700' }}>{pt('addToCart')}</button>
-            <button onClick={(e) => { e.preventDefault(); window.open(`https://wa.me/6281260001487?text=Halo%20Paperlisens,%20saya%20mau%20pesan%20${productName}`, '_blank'); }} style={{ backgroundColor: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(4px)', color: '#ffffff', border: '1px solid rgba(255,255,255,0.3)', padding: '10px', borderRadius: '8px', cursor: 'pointer', width: '100%', fontSize: '12px', fontWeight: '600' }}>{pt('orderWa')}</button>
-          </div>
+    <div 
+      className="product-card"
+      onClick={() => {
+        if (window.innerWidth <= 768 && onQuickView) {
+          onQuickView(product);
+        } else {
+          router.push(`/paperlisens/product/${encodeURIComponent(product.productSlug)}`);
+        }
+      }}
+      style={{ cursor: 'pointer' }}
+    >
+      <div className="card-image-wrapper">
+        <img src={product.image} alt={product.name} className="card-image" loading="lazy" />
+        <div style={{
+          position: 'absolute', top: '0px', right: '0px', backgroundColor: '#d6bd98',
+          padding: '4px 8px', textAlign: 'center', lineHeight: '1', zIndex: 2
+        }}>
+          <div style={{ color: '#1a3636', fontSize: '12px', fontWeight: 'bold' }}>{discountPercent}%</div>
+          <div style={{ color: '#40534c', fontSize: '10px', fontWeight: 'bold' }}>OFF</div>
         </div>
 
-        <div className="card-info">
-          <div style={{ flexGrow: 1 }}>
-            <div style={{ fontSize: '10px', color: '#40534c', border: '1px solid #40534c', display: 'inline-block', padding: '1px 4px', borderRadius: '4px', marginBottom: '4px', fontWeight: 'bold' }}>
-              {product.category || 'Paperlisens'}
-            </div>
-            <h3 style={{ fontSize: '14px', color: '#1a3636', lineHeight: '1.4', height: '40px', overflow: 'hidden', marginBottom: '8px', fontWeight: '500', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>{productName}</h3>
-          </div>
+        <div className="card-overlay">
+          <button onClick={(e) => { e.stopPropagation(); e.preventDefault(); addToCart(product, 1); }} style={{ backgroundColor: 'rgba(214,189,152,0.95)', color: '#1a3636', border: 'none', padding: '10px', borderRadius: '8px', cursor: 'pointer', width: '100%', marginBottom: '8px', fontSize: '12px', fontWeight: '700' }}>{pt('addToCart')}</button>
+          <button onClick={(e) => { e.stopPropagation(); e.preventDefault(); if (onQuickView) { onQuickView(product); } else { addToCart(product, 1, undefined, true); router.push('/paperlisens/checkout'); } }} style={{ backgroundColor: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(4px)', color: '#ffffff', border: '1px solid rgba(255,255,255,0.3)', padding: '10px', borderRadius: '8px', cursor: 'pointer', width: '100%', fontSize: '12px', fontWeight: '600' }}>{pt('orderNow')}</button>
+        </div>
+      </div>
 
-          <div style={{ marginTop: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
-            <div style={{ minWidth: 0, flexShrink: 0 }}>
-              <span style={{ fontSize: '10px', textDecoration: 'line-through', color: '#9ca3af', display: 'block' }}>Rp {markupPrice.toLocaleString('id-ID')}</span>
-              <span style={{ fontSize: '16px', fontWeight: 'bold', color: '#40534c' }}>Rp {product.price.toLocaleString('id-ID')}</span>
-            </div>
-            <div style={{ fontSize: '11px', color: '#677d6a', display: 'flex', alignItems: 'center', whiteSpace: 'nowrap', flexShrink: 1, minWidth: 0, overflow: 'hidden' }}>
-              <Icon icon="material-symbols:star" style={{ color: '#d6bd98', fontSize: '12px', marginRight: '2px', flexShrink: 0 }} />
-              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{product.sold} {pt('sold')}</span>
-            </div>
+      <div className="card-info">
+        <div style={{ flexGrow: 1 }}>
+          <div style={{ fontSize: '10px', color: '#40534c', border: '1px solid #40534c', display: 'inline-block', padding: '1px 4px', borderRadius: '4px', marginBottom: '4px', fontWeight: 'bold' }}>
+            {product.category || 'Paperlisens'}
+          </div>
+          <h3 style={{ fontSize: '14px', color: '#1a3636', lineHeight: '1.4', height: '40px', overflow: 'hidden', marginBottom: '8px', fontWeight: '500', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>{productName}</h3>
+        </div>
+
+        <div style={{ marginTop: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
+          <div style={{ minWidth: 0, flexShrink: 0 }}>
+            <span style={{ fontSize: '10px', textDecoration: 'line-through', color: '#9ca3af', display: 'block' }}>Rp {markupPrice.toLocaleString('id-ID')}</span>
+            <span style={{ fontSize: '16px', fontWeight: 'bold', color: '#40534c' }}>Rp {product.price.toLocaleString('id-ID')}</span>
+          </div>
+          <div style={{ fontSize: '11px', color: '#677d6a', display: 'flex', alignItems: 'center', whiteSpace: 'nowrap', flexShrink: 1, minWidth: 0, overflow: 'hidden' }}>
+            <Icon icon="material-symbols:star" style={{ color: '#d6bd98', fontSize: '12px', marginRight: '2px', flexShrink: 0 }} />
+            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{product.sold} {pt('sold')}</span>
           </div>
         </div>
-      </Link>
+      </div>
     </div>
   );
 };
@@ -173,6 +185,7 @@ export default function CategoryPageClient({ params }: { params: Promise<{ slug:
   const { slug } = use(params);
   const { cartCount, setIsCartOpen } = useCart();
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+  const [quickViewProduct, setQuickViewProduct] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
@@ -265,8 +278,6 @@ export default function CategoryPageClient({ params }: { params: Promise<{ slug:
               <span className="back-text-full">{pt('backToDallas')}</span>
               <span className="back-text-short" style={{ display: 'none' }}>{t('Common.back')}</span>
             </Link>
-            <span className="top-bar-separator" style={{ borderLeft: '1px solid #ddd', height: '12px' }}></span>
-            <span className="top-bar-address" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Icon icon="mdi:map-marker" style={{ fontSize: '14px', color: '#40534c' }} /> {t('TopBar.address')}</span>
             <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Icon icon="mdi:phone" style={{ fontSize: '14px', color: '#40534c' }} /> 081260001487</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -288,12 +299,50 @@ export default function CategoryPageClient({ params }: { params: Promise<{ slug:
               </button>
             </form>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <LanguageSwitcher light />
-            <div onClick={() => setIsCartOpen(true)} style={{ position: 'relative', cursor: 'pointer', color: '#d6bd98' }}>
-              <Icon icon="material-symbols:shopping-cart-outline" style={{ fontSize: '24px', color: '#d6bd98' }} />
-              {cartCount > 0 && <span style={{ position: 'absolute', top: '-5px', right: '-5px', backgroundColor: '#d6bd98', color: '#40534c', fontSize: '10px', fontWeight: 'bold', borderRadius: '50%', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{cartCount}</span>}
-            </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <button 
+              onClick={() => setIsCartOpen(true)}
+              className="header-cart-btn"
+              style={{
+                position: 'relative',
+                backgroundColor: 'transparent',
+                border: 'none',
+                color: '#d6bd98',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '8px',
+                marginRight: '4px'
+              }}
+              aria-label="Keranjang Belanja"
+            >
+              <Icon icon="material-symbols:shopping-cart-outline" style={{ fontSize: '24px' }} />
+              {cartCount > 0 && (
+                <span style={{
+                  position: 'absolute',
+                  top: '-2px',
+                  right: '-2px',
+                  backgroundColor: '#d6bd98',
+                  color: '#40534c',
+                  fontSize: '9px',
+                  fontWeight: '900',
+                  borderRadius: '50%',
+                  width: '16px',
+                  height: '16px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  border: '1.5px solid #40534c'
+                }}>
+                  {cartCount}
+                </span>
+              )}
+            </button>
+            <span className="header-lang-switcher">
+              <LanguageSwitcher light />
+            </span>
+            <UserMenu />
           </div>
         </div>
       </header>
@@ -310,13 +359,18 @@ export default function CategoryPageClient({ params }: { params: Promise<{ slug:
           <div style={{ flexGrow: 1 }}>
             <div style={{ backgroundColor: 'white', borderRadius: '4px', padding: '24px', border: '1px solid #e5e7eb' }}>
               <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#1a3636', marginBottom: '24px', borderLeft: '4px solid #40534c', paddingLeft: '12px' }}>{categoryName}</h1>
-              <div className="product-grid">{displayedProducts.map(p => <ProductCard key={p.id} product={p} />)}</div>
+              <div className="product-grid">{displayedProducts.map(p => <ProductCard key={p.id} product={p} onQuickView={(prod) => setQuickViewProduct(prod)} />)}</div>
               {filteredCategoryProducts.length > visibleCount && <div style={{ textAlign: 'center', marginTop: '32px' }}><button onClick={loadMore} style={{ padding: '12px 32px', backgroundColor: '#40534c', color: '#d6bd98', border: 'none', borderRadius: '50px', fontSize: '14px', fontWeight: 'bold', cursor: 'pointer', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>{pt('loadMore')}</button></div>}
             </div>
           </div>
         </div>
       </main>
       <Footer />
+
+      <PaperlisensFloatingCart 
+        quickViewProduct={quickViewProduct} 
+        setQuickViewProduct={setQuickViewProduct} 
+      />
     </div>
   );
 }

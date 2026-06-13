@@ -1,0 +1,4 @@
+ALTER TABLE public.orders
+  ADD COLUMN IF NOT EXISTS shipping_discount INTEGER DEFAULT 0,
+  ADD COLUMN IF NOT EXISTS product_discount INTEGER DEFAULT 0,
+  ADD COLUMN IF NOT EXISTS original_shipping_cost INTEGER DEFAULT 0;

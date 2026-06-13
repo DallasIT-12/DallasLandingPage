@@ -33,6 +33,7 @@ function toProduct(row: any) {
     images: Array.isArray(row.images) ? row.images : (row.images ? JSON.parse(row.images) : []),
     sold: row.sold || 0,
     slug: row.slug,
+    weight: row.weight,
   };
 }
 
@@ -60,10 +61,12 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
         const variants = base.variants || [];
 
         const byId = new Map<string, any[]>();
-        byId.set(base.id, variants.map((v: any) => ({
-          ...v,
-          images: Array.isArray(v.images) ? v.images : (v.images ? JSON.parse(v.images) : [])
-        })));
+        byId.set(base.id, variants.map((v: any) => {
+          return {
+            ...v,
+            images: Array.isArray(v.images) ? v.images : (v.images ? JSON.parse(v.images) : [])
+          };
+        }));
 
         const [flattened] = flattenBaseAndVariants([base], byId);
         if (flattened) {
@@ -250,6 +253,9 @@ export async function PUT(
         images: Array.isArray(body.images) ? body.images : [],
         attr_label_1: body.attr_label_1 || 'Pilih Variasi',
         attr_label_2: body.attr_label_2 || null,
+        price: parseInt(String(body.price), 10) || 0,
+        cost_price: parseInt(String(body.cost_price), 10) || 0,
+        weight: parseInt(String(body.weight), 10) || 200,
         updated_at: new Date().toISOString()
       }).eq('id', base.id);
 
@@ -277,6 +283,7 @@ export async function PUT(
             variant_name_2_en: v.variant_name_2_en || null,
             variant_name_2_zh: v.variant_name_2_zh || null,
             price: parseInt(String(v.price)) || 0,
+            cost_price: parseInt(String(v.cost_price)) || 0,
             image: v.image || body.image || '/placeholder.png',
             images: [],
             variant_slug: v.variant_slug || `${slug}-v${i + 1}`,

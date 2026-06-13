@@ -28,6 +28,7 @@ export type PaperlisensProduct = {
   images: string[];
   sold: number;
   slug: string;
+  weight?: number | null;
   variants?: any[];
 };
 
@@ -50,6 +51,7 @@ function toProduct(row: any): PaperlisensProduct {
     images: Array.isArray(row.images) ? row.images : (row.images ? JSON.parse(row.images) : []),
     sold: row.sold || 0,
     slug: row.slug,
+    weight: row.weight,
   };
 }
 

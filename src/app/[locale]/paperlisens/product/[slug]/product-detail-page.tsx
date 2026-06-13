@@ -10,6 +10,8 @@ import Footer from '@/components/layout/Footer';
 import LanguageSwitcher from '@/components/common/LanguageSwitcher';
 import { getSmartTranslation } from '@/utils/productTranslations';
 import VariantSelector from './VariantSelector';
+import PaperlisensFloatingCart from '@/components/paperlisens/PaperlisensFloatingCart';
+import UserMenu from '@/components/auth/UserMenu';
 
 // --- Constants & Helpers ---
 const generateDiscount = (idStr: string) => {
@@ -33,9 +35,10 @@ const Styles = () => (
     .tab-item { padding: 12px 24px; cursor: pointer; color: #677d6a; border-bottom: 2px solid transparent; white-space: nowrap; }
     .tab-item.active { color: #40534c; border-bottom-color: #40534c; font-weight: bold; }
     
-    @media (max-width: 768px) { 
-      .main-image { height: 300px; } 
-      .top-bar-address, .top-bar-separator { display: none !important; }
+    @media (max-width: 768px) {
+      .header-cart-btn { display: none !important; }
+      .header-lang-switcher { display: none !important; }
+      .main-image { height: 300px; }
       .back-text-full { display: none; }
       .back-text-short { display: inline !important; }
       .header-container { gap: 12px !important; padding: 0 12px !important; }
@@ -331,8 +334,6 @@ const StaticTopBar = memo(({ pt, t }: { pt: any; t: any }) => (
           <span className="back-text-full">{pt('backToDallas')}</span>
           <span className="back-text-short" style={{ display: 'none' }}>{t('Common.back')}</span>
         </Link>
-        <span className="top-bar-separator" style={{ borderLeft: '1px solid #ddd', height: '12px' }}></span>
-        <span className="top-bar-address" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Icon icon="mdi:map-marker" style={{ fontSize: '14px', color: '#40534c' }} /> {t('TopBar.address')}</span>
         <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Icon icon="mdi:phone" style={{ fontSize: '14px', color: '#40534c' }} /> 081260001487</span>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -364,12 +365,50 @@ const StaticHeader = memo(({ pt, searchQuery, setSearchQuery, handleSearch, cart
           </button>
         </form>
       </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-        <LanguageSwitcher light />
-        <div onClick={() => setIsCartOpen(true)} style={{ position: 'relative', padding: '8px', display: 'flex', alignItems: 'center', cursor: 'pointer', color: '#d6bd98' }}>
-          <Icon icon="material-symbols:shopping-cart-outline" style={{ fontSize: '24px', color: '#d6bd98' }} />
-          {cartCount > 0 && <span style={{ position: 'absolute', top: 0, right: 0, backgroundColor: '#d6bd98', color: '#40534c', fontSize: '10px', fontWeight: 'bold', borderRadius: '50%', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{cartCount}</span>}
-        </div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <button 
+          onClick={() => setIsCartOpen(true)}
+          className="header-cart-btn"
+          style={{
+            position: 'relative',
+            backgroundColor: 'transparent',
+            border: 'none',
+            color: '#d6bd98',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '8px',
+            marginRight: '4px'
+          }}
+          aria-label="Keranjang Belanja"
+        >
+          <Icon icon="material-symbols:shopping-cart-outline" style={{ fontSize: '24px' }} />
+          {cartCount > 0 && (
+            <span style={{
+              position: 'absolute',
+              top: '-2px',
+              right: '-2px',
+              backgroundColor: '#d6bd98',
+              color: '#40534c',
+              fontSize: '9px',
+              fontWeight: '900',
+              borderRadius: '50%',
+              width: '16px',
+              height: '16px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              border: '1.5px solid #40534c'
+            }}>
+              {cartCount}
+            </span>
+          )}
+        </button>
+        <span className="header-lang-switcher">
+          <LanguageSwitcher light />
+        </span>
+        <UserMenu />
       </div>
     </div>
   </header>
@@ -705,6 +744,7 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
       )}
 
       <Footer />
+      <PaperlisensFloatingCart />
     </div>
   );
 }

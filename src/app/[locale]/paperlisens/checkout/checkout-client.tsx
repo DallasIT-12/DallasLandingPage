@@ -42,18 +42,66 @@ export default function CheckoutClient() {
   const [postalCode, setPostalCode] = useState('');
   const [notes, setNotes] = useState('');
 
+  // Discount states
+  const [discountInfo, setDiscountInfo] = useState<{
+    margin_pool: number;
+    shipping_discount: number;
+    final_shipping: number;
+    product_discount: number;
+  } | null>(null);
+  const [discountLoading, setDiscountLoading] = useState(false);
+
+  // Shipping options — declared before the discount useEffect that references selectedShipping
+  const [shippingOptions, setShippingOptions] = useState<any[]>([]);
+  const [selectedShipping, setSelectedShipping] = useState<any>(null);
+  const [shippingLoading, setShippingLoading] = useState(false);
+  const [showAllCouriers, setShowAllCouriers] = useState(false);
+
+  useEffect(() => {
+    // Fetch discount info (margin pool) early when reaching Step 2
+    if (step === 2 && cartItems.length > 0) {
+      const fetchMargin = async () => {
+        setDiscountLoading(true);
+        try {
+          const res = await fetch('/api/orders/calculate-discount', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              items: cartItems.map(item => ({
+                productId: item.productId,
+                variantId: item.variantId,
+                quantity: item.quantity,
+                price: item.price
+              })),
+              shippingCost: selectedShipping ? (parseInt(selectedShipping.price) || 0) : 0
+            })
+          });
+          const data = await res.json();
+          if (data.success) {
+            setDiscountInfo({
+              margin_pool: data.margin_pool || 0,
+              shipping_discount: data.shipping_discount || 0,
+              final_shipping: data.final_shipping || 0,
+              product_discount: data.product_discount || 0
+            });
+          }
+        } catch (e) {
+          console.error('Error fetching discount info:', e);
+        }
+        setDiscountLoading(false);
+      };
+      fetchMargin();
+    }
+  }, [step, cartItems, selectedShipping?.price, selectedShipping?.code, selectedShipping?.service]);
+
   // Wilayah autocomplete
   const [wilayahQuery, setWilayahQuery] = useState('');
   const [wilayahResults, setWilayahResults] = useState<any[]>([]);
   const [wilayahLoading, setWilayahLoading] = useState(false);
-  const [selectedWilayah, setSelectedWilayah] = useState<{id:string;name:string;postal_code?:number}|null>(null);
+  const [selectedWilayah, setSelectedWilayah] = useState<{ id: string; name: string; postal_code?: number } | null>(null);
   const [showWilayahDropdown, setShowWilayahDropdown] = useState(false);
   const wilayahTimeout = useRef<any>(null);
 
-  // Shipping options
-  const [shippingOptions, setShippingOptions] = useState<any[]>([]);
-  const [selectedShipping, setSelectedShipping] = useState<any>(null);
-  const [shippingLoading, setShippingLoading] = useState(false);
 
   // QRIS payment
   const [qrUrl, setQrUrl] = useState('');
@@ -86,7 +134,7 @@ export default function CheckoutClient() {
             if (data.phone) setPhone(data.phone);
           }
         })
-        .catch(() => {}); // silently fail, session data is already set
+        .catch(() => { }); // silently fail, session data is already set
     }
   }, [session]);
 
@@ -140,6 +188,7 @@ export default function CheckoutClient() {
     if (!selectedWilayah) return;
     setShippingLoading(true);
     setShippingOptions([]);
+    setShowAllCouriers(false);
     try {
       const res = await fetch('/api/shipping', {
         method: 'POST',
@@ -147,7 +196,7 @@ export default function CheckoutClient() {
         body: JSON.stringify({
           destination_area_id: selectedWilayah.id,
           destination_postal_code: parseInt(postalCode || '0') || selectedWilayah.postal_code,
-          couriers: 'jne,jnt,sicepat,anteraja,ninja',
+          couriers: 'jne,jnt,sicepat,anteraja,ninja,lion,grab,gojek,paxel,sentral,pos,wahana,tiki,rpx',
           items: cartItems.map(item => ({
             name: item.name,
             value: item.price,
@@ -200,13 +249,13 @@ export default function CheckoutClient() {
             clearInterval(countdownRef.current);
             setPaymentStatus('success');
             clearCart();
-            window.location.href = `/id/paperlisens/checkout/success?order=${midtransOrderId.replace('PL-','')}`;
+            window.location.href = `/id/paperlisens/checkout/success?order=${midtransOrderId.replace('PL-', '')}`;
           } else if (data.data?.transactionStatus === 'expire' || data.data?.transactionStatus === 'cancel') {
             clearInterval(pollingRef.current);
             clearInterval(countdownRef.current);
             setPaymentStatus('expired');
           }
-        } catch {}
+        } catch { }
       }, 3000);
     }
     return () => {
@@ -224,7 +273,10 @@ export default function CheckoutClient() {
   }, [countdown, paymentStatus]);
 
 
-  const grandTotal = cartTotal + (selectedShipping ? parseInt(selectedShipping.price) : 0);
+  const sPrice = selectedShipping ? parseInt(selectedShipping.price) : 0;
+  const sDisc = selectedShipping?.discount ? parseInt(selectedShipping.discount) : 0;
+  const pDisc = selectedShipping ? Math.max(0, (discountInfo?.margin_pool || 0) - sDisc) : 0;
+  const grandTotal = cartTotal + sPrice - pDisc;
 
   // Snap URL based on environment
   const isProduction = process.env.NEXT_PUBLIC_MIDTRANS_IS_PRODUCTION === 'true' || process.env.MIDTRANS_IS_PRODUCTION === 'true';
@@ -248,6 +300,12 @@ export default function CheckoutClient() {
     setError('');
     try {
       const cityName = selectedWilayah?.name?.split(',')[1]?.trim() || selectedWilayah?.name || '';
+
+      const sDisc = selectedShipping?.discount ? parseInt(selectedShipping.discount) : 0;
+      const pDisc = selectedShipping ? Math.max(0, (discountInfo?.margin_pool || 0) - sDisc) : 0;
+      const finalShipping = selectedShipping ? parseInt(selectedShipping.price) : 0;
+      const originalShipping = selectedShipping?.originalPrice ? parseInt(selectedShipping.originalPrice) : finalShipping;
+
       const orderPayload = {
         items: cartItems.map(item => ({
           productId: item.productId, id: item.id, name: item.name,
@@ -255,14 +313,17 @@ export default function CheckoutClient() {
           price: item.price, quantity: item.quantity, image: item.image,
           weight: item.weight || 200,
         })),
-        customer: { 
-          name, phone, email, address, 
-          city: cityName, 
-          district: selectedWilayah?.name?.split(',')[0]?.trim() || '', 
-          province: selectedWilayah?.name?.split(',')[2]?.trim() || '', 
-          postalCode: postalCode || selectedWilayah?.postal_code?.toString() || '' 
+        customer: {
+          name, phone, email, address,
+          city: cityName,
+          district: selectedWilayah?.name?.split(',')[0]?.trim() || '',
+          province: selectedWilayah?.name?.split(',')[2]?.trim() || '',
+          postalCode: postalCode || selectedWilayah?.postal_code?.toString() || ''
         },
-        shippingCost: selectedShipping ? parseInt(selectedShipping.price) : 0,
+        shippingCost: finalShipping,
+        shippingDiscount: sDisc,
+        productDiscount: pDisc,
+        originalShippingCost: originalShipping,
         shippingCourier: selectedShipping?.code || '',
         shippingService: selectedShipping?.service || '',
         shippingEtd: selectedShipping?.estimated || '',
@@ -337,7 +398,7 @@ export default function CheckoutClient() {
       {/* Header */}
       <div style={{ backgroundColor: '#40534c', padding: '16px 0', position: 'sticky', top: 0, zIndex: 100 }}>
         <div style={{ maxWidth: '900px', margin: '0 auto', padding: '0 16px', display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <button 
+          <button
             onClick={() => {
               if (step > 1) {
                 setStep(step - 1);
@@ -345,17 +406,17 @@ export default function CheckoutClient() {
               } else {
                 router.back();
               }
-            }} 
-            style={{ 
-              background: 'none', 
-              border: 'none', 
-              color: '#d6bd98', 
-              display: 'flex', 
-              alignItems: 'center', 
-              gap: '6px', 
-              cursor: 'pointer', 
-              fontSize: '14px', 
-              padding: 0 
+            }}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#d6bd98',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              cursor: 'pointer',
+              fontSize: '14px',
+              padding: 0
             }}
           >
             <Icon icon="mdi:arrow-left" width="20" /> Kembali
@@ -475,41 +536,45 @@ export default function CheckoutClient() {
               )}
 
               {/* Instant Local Delivery Option */}
-              {!distanceLoading && distanceKm !== null && distanceKm <= MAX_LOCAL_DELIVERY_KM && (
-                <div onClick={() => setSelectedShipping({ code: 'local', service: 'Pengiriman Lokal Kediri', price: String(localDeliveryCost || 0), estimated: 'Hari ini', distance: distanceKm })} style={{
-                  border: selectedShipping?.code === 'local' ? '2px solid #40534c' : '1px solid #bbf7d0',
-                  borderRadius: '10px', padding: '14px 16px', cursor: 'pointer',
-                  backgroundColor: selectedShipping?.code === 'local' ? '#f0fdf4' : '#fefce8',
-                  transition: 'all 0.2s', marginBottom: '10px',
-                }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <Icon icon="mdi:motorbike" width="22" style={{ color: '#40534c' }} />
-                      <div>
-                        <div style={{ fontWeight: '700', fontSize: '14px', color: '#1a3636' }}>Pengiriman Lokal Kediri</div>
-                        <div style={{ fontSize: '12px', color: '#6b7280' }}>Jarak: {distanceKm} km • Estimasi hari ini</div>
+              {!distanceLoading && distanceKm !== null && distanceKm <= MAX_LOCAL_DELIVERY_KM && (() => {
+                const originalPrice = localDeliveryCost || 0;
+                const discount = Math.min(discountInfo?.margin_pool || 0, originalPrice);
+                const finalPrice = originalPrice - discount;
+                const isFree = finalPrice === 0;
+
+                return (
+                  <div onClick={() => setSelectedShipping({ code: 'local', service: 'Pengiriman Lokal Kediri', price: String(finalPrice), originalPrice: String(originalPrice), discount: String(discount), estimated: 'Hari ini', distance: distanceKm })} style={{
+                    border: selectedShipping?.code === 'local' ? '2px solid #40534c' : '1px solid #bbf7d0',
+                    borderRadius: '10px', padding: '14px 16px', cursor: 'pointer',
+                    backgroundColor: selectedShipping?.code === 'local' ? '#f0fdf4' : '#fefce8',
+                    transition: 'all 0.2s', marginBottom: '10px',
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <Icon icon="mdi:motorbike" width="22" style={{ color: '#40534c' }} />
+                        <div>
+                          <div style={{ fontWeight: '700', fontSize: '14px', color: '#1a3636' }}>Pengiriman Lokal Kediri</div>
+                          <div style={{ fontSize: '12px', color: '#6b7280' }}>Jarak: {distanceKm} km • Estimasi hari ini</div>
+                        </div>
+                      </div>
+                      <div style={{ textAlign: 'right' }}>
+                        {discount > 0 && <span style={{ display: 'block', fontSize: '11px', color: '#9ca3af', textDecoration: 'line-through', marginBottom: '2px' }}>Rp {originalPrice.toLocaleString('id-ID')}</span>}
+                        {isFree ? (
+                          <span style={{ fontWeight: '700', color: '#16a34a', fontSize: '14px' }}>GRATIS ✨</span>
+                        ) : (
+                          <span style={{ fontWeight: '700', color: '#40534c', fontSize: '14px' }}>Rp {finalPrice.toLocaleString('id-ID')}</span>
+                        )}
                       </div>
                     </div>
-                    <div style={{ textAlign: 'right' }}>
-                      {localDeliveryCost === 0 ? (
-                        <span style={{ fontWeight: '700', color: '#16a34a', fontSize: '14px' }}>GRATIS</span>
-                      ) : (
-                        <span style={{ fontWeight: '700', color: '#40534c', fontSize: '14px' }}>Rp {(localDeliveryCost || 0).toLocaleString('id-ID')}</span>
-                      )}
-                    </div>
+                    {discount > 0 && (
+                      <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', backgroundColor: '#f0fdf4', border: '1px dashed #22c55e', borderRadius: '4px', padding: '2px 8px', marginTop: '6px' }}>
+                        <Icon icon="mdi:ticket-percent" width="14" style={{ color: '#16a34a' }} />
+                        <span style={{ fontSize: '11px', color: '#166534', fontWeight: '800' }}>DISKON ONGKIR OTOMATIS</span>
+                      </div>
+                    )}
                   </div>
-                  {cartTotal < 50000 && distanceKm <= FREE_RADIUS_KM && (
-                    <div style={{ marginTop: '6px', fontSize: '11px', color: '#92400e', backgroundColor: '#fffbeb', padding: '4px 8px', borderRadius: '4px', display: 'inline-block' }}>
-                      💡 Belanja min. Rp 50.000 untuk gratis ongkir lokal!
-                    </div>
-                  )}
-                  {cartTotal >= 50000 && distanceKm > FREE_RADIUS_KM && (
-                    <div style={{ marginTop: '6px', fontSize: '11px', color: '#6b7280' }}>
-                      Gratis 5 km pertama + Rp 1.000/km sisanya
-                    </div>
-                  )}
-                </div>
-              )}
+                );
+              })()}
 
               {/* Divider */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', margin: '16px 0' }}>
@@ -524,28 +589,194 @@ export default function CheckoutClient() {
                   <p>Menghitung ongkos kirim...</p>
                 </div>
               ) : shippingOptions.length > 0 ? (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                  {shippingOptions.map((opt, i) => (
-                    <div key={i} onClick={() => setSelectedShipping(opt)} style={{
-                      border: selectedShipping === opt ? '2px solid #40534c' : '1px solid #e5e7eb',
-                      borderRadius: '10px', padding: '14px 16px', cursor: 'pointer',
-                      backgroundColor: selectedShipping === opt ? '#f0fdf4' : '#fff',
-                      transition: 'all 0.2s',
-                    }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <div>
-                          <span style={{ fontWeight: '700', fontSize: '14px', color: '#1a3636', textTransform: 'uppercase' }}>{opt.code}</span>
-                          <span style={{ marginLeft: '8px', fontSize: '13px', color: '#6b7280' }}>{opt.service}</span>
+                (() => {
+                  const getOptionDays = (opt: any) => {
+                    if (!opt.estimated) return 99;
+                    const match = opt.estimated.match(/\d+/);
+                    return match ? parseInt(match[0]) : 99;
+                  };
+
+                  const processedOptions = shippingOptions.map(opt => {
+                    const originalPrice = parseInt(opt.price);
+                    const discount = Math.min(discountInfo?.margin_pool || 0, originalPrice);
+                    const finalPrice = originalPrice - discount;
+                    const days = getOptionDays(opt);
+                    return { ...opt, originalPrice, discount, finalPrice, days };
+                  });
+
+                  if (processedOptions.length === 0) return null;
+
+                  // Find cheapest
+                  let cheapestOpt = processedOptions[0];
+                  for (const opt of processedOptions) {
+                    if (opt.finalPrice < cheapestOpt.finalPrice) {
+                      cheapestOpt = opt;
+                    }
+                  }
+
+                  // Find fastest
+                  let fastestOpt = processedOptions[0];
+                  for (const opt of processedOptions) {
+                    if (opt.days < fastestOpt.days) {
+                      fastestOpt = opt;
+                    } else if (opt.days === fastestOpt.days && opt.finalPrice < fastestOpt.finalPrice) {
+                      fastestOpt = opt;
+                    }
+                  }
+
+                  const isSame = cheapestOpt.code === fastestOpt.code && cheapestOpt.service === fastestOpt.service;
+                  const recommended = isSame ? [cheapestOpt] : [cheapestOpt, fastestOpt];
+
+                  const recKeys = new Set(recommended.map(r => `${r.code}-${r.service}`));
+                  const otherOptions = processedOptions.filter(o => !recKeys.has(`${o.code}-${o.service}`));
+                  const sortedOther = [...otherOptions].sort((a, b) => a.finalPrice - b.finalPrice);
+
+                  const visibleOther = showAllCouriers ? sortedOther : sortedOther.slice(0, 3);
+
+                  const renderCard = (opt: any, label?: string) => {
+                    const isFree = opt.finalPrice === 0;
+                    const isSelected = selectedShipping?.code === opt.code && selectedShipping?.service === opt.service;
+
+                    return (
+                      <div 
+                        key={`${opt.code}-${opt.service}`} 
+                        onClick={() => setSelectedShipping({
+                          ...opt,
+                          price: String(opt.finalPrice),
+                          originalPrice: String(opt.originalPrice),
+                          discount: String(opt.discount)
+                        })} 
+                        style={{
+                          border: isSelected ? '2px solid #40534c' : (label ? '1.5px solid #d6bd98' : '1px solid #e5e7eb'),
+                          borderRadius: '12px', 
+                          padding: '16px', 
+                          cursor: 'pointer',
+                          backgroundColor: isSelected ? '#f0fdf4' : '#fff',
+                          transition: 'all 0.2s',
+                          position: 'relative',
+                          boxShadow: label ? '0 4px 12px rgba(64,83,76,0.06)' : 'none',
+                          marginTop: label ? '8px' : '0'
+                        }}
+                      >
+                        {label && (
+                          <div style={{
+                            position: 'absolute', 
+                            top: '-10px', 
+                            left: '16px',
+                            backgroundColor: '#d6bd98', 
+                            color: '#1a3636',
+                            fontSize: '9px', 
+                            fontWeight: '800', 
+                            padding: '2px 8px',
+                            borderRadius: '10px', 
+                            textTransform: 'uppercase', 
+                            letterSpacing: '0.5px',
+                            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                            zIndex: 2
+                          }}>
+                            {label}
+                          </div>
+                        )}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <div>
+                            <span style={{ fontWeight: '700', fontSize: '14px', color: '#1a3636', textTransform: 'uppercase' }}>{opt.code}</span>
+                            <span style={{ marginLeft: '8px', fontSize: '13px', color: '#6b7280' }}>{opt.service}</span>
+                          </div>
+                          <div style={{ textAlign: 'right' }}>
+                            {opt.discount > 0 && <span style={{ display: 'block', fontSize: '11px', color: '#9ca3af', textDecoration: 'line-through', marginBottom: '2px' }}>Rp {opt.originalPrice.toLocaleString('id-ID')}</span>}
+                            {isFree ? (
+                              <span style={{ fontWeight: '700', color: '#16a34a', fontSize: '15px' }}>GRATIS ✨</span>
+                            ) : (
+                              <span style={{ fontWeight: '700', color: '#40534c', fontSize: '15px' }}>Rp {opt.finalPrice.toLocaleString('id-ID')}</span>
+                            )}
+                          </div>
                         </div>
-                        <span style={{ fontWeight: '700', color: '#40534c', fontSize: '15px' }}>Rp {parseInt(opt.price).toLocaleString('id-ID')}</span>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '4px' }}>
+                          <div style={{ fontSize: '12px', color: '#9ca3af' }}>Estimasi: {opt.estimated} hari</div>
+                          {opt.discount > 0 && (
+                            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', backgroundColor: '#f0fdf4', border: '1px dashed #22c55e', borderRadius: '4px', padding: '2px 8px' }}>
+                              <Icon icon="mdi:ticket-percent" width="12" style={{ color: '#16a34a' }} />
+                              <span style={{ fontSize: '10px', color: '#166534', fontWeight: '800' }}>HEMAT Rp {opt.discount.toLocaleString('id-ID')}</span>
+                            </div>
+                          )}
+                        </div>
                       </div>
-                      <div style={{ fontSize: '12px', color: '#9ca3af', marginTop: '4px' }}>Estimasi: {opt.estimated} hari</div>
+                    );
+                  };
+
+                  return (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                      {/* Recommended section header */}
+                      <div style={{ fontSize: '13px', fontWeight: '700', color: '#40534c', display: 'flex', alignItems: 'center', gap: '6px', marginTop: '8px' }}>
+                        <Icon icon="mdi:thumb-up" style={{ color: '#d6bd98', fontSize: '16px' }} /> Rekomendasi Kami
+                      </div>
+                      {recommended.map(r => {
+                        let label = 'Rekomendasi';
+                        if (isSame) {
+                          label = 'Termurah & Tercepat 🔥';
+                        } else if (r.code === cheapestOpt.code && r.service === cheapestOpt.service) {
+                          label = 'Paling Hemat 💰';
+                        } else {
+                          label = 'Paling Cepat ⚡';
+                        }
+                        return renderCard(r, label);
+                      })}
+
+                      {sortedOther.length > 0 && (
+                        <>
+                          {/* Other couriers section header */}
+                          <div style={{ fontSize: '13px', fontWeight: '700', color: '#6b7280', display: 'flex', alignItems: 'center', gap: '6px', marginTop: '16px', borderTop: '1px solid #e5e7eb', paddingTop: '16px' }}>
+                            <Icon icon="mdi:truck-delivery-outline" style={{ fontSize: '16px' }} /> Opsi Pengiriman Lainnya
+                          </div>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                            {visibleOther.map(o => renderCard(o))}
+                          </div>
+                          {sortedOther.length > 3 && (
+                            <button 
+                              onClick={(e) => {
+                                e.preventDefault();
+                                setShowAllCouriers(!showAllCouriers);
+                              }}
+                              style={{
+                                alignSelf: 'center',
+                                backgroundColor: 'transparent',
+                                border: '1px solid #40534c',
+                                color: '#40534c',
+                                padding: '8px 24px',
+                                borderRadius: '50px',
+                                fontSize: '12px',
+                                fontWeight: '600',
+                                cursor: 'pointer',
+                                transition: 'all 0.2s',
+                                marginTop: '8px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '4px'
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.backgroundColor = '#40534c';
+                                e.currentTarget.style.color = '#fff';
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.backgroundColor = 'transparent';
+                                e.currentTarget.style.color = '#40534c';
+                              }}
+                            >
+                              {showAllCouriers ? (
+                                <>Sembunyikan Kurir Lainnya <Icon icon="mdi:chevron-up" /></>
+                              ) : (
+                                <>Lihat Kurir Lainnya ({sortedOther.length - 3} Opsi) <Icon icon="mdi:chevron-down" /></>
+                              )}
+                            </button>
+                          )}
+                        </>
+                      )}
                     </div>
-                  ))}
-                </div>
+                  );
+                })()
               ) : (
                 <div style={{ textAlign: 'center', padding: '24px', color: '#9ca3af' }}>
-                  <p style={{ margin: '0 0 8px' }}>Ongkir via kurir belum tersedia. Pilih &quot;Ambil Sendiri&quot; di atas atau coba lagi.</p>
+                  <p style={{ margin: '0 0 8px' }}>Ongkir via kurir belum tersedia. Mohon coba lagi atau hubungi admin.</p>
                   <button onClick={fetchShipping} style={{ backgroundColor: '#40534c', color: '#fff', border: 'none', padding: '8px 20px', borderRadius: '6px', cursor: 'pointer' }}>Coba Lagi</button>
                 </div>
               )}
@@ -617,7 +848,7 @@ export default function CheckoutClient() {
               {/* Payment Method Selection */}
               <div style={{ marginBottom: '16px' }}>
                 <div style={{ fontSize: '12px', color: '#9ca3af', marginBottom: '8px', fontWeight: '600' }}>METODE PEMBAYARAN</div>
-                
+
                 {/* QRIS - always available */}
                 <div onClick={() => setPaymentMethod('qris')} style={{
                   border: paymentMethod === 'qris' ? '2px solid #40534c' : '1px solid #e5e7eb',
@@ -680,7 +911,7 @@ export default function CheckoutClient() {
               ) : (
                 <>
                   {qrUrl && <img src={qrUrl} alt="QRIS QR Code" style={{ width: '280px', height: '280px', margin: '0 auto 16px', borderRadius: '12px', border: '2px solid #e5e7eb' }} />}
-                  
+
                   {/* Countdown Timer */}
                   <div style={{ backgroundColor: countdown <= 60 ? '#fef2f2' : '#fffbeb', border: `1px solid ${countdown <= 60 ? '#fecaca' : '#fde68a'}`, borderRadius: '8px', padding: '12px 16px', marginBottom: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
                     <Icon icon="mdi:timer-outline" width="20" style={{ color: countdown <= 60 ? '#dc2626' : '#d97706' }} />
@@ -721,12 +952,63 @@ export default function CheckoutClient() {
                 <span>Subtotal</span><span>Rp {cartTotal.toLocaleString('id-ID')}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: '#6b7280', marginBottom: '6px' }}>
-                <span>Ongkir</span><span>{selectedShipping ? `Rp ${parseInt(selectedShipping.price).toLocaleString('id-ID')}` : '-'}</span>
+                <span>Ongkir</span>
+                <div style={{ textAlign: 'right' }}>
+                  {selectedShipping?.discount && parseInt(selectedShipping.discount) > 0 ? (
+                    <>
+                      <span style={{ textDecoration: 'line-through', fontSize: '11px', marginRight: '6px', opacity: 0.6 }}>Rp {parseInt(selectedShipping.originalPrice).toLocaleString('id-ID')}</span>
+                      <span style={{ color: parseInt(selectedShipping.price) === 0 ? '#16a34a' : 'inherit', fontWeight: parseInt(selectedShipping.price) === 0 ? '700' : 'inherit' }}>
+                        {parseInt(selectedShipping.price) === 0 ? 'GRATIS' : `Rp ${parseInt(selectedShipping.price).toLocaleString('id-ID')}`}
+                      </span>
+                    </>
+                  ) : (
+                    <span>{selectedShipping ? `Rp ${parseInt(selectedShipping.price).toLocaleString('id-ID')}` : '-'}</span>
+                  )}
+                </div>
               </div>
+
+              {/* Product Discount (Excess Margin) */}
+              {selectedShipping && (discountInfo?.margin_pool || 0) > (selectedShipping.discount ? parseInt(selectedShipping.discount) : 0) && (() => {
+                const pDisc = (discountInfo?.margin_pool || 0) - (selectedShipping.discount ? parseInt(selectedShipping.discount) : 0);
+                if (pDisc <= 0) return null;
+                return (
+                  <div style={{
+                    border: '1.5px dashed #d6bd98', borderRadius: '10px',
+                    padding: '10px 14px', backgroundColor: '#fffbeb',
+                    marginTop: '12px', display: 'flex', justifyContent: 'space-between',
+                    alignItems: 'center'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <Icon icon="mdi:ticket-percent" width="20" style={{ color: '#d97706' }} />
+                      <div>
+                        <div style={{ fontSize: '12px', fontWeight: '800', color: '#1a3636' }}>DISKON PRODUK</div>
+                        <div style={{ fontSize: '10px', color: '#92400e' }}>Otomatis diterapkan</div>
+                      </div>
+                    </div>
+                    <span style={{ fontSize: '14px', fontWeight: '900', color: '#16a34a' }}>-Rp {pDisc.toLocaleString('id-ID')}</span>
+                  </div>
+                );
+              })()}
             </div>
-            <div style={{ borderTop: '2px solid #40534c', paddingTop: '12px', display: 'flex', justifyContent: 'space-between', fontSize: '16px', fontWeight: '700', color: '#1a3636' }}>
-              <span>Total</span><span>Rp {grandTotal.toLocaleString('id-ID')}</span>
-            </div>
+
+            {(() => {
+              const sPrice = selectedShipping ? parseInt(selectedShipping.price) : 0;
+              const sDisc = selectedShipping?.discount ? parseInt(selectedShipping.discount) : 0;
+              const pDisc = selectedShipping ? Math.max(0, (discountInfo?.margin_pool || 0) - sDisc) : 0;
+              const finalTotal = cartTotal + sPrice - pDisc;
+
+              return (
+                <div style={{ borderTop: '2px solid #40534c', paddingTop: '12px', display: 'flex', justifyContent: 'space-between', fontSize: '16px', fontWeight: '700', color: '#1a3636' }}>
+                  <span>Total</span>
+                  <div style={{ textAlign: 'right' }}>
+                    <span style={{ color: '#40534c', fontSize: '20px', fontWeight: '900' }}>Rp {finalTotal.toLocaleString('id-ID')}</span>
+                    {(sDisc > 0 || pDisc > 0) && (
+                      <div style={{ fontSize: '10px', color: '#16a34a', fontWeight: '700', marginTop: '2px' }}>HEMAT Rp {(sDisc + pDisc).toLocaleString('id-ID')} ✨</div>
+                    )}
+                  </div>
+                </div>
+              );
+            })()}
           </div>
 
           {/* Payment methods info */}

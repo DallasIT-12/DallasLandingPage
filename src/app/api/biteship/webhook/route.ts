@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
         newOrderStatus = 'shipped';
         break;
       case 'delivered':
-        newOrderStatus = 'delivered';
+        newOrderStatus = 'completed';
         break;
       case 'cancelled':
       case 'rejected':

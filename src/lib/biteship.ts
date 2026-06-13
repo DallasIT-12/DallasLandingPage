@@ -111,6 +111,11 @@ export interface BiteshipOrderResponse {
     company: string;
     type: string;
     shipment_fee: number;
+    tracking_id?: string;
+    waybill_id?: string | null;
+    history?: any[];
+    name?: string;
+    phone?: string;
   };
   shipper: {
     name: string;
