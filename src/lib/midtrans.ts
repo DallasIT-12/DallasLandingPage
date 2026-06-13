@@ -64,13 +64,14 @@ export interface CreateTransactionParams {
   grossAmount: number;
   items: MidtransItemDetail[];
   customer: MidtransCustomerDetail;
+  enabledPayments?: string[];
 }
 
 /**
  * Create a Snap transaction and get the token + redirect URL
  */
 export async function createSnapTransaction(params: CreateTransactionParams) {
-  const { orderId, grossAmount, items, customer } = params;
+  const { orderId, grossAmount, items, customer, enabledPayments } = params;
 
   const authHeader = getAuthHeader();
 
@@ -93,10 +94,10 @@ export async function createSnapTransaction(params: CreateTransactionParams) {
       billing_address: customer.billing_address,
       shipping_address: customer.shipping_address,
     },
-    enabled_payments: [
+    enabled_payments: enabledPayments || [
       "credit_card", "cimb_clicks", "bca_klikbca", "bca_klikpay", "bri_epay", 
       "echannel", "permata_va", "bca_va", "bni_va", "bri_va", "cimb_va", 
-      "other_va", "gopay", "indomaret", "danamon_online", "akulaku", 
+      "other_va", "gopay", "indomaret", "alfamart", "danamon_online", "akulaku", 
       "shopeepay", "kredivo", "uob_ezpay", "other_qris"
     ],
     credit_card: {

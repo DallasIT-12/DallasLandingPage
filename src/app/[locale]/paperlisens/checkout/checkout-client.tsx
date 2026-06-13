@@ -31,8 +31,8 @@ export default function CheckoutClient() {
   const [showLogin, setShowLogin] = useState(false);
   const [error, setError] = useState('');
 
-  // Payment method: qris or cod (COD only available for local delivery)
-  const [paymentMethod, setPaymentMethod] = useState<'qris' | 'cod'>('qris');
+  // Payment method: qris, bank_transfer, credit_card, cstore, paylater, direct_debit, or cod (COD only available for local delivery)
+  const [paymentMethod, setPaymentMethod] = useState<'qris' | 'bank_transfer' | 'credit_card' | 'cstore' | 'paylater' | 'direct_debit' | 'cod'>('qris');
 
   // Shipping form
   const [name, setName] = useState('');
@@ -276,7 +276,24 @@ export default function CheckoutClient() {
   const sPrice = selectedShipping ? parseInt(selectedShipping.price) : 0;
   const sDisc = selectedShipping?.discount ? parseInt(selectedShipping.discount) : 0;
   const pDisc = selectedShipping ? Math.max(0, (discountInfo?.margin_pool || 0) - sDisc) : 0;
-  const grandTotal = cartTotal + sPrice - pDisc;
+  const baseTotal = cartTotal + sPrice - pDisc;
+
+  let adminFee = 0;
+  if (paymentMethod === 'qris') {
+    adminFee = Math.round(baseTotal * 0.007);
+  } else if (paymentMethod === 'bank_transfer') {
+    adminFee = 4000;
+  } else if (paymentMethod === 'credit_card') {
+    adminFee = Math.round(baseTotal * 0.029) + 2000;
+  } else if (paymentMethod === 'cstore') {
+    adminFee = 5000;
+  } else if (paymentMethod === 'paylater') {
+    adminFee = Math.round(baseTotal * 0.02);
+  } else if (paymentMethod === 'direct_debit') {
+    adminFee = 5000;
+  }
+
+  const grandTotal = baseTotal + adminFee;
 
   // Snap URL based on environment
   const isProduction = process.env.NEXT_PUBLIC_MIDTRANS_IS_PRODUCTION === 'true' || process.env.MIDTRANS_IS_PRODUCTION === 'true';
@@ -333,6 +350,7 @@ export default function CheckoutClient() {
         userId: session?.user?.id || null,
         notes,
         paymentMethod, // 'qris' or 'cod'
+        adminFee,
       };
 
       const res = await fetch('/api/payment/create', {
@@ -849,18 +867,129 @@ export default function CheckoutClient() {
               <div style={{ marginBottom: '16px' }}>
                 <div style={{ fontSize: '12px', color: '#9ca3af', marginBottom: '8px', fontWeight: '600' }}>METODE PEMBAYARAN</div>
 
-                {/* QRIS - always available */}
+                {/* 1. QRIS - always available */}
                 <div onClick={() => setPaymentMethod('qris')} style={{
                   border: paymentMethod === 'qris' ? '2px solid #40534c' : '1px solid #e5e7eb',
                   borderRadius: '10px', padding: '14px 16px', cursor: 'pointer',
                   backgroundColor: paymentMethod === 'qris' ? '#f0fdf4' : '#fff',
                   transition: 'all 0.2s', marginBottom: '8px',
+                  position: 'relative'
                 }}>
+                  {/* Recommended Badge */}
+                  <div style={{
+                    position: 'absolute', top: '-10px', right: '16px',
+                    backgroundColor: '#d6bd98', color: '#1a3636',
+                    fontSize: '9px', fontWeight: '800', padding: '2px 8px',
+                    borderRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.5px',
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                    zIndex: 2
+                  }}>
+                    Rekomendasi: Terhemat 👍
+                  </div>
+
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                     <Icon icon="mdi:qrcode" width="22" style={{ color: '#40534c' }} />
                     <div>
-                      <div style={{ fontWeight: '700', fontSize: '14px', color: '#1a3636' }}>QRIS</div>
-                      <div style={{ fontSize: '12px', color: '#6b7280' }}>Scan & bayar via GoPay, OVO, DANA, ShopeePay, dll</div>
+                      <div style={{ fontWeight: '700', fontSize: '14px', color: '#1a3636' }}>QRIS / E-Wallet</div>
+                      <div style={{ fontSize: '12px', color: '#6b7280' }}>Scan QRIS via GoPay, OVO, DANA, ShopeePay, LinkAja, dll</div>
+                      <div style={{ fontSize: '12px', color: '#16a34a', fontWeight: '700', marginTop: '4px' }}>
+                        Biaya Admin: 0.7% (+Rp {Math.round(baseTotal * 0.007).toLocaleString('id-ID')})
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 2. Bank Transfer / VA - always available */}
+                <div onClick={() => setPaymentMethod('bank_transfer')} style={{
+                  border: paymentMethod === 'bank_transfer' ? '2px solid #40534c' : '1px solid #e5e7eb',
+                  borderRadius: '10px', padding: '14px 16px', cursor: 'pointer',
+                  backgroundColor: paymentMethod === 'bank_transfer' ? '#f0fdf4' : '#fff',
+                  transition: 'all 0.2s', marginBottom: '8px',
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <Icon icon="mdi:bank-transfer" width="22" style={{ color: '#40534c' }} />
+                    <div>
+                      <div style={{ fontWeight: '700', fontSize: '14px', color: '#1a3636' }}>Transfer Bank / Virtual Account (VA)</div>
+                      <div style={{ fontSize: '12px', color: '#6b7280' }}>BCA, Mandiri, BNI, BRI, Permata, dll (Verifikasi Otomatis)</div>
+                      <div style={{ fontSize: '12px', color: '#4b5563', marginTop: '4px' }}>
+                        Biaya Admin: Rp 4.000 (Flat)
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 3. Kartu Kredit / Debit - always available */}
+                <div onClick={() => setPaymentMethod('credit_card')} style={{
+                  border: paymentMethod === 'credit_card' ? '2px solid #40534c' : '1px solid #e5e7eb',
+                  borderRadius: '10px', padding: '14px 16px', cursor: 'pointer',
+                  backgroundColor: paymentMethod === 'credit_card' ? '#f0fdf4' : '#fff',
+                  transition: 'all 0.2s', marginBottom: '8px',
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <Icon icon="mdi:credit-card" width="22" style={{ color: '#40534c' }} />
+                    <div>
+                      <div style={{ fontWeight: '700', fontSize: '14px', color: '#1a3636' }}>Kartu Kredit / Debit</div>
+                      <div style={{ fontSize: '12px', color: '#6b7280' }}>Bayar via Kartu Visa, MasterCard, JCB, Amex</div>
+                      <div style={{ fontSize: '12px', color: '#4b5563', marginTop: '4px' }}>
+                        Biaya Admin: 2.9% + Rp 2.000 (+Rp {(Math.round(baseTotal * 0.029) + 2000).toLocaleString('id-ID')})
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 4. Minimarket - always available */}
+                <div onClick={() => setPaymentMethod('cstore')} style={{
+                  border: paymentMethod === 'cstore' ? '2px solid #40534c' : '1px solid #e5e7eb',
+                  borderRadius: '10px', padding: '14px 16px', cursor: 'pointer',
+                  backgroundColor: paymentMethod === 'cstore' ? '#f0fdf4' : '#fff',
+                  transition: 'all 0.2s', marginBottom: '8px',
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <Icon icon="mdi:storefront" width="22" style={{ color: '#40534c' }} />
+                    <div>
+                      <div style={{ fontWeight: '700', fontSize: '14px', color: '#1a3636' }}>Gerai Retail / Minimarket</div>
+                      <div style={{ fontSize: '12px', color: '#6b7280' }}>Bayar tunai di kasir Alfamart, Alfamidi, Indomaret, dll</div>
+                      <div style={{ fontSize: '12px', color: '#4b5563', marginTop: '4px' }}>
+                        Biaya Admin: Rp 5.000 (Flat)
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 5. PayLater - always available */}
+                <div onClick={() => setPaymentMethod('paylater')} style={{
+                  border: paymentMethod === 'paylater' ? '2px solid #40534c' : '1px solid #e5e7eb',
+                  borderRadius: '10px', padding: '14px 16px', cursor: 'pointer',
+                  backgroundColor: paymentMethod === 'paylater' ? '#f0fdf4' : '#fff',
+                  transition: 'all 0.2s', marginBottom: '8px',
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <Icon icon="mdi:cash-clock" width="22" style={{ color: '#40534c' }} />
+                    <div>
+                      <div style={{ fontWeight: '700', fontSize: '14px', color: '#1a3636' }}>Cicilan Tanpa Kartu (PayLater)</div>
+                      <div style={{ fontSize: '12px', color: '#6b7280' }}>Kredivo, Akulaku PayLater</div>
+                      <div style={{ fontSize: '12px', color: '#4b5563', marginTop: '4px' }}>
+                        Biaya Admin: 2% (+Rp {Math.round(baseTotal * 0.02).toLocaleString('id-ID')})
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 6. Debit Langsung / Internet Banking - always available */}
+                <div onClick={() => setPaymentMethod('direct_debit')} style={{
+                  border: paymentMethod === 'direct_debit' ? '2px solid #40534c' : '1px solid #e5e7eb',
+                  borderRadius: '10px', padding: '14px 16px', cursor: 'pointer',
+                  backgroundColor: paymentMethod === 'direct_debit' ? '#f0fdf4' : '#fff',
+                  transition: 'all 0.2s', marginBottom: '8px',
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <Icon icon="mdi:bank" width="22" style={{ color: '#40534c' }} />
+                    <div>
+                      <div style={{ fontWeight: '700', fontSize: '14px', color: '#1a3636' }}>Debit Langsung / Internet Banking</div>
+                      <div style={{ fontSize: '12px', color: '#6b7280' }}>BCA KlikPay, KlikBCA, CIMB Clicks, Danamon Online, dll</div>
+                      <div style={{ fontSize: '12px', color: '#4b5563', marginTop: '4px' }}>
+                        Biaya Admin: Rp 5.000 (Flat)
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -882,13 +1011,6 @@ export default function CheckoutClient() {
                     </div>
                   </div>
                 )}
-              </div>
-
-              <div style={{ display: 'flex', gap: '12px', marginTop: '20px' }}>
-                <button onClick={() => { setStep(2); setPaymentMethod('qris'); }} style={{ flex: 1, padding: '12px', border: '1px solid #d1d5db', borderRadius: '10px', backgroundColor: '#fff', cursor: 'pointer', fontSize: '14px', fontWeight: '600', color: '#374151' }}>← Kembali</button>
-                <button onClick={handlePayment} disabled={isLoading} style={{ flex: 2, padding: '14px', backgroundColor: '#40534c', color: '#d6bd98', border: 'none', borderRadius: '10px', fontSize: '15px', fontWeight: '700', cursor: isLoading ? 'not-allowed' : 'pointer', opacity: isLoading ? 0.7 : 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-                  {isLoading ? <><Icon icon="mdi:loading" width="18" style={{ animation: 'spin 1s linear infinite' }} /> Memproses...</> : paymentMethod === 'cod' ? <>Pesan Sekarang (COD) — Rp {grandTotal.toLocaleString('id-ID')}</> : <>Bayar Sekarang — Rp {grandTotal.toLocaleString('id-ID')}</>}
-                </button>
               </div>
             </div>
           )}
@@ -991,35 +1113,75 @@ export default function CheckoutClient() {
               })()}
             </div>
 
-            {(() => {
-              const sPrice = selectedShipping ? parseInt(selectedShipping.price) : 0;
-              const sDisc = selectedShipping?.discount ? parseInt(selectedShipping.discount) : 0;
-              const pDisc = selectedShipping ? Math.max(0, (discountInfo?.margin_pool || 0) - sDisc) : 0;
-              const finalTotal = cartTotal + sPrice - pDisc;
+            {/* Admin Fee */}
+            {adminFee > 0 && (
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: '#6b7280', marginBottom: '8px', padding: '0 4px' }}>
+                <span>
+                  {paymentMethod === 'bank_transfer' ? 'Biaya Admin (Transfer Bank)' :
+                   paymentMethod === 'credit_card' ? 'Biaya Admin (Kartu Kredit)' :
+                   paymentMethod === 'cstore' ? 'Biaya Admin (Gerai Minimarket)' :
+                   paymentMethod === 'paylater' ? 'Biaya Admin (PayLater)' :
+                   paymentMethod === 'direct_debit' ? 'Biaya Admin (Internet Banking)' :
+                   'Biaya Admin (QRIS 0.7%)'}
+                </span>
+                <span>Rp {adminFee.toLocaleString('id-ID')}</span>
+              </div>
+            )}
 
-              return (
-                <div style={{ borderTop: '2px solid #40534c', paddingTop: '12px', display: 'flex', justifyContent: 'space-between', fontSize: '16px', fontWeight: '700', color: '#1a3636' }}>
-                  <span>Total</span>
-                  <div style={{ textAlign: 'right' }}>
-                    <span style={{ color: '#40534c', fontSize: '20px', fontWeight: '900' }}>Rp {finalTotal.toLocaleString('id-ID')}</span>
-                    {(sDisc > 0 || pDisc > 0) && (
-                      <div style={{ fontSize: '10px', color: '#16a34a', fontWeight: '700', marginTop: '2px' }}>HEMAT Rp {(sDisc + pDisc).toLocaleString('id-ID')} ✨</div>
-                    )}
-                  </div>
-                </div>
-              );
-            })()}
+            <div style={{ borderTop: '2px solid #40534c', paddingTop: '12px', display: 'flex', justifyContent: 'space-between', fontSize: '16px', fontWeight: '700', color: '#1a3636' }}>
+              <span>Total</span>
+              <div style={{ textAlign: 'right' }}>
+                <span style={{ color: '#40534c', fontSize: '20px', fontWeight: '900' }}>Rp {grandTotal.toLocaleString('id-ID')}</span>
+                {(sDisc > 0 || pDisc > 0) && (
+                  <div style={{ fontSize: '10px', color: '#16a34a', fontWeight: '700', marginTop: '2px' }}>HEMAT Rp {(sDisc + pDisc).toLocaleString('id-ID')} ✨</div>
+                )}
+              </div>
+            </div>
           </div>
 
           {/* Payment methods info */}
           <div style={{ backgroundColor: '#fff', borderRadius: '12px', padding: '16px', marginTop: '12px', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }}>
-            <div style={{ fontSize: '12px', color: '#9ca3af', marginBottom: '8px', fontWeight: '600' }}>METODE PEMBAYARAN</div>
+            <div style={{ fontSize: '12px', color: '#9ca3af', marginBottom: '8px', fontWeight: '600' }}>SISTEM PEMBAYARAN</div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Icon icon="mdi:qrcode" width="20" style={{ color: '#40534c' }} />
-              <span style={{ fontSize: '13px', fontWeight: '600', color: '#40534c' }}>QRIS</span>
-              <span style={{ fontSize: '11px', color: '#9ca3af' }}>— Scan & bayar dari semua e-wallet</span>
+              <Icon icon="mdi:shield-check" width="20" style={{ color: '#40534c' }} />
+              <span style={{ fontSize: '13px', fontWeight: '600', color: '#40534c' }}>Midtrans Secure</span>
+              <span style={{ fontSize: '11px', color: '#9ca3af' }}>— Pembayaran aman terverifikasi otomatis</span>
             </div>
           </div>
+
+          {/* Pay Button */}
+          {step === 3 && (
+            <button 
+              onClick={handlePayment} 
+              disabled={isLoading} 
+              style={{ 
+                width: '100%', 
+                padding: '14px', 
+                backgroundColor: '#40534c', 
+                color: '#d6bd98', 
+                border: 'none', 
+                borderRadius: '10px', 
+                fontSize: '15px', 
+                fontWeight: '700', 
+                cursor: isLoading ? 'not-allowed' : 'pointer', 
+                opacity: isLoading ? 0.7 : 1, 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center', 
+                gap: '8px',
+                marginTop: '16px',
+                boxShadow: '0 4px 12px rgba(64,83,76,0.15)'
+              }}
+            >
+              {isLoading ? (
+                <><Icon icon="mdi:loading" width="18" style={{ animation: 'spin 1s linear infinite' }} /> Memproses...</>
+              ) : paymentMethod === 'cod' ? (
+                <>Pesan Sekarang (COD) — Rp {grandTotal.toLocaleString('id-ID')}</>
+              ) : (
+                <>Bayar Sekarang — Rp {grandTotal.toLocaleString('id-ID')}</>
+              )}
+            </button>
+          )}
         </div>
       </div>
 

@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
     const { 
       items, customer, shippingCost, shippingCourier, shippingService, shippingEtd, 
       userId, notes, paymentMethod, courierCode, courierServiceCode, destinationAreaId,
-      shippingDiscount, productDiscount, originalShippingCost
+      shippingDiscount, productDiscount, originalShippingCost, adminFee
     } = body;
 
     // Validate required fields
@@ -30,7 +30,23 @@ export async function POST(request: NextRequest) {
     // Calculate totals
     const subtotal = items.reduce((sum: number, item: any) => sum + (item.price * item.quantity), 0);
     const shipping = shippingCost || 0;
-    const total = subtotal + shipping - (productDiscount || 0);
+    const baseTotal = subtotal + shipping - (productDiscount || 0);
+    let fee = 0;
+    if (paymentMethod === 'qris') {
+      fee = adminFee !== undefined ? adminFee : Math.round(baseTotal * 0.007);
+    } else if (paymentMethod === 'bank_transfer') {
+      fee = 4000;
+    } else if (paymentMethod === 'credit_card') {
+      fee = adminFee !== undefined ? adminFee : (Math.round(baseTotal * 0.029) + 2000);
+    } else if (paymentMethod === 'cstore') {
+      fee = 5000;
+    } else if (paymentMethod === 'paylater') {
+      fee = adminFee !== undefined ? adminFee : Math.round(baseTotal * 0.02);
+    } else if (paymentMethod === 'direct_debit') {
+      fee = 5000;
+    }
+
+    const total = baseTotal + fee;
 
     // Generate order ID
     const orderNumber = generateOrderId();
@@ -87,6 +103,7 @@ export async function POST(request: NextRequest) {
           shipping_discount: shippingDiscount || 0,
           product_discount: productDiscount || 0,
           original_shipping_cost: originalShippingCost || 0,
+          admin_fee: 0,
           total,
           shipping_address: shippingAddress,
           shipping_courier: shippingCourier || null,
@@ -134,6 +151,54 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    if (productDiscount > 0) {
+      midtransItems.push({
+        id: 'DISCOUNT',
+        name: 'Diskon Produk',
+        price: -productDiscount,
+        quantity: 1,
+      });
+    }
+
+    if (fee > 0) {
+      let feeName = 'Biaya Admin';
+      if (paymentMethod === 'qris') {
+        feeName = 'Biaya Admin QRIS (0.7%)';
+      } else if (paymentMethod === 'bank_transfer') {
+        feeName = 'Biaya Admin Transfer Bank';
+      } else if (paymentMethod === 'credit_card') {
+        feeName = 'Biaya Admin Kartu Kredit (2.9% + Rp2.000)';
+      } else if (paymentMethod === 'cstore') {
+        feeName = 'Biaya Admin Gerai Minimarket';
+      } else if (paymentMethod === 'paylater') {
+        feeName = 'Biaya Admin PayLater (2.0%)';
+      } else if (paymentMethod === 'direct_debit') {
+        feeName = 'Biaya Admin Internet Banking';
+      }
+
+      midtransItems.push({
+        id: 'ADMIN_FEE',
+        name: feeName,
+        price: fee,
+        quantity: 1,
+      });
+    }
+
+    let enabledPayments: string[] | undefined = undefined;
+    if (paymentMethod === 'qris') {
+      enabledPayments = ["gopay", "shopeepay", "other_qris"];
+    } else if (paymentMethod === 'bank_transfer') {
+      enabledPayments = ["bca_va", "bni_va", "bri_va", "permata_va", "cimb_va", "other_va", "echannel"];
+    } else if (paymentMethod === 'credit_card') {
+      enabledPayments = ["credit_card"];
+    } else if (paymentMethod === 'cstore') {
+      enabledPayments = ["alfamart", "indomaret"];
+    } else if (paymentMethod === 'paylater') {
+      enabledPayments = ["akulaku", "kredivo"];
+    } else if (paymentMethod === 'direct_debit') {
+      enabledPayments = ["bca_klikpay", "bca_klikbca", "cimb_clicks", "danamon_online", "bri_epay"];
+    }
+
     const snapResult = await createSnapTransaction({
       orderId: midtransOrderId,
       grossAmount: total,
@@ -150,6 +215,7 @@ export async function POST(request: NextRequest) {
           phone: customer.phone,
         },
       },
+      enabledPayments,
     });
 
     // 1. Create order in DB (status: pending_payment)
@@ -163,13 +229,14 @@ export async function POST(request: NextRequest) {
         guest_phone: !userId ? customer.phone : null,
         status: 'pending_payment',
         payment_status: 'pending',
-        payment_method: 'qris',
+        payment_method: paymentMethod || 'qris',
         midtrans_order_id: midtransOrderId,
         subtotal,
         shipping_cost: shipping,
         shipping_discount: shippingDiscount || 0,
         product_discount: productDiscount || 0,
         original_shipping_cost: originalShippingCost || 0,
+        admin_fee: fee,
         total,
         shipping_address: shippingAddress,
         shipping_courier: shippingCourier || null,
