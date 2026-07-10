@@ -14,13 +14,6 @@ import PaperlisensFloatingCart from '@/components/paperlisens/PaperlisensFloatin
 import UserMenu from '@/components/auth/UserMenu';
 
 // --- Constants & Helpers ---
-const generateDiscount = (idStr: string) => {
-  if (!idStr) return 10;
-  let hash = 0;
-  for (let i = 0; i < idStr.length; i++) { hash = idStr.charCodeAt(i) + ((hash << 5) - hash); }
-  const discounts = [10, 15, 20, 25, 30, 35, 40, 50];
-  return discounts[Math.abs(hash) % discounts.length];
-};
 
 // --- Responsive Styles ---
 const Styles = () => (
@@ -141,8 +134,9 @@ const ProductCard = memo(({ product }: { product: any }) => {
   };
 
   const productName = getLocalized(product, 'name');
-  const discountPercent = generateDiscount(product.id || product.name);
-  const markupPrice = Math.ceil(product.price / (1 - (discountPercent / 100)));
+  const discountPercent = 10;
+  const originalPrice = product.price;
+  const salePrice = Math.round(product.price * 0.9);
 
   return (
     <Link href={`/paperlisens/product/${encodeURIComponent(product.productSlug)}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block', width: '220px', flexShrink: 0 }}>
@@ -170,14 +164,14 @@ const ProductCard = memo(({ product }: { product: any }) => {
           </h4>
           <div style={{ marginTop: 'auto' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
-              <span style={{ fontSize: '11px', textDecoration: 'line-through', color: '#9ca3af' }}>Rp {markupPrice.toLocaleString('id-ID')}</span>
+              <span style={{ fontSize: '11px', textDecoration: 'line-through', color: '#9ca3af' }}>Rp {originalPrice.toLocaleString('id-ID')}</span>
               <div style={{ fontSize: '11px', color: '#677d6a', display: 'flex', alignItems: 'center' }}>
                 <Icon icon="material-symbols:star" style={{ color: '#d6bd98', fontSize: '14px', marginRight: '2px' }} />
                 {product.sold} {pt('sold')}
               </div>
             </div>
             <div style={{ color: '#40534c', fontWeight: '800', fontSize: '16px' }}>
-              Rp {product.price.toLocaleString('id-ID')}
+              Rp {salePrice.toLocaleString('id-ID')}
             </div>
           </div>
         </div>
@@ -481,8 +475,9 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
 
   const productName = getLocalized(initialProduct, 'name');
   const productDescription = getLocalized(initialProduct, 'description');
-  const discountPercent = useMemo(() => generateDiscount(displayProduct.id || displayProduct.name), [displayProduct.id, displayProduct.name]);
-  const originalPrice = useMemo(() => Math.ceil(displayProduct.price / (1 - (discountPercent / 100))), [displayProduct.price, discountPercent]);
+  const discountPercent = 10;
+  const originalPrice = displayProduct.price;
+  const salePrice = useMemo(() => Math.round(displayProduct.price * 0.9), [displayProduct.price]);
 
   const productImages = useMemo(() => {
     const list: string[] = [];
@@ -671,7 +666,7 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
                 pt={pt}
               />
               <PriceBox
-                price={displayProduct.price}
+                price={salePrice}
                 originalPrice={originalPrice}
                 discountPercent={discountPercent}
               />

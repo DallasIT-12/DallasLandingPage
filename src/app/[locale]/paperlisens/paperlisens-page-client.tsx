@@ -200,13 +200,13 @@ const ProductCard = ({ product, onQuickView }: { product: any; onQuickView?: (p:
     ? product.image
     : (Array.isArray(product.images) && product.images[0] ? product.images[0] : (product.image || '/placeholder.png'));
 
-  const { discountPercent, markupPrice } = useMemo(() => {
-    let hash = 0;
-    const idStr = product.id || product.name || '';
-    for (let i = 0; i < idStr.length; i++) { hash = idStr.charCodeAt(i) + ((hash << 5) - hash); }
-    const discounts = [10, 15, 20, 25, 30];
-    return { discountPercent: discounts[Math.abs(hash) % discounts.length], markupPrice: Math.ceil(product.price / (1 - (discounts[Math.abs(hash) % discounts.length] / 100))) };
-  }, [product.id, product.name, product.price]);
+  const { discountPercent, originalPrice, salePrice } = useMemo(() => {
+    return {
+      discountPercent: 10,
+      originalPrice: product.price,
+      salePrice: Math.round(product.price * 0.9)
+    };
+  }, [product.price]);
 
   return (
     <div 
@@ -250,8 +250,8 @@ const ProductCard = ({ product, onQuickView }: { product: any; onQuickView?: (p:
         </div>
         <div style={{ marginTop: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
           <div style={{ minWidth: 0, flexShrink: 0 }}>
-            <span style={{ fontSize: '10px', textDecoration: 'line-through', color: '#9ca3af', display: 'block' }}>Rp {markupPrice.toLocaleString('id-ID')}</span>
-            <span style={{ fontSize: '16px', fontWeight: 'bold', color: '#40534c' }}>Rp {product.price.toLocaleString('id-ID')}</span>
+            <span style={{ fontSize: '10px', textDecoration: 'line-through', color: '#9ca3af', display: 'block' }}>Rp {originalPrice.toLocaleString('id-ID')}</span>
+            <span style={{ fontSize: '16px', fontWeight: 'bold', color: '#40534c' }}>Rp {salePrice.toLocaleString('id-ID')}</span>
           </div>
           <div style={{ fontSize: '11px', color: '#677d6a', display: 'flex', alignItems: 'center', whiteSpace: 'nowrap', flexShrink: 1, minWidth: 0, overflow: 'hidden' }}>
             <Icon icon="material-symbols:star" style={{ color: '#d6bd98', fontSize: '12px', marginRight: '2px', flexShrink: 0 }} />

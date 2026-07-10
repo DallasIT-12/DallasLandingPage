@@ -849,16 +849,25 @@ export default function CheckoutClient() {
               {/* Items Summary */}
               <div style={{ marginBottom: '16px' }}>
                 <div style={{ fontSize: '12px', color: '#9ca3af', marginBottom: '8px', fontWeight: '600' }}>PRODUK ({cartItems.length})</div>
-                {cartItems.map(item => (
-                  <div key={item.id} style={{ display: 'flex', gap: '10px', padding: '8px 0', borderBottom: '1px solid #f3f4f6' }}>
-                    <img src={item.image} alt="" style={{ width: '44px', height: '44px', borderRadius: '6px', objectFit: 'cover' }} />
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: '13px', fontWeight: '500', color: '#1a3636', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.name}</div>
-                      <div style={{ fontSize: '12px', color: '#9ca3af' }}>{item.quantity}x Rp {item.price.toLocaleString('id-ID')}</div>
+                {cartItems.map(item => {
+                  const salePrice = Math.round(item.price * 0.9);
+                  return (
+                    <div key={item.id} style={{ display: 'flex', gap: '10px', padding: '8px 0', borderBottom: '1px solid #f3f4f6' }}>
+                      <img src={item.image} alt="" style={{ width: '44px', height: '44px', borderRadius: '6px', objectFit: 'cover' }} />
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: '13px', fontWeight: '500', color: '#1a3636', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.name}</div>
+                        <div style={{ fontSize: '12px', color: '#9ca3af' }}>
+                          {item.quantity}x <span style={{ textDecoration: 'line-through', marginRight: '4px' }}>Rp {item.price.toLocaleString('id-ID')}</span>
+                          <span style={{ color: '#40534c', fontWeight: '600' }}>Rp {salePrice.toLocaleString('id-ID')}</span>
+                        </div>
+                      </div>
+                      <div style={{ fontSize: '13px', fontWeight: '600', color: '#40534c' }}>
+                        <span style={{ textDecoration: 'line-through', color: '#9ca3af', marginRight: '6px', fontSize: '11px' }}>Rp {(item.price * item.quantity).toLocaleString('id-ID')}</span>
+                        <span>Rp {(salePrice * item.quantity).toLocaleString('id-ID')}</span>
+                      </div>
                     </div>
-                    <div style={{ fontSize: '13px', fontWeight: '600', color: '#40534c' }}>Rp {(item.price * item.quantity).toLocaleString('id-ID')}</div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
               {notes && <div style={{ backgroundColor: '#fffbeb', borderRadius: '8px', padding: '10px 14px', marginBottom: '16px', fontSize: '13px', color: '#92400e' }}><strong>Catatan:</strong> {notes}</div>}
@@ -1063,12 +1072,34 @@ export default function CheckoutClient() {
         <div style={{ alignSelf: 'start', position: 'sticky', top: '80px' }}>
           <div style={{ backgroundColor: '#fff', borderRadius: '12px', padding: '20px', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }}>
             <h3 style={{ margin: '0 0 16px', fontSize: '16px', color: '#1a3636', fontWeight: '700' }}>Ringkasan Pesanan</h3>
-            {cartItems.map(item => (
-              <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', marginBottom: '8px', color: '#374151' }}>
-                <span style={{ maxWidth: '180px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.name} ×{item.quantity}</span>
-                <span style={{ fontWeight: '600' }}>Rp {(item.price * item.quantity).toLocaleString('id-ID')}</span>
-              </div>
-            ))}
+            <div style={{ 
+              backgroundColor: '#f0fdf4', 
+              border: '1px solid #bbf7d0', 
+              borderRadius: '8px', 
+              padding: '10px 12px', 
+              marginBottom: '16px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              color: '#166534',
+              fontSize: '12px',
+              fontWeight: '600'
+            }}>
+              <Icon icon="mdi:ticket-percent" width="20" style={{ color: '#16a34a', flexShrink: 0 }} />
+              <span>Anda Mendapatkan Diskon Ongkir 10% Otomatis!</span>
+            </div>
+            {cartItems.map(item => {
+              const salePrice = Math.round(item.price * 0.9);
+              return (
+                <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', marginBottom: '8px', color: '#374151' }}>
+                  <span style={{ maxWidth: '180px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.name} ×{item.quantity}</span>
+                  <div style={{ textAlign: 'right' }}>
+                    <span style={{ textDecoration: 'line-through', color: '#9ca3af', marginRight: '6px', fontSize: '11px' }}>Rp {(item.price * item.quantity).toLocaleString('id-ID')}</span>
+                    <span style={{ fontWeight: '600' }}>Rp {(salePrice * item.quantity).toLocaleString('id-ID')}</span>
+                  </div>
+                </div>
+              );
+            })}
             <div style={{ borderTop: '1px solid #e5e7eb', margin: '12px 0', paddingTop: '12px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: '#6b7280', marginBottom: '6px' }}>
                 <span>Subtotal</span><span>Rp {cartTotal.toLocaleString('id-ID')}</span>
@@ -1103,8 +1134,8 @@ export default function CheckoutClient() {
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <Icon icon="mdi:ticket-percent" width="20" style={{ color: '#d97706' }} />
                       <div>
-                        <div style={{ fontSize: '12px', fontWeight: '800', color: '#1a3636' }}>DISKON PRODUK</div>
-                        <div style={{ fontSize: '10px', color: '#92400e' }}>Otomatis diterapkan</div>
+                        <div style={{ fontSize: '12px', fontWeight: '800', color: '#1a3636' }}>DISKON ONGKIR (SISA)</div>
+                        <div style={{ fontSize: '10px', color: '#92400e' }}>Sisa diskon ongkir otomatis dipotong ke produk</div>
                       </div>
                     </div>
                     <span style={{ fontSize: '14px', fontWeight: '900', color: '#16a34a' }}>-Rp {pDisc.toLocaleString('id-ID')}</span>
