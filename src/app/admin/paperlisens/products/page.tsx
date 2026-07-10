@@ -85,7 +85,6 @@ type ProductVariant = {
   variant_name_2_en?: string | null;
   variant_name_2_zh?: string | null;
   price: number;
-  cost_price?: number;
   image: string;
   images: string[];
   variant_slug: string;
@@ -100,7 +99,6 @@ type Product = {
   category: string;
   slug?: string;
   price: number;
-  cost_price?: number;
   image: string;
   images: string[];
   description?: string;
@@ -982,9 +980,9 @@ export default function PaperlisensProductsAdmin() {
                   )}
                 </div>
 
-                {/* Default Price & HPP (Visible only if no variants) */}
+                {/* Default Price (Visible only if no variants) */}
                 {(!editingProduct.variants || editingProduct.variants.length === 0) && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 gap-4">
                     <div>
                       <label className={labelClasses}>Harga Jual Dasar <span className="text-rose-400">*</span></label>
                       <div className="relative">
@@ -997,22 +995,6 @@ export default function PaperlisensProductsAdmin() {
                           placeholder="0"
                         />
                       </div>
-                    </div>
-                    <div>
-                      <label className={labelClasses}>HPP Dasar (Modal)</label>
-                      <div className="relative">
-                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold text-xs">Rp</span>
-                        <input
-                          type="number"
-                          value={editingProduct.cost_price || 0}
-                          onChange={(e) => setEditingProduct({ ...editingProduct, cost_price: parseInt(e.target.value) || 0 })}
-                          className={`${inputClasses} pl-12 border-amber-500/10 bg-amber-500/5 text-amber-200 focus:ring-amber-500`}
-                          placeholder="0"
-                        />
-                      </div>
-                      <p className="text-[9px] text-amber-500/50 font-bold uppercase mt-2 flex items-center gap-1">
-                        <Icon icon="lucide:lock" className="text-xs" /> Digunakan untuk perhitungan subsidi ongkir
-                      </p>
                     </div>
                   </div>
                 )}
@@ -1066,6 +1048,63 @@ export default function PaperlisensProductsAdmin() {
                         <Icon icon="lucide:plus" /> Tambah
                       </button>
                     )}
+                  </div>
+                </div>
+
+                {/* Bulk Update Controls */}
+                <div className="flex flex-wrap items-center gap-4 p-4 bg-white/[0.02] border border-white/5 rounded-2xl mb-6">
+                  <div className="flex items-center gap-2">
+                    <Icon icon="lucide:sliders" className="text-[#d6bd98] text-base" />
+                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Ubah Massal Varian:</span>
+                  </div>
+                  
+                  {/* Bulk Price */}
+                  <div className="flex items-center gap-2">
+                    <div className="relative w-36">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 font-bold text-[10px]">Rp</span>
+                      <input
+                        type="number"
+                        placeholder="Harga Jual"
+                        id="bulkPriceInput"
+                        className="w-full bg-white/5 border border-white/10 rounded-xl pl-8 pr-3 py-1.5 text-xs outline-none focus:ring-1 focus:ring-[#d6bd98] text-white font-bold"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const input = document.getElementById('bulkPriceInput') as HTMLInputElement;
+                        const val = parseInt(input?.value);
+                        if (isNaN(val) || val < 0) return;
+                        const nv = (editingProduct.variants || []).map(v => ({ ...v, price: val }));
+                        setEditingProduct({ ...editingProduct, variants: nv });
+                      }}
+                      className="px-3 py-2 bg-[#d6bd98] text-[#1a3636] font-bold text-[10px] uppercase tracking-wider rounded-xl hover:bg-white hover:text-black transition-colors"
+                    >
+                      Set Harga
+                    </button>
+                  </div>
+
+                  {/* Bulk Sold */}
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="number"
+                      placeholder="Terjual"
+                      id="bulkSoldInput"
+                      className="w-24 bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 text-xs outline-none focus:ring-1 focus:ring-[#d6bd98] text-white font-bold"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const input = document.getElementById('bulkSoldInput') as HTMLInputElement;
+                        const val = parseInt(input?.value);
+                        if (isNaN(val) || val < 0) return;
+                        const nv = (editingProduct.variants || []).map(v => ({ ...v, sold: val }));
+                        setEditingProduct({ ...editingProduct, variants: nv });
+                      }}
+                      className="px-3 py-2 bg-slate-700 text-white font-bold text-[10px] uppercase tracking-wider rounded-xl hover:bg-slate-600 transition-colors"
+                    >
+                      Set Terjual
+                    </button>
                   </div>
                 </div>
 
@@ -1192,17 +1231,6 @@ export default function PaperlisensProductsAdmin() {
                                       <span className="text-[7px] font-bold text-slate-600 uppercase tracking-tighter mt-1">Harga Jual</span>
                                     </div>
 
-                                    <div className="flex flex-col items-end">
-                                      <div className="flex items-center gap-1.5 opacity-60 hover:opacity-100 transition-opacity">
-                                        <Icon icon="lucide:lock" className="text-[9px] text-amber-500/50" />
-                                        <span className="text-[9px] text-slate-500 font-bold">Rp</span>
-                                        <input type="number" value={v.cost_price || 0}
-                                          onChange={(e) => { const nv = [...(editingProduct.variants || [])]; nv[idx].cost_price = parseInt(e.target.value) || 0; setEditingProduct({ ...editingProduct, variants: nv }); }}
-                                          className="w-24 bg-amber-500/5 border border-amber-500/10 rounded-lg px-2 py-1.5 text-xs outline-none focus:ring-1 focus:ring-amber-500 text-amber-200 font-bold" />
-                                      </div>
-                                      <span className="text-[7px] font-bold text-amber-500/40 uppercase tracking-tighter mt-1">HPP (Modal)</span>
-                                    </div>
-
                                     <button type="button" onClick={() => { const nv = (editingProduct.variants || []).filter((_, i) => i !== idx); setEditingProduct({ ...editingProduct, variants: nv }); }}
                                       className="text-slate-600 hover:text-rose-500 transition-colors p-1">
                                       <Icon icon="lucide:trash-2" className="text-base" />
@@ -1284,16 +1312,7 @@ export default function PaperlisensProductsAdmin() {
                             <span className="text-[7px] font-bold text-slate-600 uppercase tracking-tighter mt-1">Harga Jual</span>
                           </div>
 
-                          <div className="flex flex-col items-end">
-                            <div className="flex items-center gap-1.5 opacity-60 hover:opacity-100 transition-opacity">
-                              <Icon icon="lucide:lock" className="text-[9px] text-amber-500/50" />
-                              <span className="text-[9px] text-slate-500 font-bold">Rp</span>
-                              <input type="number" value={v.cost_price || 0}
-                                onChange={(e) => { const nv = [...(editingProduct.variants || [])]; nv[idx].cost_price = parseInt(e.target.value) || 0; setEditingProduct({ ...editingProduct, variants: nv }); }}
-                                className="w-24 bg-amber-500/5 border border-amber-500/10 rounded-lg px-2 py-1.5 text-xs outline-none focus:ring-1 focus:ring-amber-500 text-amber-200 font-bold" />
-                            </div>
-                            <span className="text-[7px] font-bold text-amber-500/40 uppercase tracking-tighter mt-1">HPP (Modal)</span>
-                          </div>
+
 
                           <button type="button" onClick={() => { const nv = (editingProduct.variants || []).filter((_, i) => i !== idx); setEditingProduct({ ...editingProduct, variants: nv }); }}
                             className="text-slate-600 hover:text-rose-500 transition-colors p-1">

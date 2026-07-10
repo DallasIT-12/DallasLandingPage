@@ -254,7 +254,6 @@ export async function PUT(
         attr_label_1: body.attr_label_1 || 'Pilih Variasi',
         attr_label_2: body.attr_label_2 || null,
         price: parseInt(String(body.price), 10) || 0,
-        cost_price: parseInt(String(body.cost_price), 10) || 0,
         weight: parseInt(String(body.weight), 10) || 200,
         updated_at: new Date().toISOString()
       }).eq('id', base.id);
@@ -283,7 +282,6 @@ export async function PUT(
             variant_name_2_en: v.variant_name_2_en || null,
             variant_name_2_zh: v.variant_name_2_zh || null,
             price: parseInt(String(v.price)) || 0,
-            cost_price: parseInt(String(v.cost_price)) || 0,
             image: v.image || body.image || '/placeholder.png',
             images: [],
             variant_slug: v.variant_slug || `${slug}-v${i + 1}`,

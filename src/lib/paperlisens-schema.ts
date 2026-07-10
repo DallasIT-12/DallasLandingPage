@@ -21,7 +21,6 @@ export type ProductBase = {
   attr_label_1?: string | null;
   attr_label_2?: string | null;
   price?: number | null;
-  cost_price?: number | null;
 };
 
 export type ProductVariant = {
@@ -34,7 +33,6 @@ export type ProductVariant = {
   variant_name_2_en?: string | null;
   variant_name_2_zh?: string | null;
   price: number;
-  cost_price?: number | null;
   image: string;
   images: string[] | any;
   sold: number;
@@ -144,7 +142,6 @@ export function flattenBaseAndVariants(
       description_zh: base.description_zh,
       category: base.category,
       price: minPrice || firstVariant?.price || base.price || 0,
-      cost_price: firstVariant?.cost_price || base.cost_price || 0,
       image: finalImages[0] || base.image || '/placeholder.png',
       images: finalImages.length > 0 ? finalImages : ['/placeholder.png'],
       sold: displaySold,
