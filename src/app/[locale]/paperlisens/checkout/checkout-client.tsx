@@ -850,20 +850,20 @@ export default function CheckoutClient() {
               <div style={{ marginBottom: '16px' }}>
                 <div style={{ fontSize: '12px', color: '#9ca3af', marginBottom: '8px', fontWeight: '600' }}>PRODUK ({cartItems.length})</div>
                 {cartItems.map(item => {
-                  const salePrice = Math.round(item.price * 0.9);
+                  const markupPrice = Math.ceil(item.price / 0.9);
                   return (
                     <div key={item.id} style={{ display: 'flex', gap: '10px', padding: '8px 0', borderBottom: '1px solid #f3f4f6' }}>
                       <img src={item.image} alt="" style={{ width: '44px', height: '44px', borderRadius: '6px', objectFit: 'cover' }} />
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ fontSize: '13px', fontWeight: '500', color: '#1a3636', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.name}</div>
                         <div style={{ fontSize: '12px', color: '#9ca3af' }}>
-                          {item.quantity}x <span style={{ textDecoration: 'line-through', marginRight: '4px' }}>Rp {item.price.toLocaleString('id-ID')}</span>
-                          <span style={{ color: '#40534c', fontWeight: '600' }}>Rp {salePrice.toLocaleString('id-ID')}</span>
+                          {item.quantity}x <span style={{ textDecoration: 'line-through', marginRight: '4px' }}>Rp {markupPrice.toLocaleString('id-ID')}</span>
+                          <span style={{ color: '#40534c', fontWeight: '600' }}>Rp {item.price.toLocaleString('id-ID')}</span>
                         </div>
                       </div>
                       <div style={{ fontSize: '13px', fontWeight: '600', color: '#40534c' }}>
-                        <span style={{ textDecoration: 'line-through', color: '#9ca3af', marginRight: '6px', fontSize: '11px' }}>Rp {(item.price * item.quantity).toLocaleString('id-ID')}</span>
-                        <span>Rp {(salePrice * item.quantity).toLocaleString('id-ID')}</span>
+                        <span style={{ textDecoration: 'line-through', color: '#9ca3af', marginRight: '6px', fontSize: '11px' }}>Rp {(markupPrice * item.quantity).toLocaleString('id-ID')}</span>
+                        <span>Rp {(item.price * item.quantity).toLocaleString('id-ID')}</span>
                       </div>
                     </div>
                   );
@@ -1089,20 +1089,24 @@ export default function CheckoutClient() {
               <span>Anda Mendapatkan Diskon Ongkir 10% Otomatis!</span>
             </div>
             {cartItems.map(item => {
-              const salePrice = Math.round(item.price * 0.9);
+              const markupPrice = Math.ceil(item.price / 0.9);
               return (
                 <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', marginBottom: '8px', color: '#374151' }}>
                   <span style={{ maxWidth: '180px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.name} ×{item.quantity}</span>
                   <div style={{ textAlign: 'right' }}>
-                    <span style={{ textDecoration: 'line-through', color: '#9ca3af', marginRight: '6px', fontSize: '11px' }}>Rp {(item.price * item.quantity).toLocaleString('id-ID')}</span>
-                    <span style={{ fontWeight: '600' }}>Rp {(salePrice * item.quantity).toLocaleString('id-ID')}</span>
+                    <span style={{ textDecoration: 'line-through', color: '#9ca3af', marginRight: '6px', fontSize: '11px' }}>Rp {(markupPrice * item.quantity).toLocaleString('id-ID')}</span>
+                    <span style={{ fontWeight: '600' }}>Rp {(item.price * item.quantity).toLocaleString('id-ID')}</span>
                   </div>
                 </div>
               );
             })}
             <div style={{ borderTop: '1px solid #e5e7eb', margin: '12px 0', paddingTop: '12px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: '#6b7280', marginBottom: '6px' }}>
-                <span>Subtotal</span><span>Rp {cartTotal.toLocaleString('id-ID')}</span>
+                <span>Subtotal</span>
+                <div>
+                  <span style={{ textDecoration: 'line-through', color: '#9ca3af', marginRight: '6px', fontSize: '11px' }}>Rp {Math.ceil(cartTotal / 0.9).toLocaleString('id-ID')}</span>
+                  <span style={{ fontWeight: '600', color: '#1a3636' }}>Rp {cartTotal.toLocaleString('id-ID')}</span>
+                </div>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: '#6b7280', marginBottom: '6px' }}>
                 <span>Ongkir</span>

@@ -135,8 +135,7 @@ const ProductCard = memo(({ product }: { product: any }) => {
 
   const productName = getLocalized(product, 'name');
   const discountPercent = 10;
-  const originalPrice = product.price;
-  const salePrice = Math.round(product.price * 0.9);
+  const markupPrice = Math.ceil(product.price / 0.9);
 
   return (
     <Link href={`/paperlisens/product/${encodeURIComponent(product.productSlug)}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block', width: '220px', flexShrink: 0 }}>
@@ -164,14 +163,14 @@ const ProductCard = memo(({ product }: { product: any }) => {
           </h4>
           <div style={{ marginTop: 'auto' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
-              <span style={{ fontSize: '11px', textDecoration: 'line-through', color: '#9ca3af' }}>Rp {originalPrice.toLocaleString('id-ID')}</span>
+              <span style={{ fontSize: '11px', textDecoration: 'line-through', color: '#9ca3af' }}>Rp {markupPrice.toLocaleString('id-ID')}</span>
               <div style={{ fontSize: '11px', color: '#677d6a', display: 'flex', alignItems: 'center' }}>
                 <Icon icon="material-symbols:star" style={{ color: '#d6bd98', fontSize: '14px', marginRight: '2px' }} />
                 {product.sold} {pt('sold')}
               </div>
             </div>
             <div style={{ color: '#40534c', fontWeight: '800', fontSize: '16px' }}>
-              Rp {salePrice.toLocaleString('id-ID')}
+              Rp {product.price.toLocaleString('id-ID')}
             </div>
           </div>
         </div>
@@ -476,8 +475,7 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
   const productName = getLocalized(initialProduct, 'name');
   const productDescription = getLocalized(initialProduct, 'description');
   const discountPercent = 10;
-  const originalPrice = displayProduct.price;
-  const salePrice = useMemo(() => Math.round(displayProduct.price * 0.9), [displayProduct.price]);
+  const markupPrice = useMemo(() => Math.ceil(displayProduct.price / 0.9), [displayProduct.price]);
 
   const productImages = useMemo(() => {
     const list: string[] = [];
@@ -529,7 +527,7 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
     images: productImages,
     rating: 4.9,
     reviewCount: 128,
-    originalPrice: originalPrice,
+    originalPrice: displayProduct.price,
     stock: 150,
     weight: '1000 gr',
   };
@@ -666,8 +664,8 @@ export default function ProductDetailPage({ initialProduct, relatedProducts, oth
                 pt={pt}
               />
               <PriceBox
-                price={salePrice}
-                originalPrice={originalPrice}
+                price={displayProduct.price}
+                originalPrice={markupPrice}
                 discountPercent={discountPercent}
               />
               <VariantSelector

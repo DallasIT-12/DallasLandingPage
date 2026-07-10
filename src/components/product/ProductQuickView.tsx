@@ -87,8 +87,7 @@ export default function ProductQuickView({ product, isOpen, onClose }: ProductQu
   };
 
   const discountPercent = 10;
-  const originalPrice = displayPrice;
-  const salePrice = Math.round(displayPrice * 0.9);
+  const markupPrice = Math.ceil(displayPrice / 0.9);
 
   return (
     <div style={{
@@ -175,8 +174,8 @@ export default function ProductQuickView({ product, isOpen, onClose }: ProductQu
           <h2 style={{ fontSize: '18px', fontWeight: '800', color: '#1a3636', marginBottom: '8px', lineHeight: '1.4' }}>{name}</h2>
           
           <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', marginBottom: '20px' }}>
-            <span style={{ fontSize: '24px', fontWeight: '900', color: '#40534c' }}>Rp {salePrice.toLocaleString('id-ID')}</span>
-            <span style={{ fontSize: '14px', textDecoration: 'line-through', color: '#9ca3af' }}>Rp {originalPrice.toLocaleString('id-ID')}</span>
+            <span style={{ fontSize: '24px', fontWeight: '900', color: '#40534c' }}>Rp {displayPrice.toLocaleString('id-ID')}</span>
+            <span style={{ fontSize: '14px', textDecoration: 'line-through', color: '#9ca3af' }}>Rp {markupPrice.toLocaleString('id-ID')}</span>
             <span style={{ fontSize: '12px', fontWeight: '800', color: '#d6bd98', backgroundColor: '#40534c', padding: '2px 6px', borderRadius: '4px' }}>{discountPercent}% OFF</span>
           </div>
 
