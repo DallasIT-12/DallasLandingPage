@@ -480,6 +480,36 @@ export default function PaperlisensPageClient() {
           </div>
         </div>
       </header>
+      {/* === SEO H1 Hero Section === */}
+      <section style={{
+        backgroundColor: '#40534c',
+        padding: '32px 16px 28px',
+        textAlign: 'center',
+        borderBottom: '3px solid #d6bd98'
+      }}>
+        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+          <h1 style={{
+            fontSize: '22px',
+            fontWeight: '700',
+            color: '#d6bd98',
+            marginBottom: '10px',
+            lineHeight: '1.4',
+            letterSpacing: '0.3px'
+          }}>
+            Paperlisens - Marketplace Kemasan & Paper Tray Terpercaya
+          </h1>
+          <p style={{
+            fontSize: '14px',
+            color: 'rgba(255,255,255,0.75)',
+            lineHeight: '1.7',
+            margin: 0,
+            fontWeight: '400'
+          }}>
+            Belanja paper tray, box takeaway, dan kemasan makanan food grade berkualitas untuk bisnis F&B Anda. Ratusan pilihan produk siap kirim ke seluruh Indonesia dari Kediri & Surabaya.
+          </p>
+        </div>
+      </section>
+
       <main className="main-content" style={{ maxWidth: '1200px', margin: '0 auto', padding: '24px 16px' }}>
         <div className="hero-banner-container" style={{ marginBottom: '24px' }}>
           <div className="main-banner-area" style={{ height: isLargeMobile ? '240px' : '400px', borderRadius: '6px', backgroundColor: 'transparent', overflow: 'visible', border: 'none' }}>
@@ -516,6 +546,52 @@ export default function PaperlisensPageClient() {
 
 
       </main>
+
+      {/* === SEO "Tentang Paperlisens" Section (above Footer) === */}
+      <section style={{
+        backgroundColor: '#ffffff',
+        borderTop: '1px solid #e5e7eb',
+        padding: '48px 16px 56px'
+      }}>
+        <div style={{ maxWidth: '900px', margin: '0 auto' }}>
+          <h2 style={{
+            fontSize: '20px',
+            fontWeight: '700',
+            color: '#40534c',
+            marginBottom: '20px',
+            position: 'relative',
+            paddingBottom: '12px'
+          }}>
+            Tentang Paperlisens
+            <span style={{
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              width: '50px',
+              height: '3px',
+              backgroundColor: '#d6bd98',
+              borderRadius: '2px'
+            }} />
+          </h2>
+          <div style={{
+            fontSize: '14px',
+            color: '#4b5563',
+            lineHeight: '1.85',
+            fontWeight: '400'
+          }}>
+            <p style={{ marginBottom: '16px' }}>
+              Paperlisens adalah marketplace kemasan yang menyediakan paper tray, box takeaway, kemasan kue, dan berbagai produk kemasan makanan berbahan food grade. Kami hadir untuk membantu pelaku usaha F&B — mulai dari UMKM kuliner rumahan, katering, hingga cafe dan restoran — mendapatkan kemasan yang aman, higienis, dan ramah lingkungan dengan harga bersaing.
+            </p>
+            <p style={{ marginBottom: '16px' }}>
+              Semua produk Paperlisens diproduksi langsung oleh Percetakan Dallas, pabrik cetak offset yang berpengalaman menangani kebutuhan kemasan custom maupun ready stock. Dengan dukungan pabrik sendiri, kami bisa menjamin kualitas cetak, ketersediaan stok, dan pengiriman yang cepat ke seluruh Indonesia, khususnya area Kediri dan Surabaya.
+            </p>
+            <p style={{ margin: 0 }}>
+              Jelajahi katalog kami untuk menemukan paper tray berbagai ukuran, box pizza, box hampers, food wrapper, dan kemasan makanan lainnya — semua siap custom sesuai kebutuhan bisnis Anda.
+            </p>
+          </div>
+        </div>
+      </section>
+
       <Footer />
 
       <PaperlisensFloatingCart 

@@ -4,9 +4,9 @@ import PaperlisensPageClient from './paperlisens-page-client';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Paperlisens - Marketplace Kemasan & Paper Tray Berkualitas',
-  description: 'Belanja kemasan premium, paper tray, box takeaway, dan produk kemasan berkualitas di Paperlisens. Solusi kemasan higienis dan ramah lingkungan untuk bisnis F&B Anda.',
-  keywords: ['paperlisens', 'beli paper tray', 'marketplace kemasan', 'box takeaway', 'kemasan food grade', 'tempat makan kertas'],
+  title: 'Paperlisens - Marketplace Kemasan & Paper Tray Terpercaya',
+  description: 'Belanja paper tray, box takeaway, dan kemasan makanan food grade berkualitas untuk bisnis F&B Anda. Ratusan pilihan produk siap kirim ke seluruh Indonesia dari Kediri & Surabaya.',
+  keywords: ['paperlisens', 'beli paper tray', 'marketplace kemasan', 'box takeaway', 'kemasan food grade', 'tempat makan kertas', 'kemasan makanan', 'paper tray murah', 'box makanan Kediri', 'kemasan UMKM'],
   alternates: {
     canonical: 'https://dallas-printingid.com/id/paperlisens',
     languages: {
