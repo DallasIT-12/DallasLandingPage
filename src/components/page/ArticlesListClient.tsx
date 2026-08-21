@@ -30,6 +30,14 @@ export default function ArticlesListPage() {
 
   const articles = [
     {
+      title: 'Saatnya Upgrade Kemasan: 5 Alasan Harus Beralih ke Paper Tray',
+      slug: 'upgrade-kemasan-paper-tray',
+      excerpt: 'Ingin tampilan produk lebih premium dan ramah lingkungan? Simak 5 alasan kenapa bisnismu perlu beralih ke paper tray sekarang.',
+      date: '21 Agustus 2026',
+      image: '/paperlisens papertray.webp',
+      category: 'Kemasan'
+    },
+    {
       title: 'Jasa Cetak Kotak Rokok, Map Perusahaan, dan Buku: Solusi Cetak Offset Presisi',
       slug: 'jasa-cetak-kotak-rokok-map-buku-instansi',
       excerpt: 'Panduan B2B untuk industri dan instansi: Vendor kemasan rokok custom, map rekam medis anti air, hingga buku tahunan sekolah dengan kapasitas produksi skala besar.',
