@@ -8,6 +8,9 @@ import Navbar from '@/components/layout/Navbar';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 
+const FONT_HEADING = "var(--font-poppins), 'Poppins', sans-serif";
+const FONT_BODY = "var(--font-source-sans), 'Source Sans 3', sans-serif";
+
 export default function UpgradeKemasanPaperTrayArticle() {
   const [isSmallMobile, setIsSmallMobile] = useState(false);
   const [isLargeMobile, setIsLargeMobile] = useState(false);
@@ -25,6 +28,7 @@ export default function UpgradeKemasanPaperTrayArticle() {
   const sectionHeadingStyle = {
     fontSize: isLargeMobile ? '1.5rem' : '2rem',
     fontWeight: '700' as const,
+    fontFamily: FONT_HEADING,
     color: '#001D39',
     marginTop: isLargeMobile ? '32px' : '48px',
     marginBottom: '16px',
@@ -34,6 +38,7 @@ export default function UpgradeKemasanPaperTrayArticle() {
   const paragraphStyle = {
     marginBottom: '24px',
     lineHeight: '1.85' as const,
+    fontFamily: FONT_BODY,
   };
 
   return (
@@ -52,6 +57,7 @@ export default function UpgradeKemasanPaperTrayArticle() {
             <h1 style={{
               fontSize: isSmallMobile ? '1.75rem' : (isLargeMobile ? '2.25rem' : '3.5rem'),
               fontWeight: '800',
+              fontFamily: FONT_HEADING,
               color: '#001D39',
               lineHeight: '1.2',
               marginBottom: '20px'
@@ -63,8 +69,9 @@ export default function UpgradeKemasanPaperTrayArticle() {
               color: '#64748b',
               lineHeight: '1.6',
               fontStyle: 'italic' as const,
+              fontFamily: FONT_BODY,
             }}>
-              Ditulis oleh Tim Produksi Dallas Printing — pabrik cetak offset berpengalaman melayani kemasan food grade untuk UMKM kuliner, katering, cafe, dan restoran di seluruh Indonesia.
+              Ditulis oleh Tim Akselerasi dan Inovasi Dallas Printing — pabrik cetak offset berpengalaman melayani kemasan food grade untuk UMKM kuliner, katering, cafe, dan restoran di seluruh Indonesia.
             </p>
           </header>
 
@@ -89,7 +96,7 @@ export default function UpgradeKemasanPaperTrayArticle() {
           </div>
 
           {/* --- Article Body --- */}
-          <section style={{ fontSize: isLargeMobile ? '1rem' : '1.125rem', lineHeight: '1.8', color: '#334155' }}>
+          <section style={{ fontSize: isLargeMobile ? '1rem' : '1.125rem', lineHeight: '1.8', color: '#334155', fontFamily: FONT_BODY }}>
 
             {/* Intro */}
             <p style={paragraphStyle}>
@@ -113,7 +120,7 @@ export default function UpgradeKemasanPaperTrayArticle() {
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
                 <span style={{ backgroundColor: '#001D39', color: '#ffffff', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', fontSize: '1rem', flexShrink: 0 }}>1</span>
-                <h2 style={{ fontSize: isLargeMobile ? '1.35rem' : '1.75rem', fontWeight: '700', color: '#001D39', margin: 0, lineHeight: '1.3' }}>
+                <h2 style={{ fontSize: isLargeMobile ? '1.35rem' : '1.75rem', fontWeight: '700', fontFamily: FONT_HEADING, color: '#001D39', margin: 0, lineHeight: '1.3' }}>
                   Tampilan Produk Jadi Lebih Premium
                 </h2>
               </div>
@@ -132,7 +139,7 @@ export default function UpgradeKemasanPaperTrayArticle() {
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
                 <span style={{ backgroundColor: '#001D39', color: '#ffffff', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', fontSize: '1rem', flexShrink: 0 }}>2</span>
-                <h2 style={{ fontSize: isLargeMobile ? '1.35rem' : '1.75rem', fontWeight: '700', color: '#001D39', margin: 0, lineHeight: '1.3' }}>
+                <h2 style={{ fontSize: isLargeMobile ? '1.35rem' : '1.75rem', fontWeight: '700', fontFamily: FONT_HEADING, color: '#001D39', margin: 0, lineHeight: '1.3' }}>
                   Lebih Ramah Lingkungan Dibanding Styrofoam dan Plastik
                 </h2>
               </div>
@@ -151,7 +158,7 @@ export default function UpgradeKemasanPaperTrayArticle() {
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
                 <span style={{ backgroundColor: '#001D39', color: '#ffffff', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', fontSize: '1rem', flexShrink: 0 }}>3</span>
-                <h2 style={{ fontSize: isLargeMobile ? '1.35rem' : '1.75rem', fontWeight: '700', color: '#001D39', margin: 0, lineHeight: '1.3' }}>
+                <h2 style={{ fontSize: isLargeMobile ? '1.35rem' : '1.75rem', fontWeight: '700', fontFamily: FONT_HEADING, color: '#001D39', margin: 0, lineHeight: '1.3' }}>
                   Lebih Kokoh dan Fungsional untuk Berbagai Jenis Produk
                 </h2>
               </div>
@@ -173,7 +180,7 @@ export default function UpgradeKemasanPaperTrayArticle() {
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
                 <span style={{ backgroundColor: '#001D39', color: '#ffffff', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', fontSize: '1rem', flexShrink: 0 }}>4</span>
-                <h2 style={{ fontSize: isLargeMobile ? '1.35rem' : '1.75rem', fontWeight: '700', color: '#001D39', margin: 0, lineHeight: '1.3' }}>
+                <h2 style={{ fontSize: isLargeMobile ? '1.35rem' : '1.75rem', fontWeight: '700', fontFamily: FONT_HEADING, color: '#001D39', margin: 0, lineHeight: '1.3' }}>
                   Media Branding yang Lebih Efektif
                 </h2>
               </div>
@@ -192,7 +199,7 @@ export default function UpgradeKemasanPaperTrayArticle() {
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
                 <span style={{ backgroundColor: '#001D39', color: '#ffffff', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', fontSize: '1rem', flexShrink: 0 }}>5</span>
-                <h2 style={{ fontSize: isLargeMobile ? '1.35rem' : '1.75rem', fontWeight: '700', color: '#001D39', margin: 0, lineHeight: '1.3' }}>
+                <h2 style={{ fontSize: isLargeMobile ? '1.35rem' : '1.75rem', fontWeight: '700', fontFamily: FONT_HEADING, color: '#001D39', margin: 0, lineHeight: '1.3' }}>
                   Nilai Investasi Jangka Panjang untuk Brand Image
                 </h2>
               </div>
@@ -227,6 +234,7 @@ export default function UpgradeKemasanPaperTrayArticle() {
               <h2 style={{
                 fontSize: isLargeMobile ? '1.5rem' : '2rem',
                 fontWeight: '700',
+                fontFamily: FONT_HEADING,
                 color: '#001D39',
                 marginBottom: '28px',
                 textAlign: 'center'
@@ -270,6 +278,7 @@ export default function UpgradeKemasanPaperTrayArticle() {
               <h2 style={{
                 fontSize: isLargeMobile ? '1.5rem' : '2.25rem',
                 fontWeight: '700',
+                fontFamily: FONT_HEADING,
                 marginBottom: '16px',
                 lineHeight: '1.2'
               }}>

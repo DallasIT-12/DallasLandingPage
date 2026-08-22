@@ -7,6 +7,9 @@ import { Link } from '@/i18n/routing';
 import Footer from '@/components/layout/Footer';
 import Navbar from '@/components/layout/Navbar';
 
+const FONT_HEADING = "var(--font-poppins), 'Poppins', sans-serif";
+const FONT_BODY = "var(--font-source-sans), 'Source Sans 3', sans-serif";
+
 interface ArtikelPendekProps {
     title: string;
     date: string;
@@ -39,7 +42,7 @@ export default function ArtikelPendekClient({
                         <div style={{ marginBottom: '16px' }}>
                             <span style={{ backgroundColor: '#0A4174', color: '#ffffff', padding: '6px 16px', borderRadius: '9999px', fontSize: '0.85rem', fontWeight: '600', textTransform: 'uppercase' }}>{category}</span>
                         </div>
-                        <h1 style={{ fontSize: '2rem', fontWeight: '800', color: '#001D39', lineHeight: '1.3', marginBottom: '16px' }}>
+                        <h1 style={{ fontSize: '2rem', fontWeight: '800', fontFamily: FONT_HEADING, color: '#001D39', lineHeight: '1.3', marginBottom: '16px' }}>
                             {title}
                         </h1>
                         <div style={{ color: '#64748b', fontSize: '0.95rem' }}>
@@ -59,7 +62,7 @@ export default function ArtikelPendekClient({
                     </div>
 
                     {/* Content Body */}
-                    <div style={{ fontSize: '1.1rem', lineHeight: '1.8', color: '#334155' }}>
+                    <div style={{ fontSize: '1.1rem', lineHeight: '1.8', color: '#334155', fontFamily: FONT_BODY }}>
                         {content}
 
                         {/* The "SEO Juice" Interlinking Box */}

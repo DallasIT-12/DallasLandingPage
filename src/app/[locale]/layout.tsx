@@ -1,7 +1,7 @@
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { Plus_Jakarta_Sans } from 'next/font/google';
+import { Plus_Jakarta_Sans, Source_Sans_3, Poppins } from 'next/font/google';
 import '@/app/globals.css';
 import { CartProvider } from '@/context/CartContext';
 import CartModal from '@/components/cart/CartModal';
@@ -17,6 +17,22 @@ const plusJakartaSans = Plus_Jakarta_Sans({
   display: 'swap',
   preload: true,
   variable: '--font-plus-jakarta',
+});
+
+const sourceSans3 = Source_Sans_3({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  display: 'swap',
+  preload: true,
+  variable: '--font-source-sans',
+});
+
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800'],
+  display: 'swap',
+  preload: true,
+  variable: '--font-poppins',
 });
 
 export const metadata: Metadata = {
@@ -93,7 +109,7 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale} className={`${plusJakartaSans.variable}`} suppressHydrationWarning>
+    <html lang={locale} className={`${plusJakartaSans.variable} ${sourceSans3.variable} ${poppins.variable}`} suppressHydrationWarning>
       <head>
         {/* Preconnect to Iconify API to fix Critical Request Chains */}
         <link rel="preconnect" href="https://api.iconify.design" crossOrigin="anonymous" />

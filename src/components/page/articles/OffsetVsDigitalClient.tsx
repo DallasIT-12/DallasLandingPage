@@ -9,6 +9,9 @@ import Navbar from '@/components/layout/Navbar';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 
+const FONT_HEADING = "var(--font-poppins), 'Poppins', sans-serif";
+const FONT_BODY = "var(--font-source-sans), 'Source Sans 3', sans-serif";
+
 export default function OffsetVsDigitalArticle() {
   const t = useTranslations();
   const [isSmallMobile, setIsSmallMobile] = useState(false);
@@ -38,7 +41,7 @@ export default function OffsetVsDigitalArticle() {
               <span style={{ backgroundColor: '#0A4174', color: '#ffffff', padding: '4px 16px', borderRadius: '9999px', fontSize: '0.8rem', fontWeight: '600' }}>EDUKASI CETAK</span>
               <span style={{ color: '#64748b', fontSize: '0.8rem', alignSelf: 'center' }}>6 Februari 2026 • 10 Menit Baca</span>
             </div>
-            <h1 style={{ fontSize: isSmallMobile ? '1.75rem' : (isLargeMobile ? '2.25rem' : '3.5rem'), fontWeight: '800', color: '#001D39', lineHeight: '1.2', marginBottom: '24px' }}>
+            <h1 style={{ fontSize: isSmallMobile ? '1.75rem' : (isLargeMobile ? '2.25rem' : '3.5rem'), fontWeight: '800', fontFamily: FONT_HEADING, color: '#001D39', lineHeight: '1.2', marginBottom: '24px' }}>
               Kenapa Bisnis Besar Selalu Memilih Offset Printing? Ini Alasannya!
             </h1>
             <p style={{ fontSize: isLargeMobile ? '1rem' : '1.25rem', color: '#64748b', lineHeight: '1.6' }}>
@@ -57,17 +60,17 @@ export default function OffsetVsDigitalArticle() {
             />
           </div>
 
-          <section style={{ fontSize: isLargeMobile ? '1rem' : '1.125rem', lineHeight: '1.8', color: '#334155' }}>
+          <section style={{ fontSize: isLargeMobile ? '1rem' : '1.125rem', lineHeight: '1.8', color: '#334155', fontFamily: FONT_BODY }}>
             <p style={{ marginBottom: '24px' }}>
               Bagi pelaku usaha yang ingin menaikkan level brand mereka, pemahaman mengenai <strong>apa itu offset printing</strong> sangatlah krusial. Seringkali, digital printing dijadikan alternatif karena kemudahannya untuk cetak satuan, namun untuk standar industri dan profesionalisme bisnis, <strong>offset printing</strong> tetap menjadi juara yang tak tergantikan.
             </p>
 
-            <h2 style={{ fontSize: isLargeMobile ? '1.5rem' : '2rem', fontWeight: '700', color: '#001D39', marginTop: isLargeMobile ? '32px' : '48px', marginBottom: '16px' }}>Apa Itu Offset Printing?</h2>
+            <h2 style={{ fontSize: isLargeMobile ? '1.5rem' : '2rem', fontWeight: '700', fontFamily: FONT_HEADING, color: '#001D39', marginTop: isLargeMobile ? '32px' : '48px', marginBottom: '16px' }}>Apa Itu Offset Printing?</h2>
             <p style={{ marginBottom: '24px' }}>
               <strong>Offset printing</strong> adalah teknologi cetak industrial yang menggunakan plat logam untuk mentransfer tinta ke media cetak melalui silinder karet. Proses ini memastikan tinta meresap sempurna ke dalam serat kertas, menghasilkan tekstur yang halus, tajam, dan terlihat jauh lebih mewah dibandingkan hasil cetak printer digital biasa.
             </p>
 
-            <h2 style={{ fontSize: isLargeMobile ? '1.5rem' : '2rem', fontWeight: '700', color: '#001D39', marginTop: isLargeMobile ? '32px' : '48px', marginBottom: '16px' }}>Keunggulan Percetakan Offset Dibandingkan Digital</h2>
+            <h2 style={{ fontSize: isLargeMobile ? '1.5rem' : '2rem', fontWeight: '700', fontFamily: FONT_HEADING, color: '#001D39', marginTop: isLargeMobile ? '32px' : '48px', marginBottom: '16px' }}>Keunggulan Percetakan Offset Dibandingkan Digital</h2>
             <p style={{ marginBottom: '20px' }}>
               Meskipun digital printing hadir for kebutuhan instan, teknologi ini memiliki banyak batasan yang tidak dimiliki oleh mesin offset profesional:
             </p>
@@ -79,7 +82,7 @@ export default function OffsetVsDigitalArticle() {
               <li style={{ marginBottom: '12px' }}><strong>Dukungan Bahan Beragam:</strong> Mesin offset mampu menangani berbagai jenis kertas premium seperti <strong>Ivory</strong>, <strong>Duplex</strong>, hingga <strong>Art Paper</strong> dengan ketebalan tinggi yang seringkali membuat printer digital macet (jamming).</li>
             </ul>
 
-            <h2 style={{ fontSize: isLargeMobile ? '1.5rem' : '2rem', fontWeight: '700', color: '#001D39', marginTop: isLargeMobile ? '32px' : '48px', marginBottom: '16px' }}>Perbandingan Biaya: Investasi vs Pemborosan</h2>
+            <h2 style={{ fontSize: isLargeMobile ? '1.5rem' : '2rem', fontWeight: '700', fontFamily: FONT_HEADING, color: '#001D39', marginTop: isLargeMobile ? '32px' : '48px', marginBottom: '16px' }}>Perbandingan Biaya: Investasi vs Pemborosan</h2>
 
             <div style={{ overflowX: 'auto', marginBottom: '32px', WebkitOverflowScrolling: 'touch' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse', border: '1px solid #e2e8f0', minWidth: '600px' }}>
@@ -126,7 +129,7 @@ export default function OffsetVsDigitalArticle() {
               </p>
             </div>
 
-            <h2 style={{ fontSize: isLargeMobile ? '1.5rem' : '2rem', fontWeight: '700', color: '#001D39', marginTop: isLargeMobile ? '32px' : '48px', marginBottom: '16px' }}>Kesimpulan</h2>
+            <h2 style={{ fontSize: isLargeMobile ? '1.5rem' : '2rem', fontWeight: '700', fontFamily: FONT_HEADING, color: '#001D39', marginTop: isLargeMobile ? '32px' : '48px', marginBottom: '16px' }}>Kesimpulan</h2>
             <p style={{ marginBottom: '24px' }}>
               Jika Anda serius membangun brand and ingin menekan biaya operasional tanpa mengorbankan kualitas, <strong>Offset Printing</strong> adalah satu-satunya jawaban yang masuk akal. Di <strong>Percetakan Dallas</strong>, kami memastikan setiap lembar yang keluar dari mesin kami memiliki kualitas standar internasional yang siap mendukung kesuksesan bisnis Anda.
             </p>

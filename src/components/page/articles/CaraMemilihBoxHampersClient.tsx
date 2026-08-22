@@ -6,6 +6,9 @@ import { Link } from '@/i18n/routing';
 import Footer from '@/components/layout/Footer';
 import Navbar from '@/components/layout/Navbar';
 
+const FONT_HEADING = "var(--font-poppins), 'Poppins', sans-serif";
+const FONT_BODY = "var(--font-source-sans), 'Source Sans 3', sans-serif";
+
 export default function CaraMemilihBoxHampersClient() {
     const t = useTranslations();
 
@@ -20,11 +23,11 @@ export default function CaraMemilihBoxHampersClient() {
                         <div style={{ marginBottom: '16px' }}>
                             <span style={{ backgroundColor: '#0A4174', color: '#ffffff', padding: '6px 16px', borderRadius: '9999px', fontSize: '0.85rem', fontWeight: '600', textTransform: 'uppercase' }}>SEO Tips Kemasan 2026</span>
                         </div>
-                        <h1 style={{ fontSize: '2.5rem', fontWeight: '800', color: '#001D39', lineHeight: '1.2', marginBottom: '24px' }}>
+                        <h1 style={{ fontSize: '2.5rem', fontWeight: '800', fontFamily: FONT_HEADING, color: '#001D39', lineHeight: '1.2', marginBottom: '24px' }}>
                             Cara Memilih Box Hampers dan Box Bakery yang Menarik untuk Meningkatkan Nilai Jual Produk
                         </h1>
                         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '16px', color: '#64748b', fontSize: '0.95rem' }}>
-                            <span>Ditulis oleh: Tim Redaksi Dallas</span>
+                            <span>Ditulis oleh: Tim Akselerasi dan Inovasi</span>
                             <span>•</span>
                             <span>24 Februari 2026</span>
                         </div>
@@ -42,7 +45,7 @@ export default function CaraMemilihBoxHampersClient() {
                     </div>
 
                     {/* Content Body */}
-                    <div style={{ fontSize: '1.15rem', lineHeight: '1.8', color: '#334155' }}>
+                    <div style={{ fontSize: '1.15rem', lineHeight: '1.8', color: '#334155', fontFamily: FONT_BODY }}>
                         {/* Featured Snippet Paragraph */}
                         <div style={{ padding: '24px', backgroundColor: '#e0f2fe', borderRadius: '16px', borderLeft: '6px solid #0284c7', marginBottom: '48px' }}>
                             <p style={{ margin: 0, fontWeight: '500', color: '#0369a1' }}>

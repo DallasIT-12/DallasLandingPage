@@ -9,6 +9,9 @@ import Navbar from '@/components/layout/Navbar';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 
+const FONT_HEADING = "var(--font-poppins), 'Poppins', sans-serif";
+const FONT_BODY = "var(--font-source-sans), 'Source Sans 3', sans-serif";
+
 export default function BusinessTrendsArticle() {
   const t = useTranslations();
   const [isSmallMobile, setIsSmallMobile] = useState(false);
@@ -86,7 +89,7 @@ export default function BusinessTrendsArticle() {
               <span style={{ backgroundColor: '#0A4174', color: '#ffffff', padding: '4px 16px', borderRadius: '9999px', fontSize: '0.8rem', fontWeight: '600' }}>IDE BISNIS</span>
               <span style={{ color: '#64748b', fontSize: '0.8rem', alignSelf: 'center' }}>6 Februari 2026 • 18 Menit Baca</span>
             </div>
-            <h1 style={{ fontSize: isSmallMobile ? '1.75rem' : (isLargeMobile ? '2.25rem' : '3.5rem'), fontWeight: '800', color: '#001D39', lineHeight: '1.2', marginBottom: '24px' }}>
+            <h1 style={{ fontSize: isSmallMobile ? '1.75rem' : (isLargeMobile ? '2.25rem' : '3.5rem'), fontWeight: '800', fontFamily: FONT_HEADING, color: '#001D39', lineHeight: '1.2', marginBottom: '24px' }}>
               7 Ide Bisnis Paling Menjanjikan Tahun 2026: Strategi Memulai & Menguasai Pasar
             </h1>
             <p style={{ fontSize: isLargeMobile ? '1rem' : '1.25rem', color: '#64748b', lineHeight: '1.6' }}>
@@ -105,14 +108,14 @@ export default function BusinessTrendsArticle() {
             />
           </div>
 
-          <section style={{ fontSize: isLargeMobile ? '1rem' : '1.125rem', lineHeight: '1.8', color: '#334155' }}>
+          <section style={{ fontSize: isLargeMobile ? '1rem' : '1.125rem', lineHeight: '1.8', color: '#334155', fontFamily: FONT_BODY }}>
             <p style={{ marginBottom: '24px' }}>
               Dunia bisnis di tahun 2026 menuntut kreativitas yang lebih tinggi dari sebelumnya. Persaingan tidak lagi hanya soal harga, tapi soal bagaimana sebuah brand bisa "berbicara" kepada konsumennya melalui identitas visual yang kuat. Berikut adalah 7 ide bisnis yang kami amati sedang berkembang pesat dan memiliki potensi jangka panjang.
             </p>
 
             {businessIdeas.map((item, index) => (
               <div key={index} style={{ marginTop: isLargeMobile ? '32px' : '48px', borderBottom: '1px solid #e2e8f0', paddingBottom: isLargeMobile ? '24px' : '32px' }}>
-                <h2 style={{ fontSize: isLargeMobile ? '1.5rem' : '2rem', fontWeight: '700', color: '#001D39', marginBottom: '16px' }}>{index + 1}. {item.title}</h2>
+                <h2 style={{ fontSize: isLargeMobile ? '1.5rem' : '2rem', fontWeight: '700', fontFamily: FONT_HEADING, color: '#001D39', marginBottom: '16px' }}>{index + 1}. {item.title}</h2>
 
                 <div style={{ marginBottom: '16px' }}>
                   <h3 style={{ color: '#0A4174', fontSize: isLargeMobile ? '1rem' : '1.1rem', fontWeight: '700', marginBottom: '4px' }}>Penjelasan:</h3>
@@ -132,7 +135,7 @@ export default function BusinessTrendsArticle() {
             ))}
 
             <div style={{ backgroundColor: '#0A4174', color: '#ffffff', padding: isLargeMobile ? '24px' : '50px', borderRadius: '32px', marginTop: isLargeMobile ? '40px' : '60px' }}>
-              <h2 style={{ fontSize: isLargeMobile ? '1.5rem' : '2.25rem', fontWeight: '700', color: '#ffffff', marginBottom: '20px', textAlign: 'center', lineHeight: '1.2' }}>
+              <h2 style={{ fontSize: isLargeMobile ? '1.5rem' : '2.25rem', fontWeight: '700', fontFamily: FONT_HEADING, color: '#ffffff', marginBottom: '20px', textAlign: 'center', lineHeight: '1.2' }}>
                 Bagaimana Percetakan Dallas Kediri Mendukung Bisnis Anda?
               </h2>
               <p style={{ textAlign: 'center', marginBottom: '32px', opacity: 0.9, fontSize: isLargeMobile ? '0.95rem' : '1rem' }}>

@@ -6,6 +6,9 @@ import { Link } from '@/i18n/routing';
 import Footer from '@/components/layout/Footer';
 import Navbar from '@/components/layout/Navbar';
 
+const FONT_HEADING = "var(--font-poppins), 'Poppins', sans-serif";
+const FONT_BODY = "var(--font-source-sans), 'Source Sans 3', sans-serif";
+
 export default function JasaCetakB2BClient() {
     const t = useTranslations();
 
@@ -20,11 +23,11 @@ export default function JasaCetakB2BClient() {
                         <div style={{ marginBottom: '16px' }}>
                             <span style={{ backgroundColor: '#0A4174', color: '#ffffff', padding: '6px 16px', borderRadius: '9999px', fontSize: '0.85rem', fontWeight: '600', textTransform: 'uppercase' }}>Solusi B2B & Instansi</span>
                         </div>
-                        <h1 style={{ fontSize: '2.5rem', fontWeight: '800', color: '#001D39', lineHeight: '1.2', marginBottom: '24px' }}>
+                        <h1 style={{ fontSize: '2.5rem', fontWeight: '800', fontFamily: FONT_HEADING, color: '#001D39', lineHeight: '1.2', marginBottom: '24px' }}>
                             Jasa Cetak Kotak Rokok, Map Perusahaan, dan Buku: Solusi Cetak Offset Presisi untuk Industri dan Instansi
                         </h1>
                         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '16px', color: '#64748b', fontSize: '0.95rem' }}>
-                            <span>Ditulis oleh: Tim Redaksi Dallas</span>
+                            <span>Ditulis oleh: Tim Akselerasi dan Inovasi</span>
                             <span>•</span>
                             <span>25 Februari 2026</span>
                         </div>
@@ -42,7 +45,7 @@ export default function JasaCetakB2BClient() {
                     </div>
 
                     {/* Content Body */}
-                    <div style={{ fontSize: '1.15rem', lineHeight: '1.8', color: '#334155' }}>
+                    <div style={{ fontSize: '1.15rem', lineHeight: '1.8', color: '#334155', fontFamily: FONT_BODY }}>
 
                         <p style={{ marginBottom: '24px', fontSize: '1.25rem', color: '#0f172a', fontWeight: '500', lineHeight: '1.6' }}>
                             Dunia industri dan profesional menuntut kualitas cetakan yang tidak hanya tajam, tetapi juga konsisten dalam jumlah besar. Apakah Anda mencari vendor cetak kotak rokok custom dengan standar presisi tinggi, atau cetak map folder untuk kebutuhan administrasi kantor? Percetakan Dallas hadir dengan teknologi cetak offset modern untuk memenuhi standar kebutuhan bisnis Anda.

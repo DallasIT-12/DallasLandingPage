@@ -7,6 +7,9 @@ import { Link } from '@/i18n/routing';
 import Footer from '@/components/layout/Footer';
 import Navbar from '@/components/layout/Navbar';
 
+const FONT_HEADING = "var(--font-poppins), 'Poppins', sans-serif";
+const FONT_BODY = "var(--font-source-sans), 'Source Sans 3', sans-serif";
+
 export default function PanduanLengkapClient() {
     const t = useTranslations();
 
@@ -21,11 +24,11 @@ export default function PanduanLengkapClient() {
                         <div style={{ marginBottom: '16px' }}>
                             <span style={{ backgroundColor: '#0A4174', color: '#ffffff', padding: '6px 16px', borderRadius: '9999px', fontSize: '0.85rem', fontWeight: '600', textTransform: 'uppercase' }}>Panduan Lengkap</span>
                         </div>
-                        <h1 style={{ fontSize: '2.5rem', fontWeight: '800', color: '#001D39', lineHeight: '1.2', marginBottom: '24px' }}>
+                        <h1 style={{ fontSize: '2.5rem', fontWeight: '800', fontFamily: FONT_HEADING, color: '#001D39', lineHeight: '1.2', marginBottom: '24px' }}>
                             Panduan Lengkap Cetak Kemasan & Atribut Bisnis: Dari Box Makanan hingga Kotak Rokok
                         </h1>
                         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '16px', color: '#64748b', fontSize: '0.95rem' }}>
-                            <span>Ditulis oleh: Tim Redaksi Dallas</span>
+                            <span>Ditulis oleh: Tim Akselerasi dan Inovasi</span>
                             <span>•</span>
                             <span>24 Februari 2026</span>
                         </div>
@@ -43,7 +46,7 @@ export default function PanduanLengkapClient() {
                     </div>
 
                     {/* Content Body */}
-                    <div style={{ fontSize: '1.15rem', lineHeight: '1.8', color: '#334155' }}>
+                    <div style={{ fontSize: '1.15rem', lineHeight: '1.8', color: '#334155', fontFamily: FONT_BODY }}>
                         <p style={{ marginBottom: '24px', fontSize: '1.25rem', color: '#0f172a', fontWeight: '500', lineHeight: '1.6' }}>
                             Membangun brand yang kuat tidak hanya soal kualitas produk, tetapi juga bagaimana produk tersebut dikemas dan dipresentasikan. Dari kemasan ritel hingga kebutuhan korporat, memilih spesifikasi cetak yang tepat adalah kunci. Berikut adalah panduan lengkap produk cetak dari Percetakan Dallas Kediri untuk memajukan bisnis Anda.
                         </p>

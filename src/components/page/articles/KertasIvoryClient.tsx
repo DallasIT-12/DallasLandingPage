@@ -9,6 +9,9 @@ import Navbar from '@/components/layout/Navbar';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 
+const FONT_HEADING = "var(--font-poppins), 'Poppins', sans-serif";
+const FONT_BODY = "var(--font-source-sans), 'Source Sans 3', sans-serif";
+
 export default function IvoryArticlePage() {
   const t = useTranslations();
   const [isSmallMobile, setIsSmallMobile] = useState(false);
@@ -40,7 +43,7 @@ export default function IvoryArticlePage() {
               <span style={{ backgroundColor: '#0A4174', color: '#ffffff', padding: '4px 16px', borderRadius: '9999px', fontSize: '0.8rem', fontWeight: '600' }}>MATERIAL</span>
               <span style={{ color: '#64748b', fontSize: '0.8rem', alignSelf: 'center' }}>5 Februari 2026 • 8 Menit Baca</span>
             </div>
-            <h1 style={{ fontSize: isSmallMobile ? '1.75rem' : (isLargeMobile ? '2.25rem' : '3.5rem'), fontWeight: '800', color: '#001D39', lineHeight: '1.2', marginBottom: '24px' }}>
+            <h1 style={{ fontSize: isSmallMobile ? '1.75rem' : (isLargeMobile ? '2.25rem' : '3.5rem'), fontWeight: '800', fontFamily: FONT_HEADING, color: '#001D39', lineHeight: '1.2', marginBottom: '24px' }}>
               Panduan Teknis Material: Memahami Karakteristik Kertas Ivory dalam Manufaktur Packaging
             </h1>
             <p style={{ fontSize: isLargeMobile ? '1rem' : '1.25rem', color: '#64748b', lineHeight: '1.6', fontStyle: 'italic' }}>
@@ -59,12 +62,12 @@ export default function IvoryArticlePage() {
             />
           </div>
 
-          <section style={{ fontSize: isLargeMobile ? '1rem' : '1.125rem', lineHeight: '1.8', color: '#334155' }}>
+          <section style={{ fontSize: isLargeMobile ? '1rem' : '1.125rem', lineHeight: '1.8', color: '#334155', fontFamily: FONT_BODY }}>
             <p style={{ marginBottom: '24px' }}>
               Dalam ekosistem <strong>manufaktur packaging</strong> modern, pemilihan material bukan sekadar urusan biaya, melainkan tentang integritas struktural dan representasi brand. Kertas Ivory (Ivory Paper) telah lama menjadi standar industri untuk <strong>cetak kemasan premium</strong> berkat perpaduan unik antara estetika dan rigiditas.
             </p>
 
-            <h2 style={{ fontSize: isLargeMobile ? '1.5rem' : '2rem', fontWeight: '700', color: '#001D39', marginTop: isLargeMobile ? '32px' : '48px', marginBottom: '16px' }}>Analisis Teknis Sisi Kertas: Coated vs Uncoated</h2>
+            <h2 style={{ fontSize: isLargeMobile ? '1.5rem' : '2rem', fontWeight: '700', fontFamily: FONT_HEADING, color: '#001D39', marginTop: isLargeMobile ? '32px' : '48px', marginBottom: '16px' }}>Analisis Teknis Sisi Kertas: Coated vs Uncoated</h2>
             <p style={{ marginBottom: '24px' }}>
               Karakteristik kertas ivory yang paling menonjol adalah perbedaan tekstur pada kedua sisinya. Hal ini terjadi karena proses manufaktur yang hanya memberikan lapisan coating pada satu permukaan saja.
             </p>
@@ -76,7 +79,7 @@ export default function IvoryArticlePage() {
               <strong>Implikasi Cetak Dua Sisi:</strong> Untuk cetak dua sisi (duplex printing), operator harus melakukan penyesuaian profil warna (ICC profile) yang berbeda untuk masing-masing sisi. Sisi belakang biasanya digunakan untuk instruksi penggunaan atau informasi legal yang tidak memerlukan grafis kompleks.
             </p>
 
-            <h2 style={{ fontSize: isLargeMobile ? '1.5rem' : '2rem', fontWeight: '700', color: '#001D39', marginTop: isLargeMobile ? '32px' : '48px', marginBottom: '16px' }}>Rentang Gramasi & Matriks Aplikasi</h2>
+            <h2 style={{ fontSize: isLargeMobile ? '1.5rem' : '2rem', fontWeight: '700', fontFamily: FONT_HEADING, color: '#001D39', marginTop: isLargeMobile ? '32px' : '48px', marginBottom: '16px' }}>Rentang Gramasi & Matriks Aplikasi</h2>
             <p style={{ marginBottom: '20px' }}>
               Ketebalan kertas ivory diukur dalam gram per meter persegi (gsm). Setiap berat memiliki peruntukan spesifik dalam industri pengemasan:
             </p>
@@ -110,7 +113,7 @@ export default function IvoryArticlePage() {
               </table>
             </div>
 
-            <h2 style={{ fontSize: isLargeMobile ? '1.5rem' : '2rem', fontWeight: '700', color: '#001D39', marginTop: isLargeMobile ? '32px' : '48px', marginBottom: '16px' }}>Proses Finishing: Kompatibilitas Kimiawi</h2>
+            <h2 style={{ fontSize: isLargeMobile ? '1.5rem' : '2rem', fontWeight: '700', fontFamily: FONT_HEADING, color: '#001D39', marginTop: isLargeMobile ? '32px' : '48px', marginBottom: '16px' }}>Proses Finishing: Kompatibilitas Kimiawi</h2>
             <p style={{ marginBottom: '20px' }}>
               Permukaan coated pada ivory sangat responsif terhadap berbagai teknik finishing pasca-cetak:
             </p>
@@ -121,7 +124,7 @@ export default function IvoryArticlePage() {
               <li style={{ marginBottom: '8px' }}><strong>Emboss/Deboss:</strong> Karena seratnya yang panjang and kuat, ivory tidak mudah retak (cracking) saat diberi tekanan for efek timbul.</li>
             </ul>
 
-            <h2 style={{ fontSize: isLargeMobile ? '1.5rem' : '2rem', fontWeight: '700', color: '#001D39', marginTop: isLargeMobile ? '32px' : '48px', marginBottom: '16px' }}>Standardisasi Food Grade</h2>
+            <h2 style={{ fontSize: isLargeMobile ? '1.5rem' : '2rem', fontWeight: '700', fontFamily: FONT_HEADING, color: '#001D39', marginTop: isLargeMobile ? '32px' : '48px', marginBottom: '16px' }}>Standardisasi Food Grade</h2>
             <p style={{ marginBottom: '20px' }}>
               Tidak semua kertas ivory bersifat food grade. Untuk aplikasi kuliner, kertas harus memenuhi kriteria ketat:
             </p>
@@ -131,7 +134,7 @@ export default function IvoryArticlePage() {
               <li style={{ marginBottom: '12px' }}><strong>Sertifikasi FDA/ISEGA:</strong> Memastikan material aman bersentuhan langsung dengan makanan berminyak atau lembap.</li>
             </ol>
 
-            <h2 style={{ fontSize: isLargeMobile ? '1.5rem' : '2rem', fontWeight: '700', color: '#001D39', marginTop: isLargeMobile ? '32px' : '48px', marginBottom: '16px' }}>Analisis Komparatif: Ivory vs Duplex vs Art Carton</h2>
+            <h2 style={{ fontSize: isLargeMobile ? '1.5rem' : '2rem', fontWeight: '700', fontFamily: FONT_HEADING, color: '#001D39', marginTop: isLargeMobile ? '32px' : '48px', marginBottom: '16px' }}>Analisis Komparatif: Ivory vs Duplex vs Art Carton</h2>
             <div style={{ overflowX: 'auto', marginBottom: '32px', WebkitOverflowScrolling: 'touch' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse', border: '1px solid #e2e8f0', minWidth: '600px' }}>
                 <thead>

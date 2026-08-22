@@ -9,6 +9,9 @@ import Navbar from '@/components/layout/Navbar';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 
+const FONT_HEADING = "var(--font-poppins), 'Poppins', sans-serif";
+const FONT_BODY = "var(--font-source-sans), 'Source Sans 3', sans-serif";
+
 export default function EcoFriendlyPackagingArticle() {
   const t = useTranslations();
   const [isSmallMobile, setIsSmallMobile] = useState(false);
@@ -40,7 +43,7 @@ export default function EcoFriendlyPackagingArticle() {
               <span style={{ backgroundColor: '#0A4174', color: '#ffffff', padding: '4px 16px', borderRadius: '9999px', fontSize: '0.8rem', fontWeight: '600' }}>KEBERLANJUTAN</span>
               <span style={{ color: '#64748b', fontSize: '0.8rem', alignSelf: 'center' }}>6 Februari 2026 • 10 Menit Baca</span>
             </div>
-            <h1 style={{ fontSize: isSmallMobile ? '1.75rem' : (isLargeMobile ? '2.25rem' : '3.5rem'), fontWeight: '800', color: '#001D39', lineHeight: '1.2', marginBottom: '20px' }}>
+            <h1 style={{ fontSize: isSmallMobile ? '1.75rem' : (isLargeMobile ? '2.25rem' : '3.5rem'), fontWeight: '800', fontFamily: FONT_HEADING, color: '#001D39', lineHeight: '1.2', marginBottom: '20px' }}>
               Kemasan Kertas vs Plastik: Kenapa Brand Besar Mulai Beralih ke Paper-Based Packaging?
             </h1>
             <p style={{ fontSize: isLargeMobile ? '1rem' : '1.25rem', color: '#64748b', lineHeight: '1.6' }}>
@@ -59,13 +62,13 @@ export default function EcoFriendlyPackagingArticle() {
             />
           </div>
 
-          <section style={{ fontSize: isLargeMobile ? '1rem' : '1.125rem', lineHeight: '1.8', color: '#334155' }}>
-            <h2 style={{ fontSize: isLargeMobile ? '1.5rem' : '2rem', fontWeight: '700', color: '#001D39', marginTop: '32px', marginBottom: '16px' }}>Penjelasan: Apa Itu Kemasan Ramah Lingkungan?</h2>
+          <section style={{ fontSize: isLargeMobile ? '1rem' : '1.125rem', lineHeight: '1.8', color: '#334155', fontFamily: FONT_BODY }}>
+            <h2 style={{ fontSize: isLargeMobile ? '1.5rem' : '2rem', fontWeight: '700', fontFamily: FONT_HEADING, color: '#001D39', marginTop: '32px', marginBottom: '16px' }}>Penjelasan: Apa Itu Kemasan Ramah Lingkungan?</h2>
             <p style={{ marginBottom: '24px' }}>
               Kemasan ramah lingkungan atau <em>eco-friendly packaging</em> adalah kemasan yang didesain agar memiliki dampak minimal terhadap kerusakan lingkungan. Ciri utamanya adalah mudah terurai secara alami (biodegradable), dapat didaur ulang (recyclable), dan diproduksi dengan konsumsi energi yang rendah. Dalam hal ini, kemasan berbasis kertas menjadi primadona karena sifatnya yang organik dibandingkan plastik yang membutuhkan ratusan tahun untuk hancur.
             </p>
 
-            <h2 style={{ fontSize: isLargeMobile ? '1.5rem' : '2rem', fontWeight: '700', color: '#001D39', marginTop: isLargeMobile ? '32px' : '48px', marginBottom: '16px' }}>Masalah yang Disebabkan oleh Kemasan Plastik</h2>
+            <h2 style={{ fontSize: isLargeMobile ? '1.5rem' : '2rem', fontWeight: '700', fontFamily: FONT_HEADING, color: '#001D39', marginTop: isLargeMobile ? '32px' : '48px', marginBottom: '16px' }}>Masalah yang Disebabkan oleh Kemasan Plastik</h2>
             <p style={{ marginBottom: '20px' }}>
               Meskipun murah dan ringan, penggunaan plastik sekali pakai dalam jangka panjang telah menciptakan krisis global yang serius bagi kesehatan dan ekosistem kita:
             </p>
@@ -76,7 +79,7 @@ export default function EcoFriendlyPackagingArticle() {
               <li style={{ marginBottom: '12px' }}><strong>Pencemaran Ekosistem Laut:</strong> Jutaan ton sampah plastik berakhir di lautan setiap tahun, merusak terumbu karang dan membunuh jutaan hewan laut yang tidak sengaja memakannya.</li>
             </ul>
 
-            <h2 style={{ fontSize: isLargeMobile ? '1.5rem' : '2rem', fontWeight: '700', color: '#001D39', marginTop: isLargeMobile ? '32px' : '48px', marginBottom: '16px' }}>Keunggulan Kemasan Kertas Dibandingkan Plastik</h2>
+            <h2 style={{ fontSize: isLargeMobile ? '1.5rem' : '2rem', fontWeight: '700', fontFamily: FONT_HEADING, color: '#001D39', marginTop: isLargeMobile ? '32px' : '48px', marginBottom: '16px' }}>Keunggulan Kemasan Kertas Dibandingkan Plastik</h2>
             <p style={{ marginBottom: '20px' }}>
               Mengapa kemasan kertas dianggap jauh lebih unggul dalam kacamata bisnis dan lingkungan?
             </p>
@@ -88,13 +91,13 @@ export default function EcoFriendlyPackagingArticle() {
               <li style={{ marginBottom: '12px' }}><strong>Dukungan Terhadap Regulasi:</strong> Banyak pemerintah daerah di Indonesia mulai melarang penggunaan kantong plastik sekali pakai. Menggunakan kemasan kertas berarti brand Anda sudah siap menghadapi perubahan hukum di masa depan.</li>
             </ul>
 
-            <h2 style={{ fontSize: isLargeMobile ? '1.5rem' : '2rem', fontWeight: '700', color: '#001D39', marginTop: isLargeMobile ? '32px' : '48px', marginBottom: '16px' }}>Kenapa Harus Kertas?</h2>
+            <h2 style={{ fontSize: isLargeMobile ? '1.5rem' : '2rem', fontWeight: '700', fontFamily: FONT_HEADING, color: '#001D39', marginTop: isLargeMobile ? '32px' : '48px', marginBottom: '16px' }}>Kenapa Harus Kertas?</h2>
             <p style={{ marginBottom: '24px' }}>
               Selain alasan lingkungan, penggunaan kertas memungkinkan teknik branding yang lebih luas. Melalui percetakan offset, kemasan kertas bisa dicetak dengan warna-warna tajam, diberi laminasi mewah, hingga efek timbul (emboss). Hal ini sulit dilakukan secara maksimal pada permukaan plastik yang tipis dan licin. Dengan kertas, brand Anda memiliki "kanvas" yang lebih luas untuk bercerita kepada pelanggan.
             </p>
 
             <div style={{ backgroundColor: '#f8fafc', padding: isLargeMobile ? '24px' : '40px', borderRadius: '32px', marginTop: '60px', border: '1px solid #e2e8f0' }}>
-              <h2 style={{ fontSize: isLargeMobile ? '1.5rem' : '2.25rem', fontWeight: '700', color: '#0A4174', marginBottom: '20px', textAlign: 'center', lineHeight: '1.2' }}>
+              <h2 style={{ fontSize: isLargeMobile ? '1.5rem' : '2.25rem', fontWeight: '700', fontFamily: FONT_HEADING, color: '#0A4174', marginBottom: '20px', textAlign: 'center', lineHeight: '1.2' }}>
                 Wujudkan Kemasan Ramah Lingkungan Anda Bersama Percetakan Dallas
               </h2>
               <p style={{ textAlign: 'center', marginBottom: '32px', opacity: 0.9, fontSize: isLargeMobile ? '0.95rem' : '1rem' }}>
