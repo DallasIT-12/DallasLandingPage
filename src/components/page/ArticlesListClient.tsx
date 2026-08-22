@@ -30,6 +30,22 @@ export default function ArticlesListPage() {
 
   const articles = [
     {
+      title: 'Cara Memilih Ukuran Paper Tray yang Tepat untuk Bisnismu',
+      slug: 'cara-memilih-ukuran-paper-tray',
+      excerpt: 'Bingung pilih ukuran paper tray untuk usahamu? Kenali detail ukuran Cup A, B, C, dan D dari Paperlisens beserta rekomendasi penggunaannya.',
+      date: '22 Agustus 2026',
+      image: '/artikel_cup_A.webp',
+      category: 'Panduan Kemasan'
+    },
+    {
+      title: 'Rumah Kemasan UMKM Kediri: Apa Itu dan Cara Memanfaatkannya',
+      slug: 'rumah-kemasan-umkm-kediri',
+      excerpt: 'Pemkab Kediri siapkan Rumah Kemasan untuk UMKM. Simak apa itu program ini, siapa yang bisa mengaksesnya, dan cara memanfaatkannya.',
+      date: '22 Agustus 2026',
+      image: '/paperlisens papertray.webp',
+      category: 'UMKM Kediri'
+    },
+    {
       title: 'Saatnya Upgrade Kemasan: 5 Alasan Harus Beralih ke Paper Tray',
       slug: 'upgrade-kemasan-paper-tray',
       excerpt: 'Ingin tampilan produk lebih premium dan ramah lingkungan? Simak 5 alasan kenapa bisnismu perlu beralih ke paper tray sekarang.',
@@ -106,7 +122,7 @@ export default function ArticlesListPage() {
 
 
   return (
-    <div style={{ backgroundColor: '#ffffff', minHeight: '100vh', color: '#1e293b', overflowX: 'hidden', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif' }}>
+    <div style={{ backgroundColor: '#ffffff', minHeight: '100vh', color: '#1e293b', overflowX: 'hidden', fontFamily: "var(--font-source-sans), 'Source Sans 3', sans-serif" }}>
       <Navbar />
 
       {/* Hero Header - Consistent with About, Career, and FAQ pages */}
@@ -138,6 +154,7 @@ export default function ArticlesListPage() {
           style={{
             fontSize: isSmallMobile ? '1.85rem' : (isMediumMobile ? '2.25rem' : '4.5rem'),
             fontWeight: '800',
+            fontFamily: "var(--font-poppins), 'Poppins', sans-serif",
             lineHeight: '1.2',
             padding: '0 20px',
             textShadow: '0 2px 10px rgba(0,0,0,0.3)'
@@ -182,7 +199,7 @@ export default function ArticlesListPage() {
                   <div style={{ marginBottom: '12px' }}>
                     <span style={{ backgroundColor: '#0A4174', color: '#ffffff', padding: '4px 12px', borderRadius: '9999px', fontSize: '0.7rem', fontWeight: '600', textTransform: 'uppercase' }}>{article.category}</span>
                   </div>
-                  <h2 style={{ fontSize: isLargeMobile ? '1.15rem' : '1.5rem', fontWeight: '700', marginBottom: '12px', lineHeight: '1.3', color: '#001D39' }}>{article.title}</h2>
+                  <h2 style={{ fontSize: isLargeMobile ? '1.15rem' : '1.5rem', fontWeight: '700', fontFamily: "var(--font-poppins), 'Poppins', sans-serif", marginBottom: '12px', lineHeight: '1.3', color: '#001D39' }}>{article.title}</h2>
                   <p style={{ color: '#64748b', lineHeight: '1.6', marginBottom: '24px', fontSize: isLargeMobile ? '0.9rem' : '1rem', flex: 1 }}>{article.excerpt}</p>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto', borderTop: '1px solid #f1f5f9', paddingTop: '16px' }}>
                     <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>{article.date}</span>
